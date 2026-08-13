@@ -100,11 +100,11 @@
         .brand-box h3.omega span { color: #4285F4; } /* omegaUp style */
 
         /* Slide 8 custom layout styles */
-        .s8-container { background: #E5E5E5; padding: 20px; border-radius: 10px; }
-        .s8-group { border: 4px dotted #777; padding: 15px; margin-bottom: 20px; }
-        .s8-pink { background-color: #EBD4DB; border: 2px dotted #888; padding: 10px 20px; color: #000; }
-        .s8-blue { background-color: #5B8DF2; border: 2px dotted #fff; color: white; padding: 15px 30px; font-size: 24px; text-align: center; }
-        .s8-lightblue { background-color: #D3E3FD; border: 2px dotted #fff; padding: 15px 5px; text-align: center; font-size: 22px; display: flex; flex-direction: column; justify-content: center; }
+        .s8-container { background: #E5E5E5; padding: 10px; border-radius: 10px; }
+        .s8-group { border: 4px dotted #777; padding: 10px; margin-bottom: 10px; }
+        .s8-pink { background-color: #EBD4DB; border: 2px dotted #888; padding: 5px 15px; color: #000; }
+        .s8-blue { background-color: #5B8DF2; border: 2px dotted #fff; color: white; padding: 10px 15px; font-size: 20px; text-align: center; }
+        .s8-lightblue { background-color: #D3E3FD; border: 2px dotted #fff; padding: 10px 5px; text-align: center; font-size: 18px; display: flex; flex-direction: column; justify-content: center; }
 
         @media (max-aspect-ratio: 1/1) {
             .hero-container { flex-direction: column; padding: 20px; }
@@ -290,12 +290,12 @@
                     
                     <!-- Grupo 1: Actividades de Seguimiento -->
                     <div class="s8-group">
-                        <div class="s8-pink" style="margin-bottom: 20px;">
+                        <div class="s8-pink" style="margin-bottom: 15px; font-size: 20px;">
                             Actividades de Seguimiento: Ayudan a seguir la materia y definir notas.
                         </div>
-                        <div style="display: flex; gap: 20px; justify-content: center; align-items: center;">
+                        <div style="display: flex; gap: 15px; justify-content: center; align-items: center;">
                             <div class="s8-blue" style="flex: 1;">Cuestionarios (individual)</div>
-                            <i class="fa-solid fa-plus" style="color: #5B8DF2; font-size: 40px; font-weight: 900;"></i>
+                            <i class="fa-solid fa-plus" style="color: #5B8DF2; font-size: 30px; font-weight: 900;"></i>
                             <div class="s8-blue" style="flex: 1;">Tareas juez en línea<br>(individual)</div>
                         </div>
                     </div>
@@ -304,8 +304,8 @@
                     <div class="s8-group" style="display: flex; gap: 20px; align-items: stretch; margin-bottom: 0;">
                         
                         <div class="s8-pink" style="width: 35%; display: flex; flex-direction: column; justify-content: center;">
-                            <h4 style="font-size: 26px; color: #000; margin-bottom: 15px;">Aprobación:</h4>
-                            <ul style="margin: 0; padding-left: 20px; font-size: 22px; color: #000;">
+                            <h4 style="font-size: 22px; color: #000; margin-bottom: 10px;">Aprobación:</h4>
+                            <ul style="margin: 0; padding-left: 20px; font-size: 18px; color: #000;">
                                 <li>AP Directa (Promoción)</li>
                                 <li>Regular</li>
                             </ul>
@@ -333,13 +333,13 @@
                                     <line x1="50%" y1="0" x2="84%" y2="60" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)" />
                                 </svg>
                                 
-                                <div style="position: absolute; left: 18%; top: 15px; color: #D32F2F; font-weight: bold; font-size: 16px; transform: rotate(-22deg);">
+                                <div style="position: absolute; left: 18%; top: 15px; color: #D32F2F; font-weight: bold; font-size: 14px; transform: rotate(-22deg);">
                                     &lt; 60 pts
                                 </div>
-                                <div style="position: absolute; left: 41%; top: 25px; color: #1976D2; font-weight: bold; font-size: 16px;">
+                                <div style="position: absolute; left: 41%; top: 25px; color: #1976D2; font-weight: bold; font-size: 14px;">
                                     entre 60 y 69 puntos
                                 </div>
-                                <div style="position: absolute; right: 15%; top: 15px; color: #388E3C; font-weight: bold; font-size: 16px; transform: rotate(22deg);">
+                                <div style="position: absolute; right: 15%; top: 15px; color: #388E3C; font-weight: bold; font-size: 14px; transform: rotate(22deg);">
                                     &gt;= 70 puntos
                                 </div>
                             </div>
@@ -349,10 +349,14 @@
                                     Libre
                                 </div>
                                 <div class="s8-lightblue" style="color: #1976D2; flex: 1;">
-                                    REGULAR<br><span style="font-size: 18px;">(Examen Final)</span>
+                                    REGULAR<br><span style="font-size: 16px;">(Examen Final)</span>
                                 </div>
                                 <div class="s8-lightblue" style="color: #388E3C; flex: 1; text-align: left; padding-left: 20px;">
-                                    AP Directa <strong>U5</strong><br><span style="font-weight: normal;">+ Parcial</span><br><span style="font-weight: normal;">+ Recuperatorio</span>
+                                    <div style="line-height: 1.2;">
+                                        AP Directa <strong>U5</strong><br>
+                                        <span style="font-weight: normal;">+ Parcial</span><br>
+                                        <span style="font-weight: normal;">+ Recuperatorio</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
