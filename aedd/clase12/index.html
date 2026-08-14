@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>AEDD - Clase 12 - Matrices</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="../../dist/reset.css">
+    <link rel="stylesheet" href="../../dist/reveal.css">
+    <link rel="stylesheet" href="../../dist/theme/white.css" id="theme">
+    <link rel="stylesheet" href="../../dist/plugin/highlight/monokai.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 22px; color: var(--text-main); line-height: 1.5; text-align: left; }
+        
+        .slide-title {
+            font-size: 48px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 40px !important; border-left: 12px solid var(--utn-gold);
+            padding-left: 24px; text-transform: uppercase !important; letter-spacing: -1.5px;
+            text-align: left; width: 100%;
+        }
+
+        .reveal pre {
+            background: #272822; padding: 20px; border-radius: 12px;
+            font-family: 'Fira Code', monospace; font-size: 18px; margin: 0;
+            border-left: 6px solid var(--utn-gold); box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            width: 100%;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+        
+        .reveal code { 
+            font-family: 'Fira Code', monospace !important; 
+            font-variant-ligatures: none !important;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .texto-enunciado {
+            font-size: 24px;
+            text-align: left;
+            line-height: 1.5;
+            background: var(--bg-neutral);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 6px solid var(--utn-blue);
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .texto-enunciado p {
+            margin-bottom: 10px;
+        }
+
+        /* Estilos Ventana Compilador */
+        .compiler-window {
+            background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;
+            height: 60vh;
+            display: flex; flex-direction: column;
+        }
+        .compiler-window .header {
+            background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;
+        }
+        .compiler-window .header span {
+            color: #d4d4d4; font-family: 'Fira Code', monospace; font-size: 16px;
+        }
+        .compiler-window .header button {
+            background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 14px; cursor: pointer; transition: opacity 0.2s;
+        }
+        .compiler-window .header button:hover { opacity: 0.8; }
+        .compiler-window iframe { flex-grow: 1; width: 100%; border: none; }
+        
+        .instruccion {
+            font-size: 16px; color: var(--text-light); text-align: center; margin-top: 15px; font-style: italic;
+        }
+        
+        .branding-footer { position: absolute; bottom: 30px; left: 40px; color: #94A3B8; font-weight: 600; font-size: 14px; letter-spacing: 1px; z-index: 1000; }
+        .branding-footer span { color: var(--utn-gold); }
+
+        @media (max-aspect-ratio: 1/1) {
+            .slide-title { font-size: 40px !important; margin-bottom: 20px !important; }
+            .reveal p, .reveal li { font-size: 24px; }
+            .reveal pre { font-size: 18px; padding: 15px; overflow-x: auto; width: 100%; box-sizing: border-box; }
+            .branding-footer { bottom: 20px; left: 20px; }
+            .compiler-window { height: 50vh; }
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Portada -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <h1 style="color: white; font-size: 80px; line-height: 0.9; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 55px;">Clase 12: Matrices</span></h1>
+                <p style="color: rgba(255,255,255,0.6); margin-top: 50px; text-align: center; font-size: 24px;">Docentes de práctica: Tomás Assenza, Facundo Sanchez</p>
+                <p style="color: rgba(255,255,255,0.3); margin-top: 10px; text-align: center; font-size: 18px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe</p>
+            </section>
+
+            <!-- INTRODUCCION A MATRICES -->
+            <section>
+                <h2 class="slide-title">Concepto de Matriz (2D)</h2>
+                <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; width: 100%; align-items: center;">
+                    <div>
+                        <p style="font-size: 22px;">Una <strong>matriz</strong> es un arreglo bidimensional. Se puede imaginar como una cuadrícula o tabla compuesta por <strong>filas</strong> (horizontal) y <strong>columnas</strong> (vertical).</p>
+                        <div style="background: var(--bg-neutral); padding: 20px; border-radius: 12px; margin-top: 20px; border-left: 6px solid var(--utn-gold);">
+                            <p style="font-weight: bold; margin-bottom: 5px; color: var(--utn-blue);">Puntos Clave:</p>
+                            <ul style="font-size: 18px; margin: 0; padding-left: 20px;">
+                                <li>Se declaran: <code>int matriz[FILAS][COL];</code></li>
+                                <li>Los índices comienzan en <strong>0</strong>.</li>
+                                <li>Se utilizan <strong>bucles anidados</strong> (normalmente `for` o `while`) para recorrerlas.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: #E2E8F0; padding: 15px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                            <!-- Fila 0 -->
+                            <div style="background: var(--utn-blue); color: white; padding: 15px; border-radius: 8px; font-family: monospace; font-weight: bold; text-align: center;">12</div>
+                            <div style="background: white; color: var(--utn-blue); border: 2px solid var(--utn-blue); padding: 15px; border-radius: 8px; font-family: monospace; font-weight: bold; text-align: center;">5</div>
+                            <div style="background: white; color: var(--utn-blue); border: 2px solid var(--utn-blue); padding: 15px; border-radius: 8px; font-family: monospace; font-weight: bold; text-align: center;">9</div>
+                            <div style="background: white; color: var(--utn-blue); border: 2px solid var(--utn-blue); padding: 15px; border-radius: 8px; font-family: monospace; font-weight: bold; text-align: center;">2</div>
+                            <!-- Fila 1 -->
+                            <div style="background: white; color: var(--utn-blue); border: 2px solid var(--utn-blue); padding: 15px; border-radius: 8px; font-family: monospace; font-weight: bold; text-align: center;">8</div>
+                            <div style="background: var(--utn-gold); color: var(--utn-blue); padding: 15px; border-radius: 8px; font-family: monospace; font-weight: bold; text-align: center;">14</div>
+                            <div style="background: white; color: var(--utn-blue); border: 2px solid var(--utn-blue); padding: 15px; border-radius: 8px; font-family: monospace; font-weight: bold; text-align: center;">7</div>
+                            <div style="background: white; color: var(--utn-blue); border: 2px solid var(--utn-blue); padding: 15px; border-radius: 8px; font-family: monospace; font-weight: bold; text-align: center;">1</div>
+                            <!-- Fila 2 -->
+                            <div style="background: white; color: var(--utn-blue); border: 2px solid var(--utn-blue); padding: 15px; border-radius: 8px; font-family: monospace; font-weight: bold; text-align: center;">3</div>
+                            <div style="background: white; color: var(--utn-blue); border: 2px solid var(--utn-blue); padding: 15px; border-radius: 8px; font-family: monospace; font-weight: bold; text-align: center;">6</div>
+                            <div style="background: white; color: var(--utn-blue); border: 2px solid var(--utn-blue); padding: 15px; border-radius: 8px; font-family: monospace; font-weight: bold; text-align: center;">11</div>
+                            <div style="background: #ef4444; color: white; padding: 15px; border-radius: 8px; font-family: monospace; font-weight: bold; text-align: center;">0</div>
+                        </div>
+                        <p style="font-size: 16px; color: var(--text-light); margin-top: 15px; font-style: italic;">Matriz de 3x4 (3 filas, 4 columnas)</p>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- EJERCICIO 6: SOPA DE LETRAS -->
+            <section>
+                <section>
+                    <h2 class="slide-title">Ejercicio 6 - Sopa de Letras</h2>
+                    <div class="texto-enunciado">
+                        <p>Se recibe una matriz SopaLetras (orden 10 x 10) de caracteres y una palabra P almacenada en una cadena de caracteres de longitud máxima 10. Se debe informar:</p>
+                        <ul style="font-size: 20px;">
+                            <li>Si esa palabra se encuentra en alguna fila, de derecha a izquierda. (Si se la encuentra indicarlo con un mensaje del tipo: la palabra XXXX está en la fila NN).</li>
+                            <li>Cuántas columnas tienen únicamente letras minúsculas.</li>
+                        </ul>
+                        <p style="font-size: 20px; margin-top: 15px;"><strong>Nota</strong>: Si la palabra tiene menos de 10 caracteres (por ejemplo 6), se considera que está en una fila si la palabra aparece ocupando las últimas seis posiciones y todas las restantes son blancos.</p>
+                    </div>
+                </section>
+                <section>
+                    <h2 class="slide-title">Solución: Sopa de Letras</h2>
+                    <pre style="max-height: 500px; overflow-y: auto;"><code class="cpp" data-trim data-noescape data-line-numbers>
+bool buscarDerechaAIzquierda(char sopa[10][10], string P) {
+    bool encontradaGlobal = false;
+    int fila = 0;
+    while (fila < 10 && !encontradaGlobal) {
+        bool coinciden = true;
+        int pLen = P.length();
+        int jSopa = 9;
+        int iP = pLen - 1;
+        while (coinciden && jSopa >= 0) {
+            if (iP >= 0) {
+                if (sopa[fila][jSopa] != P[iP]) coinciden = false;
+                iP--;
+            } else {
+                if (sopa[fila][jSopa] != ' ') coinciden = false;
+            }
+            jSopa--;
+        }
+        if (coinciden) encontradaGlobal = true;
+        fila++;
+    }
+    return encontradaGlobal;
+}
+
+int columnasMinusculas(char sopa[10][10]) {
+    int cantidad = 0;
+    for (int col = 0; col < 10; col++) {
+        bool soloMinusculas = true;
+        int fila = 0;
+        while (fila < 10 && soloMinusculas) {
+            char c = sopa[fila][col];
+            if ((c < 'a' || c > 'z') && c != ' ') soloMinusculas = false;
+            fila++;
+        }
+        if (soloMinusculas) cantidad++;
+    }
+    return cantidad;
+}
+                    </code></pre>
+                </section>
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title">Prueba: Sopa de Letras</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler</span>
+                            <button onclick="sendCode('oc-editor-1', codeEx6)">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- OMEGAUP: CUADRADOS SEMIMAGICOS -->
+            <section>
+                <section>
+                    <h2 class="slide-title">OmegaUp - Cuad. Semimágicos</h2>
+                    <div class="texto-enunciado">
+                        <p>Un cuadrado semimágico es una matriz `N x N` donde la suma de cada fila, cada columna y ambas diagonales <strong>vale lo mismo</strong>.</p>
+                        <p>Imprimir <strong>1</strong> si la matriz cumple, o <strong>0</strong> en caso contrario.</p>
+                        <p style="font-size: 0.8em; margin-top: 15px;"><i class="fa-solid fa-link" style="color: var(--utn-gold);"></i> <a href="https://omegaup.com/arena/problem/Los-cuadrados-semimagicos" target="_blank" style="color: var(--utn-blue);">https://omegaup.com/arena/problem/Los-cuadrados-semimagicos</a></p>
+                    </div>
+                </section>
+                <section>
+                    <h2 class="slide-title">Solución: Cuad. Semimágicos</h2>
+                    <pre style="max-height: 500px; overflow-y: auto;"><code class="cpp" data-trim data-noescape data-line-numbers>
+    bool esMagico = true;
+    
+    // Filas
+    int i = 0;
+    while (i < n && esMagico) {
+        int sumaFila = 0;
+        for (int j = 0; j < n; j++) sumaFila += matriz[i][j];
+        if (sumaFila != sumObjetivo) esMagico = false;
+        i++;
+    }
+    
+    // Columnas
+    int j = 0;
+    while (j < n && esMagico) {
+        int sumaCol = 0;
+        for (int i2 = 0; i2 < n; i2++) sumaCol += matriz[i2][j];
+        if (sumaCol != sumObjetivo) esMagico = false;
+        j++;
+    }
+    
+    // Diagonales
+    if (esMagico) {
+        int sumaDiag1 = 0;
+        for (int k = 0; k < n; k++) sumaDiag1 += matriz[k][k];
+        if (sumaDiag1 != sumObjetivo) esMagico = false;
+    }
+    if (esMagico) {
+        int sumaDiag2 = 0;
+        for (int k = 0; k < n; k++) sumaDiag2 += matriz[k][n - 1 - k];
+        if (sumaDiag2 != sumObjetivo) esMagico = false;
+    }
+                    </code></pre>
+                </section>
+                <section id="slide-compiler-2">
+                    <h2 class="slide-title">Prueba: Cuad. Semimágicos</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler</span>
+                            <button onclick="sendCode('oc-editor-2', codeOmega2)">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- OMEGAUP: MATRIZ Y VECTOR -->
+            <section>
+                <section>
+                    <h2 class="slide-title">OmegaUp - Matriz y Vector</h2>
+                    <div class="texto-enunciado">
+                        <p>Dado un <strong>Vector</strong> de `T` elementos (ordenado) y una <strong>Matriz</strong> `T x T`, procesar:</p>
+                        <ul>
+                            <li><strong>Q=1</strong>: Mostrar cantidad de filas ordenadas de la misma forma que el vector.</li>
+                            <li><strong>Q=2</strong>: Mostrar primer valor de cada columna que sea mayor al promedio del vector (o -1 si no existe).</li>
+                        </ul>
+                        <p style="font-size: 0.8em; margin-top: 15px;"><i class="fa-solid fa-link" style="color: var(--utn-gold);"></i> <a href="https://omegaup.com/arena/problem/MatrizyVector/" target="_blank" style="color: var(--utn-blue);">https://omegaup.com/arena/problem/MatrizyVector/</a></p>
+                    </div>
+                </section>
+                <section>
+                    <h2 class="slide-title">Solución: Matriz y Vector</h2>
+                    <pre style="max-height: 500px; overflow-y: auto;"><code class="cpp" data-trim data-noescape data-line-numbers>
+int FilasOrdenadas(int matriz[10][10], int vector[10], int T) {
+    int filasOrdenadas = 0;
+    for (int i = 0; i < T; i++) {
+        bool igual = true;
+        int j = 0;
+        while (j < T && igual) {
+            if (matriz[i][j] != vector[j]) igual = false;
+            j++;
+        }
+        if (igual) filasOrdenadas++;
+    }
+    return filasOrdenadas;
+}
+
+void PrimerMayorenColumna(int matriz[10][10], int vector[10], int T) {
+    int suma = 0;
+    for (int i = 0; i < T; i++) suma += vector[i];
+    double promedio = (double)suma / T;
+    
+    for (int col = 0; col < T; col++) {
+        bool encontrado = false;
+        int fila = 0;
+        int valor = -1;
+        while (fila < T && !encontrado) {
+            if (matriz[fila][col] > promedio) {
+                valor = matriz[fila][col];
+                encontrado = true;
+            }
+            fila++;
+        }
+        cout << valor << " ";
+    }
+    cout << endl;
+}
+                    </code></pre>
+                </section>
+                <section id="slide-compiler-3">
+                    <h2 class="slide-title">Prueba: Matriz y Vector</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler</span>
+                            <button onclick="sendCode('oc-editor-3', codeOmega1)">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-3" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- DESPEDIDA -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%;">
+                    <h2 style="font-size: 80px !important; color: var(--utn-gold) !important; font-weight: 700 !important; letter-spacing: -2px; margin-bottom: 20px;">Equipo de Algoritmos y Estructuras de Datos</h2>
+                    <p style="color: white !important; font-size: 32px !important; font-weight: 300 !important; letter-spacing: 5px; text-align: center; margin: 0;">Comisión A</p>
+                    <div style="margin-top: 70px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px;">
+                        <p style="font-size: 18px !important; color: rgba(255,255,255,0.5) !important; letter-spacing: 2px; font-weight: 300 !important; text-align: center; margin: 0;">UTN SANTA FE - INGENIERÍA EN SISTEMAS</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer -->
+    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+
+    <script src="../../dist/reveal.js"></script>
+    <script src="../../dist/plugin/notes.js"></script>
+    <script src="../../dist/plugin/markdown.js"></script>
+    <script src="../../dist/plugin/highlight.js"></script>
+    
+    <script>
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            hash: true,
+            slideNumber: 'c/t',
+            plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({
+                width: newSize.width,
+                height: newSize.height
+            });
+        });
+
+        // -------------------------------------------------------------
+        // CÓDIGOS PARA LOS COMPILADORES
+        // -------------------------------------------------------------
+        
+        const codeEx2 = `
+#include <iostream>
+#include <string>
+using namespace std;
+
+void reporteAerolineas(int pasajes[4][50], string localidades[50]) {
+    int minPasajeros = 1e9;
+    int indexLocalidadMin = -1;
+    int localidadesMas1000 = 0;
+
+    for (int col = 0; col < 50; col++) {
+        int sumaLoc = 0;
+        for (int fila = 0; fila < 4; fila++) {
+            sumaLoc += pasajes[fila][col];
+        }
+        
+        cout << "- " << localidades[col] << ": " << sumaLoc << " pasajeros." << endl;
+        
+        if (sumaLoc == 0) {
+            cout << "  (INFO) Cero pasajes para " << localidades[col] << endl;
+        }
+        
+        if (sumaLoc < minPasajeros) {
+            minPasajeros = sumaLoc;
+            indexLocalidadMin = col;
+        }
+        
+        if (sumaLoc > 1000) {
+            localidadesMas1000++;
+        }
+    }
+
+    if(indexLocalidadMin != -1) {
+        cout << "La localidad con menor cantidad de pasajeros es: " << localidades[indexLocalidadMin] << endl;
+    }
+    cout << "Localidades con mas de 1000 pasajeros: " << localidadesMas1000 << endl;
+
+    bool algunaCatEnCero = false;
+    for (int fila = 0; fila < 4; fila++) {
+        int sumaCat = 0;
+        for (int col = 0; col < 50; col++) {
+            sumaCat += pasajes[fila][col];
+        }
+        cout << "Categoria " << fila << ": " << sumaCat << " pasajeros." << endl;
+        if (sumaCat == 0) {
+            algunaCatEnCero = true;
+        }
+    }
+
+    if (algunaCatEnCero) {
+        cout << "Existe al menos una categoria sin pasajes vendidos." << endl;
+    }
+}
+
+int main() {
+    int matriz[4][50] = {0};
+    string localidades[50];
+    
+    for(int i = 0; i < 50; i++) {
+        localidades[i] = "Ciudad_" + to_string(i);
+    }
+    
+    // Algunos datos de prueba
+    matriz[0][0] = 500;
+    matriz[1][0] = 600; // Ciudad 0 tiene 1100 > 1000
+    matriz[2][1] = 50;  // Ciudad 1 tiene 50
+    matriz[0][2] = 0;   // Ciudad 2 tiene 0
+    // Categoria 3 queda en cero
+    
+    cout << "Reporte de Aerolineas:" << endl;
+    reporteAerolineas(matriz, localidades);
+    return 0;
+}
+`;
+
+        const codeEx6 = `
+#include <iostream>
+#include <string>
+using namespace std;
+
+bool buscarDerechaAIzquierda(char sopa[10][10], string P) {
+    bool encontradaGlobal = false;
+    int fila = 0;
+    
+    while (fila < 10 && !encontradaGlobal) {
+        bool coinciden = true;
+        int pLen = P.length();
+        int jSopa = 9;
+        int iP = pLen - 1;
+        
+        while (coinciden && jSopa >= 0) {
+            if (iP >= 0) {
+                if (sopa[fila][jSopa] != P[iP]) {
+                    coinciden = false;
+                }
+                iP--;
+            } else {
+                if (sopa[fila][jSopa] != ' ') {
+                    coinciden = false;
+                }
+            }
+            jSopa--;
+        }
+        
+        if (coinciden) {
+            cout << "La palabra '" << P << "' esta en la fila " << fila << endl;
+            encontradaGlobal = true;
+        }
+        fila++;
+    }
+    return encontradaGlobal;
+}
+
+int columnasMinusculas(char sopa[10][10]) {
+    int cantidad = 0;
+    for (int col = 0; col < 10; col++) {
+        bool soloMinusculas = true;
+        int fila = 0;
+        
+        while (fila < 10 && soloMinusculas) {
+            char c = sopa[fila][col];
+            if ((c < 'a' || c > 'z') && c != ' ') {
+                soloMinusculas = false;
+            }
+            fila++;
+        }
+        if (soloMinusculas) {
+            cantidad++;
+        }
+    }
+    return cantidad;
+}
+
+int main() {
+    char sopa[10][10];
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) sopa[i][j] = ' ';
+    }
+    
+    // Agregamos "hola" en la fila 2 de derecha a izquierda, justificando al final
+    sopa[2][6] = 'h';
+    sopa[2][7] = 'o';
+    sopa[2][8] = 'l';
+    sopa[2][9] = 'a';
+    
+    sopa[0][0] = 'H'; // Rompe minuscula en columna 0
+    sopa[1][1] = 'a'; // Col 1 sigue minuscula
+    
+    buscarDerechaAIzquierda(sopa, "hola");
+    cout << "Columnas con unicamente minusculas (o espacios): " << columnasMinusculas(sopa) << endl;
+    
+    return 0;
+}
+`;
+
+        const codeOmega1 = `
+#include <iostream>
+using namespace std;
+
+int FilasOrdenadas(int matriz[10][10], int vector[10], int T) {
+    int filasOrdenadas = 0;
+    for (int i = 0; i < T; i++) {
+        bool igual = true;
+        int j = 0;
+        while (j < T && igual) {
+            if (matriz[i][j] != vector[j]) {
+                igual = false;
+            }
+            j++;
+        }
+        if (igual) filasOrdenadas++;
+    }
+    return filasOrdenadas;
+}
+
+void PrimerMayorenColumna(int matriz[10][10], int vector[10], int T) {
+    int suma = 0;
+    for (int i = 0; i < T; i++) {
+        suma += vector[i];
+    }
+    double promedio = (double)suma / T;
+    
+    for (int col = 0; col < T; col++) {
+        bool encontrado = false;
+        int fila = 0;
+        int valor = -1;
+        while (fila < T && !encontrado) {
+            if (matriz[fila][col] > promedio) {
+                valor = matriz[fila][col];
+                encontrado = true;
+            }
+            fila++;
+        }
+        cout << valor << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    int T;
+    if (!(cin >> T)) {
+        cout << "Por favor ingresa la entrada en consola abajo." << endl;
+        return 0; 
+    }
+    
+    int matriz[10][10];
+    for (int i = 0; i < T; i++) {
+        for (int j = 0; j < T; j++) {
+            cin >> matriz[i][j];
+        }
+    }
+    
+    int vector[10];
+    for (int i = 0; i < T; i++) {
+        cin >> vector[i];
+    }
+    
+    int Q;
+    cin >> Q;
+    
+    if (Q == 1) {
+        cout << FilasOrdenadas(matriz, vector, T) << endl;
+    } else if (Q == 2) {
+        PrimerMayorenColumna(matriz, vector, T);
+    }
+    
+    return 0;
+}
+`;
+
+        const codeOmega2 = `
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n;
+    if (!(cin >> n)) {
+        cout << "Por favor ingresa la entrada en consola abajo." << endl;
+        return 0; 
+    }
+    
+    int matriz[100][100];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> matriz[i][j];
+        }
+    }
+    
+    int sumObjetivo = 0;
+    for (int j = 0; j < n; j++) {
+        sumObjetivo += matriz[0][j];
+    }
+    
+    bool esMagico = true;
+    
+    // Filas
+    int i = 0;
+    while (i < n && esMagico) {
+        int sumaFila = 0;
+        for (int j = 0; j < n; j++) sumaFila += matriz[i][j];
+        if (sumaFila != sumObjetivo) esMagico = false;
+        i++;
+    }
+    
+    // Columnas
+    int j = 0;
+    while (j < n && esMagico) {
+        int sumaCol = 0;
+        for (int i2 = 0; i2 < n; i2++) sumaCol += matriz[i2][j];
+        if (sumaCol != sumObjetivo) esMagico = false;
+        j++;
+    }
+    
+    // Diagonal principal
+    if (esMagico) {
+        int sumaDiag1 = 0;
+        for (int k = 0; k < n; k++) sumaDiag1 += matriz[k][k];
+        if (sumaDiag1 != sumObjetivo) esMagico = false;
+    }
+    
+    // Diagonal secundaria
+    if (esMagico) {
+        int sumaDiag2 = 0;
+        for (int k = 0; k < n; k++) sumaDiag2 += matriz[k][n - 1 - k];
+        if (sumaDiag2 != sumObjetivo) esMagico = false;
+    }
+    
+    if (esMagico) cout << 1 << endl;
+    else cout << 0 << endl;
+    
+    return 0;
+}
+`;
+
+        // -------------------------------------------------------------
+        // LÓGICA DE INYECCIÓN ONECOMPILER Y COMPATIBILIDAD MÓVIL
+        // -------------------------------------------------------------
+        function sendCode(iframeId, code) {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: 'cpp',
+                    files: [{ name: 'main.cpp', content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code) {
+            const send = () => sendCode(iframeId, code);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        Reveal.on('slidechanged', event => {
+            const slideId = event.currentSlide.id;
+            if (slideId === 'slide-compiler-1') sendCodeWithRetries('oc-editor-1', codeEx6);
+            else if (slideId === 'slide-compiler-2') sendCodeWithRetries('oc-editor-2', codeOmega2);
+            else if (slideId === 'slide-compiler-3') sendCodeWithRetries('oc-editor-3', codeOmega1);
+        });
+
+        // Aplanado en móviles
+        document.addEventListener("DOMContentLoaded", function() {
+            const isMobileOrTablet = window.innerWidth < 768;
+            if (isMobileOrTablet) {
+                document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+                document.querySelectorAll('section > section').forEach(sec => {
+                    const parent = sec.parentNode;
+                    if (parent && parent.children.length === 1) {
+                        while (sec.firstChild) {
+                            parent.appendChild(sec.firstChild);
+                        }
+                        sec.remove();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
