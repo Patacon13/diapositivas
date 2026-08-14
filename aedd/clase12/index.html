@@ -726,12 +726,15 @@ int main() {
             const isMobileOrTablet = window.innerWidth < 768;
             if (isMobileOrTablet) {
                 document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
-                document.querySelectorAll('section > section').forEach(sec => {
+                
+                const slidesContainer = document.querySelector('.slides');
+                document.querySelectorAll('.slides > section > section').forEach(sec => {
                     const parent = sec.parentNode;
-                    if (parent && parent.children.length === 1) {
-                        while (sec.firstChild) {
-                            parent.appendChild(sec.firstChild);
-                        }
+                    slidesContainer.insertBefore(sec, parent);
+                });
+                
+                document.querySelectorAll('.slides > section').forEach(sec => {
+                    if (sec.children.length === 0) {
                         sec.remove();
                     }
                 });
