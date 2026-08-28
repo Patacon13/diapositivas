@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AEDD - Simulacro de Parcial</title>
+
+    <link rel="stylesheet" href="../../dist/reset.css" />
+    <link rel="stylesheet" href="../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../dist/plugin/highlight/monokai.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 22px; color: var(--text-main); line-height: 1.5; text-align: left; }
+        
+        .slide-title {
+            font-size: 48px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 40px !important; border-left: 12px solid var(--utn-gold);
+            padding-left: 24px; text-transform: uppercase !important; letter-spacing: -1.5px;
+            text-align: left; width: 100%;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; width: 100%; align-items: center; }
+
+        .tiled-content { display: flex; gap: 30px; width: 100%; justify-content: center; }
+        .tile { 
+            flex: 1; background: var(--bg-neutral); padding: 40px; border-radius: 24px;
+            border-bottom: 6px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+        }
+        .tile:hover { transform: translateY(-10px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+        .tile h3 { font-size: 24px; color: var(--utn-blue); margin-bottom: 15px; }
+
+        .reveal pre {
+            background: #272822; padding: 20px; border-radius: 12px;
+            font-family: 'Fira Code', monospace; font-size: 18px; margin: 0;
+            border-left: 6px solid var(--utn-gold); box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            width: 100%;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+        .reveal code { 
+            font-family: 'Fira Code', monospace; 
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .section-title-layout { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .section-title-layout h2 { font-size: 100px !important; color: var(--utn-gold) !important; font-weight: 700 !important; letter-spacing: -2px; }
+        .section-title-layout p { color: rgba(255,255,255,0.7) !important; font-size: 32px !important; font-weight: 300 !important; letter-spacing: 5px; text-align: center; }
+
+        .branding-footer { position: absolute; bottom: 30px; left: 40px; color: #94A3B8; font-weight: 600; font-size: 14px; letter-spacing: 1px; z-index: 1000; }
+        .branding-footer span { color: var(--utn-gold); }
+
+        /* Estilos para el simulacro */
+        .inciso-badge {
+            display: inline-block; background: var(--utn-gold); color: var(--utn-blue);
+            font-weight: 700; font-size: 28px; width: 50px; height: 50px; line-height: 50px;
+            text-align: center; border-radius: 50%; margin-right: 15px; flex-shrink: 0;
+        }
+
+        .inciso-header {
+            display: flex; align-items: center; margin-bottom: 20px;
+        }
+
+        .points-badge {
+            display: inline-block; background: var(--utn-blue); color: white;
+            padding: 4px 14px; border-radius: 20px; font-size: 16px; font-weight: 600;
+            margin-left: auto;
+        }
+
+        /* --- Estilos Especiales para Celulares Verticales --- */
+        @media (max-aspect-ratio: 1/1) {
+            .two-column { grid-template-columns: 1fr; gap: 30px; }
+            .tiled-content { flex-direction: column; gap: 20px; }
+            .slide-title { font-size: 60px !important; margin-bottom: 25px !important; }
+            .reveal p, .reveal li { font-size: 28px; }
+            .reveal pre { font-size: 20px; padding: 25px; overflow-x: auto; width: 100%; box-sizing: border-box; }
+            .section-title-layout h2 { font-size: 100px !important; }
+            .section-title-layout p { font-size: 28px !important; }
+            .tile { padding: 25px; }
+            .tile .icon { font-size: 40px; margin-bottom: 15px; }
+            .tile h3 { font-size: 24px; }
+            .branding-footer { bottom: 20px; left: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- ================================================================== -->
+            <!-- PORTADA -->
+            <!-- ================================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <h1 style="color: white; font-size: 80px; line-height: 0.9; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 60px;">Clase 13: Simulacro de Parcial</span></h1>
+                <p style="color: rgba(255,255,255,0.6); margin-top: 50px; text-align: center; font-size: 24px;">Docentes de práctica: Tomás Assenza, Facundo Sanchez</p>
+                <p style="color: rgba(255,255,255,0.3); margin-top: 10px; text-align: center; font-size: 18px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe</p>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- INCISO A: Enunciado + Solución (vertical) + Compilador (vertical) -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- Enunciado A -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">a</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Declaraciones en main()</h2>
+                        <span class="points-badge">8 pts</span>
+                    </div>
+                    <div style="background: white; padding: 25px 30px; border-radius: 16px; border: 1px solid #E2E8F0;">
+                        <p style="font-size: 22px;">Declare (sin implementar la carga) en el entorno de una función <code>main()</code> las variables y estructuras de datos descritas en la consigna, utilizando las <strong>dimensiones y tipos de datos adecuados</strong>.</p>
+                    </div>
+                    <div style="background: white; padding: 20px 30px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 30px;">
+                        <p style="font-size: 18px; color: var(--text-light); margin: 0;"><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Puesta en común <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                    </div>
+                </section>
+
+                <!-- Solución A -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">a</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Declaraciones</h2>
+                    </div>
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-11">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+const int CHOFERES = 25;
+const int DIAS = 31;
+
+int main() {
+    int matrizEnvios[CHOFERES][DIAS];
+    string nombresChoferes[CHOFERES];
+    float tarifasChoferes[CHOFERES];
+
+    return 0;
+}
+                    </code></pre>
+                </section>
+
+                <!-- Compilador A -->
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title">Ejecución Interactiva: Inciso A</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-1', cppCodeIncisoA)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- INCISO B: Enunciado + Solución (vertical) + Compilador (vertical) -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- Enunciado B -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">b</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">MejorChofer</h2>
+                        <span class="points-badge">8 pts</span>
+                    </div>
+                    <div style="background: white; padding: 25px 30px; border-radius: 16px; border: 1px solid #E2E8F0;">
+                        <p style="font-size: 22px;">Defina e implemente la función <code>MejorChofer(...)</code> la cual reciba la matriz y el vector de nombres. La función debe <strong>retornar el nombre</strong> del chofer que mayor cantidad total de paquetes entregó a lo largo de todo el mes.</p>
+                    </div>
+                    <div style="background: white; padding: 20px 30px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 30px;">
+                        <p style="font-size: 18px; color: var(--text-light); margin: 0;"><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Puesta en común <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                    </div>
+                </section>
+
+                <!-- Solución B -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">b</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: MejorChofer</h2>
+                    </div>
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-3|5-8|10-12|15">
+string MejorChofer(int envios[][DIAS], string nombres[]) {
+    int maxPaquetes = -1;
+    string mejorNombre = "";
+
+    for (int f = 0; f &lt; CHOFERES; f++) {
+        int sumaActual = 0;
+        for (int c = 0; c &lt; DIAS; c++) {
+            sumaActual += envios[f][c];
+        }
+
+        if (sumaActual &gt; maxPaquetes) {
+            maxPaquetes = sumaActual;
+            mejorNombre = nombres[f];
+        }
+    }
+
+    return mejorNombre;
+}
+                    </code></pre>
+                </section>
+
+                <!-- Compilador B -->
+                <section id="slide-compiler-2">
+                    <h2 class="slide-title">Ejecución Interactiva: MejorChofer</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-2', cppCodeIncisoB)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- INCISO C: Enunciado + Solución (vertical) + Compilador (vertical) -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- Enunciado C -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">c</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">DiasBajaProduccion</h2>
+                        <span class="points-badge">8 pts</span>
+                    </div>
+                    <div style="background: white; padding: 25px 30px; border-radius: 16px; border: 1px solid #E2E8F0;">
+                        <p style="font-size: 22px;">Defina e implemente la función <code>DiasBajaProduccion(...)</code> que reciba la matriz. La función debe devolver la <strong>cantidad de días</strong> (columnas) en los cuales el total de paquetes entregados entre todos los choferes haya sido <strong>inferior a 100 paquetes</strong>.</p>
+                    </div>
+                    <div style="background: white; padding: 20px 30px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 30px;">
+                        <p style="font-size: 18px; color: var(--text-light); margin: 0;"><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Puesta en común <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                    </div>
+                </section>
+
+                <!-- Solución C -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">c</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: DiasBajaProduccion</h2>
+                    </div>
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-2|4-7|9-11|14">
+int DiasBajaProduccion(int envios[][DIAS]) {
+    int diasBajos = 0;
+
+    for (int c = 0; c &lt; DIAS; c++) {
+        int sumaDia = 0;
+        for (int f = 0; f &lt; CHOFERES; f++) {
+            sumaDia += envios[f][c];
+        }
+
+        if (sumaDia &lt; 100) {
+            diasBajos++;
+        }
+    }
+
+    return diasBajos;
+}
+                    </code></pre>
+                </section>
+
+                <!-- Compilador C -->
+                <section id="slide-compiler-3">
+                    <h2 class="slide-title">Ejecución Interactiva: DiasBajaProduccion</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-3', cppCodeIncisoC)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-3" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- INCISO D: Enunciado + Solución (vertical) + Compilador (vertical) -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- Enunciado D -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">d</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">CalcularLiquidacion</h2>
+                        <span class="points-badge">8 pts</span>
+                    </div>
+                    <div style="background: white; padding: 25px 30px; border-radius: 16px; border: 1px solid #E2E8F0;">
+                        <p style="font-size: 22px;">Defina e implemente la función <code>CalcularLiquidacion(...)</code> que reciba la matriz, el vector de nombres, el vector de tarifas y un <code>string</code> con el nombre de un chofer (ingresado por teclado).</p>
+                        <p style="font-size: 22px; margin-top: 10px;">La función debe <strong>buscar</strong> a ese chofer y retornar el monto total a cobrar en el mes (calculado como: <code>total de paquetes &times; tarifa base</code>). Si el chofer <strong>no existe</strong>, debe retornar <code>-1</code>.</p>
+                    </div>
+                    <div style="background: white; padding: 20px 30px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 30px;">
+                        <p style="font-size: 18px; color: var(--text-light); margin: 0;"><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Puesta en común <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                    </div>
+                </section>
+
+                <!-- Solución D -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">d</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: CalcularLiquidacion</h2>
+                    </div>
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-2|4-11|13-21|23">
+float CalcularLiquidacion(int envios[][DIAS], string nombres[],
+        float tarifas[], string choferBuscado) {
+    int indiceChofer = -1;
+    int i = 0;
+    bool encontrado = false;
+    while (i &lt; CHOFERES &amp;&amp; !encontrado) {
+        if (nombres[i] == choferBuscado) {
+            indiceChofer = i;
+            encontrado = true;
+        }
+        i++;
+    }
+
+    int totalPaquetes = 0;
+    if (indiceChofer == -1) {
+        totalPaquetes = -1;
+    } else {
+        for (int c = 0; c &lt; DIAS; c++) {
+            totalPaquetes += envios[indiceChofer][c];
+        }
+        totalPaquetes = totalPaquetes * tarifas[indiceChofer];
+    }
+    return totalPaquetes;
+}
+                    </code></pre>
+                </section>
+
+                <!-- Compilador D -->
+                <section id="slide-compiler-4">
+                    <h2 class="slide-title">Ejecución Interactiva: CalcularLiquidacion</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-4', cppCodeIncisoD)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-4" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- INCISO E: Enunciado + Solución (vertical) + Compilador (vertical) -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- Enunciado E -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">e</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">ChoferesInactivosDia</h2>
+                        <span class="points-badge">8 pts</span>
+                    </div>
+                    <div style="background: white; padding: 25px 30px; border-radius: 16px; border: 1px solid #E2E8F0;">
+                        <p style="font-size: 22px;">Defina e implemente una función <strong>recursiva</strong> llamada <code>ChoferesInactivosDia(...)</code> que reciba la matriz, un día específico <code>D</code> (0 &lt;= D &lt;= 30) y los índices necesarios.</p>
+                        <p style="font-size: 22px; margin-top: 10px;">La función debe retornar la <strong>cantidad de choferes</strong> que no entregaron ningún paquete (valor 0) en ese día <code>D</code>.</p>
+                    </div>
+                    <div style="background: white; padding: 20px 30px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 30px;">
+                        <p style="font-size: 18px; color: var(--text-light); margin: 0;"><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Puesta en común <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                    </div>
+                </section>
+
+                <!-- Solución E -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">e</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: ChoferesInactivosDia</h2>
+                    </div>
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-10|12">
+int ChoferesInactivosDia(int envios[][DIAS], int D, int f) {
+    if (f == CHOFERES) {
+        return 0;
+    }
+
+    int inactivo = 0;
+    if (envios[f][D] == 0) {
+        inactivo = 1;
+    }
+
+    return inactivo + ChoferesInactivosDia(envios, D, f + 1);
+}
+                    </code></pre>
+                    <div style="background: var(--bg-neutral); padding: 20px 25px; border-radius: 12px; margin-top: 20px; border-left: 6px solid var(--utn-gold);">
+                        <p style="font-size: 18px; margin: 0;"><i class="fa-solid fa-rotate-right" style="color: var(--utn-gold); margin-right: 8px;"></i><strong>Llamada desde main:</strong> <code>ChoferesInactivosDia(matrizEnvios, diaConsultar, 0)</code></p>
+                        <p style="font-size: 16px; margin-top: 8px; color: var(--text-light);">El tercer parámetro arranca en 0 (primer chofer) y avanza recursivamente hasta CHOFERES.</p>
+                    </div>
+                </section>
+
+                <!-- Compilador E -->
+                <section id="slide-compiler-5">
+                    <h2 class="slide-title">Ejecución Interactiva: ChoferesInactivosDia</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-5', cppCodeIncisoE)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-5" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- SEPARADOR: SOLUCIONES -->
+            <!-- ================================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2 style="font-size: 80px !important; margin-bottom: 20px;">Código Completo</h2>
+                    <p style="color: white !important;">Solución integrada</p>
+                </div>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- CÓDIGO COMPLETO -->
+            <!-- ================================================================== -->
+            <section>
+                <section>
+                    <h2 class="slide-title">Solución Completa</h2>
+                    <pre style="font-size: 14px !important;"><code class="cpp" data-trim data-noescape data-line-numbers>
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+const int CHOFERES = 25;
+const int DIAS = 31;
+
+string MejorChofer(int envios[][DIAS], string nombres[]) {
+    int maxPaquetes = -1;
+    string mejorNombre = "";
+    for (int f = 0; f &lt; CHOFERES; f++) {
+        int sumaActual = 0;
+        for (int c = 0; c &lt; DIAS; c++) {
+            sumaActual += envios[f][c];
+        }
+        if (sumaActual &gt; maxPaquetes) {
+            maxPaquetes = sumaActual;
+            mejorNombre = nombres[f];
+        }
+    }
+    return mejorNombre;
+}
+
+int DiasBajaProduccion(int envios[][DIAS]) {
+    int diasBajos = 0;
+    for (int c = 0; c &lt; DIAS; c++) {
+        int sumaDia = 0;
+        for (int f = 0; f &lt; CHOFERES; f++) {
+            sumaDia += envios[f][c];
+        }
+        if (sumaDia &lt; 100) {
+            diasBajos++;
+        }
+    }
+    return diasBajos;
+}
+
+float CalcularLiquidacion(int envios[][DIAS], string nombres[],
+        float tarifas[], string choferBuscado) {
+    int indiceChofer = -1;
+    int i = 0;
+    bool encontrado = false;
+    while (i &lt; CHOFERES &amp;&amp; !encontrado) {
+        if (nombres[i] == choferBuscado) {
+            indiceChofer = i;
+            encontrado = true;
+        }
+        i++;
+    }
+    int totalPaquetes = 0;
+    if (indiceChofer == -1) {
+        totalPaquetes = -1;
+    } else {
+        for (int c = 0; c &lt; DIAS; c++) {
+            totalPaquetes += envios[indiceChofer][c];
+        }
+        totalPaquetes = totalPaquetes * tarifas[indiceChofer];
+    }
+    return totalPaquetes;
+}
+
+int ChoferesInactivosDia(int envios[][DIAS], int D, int f) {
+    if (f == CHOFERES) {
+        return 0;
+    }
+    int inactivo = 0;
+    if (envios[f][D] == 0) {
+        inactivo = 1;
+    }
+    return inactivo + ChoferesInactivosDia(envios, D, f + 1);
+}
+
+int main() {
+    int matrizEnvios[CHOFERES][DIAS];
+    string nombresChoferes[CHOFERES];
+    float tarifasChoferes[CHOFERES];
+
+    cout &lt;&lt; MejorChofer(matrizEnvios, nombresChoferes) &lt;&lt; endl;
+    cout &lt;&lt; DiasBajaProduccion(matrizEnvios) &lt;&lt; endl;
+
+    string nombreBuscado;
+    cin &gt;&gt; nombreBuscado;
+    float pago = CalcularLiquidacion(matrizEnvios, nombresChoferes,
+        tarifasChoferes, nombreBuscado);
+    cout &lt;&lt; pago &lt;&lt; endl;
+
+    cout &lt;&lt; ChoferesInactivosDia(matrizEnvios, 15, 0) &lt;&lt; endl;
+    return 0;
+}
+                    </code></pre>
+                </section>
+
+                <section id="slide-compiler-6">
+                    <h2 class="slide-title">Ejecución Interactiva: Código Completo</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-6', cppCodeCompleto)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-6" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- DIAPOSITIVA FINAL -->
+            <!-- ================================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2 style="font-size: 80px !important; margin-bottom: 20px;">Equipo de Algoritmos y Estructuras de Datos</h2>
+                    <p style="color: white !important;">Comisión A</p>
+                    <div style="margin-top: 70px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px;">
+                        <p style="font-size: 18px !important; color: rgba(255,255,255,0.5) !important; letter-spacing: 2px;">UTN SANTA FE - INGENIERÍA EN SISTEMAS</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+
+    <script src="../../dist/reveal.js"></script>
+    <script src="../../dist/plugin/notes.js"></script>
+    <script src="../../dist/plugin/highlight.js"></script>
+    
+    <script>
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        // Detectar si es un dispositivo móvil chico (celular) para simplificar el flujo
+        const isMobileOrTablet = window.innerWidth < 768;
+        if (isMobileOrTablet) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            controls: true,
+            progress: true,
+            center: true,
+            
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({
+                width: newSize.width,
+                height: newSize.height
+            });
+        });
+
+        // ================================================================
+        // Código C++ para cada inciso del compilador OneCompiler
+        // ================================================================
+
+        const cppCodeIncisoA = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int CHOFERES = 25;
+const int DIAS = 31;
+
+int main() {
+    int matrizEnvios[CHOFERES][DIAS];
+    string nombresChoferes[CHOFERES];
+    float tarifasChoferes[CHOFERES];
+
+    return 0;
+}`;
+
+        const cppCodeIncisoB = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int CHOFERES = 25;
+const int DIAS = 31;
+
+string MejorChofer(int envios[][DIAS], string nombres[]) {
+    int maxPaquetes = -1;
+    string mejorNombre = "";
+
+    for (int f = 0; f < CHOFERES; f++) {
+        int sumaActual = 0;
+        for (int c = 0; c < DIAS; c++) {
+            sumaActual += envios[f][c];
+        }
+        if (sumaActual > maxPaquetes) {
+            maxPaquetes = sumaActual;
+            mejorNombre = nombres[f];
+        }
+    }
+
+    return mejorNombre;
+}
+
+int main() {
+    int matrizEnvios[CHOFERES][DIAS] {};
+    string nombresChoferes[CHOFERES] {"Lopez", "Garcia", "Martinez"};
+
+    cout << "Mejor chofer: " << MejorChofer(matrizEnvios, nombresChoferes) << endl;
+    return 0;
+}`;
+
+        const cppCodeIncisoC = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int CHOFERES = 25;
+const int DIAS = 31;
+
+int DiasBajaProduccion(int envios[][DIAS]) {
+    int diasBajos = 0;
+
+    for (int c = 0; c < DIAS; c++) {
+        int sumaDia = 0;
+        for (int f = 0; f < CHOFERES; f++) {
+            sumaDia += envios[f][c];
+        }
+        if (sumaDia < 100) {
+            diasBajos++;
+        }
+    }
+
+    return diasBajos;
+}
+
+int main() {
+    int matrizEnvios[CHOFERES][DIAS] {};
+
+    cout << "Dias con baja produccion: " << DiasBajaProduccion(matrizEnvios) << endl;
+    return 0;
+}`;
+
+        const cppCodeIncisoD = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int CHOFERES = 25;
+const int DIAS = 31;
+
+float CalcularLiquidacion(int envios[][DIAS], string nombres[],
+        float tarifas[], string choferBuscado) {
+    int indiceChofer = -1;
+    int i = 0;
+    bool encontrado = false;
+    while (i < CHOFERES && !encontrado) {
+        if (nombres[i] == choferBuscado) {
+            indiceChofer = i;
+            encontrado = true;
+        }
+        i++;
+    }
+
+    int totalPaquetes = 0;
+    if (indiceChofer == -1) {
+        totalPaquetes = -1;
+    } else {
+        for (int c = 0; c < DIAS; c++) {
+            totalPaquetes += envios[indiceChofer][c];
+        }
+        totalPaquetes = totalPaquetes * tarifas[indiceChofer];
+    }
+    return totalPaquetes;
+}
+
+int main() {
+    int matrizEnvios[CHOFERES][DIAS] {};
+    string nombresChoferes[CHOFERES] {"Lopez", "Garcia"};
+    float tarifasChoferes[CHOFERES] {150.5, 200.0};
+
+    string nombre;
+    cout << "Ingrese nombre del chofer: ";
+    cin >> nombre;
+
+    float pago = CalcularLiquidacion(matrizEnvios, nombresChoferes, tarifasChoferes, nombre);
+    if (pago == -1) {
+        cout << "El chofer no existe en los registros." << endl;
+    } else {
+        cout << "Monto a cobrar: $" << pago << endl;
+    }
+    return 0;
+}`;
+
+        const cppCodeIncisoE = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int CHOFERES = 25;
+const int DIAS = 31;
+
+int ChoferesInactivosDia(int envios[][DIAS], int D, int f) {
+    if (f == CHOFERES) {
+        return 0;
+    }
+
+    int inactivo = 0;
+    if (envios[f][D] == 0) {
+        inactivo = 1;
+    }
+
+    return inactivo + ChoferesInactivosDia(envios, D, f + 1);
+}
+
+int main() {
+    int matrizEnvios[CHOFERES][DIAS] {};
+
+    int dia = 15;
+    cout << "Choferes inactivos en el dia " << dia << ": "
+         << ChoferesInactivosDia(matrizEnvios, dia, 0) << endl;
+    return 0;
+}`;
+
+        const cppCodeCompleto = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int CHOFERES = 25;
+const int DIAS = 31;
+
+string MejorChofer(int envios[][DIAS], string nombres[]) {
+    int maxPaquetes = -1;
+    string mejorNombre = "";
+    for (int f = 0; f < CHOFERES; f++) {
+        int sumaActual = 0;
+        for (int c = 0; c < DIAS; c++) {
+            sumaActual += envios[f][c];
+        }
+        if (sumaActual > maxPaquetes) {
+            maxPaquetes = sumaActual;
+            mejorNombre = nombres[f];
+        }
+    }
+    return mejorNombre;
+}
+
+int DiasBajaProduccion(int envios[][DIAS]) {
+    int diasBajos = 0;
+    for (int c = 0; c < DIAS; c++) {
+        int sumaDia = 0;
+        for (int f = 0; f < CHOFERES; f++) {
+            sumaDia += envios[f][c];
+        }
+        if (sumaDia < 100) {
+            diasBajos++;
+        }
+    }
+    return diasBajos;
+}
+
+float CalcularLiquidacion(int envios[][DIAS], string nombres[],
+        float tarifas[], string choferBuscado) {
+    int indiceChofer = -1;
+    int i = 0;
+    bool encontrado = false;
+    while (i < CHOFERES && !encontrado) {
+        if (nombres[i] == choferBuscado) {
+            indiceChofer = i;
+            encontrado = true;
+        }
+        i++;
+    }
+    int totalPaquetes = 0;
+    if (indiceChofer == -1) {
+        totalPaquetes = -1;
+    } else {
+        for (int c = 0; c < DIAS; c++) {
+            totalPaquetes += envios[indiceChofer][c];
+        }
+        totalPaquetes = totalPaquetes * tarifas[indiceChofer];
+    }
+    return totalPaquetes;
+}
+
+int ChoferesInactivosDia(int envios[][DIAS], int D, int f) {
+    if (f == CHOFERES) {
+        return 0;
+    }
+    int inactivo = 0;
+    if (envios[f][D] == 0) {
+        inactivo = 1;
+    }
+    return inactivo + ChoferesInactivosDia(envios, D, f + 1);
+}
+
+int main() {
+    int matrizEnvios[CHOFERES][DIAS] {};
+    string nombresChoferes[CHOFERES] {"Lopez", "Garcia", "Martinez"};
+    float tarifasChoferes[CHOFERES] {150.5, 200.0, 175.0};
+
+    cout << "Mejor chofer: " << MejorChofer(matrizEnvios, nombresChoferes) << endl;
+    cout << "Dias baja produccion: " << DiasBajaProduccion(matrizEnvios) << endl;
+
+    string nombre;
+    cout << "Ingrese nombre del chofer: ";
+    cin >> nombre;
+    float pago = CalcularLiquidacion(matrizEnvios, nombresChoferes, tarifasChoferes, nombre);
+    if (pago == -1) {
+        cout << "Chofer no encontrado." << endl;
+    } else {
+        cout << "Monto: $" << pago << endl;
+    }
+
+    cout << "Inactivos dia 15: " << ChoferesInactivosDia(matrizEnvios, 15, 0) << endl;
+    return 0;
+}`;
+
+        // Función para enviar el código a un iframe de OneCompiler específico
+        function sendCode(iframeId, code) {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: 'cpp',
+                    files: [
+                        {
+                            name: 'main.cpp',
+                            content: code
+                        }
+                    ]
+                }, '*');
+            }
+        }
+
+        // Se envía el código en varios momentos clave para contrarrestar problemas de carga asíncrona
+        function sendCodeWithRetries(iframeId, code) {
+            const send = () => sendCode(iframeId, code);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        // Comprobación de las diapositivas de compilador
+        function checkCompilerSlides(slide) {
+            if (!slide) return;
+            if (slide.id === 'slide-compiler-1') {
+                sendCodeWithRetries('oc-editor-1', cppCodeIncisoA);
+            } else if (slide.id === 'slide-compiler-2') {
+                sendCodeWithRetries('oc-editor-2', cppCodeIncisoB);
+            } else if (slide.id === 'slide-compiler-3') {
+                sendCodeWithRetries('oc-editor-3', cppCodeIncisoC);
+            } else if (slide.id === 'slide-compiler-4') {
+                sendCodeWithRetries('oc-editor-4', cppCodeIncisoD);
+            } else if (slide.id === 'slide-compiler-5') {
+                sendCodeWithRetries('oc-editor-5', cppCodeIncisoE);
+            } else if (slide.id === 'slide-compiler-6') {
+                sendCodeWithRetries('oc-editor-6', cppCodeCompleto);
+            }
+        }
+
+        // Escuchar cuando el usuario cambia de diapositiva
+        Reveal.on('slidechanged', event => {
+            checkCompilerSlides(event.currentSlide);
+        });
+
+        // Escuchar cuando Reveal se ha inicializado
+        Reveal.on('ready', event => {
+            checkCompilerSlides(Reveal.getCurrentSlide());
+        });
+    </script>
+</body>
+</html>
