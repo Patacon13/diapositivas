@@ -69,7 +69,6 @@
         .branding-footer { position: absolute; bottom: 30px; left: 40px; color: #94A3B8; font-weight: 600; font-size: 14px; letter-spacing: 1px; z-index: 1000; }
         .branding-footer span { color: var(--utn-gold); }
 
-        /* Estilos para el simulacro */
         .inciso-badge {
             display: inline-block; background: var(--utn-gold); color: var(--utn-blue);
             font-weight: 700; font-size: 28px; width: 50px; height: 50px; line-height: 50px;
@@ -110,7 +109,7 @@
             <!-- PORTADA -->
             <!-- ================================================================== -->
             <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
-                <h1 style="color: white; font-size: 80px; line-height: 0.9; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 60px;">Clase 13: Simulacro de Parcial</span></h1>
+                <h1 style="color: white; font-size: 80px; line-height: 0.9; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 60px;">Clase 14: Simulacro de Parcial</span></h1>
                 <p style="color: rgba(255,255,255,0.6); margin-top: 50px; text-align: center; font-size: 24px;">Docentes de práctica: Tomás Assenza, Facundo Sanchez</p>
                 <p style="color: rgba(255,255,255,0.3); margin-top: 10px; text-align: center; font-size: 18px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe</p>
             </section>
@@ -123,11 +122,11 @@
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
                         <span class="inciso-badge">a</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Declaraciones en main()</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Tipos y función main()</h2>
                         <span class="points-badge">8 pts</span>
                     </div>
                     <div style="background: white; padding: 25px 30px; border-radius: 16px; border: 1px solid #E2E8F0;">
-                        <p style="font-size: 22px;">Declare (sin implementar la carga) en el entorno de una función <code>main()</code> las variables y estructuras de datos descritas en la consigna, utilizando las <strong>dimensiones y tipos de datos adecuados</strong>.</p>
+                        <p style="font-size: 22px;">Defina los tipos de datos necesarios para almacenar la información de <strong>Participantes</strong>, <strong>Equipos</strong> y <strong>MatrizTecno</strong>, y luego codifique la función <code>main()</code> y declare en la misma el vector <code>Participantes</code>, el cual inicialmente está vacío y tiene tamaño 0. También declare el vector <code>Equipos</code> y la <code>MatrizTecno</code>, utilizando los tamaños lógicos que sean necesarios.</p>
                     </div>
                     <div style="background: white; padding: 20px 30px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 30px;">
                         <p style="font-size: 18px; color: var(--text-light); margin: 0;"><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Puesta en común <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
@@ -138,20 +137,49 @@
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">a</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Declaraciones</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Tipos y main()</h2>
                     </div>
-                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-11">
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-7|9-14|16-21|23-28|30-41">
 #include &lt;iostream&gt;
 #include &lt;string&gt;
-#define CHOFERES 25
-#define DIAS 31
 
 using namespace std;
-                        
+
+const int MAX_PARTICIPANTES = 300;
+const int MAX_EQUIPOS = 100;
+const int NIVELES = 4;
+const int MAX_COL_TECNO = 35;
+
+struct Participante {
+    string nombreCompleto;
+    long long cuil;
+    int nroEquipo;
+    int nivel;
+};
+
+struct Equipo {
+    int nroEquipo;
+    string nombreFantasia;
+    string institucion;
+    Participante integrantes[3];
+};
+
+struct InfoTecno {
+    int nroEquipo;
+    int envios;
+    int aceptados;
+    int minutoUltimo;
+};
+
 int main() {
-    int matrizEnvios[CHOFERES][DIAS];
-    string nombresChoferes[CHOFERES];
-    float tarifasChoferes[CHOFERES];
+    Participante participantes[MAX_PARTICIPANTES];
+    int cantParticipantes = 0;
+
+    Equipo equipos[MAX_EQUIPOS];
+    int cantEquipos = 0;
+
+    InfoTecno matrizTecno[NIVELES][MAX_COL_TECNO];
+    int cantEquiposNivel[NIVELES] {0};
 
     return 0;
 }
@@ -186,11 +214,15 @@ int main() {
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
                         <span class="inciso-badge">b</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">MejorChofer</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">CargarEquipo()</h2>
                         <span class="points-badge">8 pts</span>
                     </div>
                     <div style="background: white; padding: 25px 30px; border-radius: 16px; border: 1px solid #E2E8F0;">
-                        <p style="font-size: 22px;">Defina e implemente la función <code>MejorChofer(...)</code> la cual reciba la matriz y el vector de nombres. La función debe <strong>retornar el nombre</strong> del chofer que mayor cantidad total de paquetes entregó a lo largo de todo el mes.</p>
+                        <p style="font-size: 22px;">Diseñe y codifique una función <code>CargarEquipo()</code>, con los parámetros apropiados. La función deberá:</p>
+                        <ul style="font-size: 20px; margin-top: 10px;">
+                            <li>Leer los datos de cada integrante y ejecutar una llamada a <code>CargarIntegrante()</code> (no es necesario codificar esta función, pero sí definir el prototipo de la misma y todos sus parámetros para poder ejecutar la llamada).</li>
+                            <li>Leer los datos restantes del equipo y efectivamente agregar el nuevo equipo a <code>Equipos</code>.</li>
+                        </ul>
                     </div>
                     <div style="background: white; padding: 20px 30px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 30px;">
                         <p style="font-size: 18px; color: var(--text-light); margin: 0;"><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Puesta en común <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
@@ -201,33 +233,33 @@ int main() {
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">b</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: MejorChofer</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: CargarEquipo()</h2>
                     </div>
-                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-3|5-8|10-12|15">
-string MejorChofer(int envios[][DIAS], string nombres[]) {
-    int maxPaquetes = -1;
-    string mejorNombre = "";
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1|3-6|8-9|11-15|17-18">
+void CargarIntegrante(Participante &p, int nroEquipo, int nivel);
 
-    for (int f = 0; f &lt; CHOFERES; f++) {
-        int sumaActual = 0;
-        for (int c = 0; c &lt; DIAS; c++) {
-            sumaActual += envios[f][c];
-        }
+void CargarEquipo(Equipo equipos[], int &cantEquipos, Participante participantes[], int &cantParticipantes, int nivel) {
+    Equipo nuevoEquipo;
+    nuevoEquipo.nroEquipo = cantEquipos;
 
-        if (sumaActual &gt; maxPaquetes) {
-            maxPaquetes = sumaActual;
-            mejorNombre = nombres[f];
-        }
+    cin >> nuevoEquipo.nombreFantasia;
+    cin >> nuevoEquipo.institucion;
+
+    for (int i = 0; i < 3; i++) {
+        CargarIntegrante(nuevoEquipo.integrantes[i], nuevoEquipo.nroEquipo, nivel);
+        participantes[cantParticipantes] = nuevoEquipo.integrantes[i];
+        cantParticipantes++;
     }
 
-    return mejorNombre;
+    equipos[cantEquipos] = nuevoEquipo;
+    cantEquipos++;
 }
                     </code></pre>
                 </section>
 
                 <!-- Compilador B -->
                 <section id="slide-compiler-2">
-                    <h2 class="slide-title">Ejecución Interactiva: MejorChofer</h2>
+                    <h2 class="slide-title">Ejecución Interactiva: CargarEquipo()</h2>
                     <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
                     
                     <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
@@ -253,11 +285,16 @@ string MejorChofer(int envios[][DIAS], string nombres[]) {
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
                         <span class="inciso-badge">c</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">DiasBajaProduccion</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Premios()</h2>
                         <span class="points-badge">8 pts</span>
                     </div>
                     <div style="background: white; padding: 25px 30px; border-radius: 16px; border: 1px solid #E2E8F0;">
-                        <p style="font-size: 22px;">Defina e implemente la función <code>DiasBajaProduccion(...)</code> que reciba la matriz. La función debe devolver la <strong>cantidad de días</strong> (columnas) en los cuales el total de paquetes entregados entre todos los choferes haya sido <strong>inferior a 100 paquetes</strong>.</p>
+                        <p style="font-size: 22px;">Asumiendo que los datos de todas las estructuras se encuentran debidamente cargados, codifique la función <code>Premios()</code>, que reciba la <code>MatrizTecno</code>, un número <code>Level</code> de nivel de competencia, y un entero <code>position</code> en 1..3, y retorne la siguiente información del equipo que obtuvo la posición <code>position</code> en la competencia de nivel <code>Level</code>:</p>
+                        <ul style="font-size: 20px; margin-top: 10px;">
+                            <li>Nro. de Equipo</li>
+                            <li>Nombre de Fantasía</li>
+                            <li>Porcentaje aceptados/enviados</li>
+                        </ul>
                     </div>
                     <div style="background: white; padding: 20px 30px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 30px;">
                         <p style="font-size: 18px; color: var(--text-light); margin: 0;"><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Puesta en común <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
@@ -268,31 +305,38 @@ string MejorChofer(int envios[][DIAS], string nombres[]) {
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">c</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: DiasBajaProduccion</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Premios()</h2>
                     </div>
-                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-2|4-7|9-11|14">
-int DiasBajaProduccion(int envios[][DIAS]) {
-    int diasBajos = 0;
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-10|12-14|16-20|22">
+struct InfoPremio {
+    int nroEquipo;
+    string nombreFantasia;
+    float porcentajeAceptados;
+};
 
-    for (int c = 0; c &lt; DIAS; c++) {
-        int sumaDia = 0;
-        for (int f = 0; f &lt; CHOFERES; f++) {
-            sumaDia += envios[f][c];
-        }
+InfoPremio Premios(InfoTecno matrizTecno[][MAX_COL_TECNO], Equipo equipos[], int level, int position) {
+    InfoPremio resultado;
+    int f = level - 1;
+    int c = position - 1;
 
-        if (sumaDia &lt; 100) {
-            diasBajos++;
-        }
+    int nroEq = matrizTecno[f][c].nroEquipo;
+    resultado.nroEquipo = nroEq;
+    resultado.nombreFantasia = equipos[nroEq].nombreFantasia;
+
+    if (matrizTecno[f][c].envios > 0) {
+        resultado.porcentajeAceptados = ((float)matrizTecno[f][c].aceptados / matrizTecno[f][c].envios) * 100.0f;
+    } else {
+        resultado.porcentajeAceptados = 0.0f;
     }
 
-    return diasBajos;
+    return resultado;
 }
                     </code></pre>
                 </section>
 
                 <!-- Compilador C -->
                 <section id="slide-compiler-3">
-                    <h2 class="slide-title">Ejecución Interactiva: DiasBajaProduccion</h2>
+                    <h2 class="slide-title">Ejecución Interactiva: Premios()</h2>
                     <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
                     
                     <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
@@ -318,12 +362,13 @@ int DiasBajaProduccion(int envios[][DIAS]) {
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
                         <span class="inciso-badge">d</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">CalcularLiquidacion</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">UTNSantaFeesTop()</h2>
                         <span class="points-badge">8 pts</span>
                     </div>
                     <div style="background: white; padding: 25px 30px; border-radius: 16px; border: 1px solid #E2E8F0;">
-                        <p style="font-size: 22px;">Defina e implemente la función <code>CalcularLiquidacion(...)</code> que reciba la matriz, el vector de nombres, el vector de tarifas y un <code>string</code> con el nombre de un chofer (ingresado por teclado).</p>
-                        <p style="font-size: 22px; margin-top: 10px;">La función debe <strong>buscar</strong> a ese chofer y retornar el monto total a cobrar en el mes (calculado como: <code>total de paquetes &times; tarifa base</code>). Si el chofer <strong>no existe</strong>, debe retornar <code>-1</code>.</p>
+                        <p style="font-size: 22px;">Codifique la función <code>UTNSantaFeesTop()</code> que determine si se cumple la siguiente condición: en los 3 niveles de competencia más altos (el nivel de fila 0 corresponde a secundaria) la <strong>UTN Santa Fe</strong> obtuvo alguno de los tres primeros puestos.</p>
+                        <p style="font-size: 20px; margin-top: 10px; color: var(--text-light);">Los equipos se ordenan según resuelvan mayor cantidad de problemas, y en caso de empate resulta ganador el equipo que hizo el último envío en menor cantidad de tiempo.<br>
+                        <em>La <code>MatrizTecno</code> se ha ordenado de tal forma que todas las filas contienen a los tres primeros equipos de ese nivel en sus tres primeras posiciones (ordenados del 1° al 3°).</em></p>
                     </div>
                     <div style="background: white; padding: 20px 30px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 30px;">
                         <p style="font-size: 18px; color: var(--text-light); margin: 0;"><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Puesta en común <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
@@ -334,39 +379,39 @@ int DiasBajaProduccion(int envios[][DIAS]) {
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">d</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: CalcularLiquidacion</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: UTNSantaFeesTop()</h2>
                     </div>
-                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-2|4-11|13-21|23">
-float CalcularLiquidacion(int envios[][DIAS], string nombres[],
-        float tarifas[], string choferBuscado) {
-    int indiceChofer = -1;
-    int i = 0;
-    bool encontrado = false;
-    while (i &lt; CHOFERES &amp;&amp; !encontrado) {
-        if (nombres[i] == choferBuscado) {
-            indiceChofer = i;
-            encontrado = true;
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-3|5-7|8-15|17-21|23">
+bool UTNSantaFeesTop(InfoTecno matrizTecno[][MAX_COL_TECNO], Equipo equipos[]) {
+    bool topEnTodos = true;
+    int f = 1;
+
+    while (f < NIVELES && topEnTodos) {
+        bool podioNivel = false;
+        int c = 0;
+
+        while (c < 3 && !podioNivel) {
+            int nroEq = matrizTecno[f][c].nroEquipo;
+            if (equipos[nroEq].institucion == "UTN Santa Fe") {
+                podioNivel = true;
+            }
+            c++;
         }
-        i++;
+
+        if (!podioNivel) {
+            topEnTodos = false;
+        }
+        f++;
     }
 
-    int totalPaquetes = 0;
-    if (indiceChofer == -1) {
-        totalPaquetes = -1;
-    } else {
-        for (int c = 0; c &lt; DIAS; c++) {
-            totalPaquetes += envios[indiceChofer][c];
-        }
-        totalPaquetes = totalPaquetes * tarifas[indiceChofer];
-    }
-    return totalPaquetes;
+    return topEnTodos;
 }
                     </code></pre>
                 </section>
 
                 <!-- Compilador D -->
                 <section id="slide-compiler-4">
-                    <h2 class="slide-title">Ejecución Interactiva: CalcularLiquidacion</h2>
+                    <h2 class="slide-title">Ejecución Interactiva: UTNSantaFeesTop()</h2>
                     <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
                     
                     <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
@@ -392,12 +437,11 @@ float CalcularLiquidacion(int envios[][DIAS], string nombres[],
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
                         <span class="inciso-badge">e</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">ChoferesInactivosDia</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">RankingGlobal()</h2>
                         <span class="points-badge">8 pts</span>
                     </div>
                     <div style="background: white; padding: 25px 30px; border-radius: 16px; border: 1px solid #E2E8F0;">
-                        <p style="font-size: 22px;">Defina e implemente una función <strong>recursiva</strong> llamada <code>ChoferesInactivosDia(...)</code> que reciba la matriz, un día específico <code>D</code> (0 &lt;= D &lt;= 30) y los índices necesarios.</p>
-                        <p style="font-size: 22px; margin-top: 10px;">La función debe retornar la <strong>cantidad de choferes</strong> que no entregaron ningún paquete (valor 0) en ese día <code>D</code>.</p>
+                        <p style="font-size: 22px;">Codifique la función <code>RankingGlobal()</code> que obtenga los 3 primeros puestos entre todos los equipos en las tres primeras posiciones de cada nivel, según el valor de <code>Enviados/Aceptados</code>. La función debe retornar los 3 números que identifican a estos equipos.</p>
                     </div>
                     <div style="background: white; padding: 20px 30px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 30px;">
                         <p style="font-size: 18px; color: var(--text-light); margin: 0;"><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Puesta en común <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
@@ -408,31 +452,60 @@ float CalcularLiquidacion(int envios[][DIAS], string nombres[],
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">e</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: ChoferesInactivosDia</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: RankingGlobal()</h2>
                     </div>
-                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-10|12">
-int ChoferesInactivosDia(int envios[][DIAS], int D, int f) {
-    if (f == CHOFERES) {
-        return 0;
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-10|12-28|30-41|43-47">
+struct Candidato {
+    int nroEquipo;
+    float ratio;
+};
+
+struct PodioGlobal {
+    int primero;
+    int segundo;
+    int tercero;
+};
+
+PodioGlobal RankingGlobal(InfoTecno matrizTecno[][MAX_COL_TECNO]) {
+    Candidato finalistas[12];
+    int k = 0;
+
+    for (int f = 0; f &lt; NIVELES; f++) {
+        for (int c = 0; c &lt; 3; c++) {
+            finalistas[k].nroEquipo = matrizTecno[f][c].nroEquipo;
+            if (matrizTecno[f][c].aceptados &gt; 0) {
+                finalistas[k].ratio = (float)matrizTecno[f][c].envios / matrizTecno[f][c].aceptados;
+            } else {
+                finalistas[k].ratio = 0.0f;
+            }
+            k++;
+        }
     }
 
-    int inactivo = 0;
-    if (envios[f][D] == 0) {
-        inactivo = 1;
+    for (int i = 0; i &lt; 3; i++) {
+        int posMax = i;
+        for (int j = i + 1; j &lt; 12; j++) {
+            if (finalistas[j].ratio &gt; finalistas[posMax].ratio) {
+                posMax = j;
+            }
+        }
+        Candidato aux = finalistas[i];
+        finalistas[i] = finalistas[posMax];
+        finalistas[posMax] = aux;
     }
 
-    return inactivo + ChoferesInactivosDia(envios, D, f + 1);
+    PodioGlobal podio;
+    podio.primero = finalistas[0].nroEquipo;
+    podio.segundo = finalistas[1].nroEquipo;
+    podio.tercero = finalistas[2].nroEquipo;
+    return podio;
 }
                     </code></pre>
-                    <div style="background: var(--bg-neutral); padding: 20px 25px; border-radius: 12px; margin-top: 20px; border-left: 6px solid var(--utn-gold);">
-                        <p style="font-size: 18px; margin: 0;"><i class="fa-solid fa-rotate-right" style="color: var(--utn-gold); margin-right: 8px;"></i><strong>Llamada desde main:</strong> <code>ChoferesInactivosDia(matrizEnvios, diaConsultar, 0)</code></p>
-                        <p style="font-size: 16px; margin-top: 8px; color: var(--text-light);">El tercer parámetro arranca en 0 (primer chofer) y avanza recursivamente hasta CHOFERES.</p>
-                    </div>
                 </section>
 
                 <!-- Compilador E -->
                 <section id="slide-compiler-5">
-                    <h2 class="slide-title">Ejecución Interactiva: ChoferesInactivosDia</h2>
+                    <h2 class="slide-title">Ejecución Interactiva: RankingGlobal()</h2>
                     <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
                     
                     <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
@@ -450,6 +523,7 @@ int ChoferesInactivosDia(int envios[][DIAS], int D, int f) {
                 </section>
             </section>
 
+            <!-- ================================================================== -->
             <!-- DIAPOSITIVA FINAL -->
             <!-- ================================================================== -->
             <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
@@ -528,252 +602,332 @@ int ChoferesInactivosDia(int envios[][DIAS], int D, int f) {
 
         const cppCodeIncisoA = `#include <iostream>
 #include <string>
+
 using namespace std;
 
-const int CHOFERES = 25;
-const int DIAS = 31;
+const int MAX_PARTICIPANTES = 300;
+const int MAX_EQUIPOS = 100;
+const int NIVELES = 4;
+const int MAX_COL_TECNO = 35;
+
+struct Participante {
+    string nombreCompleto;
+    long long cuil;
+    int nroEquipo;
+    int nivel;
+};
+
+struct Equipo {
+    int nroEquipo;
+    string nombreFantasia;
+    string institucion;
+    Participante integrantes[3];
+};
+
+struct InfoTecno {
+    int nroEquipo;
+    int envios;
+    int aceptados;
+    int minutoUltimo;
+};
 
 int main() {
-    int matrizEnvios[CHOFERES][DIAS];
-    string nombresChoferes[CHOFERES];
-    float tarifasChoferes[CHOFERES];
+    Participante participantes[MAX_PARTICIPANTES];
+    int cantParticipantes = 0;
 
+    Equipo equipos[MAX_EQUIPOS];
+    int cantEquipos = 0;
+
+    InfoTecno matrizTecno[NIVELES][MAX_COL_TECNO];
+    int cantEquiposNivel[NIVELES] {0};
+
+    cout << "Estructuras declaradas correctamente." << endl;
     return 0;
 }`;
 
         const cppCodeIncisoB = `#include <iostream>
 #include <string>
+
 using namespace std;
 
-const int CHOFERES = 25;
-const int DIAS = 31;
+const int MAX_PARTICIPANTES = 300;
+const int MAX_EQUIPOS = 100;
 
-string MejorChofer(int envios[][DIAS], string nombres[]) {
-    int maxPaquetes = -1;
-    string mejorNombre = "";
+struct Participante {
+    string nombreCompleto;
+    long long cuil;
+    int nroEquipo;
+    int nivel;
+};
 
-    for (int f = 0; f < CHOFERES; f++) {
-        int sumaActual = 0;
-        for (int c = 0; c < DIAS; c++) {
-            sumaActual += envios[f][c];
-        }
-        if (sumaActual > maxPaquetes) {
-            maxPaquetes = sumaActual;
-            mejorNombre = nombres[f];
-        }
+struct Equipo {
+    int nroEquipo;
+    string nombreFantasia;
+    string institucion;
+    Participante integrantes[3];
+};
+
+void CargarIntegrante(Participante &p, int nroEquipo, int nivel) {
+    p.nombreCompleto = "Alumno Ejemplo";
+    p.cuil = 20334455667;
+    p.nroEquipo = nroEquipo;
+    p.nivel = nivel;
+}
+
+void CargarEquipo(Equipo equipos[], int &cantEquipos, Participante participantes[], int &cantParticipantes, int nivel) {
+    Equipo nuevoEquipo;
+    nuevoEquipo.nroEquipo = cantEquipos;
+
+    cin >> nuevoEquipo.nombreFantasia;
+    cin >> nuevoEquipo.institucion;
+
+    for (int i = 0; i < 3; i++) {
+        CargarIntegrante(nuevoEquipo.integrantes[i], nuevoEquipo.nroEquipo, nivel);
+        participantes[cantParticipantes] = nuevoEquipo.integrantes[i];
+        cantParticipantes++;
     }
 
-    return mejorNombre;
+    equipos[cantEquipos] = nuevoEquipo;
+    cantEquipos++;
 }
 
 int main() {
-    int matrizEnvios[CHOFERES][DIAS] {};
-    string nombresChoferes[CHOFERES] {"Lopez", "Garcia", "Martinez"};
+    Equipo equipos[MAX_EQUIPOS];
+    int cantEquipos = 0;
+    Participante participantes[MAX_PARTICIPANTES];
+    int cantParticipantes = 0;
 
-    cout << "Mejor chofer: " << MejorChofer(matrizEnvios, nombresChoferes) << endl;
+    CargarEquipo(equipos, cantEquipos, participantes, cantParticipantes, 2);
+
+    cout << "Equipo cargado: " << equipos[0].nombreFantasia << " de " << equipos[0].institucion << endl;
+    cout << "Total participantes cargados: " << cantParticipantes << endl;
     return 0;
 }`;
 
         const cppCodeIncisoC = `#include <iostream>
 #include <string>
+
 using namespace std;
 
-const int CHOFERES = 25;
-const int DIAS = 31;
+const int MAX_EQUIPOS = 100;
+const int NIVELES = 4;
+const int MAX_COL_TECNO = 35;
 
-int DiasBajaProduccion(int envios[][DIAS]) {
-    int diasBajos = 0;
+struct Participante {
+    string nombreCompleto;
+    long long cuil;
+    int nroEquipo;
+    int nivel;
+};
 
-    for (int c = 0; c < DIAS; c++) {
-        int sumaDia = 0;
-        for (int f = 0; f < CHOFERES; f++) {
-            sumaDia += envios[f][c];
-        }
-        if (sumaDia < 100) {
-            diasBajos++;
-        }
+struct Equipo {
+    int nroEquipo;
+    string nombreFantasia;
+    string institucion;
+    Participante integrantes[3];
+};
+
+struct InfoTecno {
+    int nroEquipo;
+    int envios;
+    int aceptados;
+    int minutoUltimo;
+};
+
+struct InfoPremio {
+    int nroEquipo;
+    string nombreFantasia;
+    float porcentajeAceptados;
+};
+
+InfoPremio Premios(InfoTecno matrizTecno[][MAX_COL_TECNO], Equipo equipos[], int level, int position) {
+    InfoPremio resultado;
+    int f = level - 1;
+    int c = position - 1;
+
+    int nroEq = matrizTecno[f][c].nroEquipo;
+    resultado.nroEquipo = nroEq;
+    resultado.nombreFantasia = equipos[nroEq].nombreFantasia;
+
+    if (matrizTecno[f][c].envios > 0) {
+        resultado.porcentajeAceptados = ((float)matrizTecno[f][c].aceptados / matrizTecno[f][c].envios) * 100.0f;
+    } else {
+        resultado.porcentajeAceptados = 0.0f;
     }
 
-    return diasBajos;
+    return resultado;
 }
 
 int main() {
-    int matrizEnvios[CHOFERES][DIAS] {};
+    Equipo equipos[MAX_EQUIPOS];
+    equipos[0].nroEquipo = 0;
+    equipos[0].nombreFantasia = "Los Patagónicos";
+    equipos[0].institucion = "UTN Santa Fe";
 
-    cout << "Dias con baja produccion: " << DiasBajaProduccion(matrizEnvios) << endl;
+    InfoTecno matrizTecno[NIVELES][MAX_COL_TECNO] {};
+    matrizTecno[1][0].nroEquipo = 0;
+    matrizTecno[1][0].envios = 10;
+    matrizTecno[1][0].aceptados = 8;
+    matrizTecno[1][0].minutoUltimo = 180;
+
+    InfoPremio p = Premios(matrizTecno, equipos, 2, 1);
+    cout << "Puesto 1 Nivel 2:" << endl;
+    cout << "Equipo Nro: " << p.nroEquipo << endl;
+    cout << "Nombre: " << p.nombreFantasia << endl;
+    cout << "Porcentaje Aceptados: " << p.porcentajeAceptados << "%" << endl;
+
     return 0;
 }`;
 
         const cppCodeIncisoD = `#include <iostream>
 #include <string>
+
 using namespace std;
 
-const int CHOFERES = 25;
-const int DIAS = 31;
+const int MAX_EQUIPOS = 100;
+const int NIVELES = 4;
+const int MAX_COL_TECNO = 35;
 
-float CalcularLiquidacion(int envios[][DIAS], string nombres[],
-        float tarifas[], string choferBuscado) {
-    int indiceChofer = -1;
-    int i = 0;
-    bool encontrado = false;
-    while (i < CHOFERES && !encontrado) {
-        if (nombres[i] == choferBuscado) {
-            indiceChofer = i;
-            encontrado = true;
+struct Participante {
+    string nombreCompleto;
+    long long cuil;
+    int nroEquipo;
+    int nivel;
+};
+
+struct Equipo {
+    int nroEquipo;
+    string nombreFantasia;
+    string institucion;
+    Participante integrantes[3];
+};
+
+struct InfoTecno {
+    int nroEquipo;
+    int envios;
+    int aceptados;
+    int minutoUltimo;
+};
+
+bool UTNSantaFeesTop(InfoTecno matrizTecno[][MAX_COL_TECNO], Equipo equipos[]) {
+    bool topEnTodos = true;
+    int f = 1;
+
+    while (f < NIVELES && topEnTodos) {
+        bool podioNivel = false;
+        int c = 0;
+
+        while (c < 3 && !podioNivel) {
+            int nroEq = matrizTecno[f][c].nroEquipo;
+            if (equipos[nroEq].institucion == "UTN Santa Fe") {
+                podioNivel = true;
+            }
+            c++;
         }
-        i++;
+
+        if (!podioNivel) {
+            topEnTodos = false;
+        }
+        f++;
     }
 
-    int totalPaquetes = 0;
-    if (indiceChofer == -1) {
-        totalPaquetes = -1;
-    } else {
-        for (int c = 0; c < DIAS; c++) {
-            totalPaquetes += envios[indiceChofer][c];
-        }
-        totalPaquetes = totalPaquetes * tarifas[indiceChofer];
-    }
-    return totalPaquetes;
+    return topEnTodos;
 }
 
 int main() {
-    int matrizEnvios[CHOFERES][DIAS] {};
-    string nombresChoferes[CHOFERES] {"Lopez", "Garcia"};
-    float tarifasChoferes[CHOFERES] {150.5, 200.0};
+    Equipo equipos[MAX_EQUIPOS];
+    equipos[0].institucion = "UTN Santa Fe";
+    equipos[1].institucion = "UBA";
+    equipos[2].institucion = "UTN Santa Fe";
+    equipos[3].institucion = "UTN Santa Fe";
 
-    string nombre;
-    cout << "Ingrese nombre del chofer: ";
-    cin >> nombre;
+    InfoTecno matrizTecno[NIVELES][MAX_COL_TECNO] {};
+    matrizTecno[1][0].nroEquipo = 0;
+    matrizTecno[2][1].nroEquipo = 2;
+    matrizTecno[3][2].nroEquipo = 3;
 
-    float pago = CalcularLiquidacion(matrizEnvios, nombresChoferes, tarifasChoferes, nombre);
-    if (pago == -1) {
-        cout << "El chofer no existe en los registros." << endl;
+    if (UTNSantaFeesTop(matrizTecno, equipos)) {
+        cout << "UTN Santa Fe obtuvo podio en los 3 niveles superiores." << endl;
     } else {
-        cout << "Monto a cobrar: $" << pago << endl;
+        cout << "No se cumplio la condicion." << endl;
     }
+
     return 0;
 }`;
 
         const cppCodeIncisoE = `#include <iostream>
 #include <string>
+
 using namespace std;
 
-const int CHOFERES = 25;
-const int DIAS = 31;
+const int NIVELES = 4;
+const int MAX_COL_TECNO = 35;
 
-int ChoferesInactivosDia(int envios[][DIAS], int D, int f) {
-    if (f == CHOFERES) {
-        return 0;
+struct InfoTecno {
+    int nroEquipo;
+    int envios;
+    int aceptados;
+    int minutoUltimo;
+};
+
+struct Candidato {
+    int nroEquipo;
+    float ratio;
+};
+
+struct PodioGlobal {
+    int primero;
+    int segundo;
+    int tercero;
+};
+
+PodioGlobal RankingGlobal(InfoTecno matrizTecno[][MAX_COL_TECNO]) {
+    Candidato finalistas[12];
+    int k = 0;
+
+    for (int f = 0; f < NIVELES; f++) {
+        for (int c = 0; c < 3; c++) {
+            finalistas[k].nroEquipo = matrizTecno[f][c].nroEquipo;
+            if (matrizTecno[f][c].aceptados > 0) {
+                finalistas[k].ratio = (float)matrizTecno[f][c].envios / matrizTecno[f][c].aceptados;
+            } else {
+                finalistas[k].ratio = 0.0f;
+            }
+            k++;
+        }
     }
 
-    int inactivo = 0;
-    if (envios[f][D] == 0) {
-        inactivo = 1;
+    for (int i = 0; i < 3; i++) {
+        int posMax = i;
+        for (int j = i + 1; j < 12; j++) {
+            if (finalistas[j].ratio > finalistas[posMax].ratio) {
+                posMax = j;
+            }
+        }
+        Candidato aux = finalistas[i];
+        finalistas[i] = finalistas[posMax];
+        finalistas[posMax] = aux;
     }
 
-    return inactivo + ChoferesInactivosDia(envios, D, f + 1);
+    PodioGlobal podio;
+    podio.primero = finalistas[0].nroEquipo;
+    podio.segundo = finalistas[1].nroEquipo;
+    podio.tercero = finalistas[2].nroEquipo;
+    return podio;
 }
 
 int main() {
-    int matrizEnvios[CHOFERES][DIAS] {};
+    InfoTecno matrizTecno[NIVELES][MAX_COL_TECNO] {};
+    matrizTecno[0][0] = {10, 15, 5, 120};
+    matrizTecno[1][0] = {20, 20, 4, 180};
+    matrizTecno[2][0] = {30, 8, 2, 90};
 
-    int dia = 15;
-    cout << "Choferes inactivos en el dia " << dia << ": "
-         << ChoferesInactivosDia(matrizEnvios, dia, 0) << endl;
-    return 0;
-}`;
+    PodioGlobal podio = RankingGlobal(matrizTecno);
+    cout << "Top 3 Equipos (Enviados/Aceptados):" << endl;
+    cout << "1ro: " << podio.primero << endl;
+    cout << "2do: " << podio.segundo << endl;
+    cout << "3ro: " << podio.tercero << endl;
 
-        const cppCodeCompleto = `#include <iostream>
-#include <string>
-using namespace std;
-
-const int CHOFERES = 25;
-const int DIAS = 31;
-
-string MejorChofer(int envios[][DIAS], string nombres[]) {
-    int maxPaquetes = -1;
-    string mejorNombre = "";
-    for (int f = 0; f < CHOFERES; f++) {
-        int sumaActual = 0;
-        for (int c = 0; c < DIAS; c++) {
-            sumaActual += envios[f][c];
-        }
-        if (sumaActual > maxPaquetes) {
-            maxPaquetes = sumaActual;
-            mejorNombre = nombres[f];
-        }
-    }
-    return mejorNombre;
-}
-
-int DiasBajaProduccion(int envios[][DIAS]) {
-    int diasBajos = 0;
-    for (int c = 0; c < DIAS; c++) {
-        int sumaDia = 0;
-        for (int f = 0; f < CHOFERES; f++) {
-            sumaDia += envios[f][c];
-        }
-        if (sumaDia < 100) {
-            diasBajos++;
-        }
-    }
-    return diasBajos;
-}
-
-float CalcularLiquidacion(int envios[][DIAS], string nombres[],
-        float tarifas[], string choferBuscado) {
-    int indiceChofer = -1;
-    int i = 0;
-    bool encontrado = false;
-    while (i < CHOFERES && !encontrado) {
-        if (nombres[i] == choferBuscado) {
-            indiceChofer = i;
-            encontrado = true;
-        }
-        i++;
-    }
-    int totalPaquetes = 0;
-    if (indiceChofer == -1) {
-        totalPaquetes = -1;
-    } else {
-        for (int c = 0; c < DIAS; c++) {
-            totalPaquetes += envios[indiceChofer][c];
-        }
-        totalPaquetes = totalPaquetes * tarifas[indiceChofer];
-    }
-    return totalPaquetes;
-}
-
-int ChoferesInactivosDia(int envios[][DIAS], int D, int f) {
-    if (f == CHOFERES) {
-        return 0;
-    }
-    int inactivo = 0;
-    if (envios[f][D] == 0) {
-        inactivo = 1;
-    }
-    return inactivo + ChoferesInactivosDia(envios, D, f + 1);
-}
-
-int main() {
-    int matrizEnvios[CHOFERES][DIAS] {};
-    string nombresChoferes[CHOFERES] {"Lopez", "Garcia", "Martinez"};
-    float tarifasChoferes[CHOFERES] {150.5, 200.0, 175.0};
-
-    cout << "Mejor chofer: " << MejorChofer(matrizEnvios, nombresChoferes) << endl;
-    cout << "Dias baja produccion: " << DiasBajaProduccion(matrizEnvios) << endl;
-
-    string nombre;
-    cout << "Ingrese nombre del chofer: ";
-    cin >> nombre;
-    float pago = CalcularLiquidacion(matrizEnvios, nombresChoferes, tarifasChoferes, nombre);
-    if (pago == -1) {
-        cout << "Chofer no encontrado." << endl;
-    } else {
-        cout << "Monto: $" << pago << endl;
-    }
-
-    cout << "Inactivos dia 15: " << ChoferesInactivosDia(matrizEnvios, 15, 0) << endl;
     return 0;
 }`;
 
