@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>SAO - Unidad 2: Tipos de Datos</title>
+
+    <link rel="stylesheet" href="../../dist/reset.css" />
+    <link rel="stylesheet" href="../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../dist/plugin/highlight/monokai.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --cyan-accent: #38bdf8;
+            --danger-red: #EF4444;
+            --success-green: #10B981;
+            --warning-amber: #F59E0B;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 22px; color: var(--text-main); line-height: 1.5; text-align: left; }
+        
+        .slide-title {
+            font-size: 46px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 35px !important; border-left: 12px solid var(--utn-gold);
+            padding-left: 24px; text-transform: uppercase !important; letter-spacing: -1.2px;
+            text-align: left; width: 100%;
+        }
+
+        .slide-subtitle {
+            color: var(--cyan-accent);
+            font-weight: 700;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; width: 100%; align-items: center; }
+
+        .branding-footer { position: absolute; bottom: 30px; left: 40px; color: #94A3B8; font-weight: 600; font-size: 14px; letter-spacing: 1px; z-index: 1000; }
+        .branding-footer span { color: var(--utn-gold); }
+
+        /* Hero */
+        .hero-title { font-size: 60px !important; color: var(--cyan-accent) !important; line-height: 1.1; margin-bottom: 20px !important; text-align: right; font-weight: 700 !important; }
+        .hero-container { display: flex; justify-content: space-between; align-items: center; width: 100%; height: 100%; padding: 40px; box-sizing: border-box; }
+        .hero-image { flex: 1; background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop'); background-size: cover; background-position: center; border-radius: 20px; height: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.15); min-height: 400px;}
+        .hero-text { flex: 1; padding-left: 60px; display: flex; flex-direction: column; justify-content: center; }
+        
+        .staff-list { text-align: left; margin-bottom: 18px; }
+        .staff-list h4 { font-size: 22px; color: #64748B; margin-bottom: 8px; font-weight: 600; text-decoration: underline; text-decoration-color: var(--utn-gold); text-underline-offset: 4px; }
+        .staff-list ul { list-style: none; padding-left: 0; margin-top: 0; }
+        .staff-list li { font-size: 19px; margin-bottom: 5px; padding-left: 20px; position: relative; font-weight: 500; }
+        .staff-list li::before { content: "•"; color: var(--utn-gold); font-weight: bold; position: absolute; left: 0; top: 0; }
+
+        /* Diagrama Flujo (Slide 2) */
+        .flow-container { display: flex; align-items: center; justify-content: center; gap: 30px; margin: 40px 0; }
+        .flow-arrow-shape {
+            padding: 30px 45px; border-radius: 12px; font-weight: 700; font-size: 26px; color: #1E293B;
+            position: relative; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+        }
+        .flow-entrada { background-color: #FCA5A5; }
+        .flow-algoritmo { background-color: #86EFAC; border-radius: 24px; min-width: 260px; height: 160px; font-size: 28px; }
+        .flow-salida { background-color: #FDE047; }
+        .flow-arrow-icon { font-size: 44px; color: #94A3B8; }
+
+        /* Variables y RAM (Slide 3) */
+        .code-anatomy-card {
+            background: #1E293B; border-radius: 18px; padding: 30px 40px; color: white;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12); margin-bottom: 30px;
+        }
+        .code-syntax-row {
+            display: flex; justify-content: center; gap: 40px; font-family: 'Fira Code', monospace; font-size: 42px; font-weight: 600;
+        }
+        .syntax-item { display: flex; flex-direction: column; align-items: center; position: relative; }
+        .syntax-label {
+            font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 500; color: #94A3B8; margin-top: 15px;
+            border-top: 2px dashed #475569; padding-top: 8px; width: 100%; text-align: center;
+        }
+        .syntax-type { color: #38BDF8; }
+        .syntax-name { color: #A7F3D0; }
+        .syntax-op { color: #FCD34D; }
+        .syntax-val { color: #F472B6; }
+
+        .ram-chip-box {
+            background: #F8FAFC; border: 3px solid #E2E8F0; border-radius: 20px; padding: 25px;
+            display: flex; flex-direction: column; align-items: center; gap: 15px; position: relative;
+        }
+        .ram-cell {
+            border: 4px solid #10B981; border-radius: 16px; background: #ECFDF5; padding: 25px 60px;
+            font-family: 'Fira Code', monospace; font-size: 48px; font-weight: 700; color: #065F46;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.15);
+        }
+
+        /* Mapa conceptual Tipos Java (Slide 4) */
+        .types-tree-container {
+            display: grid; grid-template-columns: 1fr 1.6fr; gap: 30px; width: 100%;
+        }
+        .types-card-primitives {
+            background: #FFFBEB; border: 2px solid #FDE68A; border-radius: 20px; padding: 25px;
+            display: flex; flex-direction: column; box-shadow: 0 8px 20px rgba(245, 158, 11, 0.06);
+        }
+        .types-card-objects {
+            background: #EFF6FF; border: 2px solid #BFDBFE; border-radius: 20px; padding: 25px;
+            display: flex; flex-direction: column; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.06);
+        }
+        .pill-cluster { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        .type-pill {
+            padding: 8px 16px; border-radius: 999px; font-family: 'Fira Code', monospace; font-size: 17px; font-weight: 600;
+        }
+        .pill-primitive { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+        .pill-wrapper { background: #1E3A8A; color: #DBEAFE; }
+        .pill-array { background: #047857; color: #D1FAE5; }
+        .pill-custom { background: #6B21A8; color: #F3E8FF; }
+        .pill-standard { background: #374151; color: #F9FAFB; }
+
+        /* Tabla de Tipos (Slide 5) */
+        .reveal table.data-types-table {
+            width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 14px;
+            overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.06); font-size: 18px; margin: 0 auto;
+        }
+        .reveal table.data-types-table th {
+            background: var(--utn-blue); color: white; padding: 14px 18px; font-size: 19px;
+            font-family: 'Poppins', sans-serif; font-weight: 600; text-align: left;
+        }
+        .reveal table.data-types-table td {
+            padding: 10px 18px; border-bottom: 1px solid #E2E8F0; color: var(--text-main); font-family: 'Inter', sans-serif;
+        }
+        .reveal table.data-types-table tr:nth-child(even) { background: #F8FAFC; }
+        .reveal table.data-types-table tr:hover { background: #F1F5F9; }
+        .type-code { font-family: 'Fira Code', monospace; font-weight: 600; color: #0284C7; }
+
+        /* Y2K Slide (Slide 6) */
+        .y2k-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
+        .vintage-newspaper {
+            background: #FDFBF7; border: 2px solid #27272A; padding: 25px; border-radius: 6px;
+            box-shadow: 8px 8px 0px #18181B; font-family: 'Times New Roman', serif; text-align: center;
+        }
+        .news-header { border-bottom: 2px solid #18181B; border-top: 2px solid #18181B; padding: 6px 0; margin-bottom: 12px; font-weight: bold; font-size: 18px; }
+        .news-headline { font-size: 32px; font-weight: 900; line-height: 1.1; margin: 10px 0; text-transform: uppercase; color: #000; }
+        .y2k-panic-box {
+            background: #18181B; color: white; border-radius: 16px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); text-align: left;
+        }
+        .y2k-key-cap {
+            background: linear-gradient(145deg, #F43F5E, #BE123C); color: white; width: 110px; height: 110px; border-radius: 16px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; font-size: 24px;
+            box-shadow: 0 10px 0 #881337, 0 15px 25px rgba(0,0,0,0.3); margin: 0 auto 20px auto;
+        }
+
+        /* Overflow / Underflow (Slides 7 y 8) */
+        .overflow-callout {
+            background: #EFF6FF; border-left: 8px solid var(--cyan-accent); padding: 20px 25px; border-radius: 12px;
+            margin-top: 25px; text-align: left;
+        }
+        .overflow-callout p { margin: 0; font-size: 20px; font-weight: 500; }
+        .down-arrow-hint {
+            display: inline-flex; align-items: center; gap: 10px; background: var(--utn-gold); color: var(--utn-blue);
+            padding: 8px 18px; border-radius: 999px; font-size: 16px; font-weight: 700; margin-top: 15px; cursor: pointer;
+        }
+
+        /* Compilador OneCompiler */
+        .compiler-window {
+            background: #1e1e1e; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left; height: 62vh; display: flex; flex-direction: column;
+        }
+        .compiler-window .header {
+            background: #252526; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #3c3c3c; line-height: 1;
+        }
+        .compiler-window .header span { color: #d4d4d4; font-family: 'Fira Code', monospace; font-size: 16px; }
+        .compiler-window .header button {
+            background: var(--utn-gold); border: none; padding: 7px 16px; border-radius: 6px; color: var(--utn-blue);
+            font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.2s;
+        }
+        .compiler-window .header button:hover { background: #E5A900; }
+        .compiler-window iframe { flex-grow: 1; width: 100%; border: none; }
+
+        /* Operadores Grid (Slide 9) */
+        .operators-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; width: 100%; margin-top: 20px; }
+        .operator-card {
+            background: var(--bg-neutral); border: 2px solid #E2E8F0; border-radius: 18px; padding: 25px;
+            text-align: left; display: flex; flex-direction: column; gap: 12px; transition: transform 0.2s;
+        }
+        .operator-card:hover { transform: translateY(-4px); border-color: var(--cyan-accent); }
+        .operator-card h3 { font-size: 22px; color: var(--utn-blue); font-weight: 700; border-bottom: 2px solid #E2E8F0; padding-bottom: 8px; }
+        .op-row { display: flex; align-items: center; justify-content: space-between; font-size: 18px; padding: 4px 0; }
+        .op-badge { font-family: 'Fira Code', monospace; font-weight: 700; background: white; padding: 3px 10px; border-radius: 6px; border: 1px solid #CBD5E1; color: #0284C7; }
+
+        /* Gatitos Cajas (Slide 10) */
+        .box-analogy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; width: 100%; }
+        .cardboard-grid-mockup {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; background: #D97706; padding: 18px;
+            border-radius: 18px; box-shadow: inset 0 4px 10px rgba(0,0,0,0.2), 0 15px 30px rgba(0,0,0,0.08);
+        }
+        .box-cell {
+            background: #FBBF24; height: 110px; border-radius: 12px; border: 3px dashed #B45309;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-family: 'Fira Code', monospace; font-size: 14px; font-weight: 700; color: #78350F; position: relative;
+        }
+        .box-cat-icon { font-size: 34px; color: #78350F; margin-bottom: 4px; }
+
+        /* Convenciones (Slide 11) */
+        .conventions-table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.06); font-size: 19px; }
+        .conventions-table th { background: var(--utn-blue); color: white; padding: 18px 24px; font-size: 21px; text-align: left; }
+        .conventions-table td { padding: 16px 24px; border-bottom: 1px solid #E2E8F0; }
+        .conventions-table tr:nth-child(even) { background: #F8FAFC; }
+
+        /* Estrategia de Trabajo 8 Pasos (Slide 13) */
+        .strategy-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; width: 100%; margin-top: 20px; }
+        .step-card {
+            background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 20px; text-align: left;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04); position: relative; border-top: 5px solid var(--utn-blue);
+            transition: all 0.2s;
+        }
+        .step-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.08); border-top-color: var(--utn-gold); }
+        .step-num {
+            font-size: 28px; font-weight: 800; color: var(--cyan-accent); font-family: 'Poppins', sans-serif;
+            line-height: 1; margin-bottom: 8px;
+        }
+        .step-card h4 { font-size: 19px; font-weight: 700; color: var(--utn-blue); margin-bottom: 6px; }
+        .step-card p { font-size: 15px; color: var(--text-light); line-height: 1.4; margin: 0; }
+
+        @media (max-aspect-ratio: 1/1) {
+            .hero-container { flex-direction: column; padding: 20px; }
+            .hero-image { height: 230px; min-height: 230px; width: 100%; margin-bottom: 20px; }
+            .hero-text { padding-left: 0; text-align: center; }
+            .hero-title { font-size: 38px !important; text-align: center; }
+            .staff-list h4 { text-align: center; }
+            .staff-list ul { display: inline-block; text-align: left; }
+            .two-column, .y2k-grid, .box-analogy-grid, .types-tree-container { grid-template-columns: 1fr; gap: 20px; }
+            .operators-grid { grid-template-columns: 1fr; }
+            .strategy-grid { grid-template-columns: 1fr 1fr; }
+            .slide-title { font-size: 32px !important; margin-bottom: 20px !important; }
+            .compiler-window { height: 50vh; }
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- 1. PORTADA -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title">SISTEMA DE<br>AUTOMATIZACIÓN<br>DE OFICINAS</h1>
+                        <p style="color: var(--cyan-accent); font-size: 26px; text-align: right; margin-bottom: 35px; font-weight: 600;">Unidad #2 - Tipos de Datos</p>
+                        
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Patricia Torresan</li>
+                                <li>Gastón Micheri</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Tomás Assenza</li>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. DIAGRAMA DE FLUJO: ENTRADA -> ALGORITMO -> SALIDA -->
+            <section>
+                <h2 class="slide-title">TIPOS DE DATOS: <span class="slide-subtitle">Flujo de Información</span></h2>
+                <div class="content-area">
+                    <p style="text-align: center; font-size: 24px; margin-bottom: 20px;">
+                        En todo sistema computacional, los datos ingresan, se procesan y se exteriorizan:
+                    </p>
+                    <div class="flow-container">
+                        <div class="flow-arrow-shape flow-entrada">
+                            <i class="fa-solid fa-arrow-right-to-bracket" style="margin-right: 12px;"></i> ENTRADA
+                        </div>
+                        <i class="fa-solid fa-arrow-right flow-arrow-icon"></i>
+                        <div class="flow-arrow-shape flow-algoritmo">
+                            <i class="fa-solid fa-gears" style="margin-right: 12px; color: #047857;"></i> ALGORITMO
+                        </div>
+                        <i class="fa-solid fa-arrow-right flow-arrow-icon"></i>
+                        <div class="flow-arrow-shape flow-salida">
+                            <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 12px;"></i> SALIDA
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; max-width: 1000px; margin: 20px auto 0 auto;">
+                        <div style="background: var(--bg-neutral); padding: 18px; border-radius: 12px; border-left: 4px solid #FCA5A5;">
+                            <strong style="color: #DC2626;">Datos de Entrada</strong>
+                            <p style="font-size: 17px; margin-top: 5px;">Capturados por teclado (`Scanner`), archivos o sensores.</p>
+                        </div>
+                        <div style="background: var(--bg-neutral); padding: 18px; border-radius: 12px; border-left: 4px solid #10B981;">
+                            <strong style="color: #047857;">Procesamiento</strong>
+                            <p style="font-size: 17px; margin-top: 5px;">Variables en memoria RAM transformadas por operaciones lógicas.</p>
+                        </div>
+                        <div style="background: var(--bg-neutral); padding: 18px; border-radius: 12px; border-left: 4px solid #FDE047;">
+                            <strong style="color: #B45309;">Resultados de Salida</strong>
+                            <p style="font-size: 17px; margin-top: 5px;">Información emitida por pantalla (`System.out`) o reportes.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. VARIABLES Y ESTRUCTURA EN MEMORIA RAM -->
+            <section>
+                <h2 class="slide-title">VARIABLES: <span class="slide-subtitle">Declaración y Memoria</span></h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <div class="code-anatomy-card">
+                                <div style="color: #94A3B8; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">ANATOMÍA DE UNA SENTENCIA:</div>
+                                <div class="code-syntax-row">
+                                    <div class="syntax-item">
+                                        <span class="syntax-type">int</span>
+                                        <span class="syntax-label">Tipo de Dato</span>
+                                    </div>
+                                    <div class="syntax-item">
+                                        <span class="syntax-name">age</span>
+                                        <span class="syntax-label">Identificador</span>
+                                    </div>
+                                    <div class="syntax-item">
+                                        <span class="syntax-op">=</span>
+                                        <span class="syntax-label">Asignación</span>
+                                    </div>
+                                    <div class="syntax-item">
+                                        <span class="syntax-val">20;</span>
+                                        <span class="syntax-label">Valor Literal</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul style="font-size: 20px;">
+                                <li><strong>Tipo (`int`)</strong>: Especifica el espacio en memoria (4 bytes) y las operaciones permitidas.</li>
+                                <li><strong>Nombre (`age`)</strong>: Etiqueta simbólica para referirse a dicha celda.</li>
+                                <li><strong>Valor (`20`)</strong>: El contenido almacenado en ese instante.</li>
+                            </ul>
+                        </div>
+                        <div class="ram-chip-box">
+                            <div style="font-weight: 700; color: #475569; font-size: 18px; letter-spacing: 2px;">
+                                <i class="fa-solid fa-microchip" style="color: #10B981;"></i> MEMORIA RAM
+                            </div>
+                            <div class="ram-cell">20</div>
+                            <div style="font-size: 17px; font-weight: 600; color: #047857;">Reserved Memory for Variable: <code>age</code></div>
+                            <div style="font-size: 14px; color: #94A3B8; font-family: 'Fira Code', monospace;">Dirección física: 0x7FFF5FBFF4AC (4 bytes reservados)</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. TIPOS DE DATOS EN JAVA (CLASIFICACIÓN) -->
+            <section>
+                <h2 class="slide-title">TIPOS DE DATOS: <span class="slide-subtitle">Clasificación en Java</span></h2>
+                <div class="content-area">
+                    <div class="types-tree-container">
+                        
+                        <!-- Columna Primitivos -->
+                        <div class="types-card-primitives">
+                            <h3 style="color: #B45309; font-size: 26px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-solid fa-cube"></i> Primitivos
+                            </h3>
+                            <p style="font-size: 17px; color: #78350F; margin: 10px 0;">Almacenan directamente el valor en memoria. No son objetos, no tienen métodos asociados.</p>
+                            <div class="pill-cluster">
+                                <span class="type-pill pill-primitive">byte</span>
+                                <span class="type-pill pill-primitive">short</span>
+                                <span class="type-pill pill-primitive">int</span>
+                                <span class="type-pill pill-primitive">long</span>
+                                <span class="type-pill pill-primitive">float</span>
+                                <span class="type-pill pill-primitive">double</span>
+                                <span class="type-pill pill-primitive">char</span>
+                                <span class="type-pill pill-primitive">boolean</span>
+                            </div>
+                        </div>
+
+                        <!-- Columna No Primitivos -->
+                        <div class="types-card-objects">
+                            <h3 style="color: #1E40AF; font-size: 26px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-solid fa-cubes"></i> No Primitivos (Objetos y Referencias)
+                            </h3>
+                            <p style="font-size: 17px; color: #1E3A8A; margin: 10px 0;">Guardan referencias a direcciones de memoria. Poseen métodos y requieren invocación o `new`.</p>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 5px;">
+                                <div>
+                                    <strong style="font-size: 16px; color: #1E3A8A;">Tipos Envoltorio (Wrappers):</strong>
+                                    <div class="pill-cluster" style="margin-top: 6px;">
+                                        <span class="type-pill pill-wrapper">Byte</span>
+                                        <span class="type-pill pill-wrapper">Short</span>
+                                        <span class="type-pill pill-wrapper">Integer</span>
+                                        <span class="type-pill pill-wrapper">Long</span>
+                                        <span class="type-pill pill-wrapper">Float</span>
+                                        <span class="type-pill pill-wrapper">Double</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong style="font-size: 16px; color: #065F46;">Colecciones y Biblioteca:</strong>
+                                    <div class="pill-cluster" style="margin-top: 6px;">
+                                        <span class="type-pill pill-array">Arrays []</span>
+                                        <span class="type-pill pill-standard">String</span>
+                                        <span class="type-pill pill-standard">ArrayList</span>
+                                        <span class="type-pill pill-standard">Scanner</span>
+                                    </div>
+                                    <strong style="font-size: 16px; color: #6B21A8; display: block; margin-top: 10px;">Definidos por Usuario:</strong>
+                                    <div class="pill-cluster" style="margin-top: 6px;">
+                                        <span class="type-pill pill-custom">Persona</span>
+                                        <span class="type-pill pill-custom">Animal</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. TABLA COMPARATIVA DE TIPOS -->
+            <section>
+                <h2 class="slide-title">TIPOS DE DATOS: <span class="slide-subtitle">Tabla Comparativa</span></h2>
+                <div class="content-area">
+                    <table class="data-types-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Ocupa</th>
+                                <th>Rango / Capacidad</th>
+                                <th>Wrapper</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="type-code">byte</td>
+                                <td>Entero</td>
+                                <td>1 byte</td>
+                                <td>-128 a 127</td>
+                                <td class="type-code">Byte</td>
+                            </tr>
+                            <tr>
+                                <td class="type-code">short</td>
+                                <td>Entero</td>
+                                <td>2 bytes</td>
+                                <td>-32,768 a 32,767</td>
+                                <td class="type-code">Short</td>
+                            </tr>
+                            <tr>
+                                <td class="type-code">int</td>
+                                <td>Entero</td>
+                                <td>4 bytes</td>
+                                <td>-2,147,483,648 a 2,147,483,647 (~2 · 10<sup>9</sup>)</td>
+                                <td class="type-code">Integer</td>
+                            </tr>
+                            <tr>
+                                <td class="type-code">long</td>
+                                <td>Entero</td>
+                                <td>8 bytes</td>
+                                <td>Muy grande (~9 · 10<sup>18</sup>) — sufijo <code>L</code></td>
+                                <td class="type-code">Long</td>
+                            </tr>
+                            <tr>
+                                <td class="type-code">float</td>
+                                <td>Decimal simple</td>
+                                <td>4 bytes</td>
+                                <td>~6-7 dígitos de precisión — sufijo <code>f</code></td>
+                                <td class="type-code">Float</td>
+                            </tr>
+                            <tr>
+                                <td class="type-code">double</td>
+                                <td>Decimal doble</td>
+                                <td>8 bytes</td>
+                                <td>~15 dígitos de precisión (estándar en Java)</td>
+                                <td class="type-code">Double</td>
+                            </tr>
+                            <tr>
+                                <td class="type-code">char</td>
+                                <td>Carácter</td>
+                                <td>2 bytes</td>
+                                <td>Un único carácter Unicode (0 a 65,535)</td>
+                                <td class="type-code">Character</td>
+                            </tr>
+                            <tr>
+                                <td class="type-code">boolean</td>
+                                <td>Valor lógico</td>
+                                <td>1 byte</td>
+                                <td><code>true</code> o <code>false</code></td>
+                                <td class="type-code">Boolean</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 6. ELECCIÓN ADECUADA: EFECTO Y2K -->
+            <section>
+                <h2 class="slide-title">ELECCIÓN ADECUADA: <span class="slide-subtitle">El Efecto Y2K</span></h2>
+                <div class="content-area">
+                    <div class="y2k-grid">
+                        <div class="vintage-newspaper">
+                            <div class="news-header">WEEKLY WORLD NEWS • SPECIAL REPORT</div>
+                            <div class="news-headline">JANUARY 1, 2000<br>THE DAY THE EARTH WILL STAND STILL!</div>
+                            <p style="font-size: 16px; color: #3F3F46; line-height: 1.3; margin: 10px 0;">
+                                "The computer crash of the millennium: banks, flights and satellites threatened by a 2-digit date representation."
+                            </p>
+                        </div>
+                        <div class="y2k-panic-box">
+                            <div class="y2k-key-cap">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>Y2K</span>
+                            </div>
+                            <h3 style="color: #F87171; font-size: 24px; margin-bottom: 12px; font-weight: 700;">¿Por qué ocurrió?</h3>
+                            <p style="font-size: 18px; color: #E4E4E7; margin-bottom: 12px;">
+                                Para economizar unos pocos bytes de memoria en los años 60 y 70, los años se almacenaban con <strong>2 dígitos</strong> (ej: <code>99</code> en vez de <code>1999</code>).
+                            </p>
+                            <p style="font-size: 18px; color: #E4E4E7;">
+                                Al pasar al 2000, los sistemas volvían al <code>00</code> (año 1900), provocando fallas masivas. Costó más de <strong>$300 mil millones de dólares</strong> corregirlo en todo el mundo.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. DESBORDAMIENTO [OVERFLOW] -->
+            <section>
+                <section>
+                    <h2 class="slide-title">DESBORDAMIENTO: <span class="slide-subtitle">[Overflow]</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 24px; margin-bottom: 20px;">
+                            Ocurre cuando el resultado de una operación aritmética <strong>excede el rango máximo</strong> que puede representar un tipo de dato.
+                        </p>
+                        <pre><code class="java" data-trim data-noescape data-line-numbers>
+// Rango de short (16 bits): -32,768 a 32,767
+short x = 32767;            // Valor máximo permitido
+short y = (short)(x + 1);    // ¡Se pasa de largo!
+
+System.out.println(y);      // Imprime: -32768 (¡desbordó!)
+                        </code></pre>
+                        <div class="overflow-callout">
+                            <p>
+                                💡 <strong>En palabras simples:</strong> Como la cantidad de bits es fija, el valor <em>"se da la vuelta"</em> (wrap-around) como el cuentakilómetros de un auto y reaparece en el extremo negativo mínimo.
+                            </p>
+                        </div>
+                        <div style="text-align: center;">
+                            <span class="down-arrow-hint" onclick="Reveal.down();">
+                                <i class="fa-solid fa-terminal"></i> Presioná Flecha Abajo (↓) para probar el código en vivo
+                            </span>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Vertical Compilador Overflow -->
+                <section id="slide-compiler-overflow">
+                    <h2 class="slide-title">PRUEBA EN VIVO: <span class="slide-subtitle">Desbordamiento (Overflow)</span></h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> Java Compiler - Overflow Demo</span>
+                            <button onclick="sendCode('oc-editor-overflow', codeOverflow, 'java', 'Main.java')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-overflow" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- 8. SUBDESBORDAMIENTO [UNDERFLOW] -->
+            <section>
+                <section>
+                    <h2 class="slide-title">SUBDESBORDAMIENTO: <span class="slide-subtitle">[Underflow]</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 24px; margin-bottom: 20px;">
+                            Ocurre cuando el resultado de una operación es <strong>menor que el valor mínimo</strong> representable por el tipo de dato.
+                        </p>
+                        <pre><code class="java" data-trim data-noescape data-line-numbers>
+// Rango de short (16 bits): -32,768 a 32,767
+short x = -32768;           // Valor mínimo permitido
+short y = (short)(x - 1);    // ¡Cae por debajo del límite!
+
+System.out.println(y);      // Imprime: 32767 (¡subdesbordó!)
+                        </code></pre>
+                        <div class="overflow-callout" style="border-left-color: #F59E0B;">
+                            <p>
+                                💡 <strong>Comportamiento simétrico:</strong> Al restar por debajo de la cota inferior, el valor "salta" hacia el límite superior positivo más alto.
+                            </p>
+                        </div>
+                        <div style="text-align: center;">
+                            <span class="down-arrow-hint" onclick="Reveal.down();">
+                                <i class="fa-solid fa-terminal"></i> Presioná Flecha Abajo (↓) para probar el código en vivo
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Vertical Compilador Underflow -->
+                <section id="slide-compiler-underflow">
+                    <h2 class="slide-title">PRUEBA EN VIVO: <span class="slide-subtitle">Subdesbordamiento (Underflow)</span></h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> Java Compiler - Underflow Demo</span>
+                            <button onclick="sendCode('oc-editor-underflow', codeUnderflow, 'java', 'Main.java')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-underflow" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- 9. OPERADORES ARITMÉTICOS EN JAVA -->
+            <section>
+                <h2 class="slide-title">OPERADORES ARITMÉTICOS: <span class="slide-subtitle">en Java</span></h2>
+                <div class="content-area">
+                    <div class="operators-grid">
+                        
+                        <!-- Básicas -->
+                        <div class="operator-card">
+                            <h3>Operadores Básicos</h3>
+                            <div class="op-row"><span class="op-badge">+</span> <span>Suma / Concatenación</span></div>
+                            <div class="op-row"><span class="op-badge">-</span> <span>Resta / Menos unario</span></div>
+                            <div class="op-row"><span class="op-badge">*</span> <span>Multiplicación</span></div>
+                            <div class="op-row"><span class="op-badge">/</span> <span>División</span></div>
+                            <div class="op-row"><span class="op-badge">%</span> <span>Módulo (resto)</span></div>
+                        </div>
+
+                        <!-- Abreviadas unarias -->
+                        <div class="operator-card">
+                            <h3>Abreviadas Unarias</h3>
+                            <div class="op-row"><span class="op-badge">++</span> <span>Incremento (+1)</span></div>
+                            <div class="op-row"><span class="op-badge">--</span> <span>Decremento (-1)</span></div>
+                            <div style="margin-top: 15px; font-size: 15px; color: var(--text-light); background: white; padding: 10px; border-radius: 8px;">
+                                <code>x++;</code> equivale a <code>x = x + 1;</code><br>
+                                Puede ser prefijo (<code>++x</code>) o sufijo (<code>x++</code>).
+                            </div>
+                        </div>
+
+                        <!-- Abreviadas binarias -->
+                        <div class="operator-card">
+                            <h3>Abreviadas Binarias</h3>
+                            <div class="op-row"><span class="op-badge">+=</span> <span>Suma y asignación</span></div>
+                            <div class="op-row"><span class="op-badge">-=</span> <span>Resta y asignación</span></div>
+                            <div class="op-row"><span class="op-badge">*=</span> <span>Multiplicación y asig.</span></div>
+                            <div class="op-row"><span class="op-badge">/=</span> <span>División y asig.</span></div>
+                            <div class="op-row"><span class="op-badge">%=</span> <span>Módulo y asig.</span></div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- 10. VARIABLES: LA ANALOGÍA DE LAS CAJAS -->
+            <section>
+                <h2 class="slide-title">VARIABLES: <span class="slide-subtitle">La Analogía de las Cajas</span></h2>
+                <div class="content-area">
+                    <div class="box-analogy-grid">
+                        <div class="cardboard-grid-mockup">
+                            <div class="box-cell">
+                                <i class="fa-solid fa-cat box-cat-icon"></i>
+                                <span>edad = 2</span>
+                            </div>
+                            <div class="box-cell">
+                                <i class="fa-solid fa-cat box-cat-icon" style="color: #9A3412;"></i>
+                                <span>peso = 4.5</span>
+                            </div>
+                            <div class="box-cell">
+                                <i class="fa-solid fa-cat box-cat-icon"></i>
+                                <span>esMacho = true</span>
+                            </div>
+                            <div class="box-cell">
+                                <i class="fa-solid fa-cat box-cat-icon" style="color: #7C2D12;"></i>
+                                <span>nombre = "Misi"</span>
+                            </div>
+                            <div class="box-cell" style="border-style: solid; background: #FDE68A;">
+                                <i class="fa-solid fa-box-open box-cat-icon" style="color: #92400E;"></i>
+                                <span>[Disponible]</span>
+                            </div>
+                            <div class="box-cell">
+                                <i class="fa-solid fa-cat box-cat-icon"></i>
+                                <span>vidas = 7</span>
+                            </div>
+                        </div>
+                        <div>
+                            <ul style="font-size: 21px; display: flex; flex-direction: column; gap: 15px;">
+                                <li>
+                                    <strong>La Caja:</strong> Representa una posición específica en la memoria RAM del ordenador.
+                                </li>
+                                <li>
+                                    <strong>La Etiqueta:</strong> Es el nombre (identificador) de la variable con el que nos referimos a ella en el código.
+                                </li>
+                                <li>
+                                    <strong>El Tamaño / Forma:</strong> Es el <em>Tipo de Dato</em> (determina si puede entrar un número chico, grande o texto).
+                                </li>
+                                <li>
+                                    <strong>El Contenido:</strong> Es el <em>Valor actual</em>. Puede cambiar cuantas veces sea necesario a lo largo del tiempo.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11. IDENTIFICADORES Y CONVENCIONES -->
+            <section>
+                <h2 class="slide-title">IDENTIFICADORES: <span class="slide-subtitle">Reglas y Convenciones</span></h2>
+                <div class="content-area">
+                    <table class="conventions-table">
+                        <thead>
+                            <tr>
+                                <th>Identificador</th>
+                                <th>Convención de Nomenclatura</th>
+                                <th>Ejemplos Válidos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Nombre de variable</strong></td>
+                                <td>Comienza con minúscula. Si tiene varias palabras, se usa <em>camelCase</em>.</td>
+                                <td><code class="type-code">numAlumnos</code>, <code class="type-code">sumaTotal</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Nombre de constante</strong></td>
+                                <td>Todo en MAYÚSCULAS separadas por guión bajo (<em>SCREAMING_SNAKE_CASE</em>).</td>
+                                <td><code class="type-code">TAM_MAX</code>, <code class="type-code">PI</code>, <code class="type-code">DIAS_SEMANA</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Nombre de una clase</strong></td>
+                                <td>Comienza con Mayúscula (<em>PascalCase</em>). Generalmente sustantivos.</td>
+                                <td><code class="type-code">String</code>, <code class="type-code">MiClase</code>, <code class="type-code">Scanner</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Nombre de función / método</strong></td>
+                                <td>Comienza con minúscula (<em>camelCase</em>). Generalmente verbos de acción.</td>
+                                <td><code class="type-code">modificaValor()</code>, <code class="type-code">obtieneResultado()</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 12. CONSTANTES EN JAVA -->
+            <section>
+                <section>
+                    <h2 class="slide-title">CONSTANTES: <span class="slide-subtitle">Palabra reservada final</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 22px; margin-bottom: 20px;">
+                            Una constante almacena un valor que <strong>no puede modificarse</strong> tras su inicialización. En Java se utiliza la palabra clave <code>final</code>:
+                        </p>
+                        <pre><code class="java" data-trim data-noescape data-line-numbers>
+// Enteros
+final byte   EDAD_MINIMA         = 18;
+final short  MAX_ALTURA          = 250;
+final int    DIAS_SEMANA         = 7;
+final long   DISTANCIA_TIERRA_SOL = 149_600_000L;
+
+// Punto flotante
+final float  IVA                 = 0.21f;
+final double PI                  = 3.1415926535;
+
+// Carácter
+final char   GRADO               = '°';
+                        </code></pre>
+                        <div class="overflow-callout" style="border-left-color: var(--utn-gold);">
+                            <p>
+                                🔒 <strong>Garantía de inmutabilidad:</strong> Si el programador intenta reasignar una constante (ej: <code>EDAD_MINIMA = 21;</code>), el compilador detendrá la ejecución informando un error.
+                            </p>
+                        </div>
+                        <div style="text-align: center;">
+                            <span class="down-arrow-hint" onclick="Reveal.down();">
+                                <i class="fa-solid fa-terminal"></i> Presioná Flecha Abajo (↓) para probar la inmutabilidad en el compilador
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Vertical Compilador Constantes -->
+                <section id="slide-compiler-constants">
+                    <h2 class="slide-title">PRUEBA EN VIVO: <span class="slide-subtitle">Inmutabilidad de Constantes</span></h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> Java Compiler - Constantes Demo</span>
+                            <button onclick="sendCode('oc-editor-constants', codeConstants, 'java', 'Main.java')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-constants" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- 13. ESTRATEGIA DE TRABAJO -->
+            <section>
+                <h2 class="slide-title">ESTRATEGIA: <span class="slide-subtitle">Metodología de Resolución</span></h2>
+                <div class="content-area">
+                    <div class="strategy-grid">
+                        <div class="step-card">
+                            <div class="step-num">01</div>
+                            <h4>Comprender</h4>
+                            <p>Leer minuciosamente el enunciado y entender el problema planteado.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">02</div>
+                            <h4>E / S</h4>
+                            <p>Identificar con precisión los datos de Entrada y los de Salida esperados.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">03</div>
+                            <h4>Algoritmo</h4>
+                            <p>Diseñar los pasos lógicos para transformar la entrada en la salida.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">04</div>
+                            <h4>Codificar</h4>
+                            <p>Escribir el código en el entorno de desarrollo (NetBeans / Java).</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">05</div>
+                            <h4>Probar</h4>
+                            <p>Testear con diversos casos de prueba y valores límite.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">06</div>
+                            <h4>Juez en Línea</h4>
+                            <p>Subir la solución a la plataforma de evaluación (OmegaUp).</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">07</div>
+                            <h4>Analizar</h4>
+                            <p>Interpretar el veredicto del juez (Accepted, WA, TLE, etc.).</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">08</div>
+                            <h4>Corregir</h4>
+                            <p>Depurar los errores encontrados y reiniciar el ciclo si es necesario.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 14. CIERRE INSTITUCIONAL -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title">SISTEMA DE<br>AUTOMATIZACIÓN<br>DE OFICINAS</h1>
+                        <p style="color: var(--cyan-accent); font-size: 26px; text-align: right; margin-bottom: 35px; font-weight: 600;">¿Preguntas o Consultas?</p>
+                        
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Patricia Torresan</li>
+                                <li>Gastón Micheri</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Tomás Assenza</li>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente -->
+    <div class="branding-footer">TUTI / UTN <span>SANTA FE</span></div>
+
+    <script src="../../dist/reveal.js"></script>
+    <script src="../../dist/plugin/notes.js"></script>
+    <script src="../../dist/plugin/highlight.js"></script>
+
+    <script>
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            controls: true,
+            progress: true,
+            center: true,
+            
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        // Adaptabilidad ante rotación de dispositivo
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({
+                width: newSize.width,
+                height: newSize.height
+            });
+        });
+
+        // -------------------------------------------------------------
+        // CÓDIGOS PARA COMPILADORES INTERACTIVOS ONECOMPILER
+        // -------------------------------------------------------------
+        const codeOverflow = `public class Main {
+    public static void main(String[] args) {
+        // Rango del tipo short (16 bits con signo): -32,768 a 32,767
+        short x = 32767; // valor máximo
+        System.out.println("1. Valor inicial de x: " + x);
+        
+        // Al sumar 1, excede el límite superior y se produce DESBORDAMIENTO (Overflow)
+        short y = (short)(x + 1);
+        System.out.println("2. Valor de y tras (x + 1): " + y);
+        
+        System.out.println("\\n-> ¿Por qué dio negativo? Porque los bits 'dieron la vuelta'");
+        System.out.println("   reapareciendo en el extremo opuesto del rango.");
+    }
+}`;
+
+        const codeUnderflow = `public class Main {
+    public static void main(String[] args) {
+        // Rango del tipo short: -32,768 a 32,767
+        short x = -32768; // valor mínimo
+        System.out.println("1. Valor inicial de x: " + x);
+        
+        // Al restar 1, cae por debajo del límite y se produce SUBDESBORDAMIENTO (Underflow)
+        short y = (short)(x - 1);
+        System.out.println("2. Valor de y tras (x - 1): " + y);
+        
+        System.out.println("\\n-> ¿Por qué dio positivo? De manera simétrica, al restar por debajo");
+        System.out.println("   del mínimo, el valor salta al límite superior positivo.");
+    }
+}`;
+
+        const codeConstants = `public class Main {
+    public static void main(String[] args) {
+        // Declaración de constantes con palabra clave final
+        final byte EDAD_MINIMA = 18;
+        final float IVA = 0.21f;
+        final double PI = 3.1415926535;
+        
+        System.out.println("EDAD_MINIMA : " + EDAD_MINIMA);
+        System.out.println("IVA         : " + IVA);
+        System.out.println("PI          : " + PI);
+        
+        // ¡Descomentá la siguiente línea para comprobar cómo el compilador
+        // rechaza modificar una variable constante!
+        // EDAD_MINIMA = 21;
+    }
+}`;
+
+        // Inyección de código con postMessage y reintentos robustos
+        function sendCode(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        // Detección de cambio de diapositiva para inyectar código
+        Reveal.on('slidechanged', event => {
+            const slideId = event.currentSlide.id;
+            if (slideId === 'slide-compiler-overflow') {
+                sendCodeWithRetries('oc-editor-overflow', codeOverflow, 'java', 'Main.java');
+            } else if (slideId === 'slide-compiler-underflow') {
+                sendCodeWithRetries('oc-editor-underflow', codeUnderflow, 'java', 'Main.java');
+            } else if (slideId === 'slide-compiler-constants') {
+                sendCodeWithRetries('oc-editor-constants', codeConstants, 'java', 'Main.java');
+            }
+        });
+
+        // Aplanado en dispositivos móviles (< 768px)
+        document.addEventListener("DOMContentLoaded", function() {
+            const isMobileOrTablet = window.innerWidth < 768;
+            if (isMobileOrTablet) {
+                document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+                
+                const slidesContainer = document.querySelector('.slides');
+                document.querySelectorAll('.slides > section > section').forEach(sec => {
+                    const parent = sec.parentNode;
+                    slidesContainer.insertBefore(sec, parent);
+                });
+                
+                document.querySelectorAll('.slides > section').forEach(sec => {
+                    if (sec.children.length === 0) {
+                        sec.remove();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

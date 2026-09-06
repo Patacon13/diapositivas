@@ -14,6 +14,7 @@ Esta skill define el estándar de diseño, estructura e interactividad para las 
 El proyecto organiza las diapositivas de la siguiente manera:
 - `/deploy/aedd/claseX/index.html` - Diapositivas de la materia AEDD (C++).
 - `/deploy/pba/nombre_clase/index.html` - Diapositivas de la materia PBA (Java).
+- `/deploy/sao/unidadX/index.html` - Diapositivas de la materia SAO (Sistema de Automatización de Oficinas - TUTI) en Java.
 - `/deploy/dist/`, `/deploy/plugin/` - Dependencias centrales de RevealJS.
 
 ---
@@ -35,6 +36,7 @@ Usa fuentes modernas de Google Fonts y respeta la paleta institucional UTN:
     --bg-neutral: #F8FAFC;    /* Fondo de contenedores y bloques */
     --text-main: #1E293B;     /* Texto principal legible */
     --text-light: #64748B;    /* Descripciones y subtítulos */
+    --cyan-accent: #38bdf8;   /* Azul cielo / cian para subtítulos y destacados de SAO */
 }
 ```
 
@@ -158,6 +160,22 @@ Al simplificar búsquedas secuenciales a tiempo constante $O(1)$ usando arreglos
 - **Formateo de Negrita en HTML:** En diapositivas RevealJS escritas en HTML plano (sin `data-markdown`), evitar el uso de notación Markdown como `**texto**` para negritas, ya que se renderizarán literalmente en pantalla. Utilizar siempre etiquetas HTML tradicionales como `<strong>texto</strong>` o `<b>texto</b>`.
 - **No usar operadores ternarios (AEDD):** En la materia AEDD no se enseña ni se permite el uso de operadores ternarios `? :`. Utilizar siempre estructuras `if-else` tradicionales para la asignación condicional de valores.
 - **No usar break en bucles:** Evitar el uso de `break` dentro de bucles `for`, `while` o `do-while` para controlar la salida anticipada. Se debe estructurar la salida mediante condiciones de bucle compuestas y banderas lógicas. La sentencia `break` solo se permite dentro del bloque `switch`.
+
+---
+
+## 6. Historial de Aprendizajes y Notas por Cátedra
+
+### Cátedra SAO (Sistema de Automatización de Oficinas - TUTI)
+- **Framework oficial**: Se mantiene la continuidad con **Reveal.js** compartiendo el motor central en `/deploy/dist/`, asegurando compatibilidad multiplataforma y consistencia visual con Unidad 0 y Unidad 1.
+- **Identidad SAO**: Subtítulos destacados con clase `.slide-subtitle` usando `--cyan-accent: #38bdf8;` y footer persistente `.branding-footer` (`TUTI / UTN <span>SANTA FE</span>`).
+- **Diagramación conceptual pura (sin imágenes rasterizadas borrosas)**:
+  - Estructura de declaración de variables (`int age = 20;`) con desgloses sintácticos etiquetados y representación estilizada de celdas en la memoria RAM.
+  - Analogía didáctica de "variables como cajas": diseñada con rejilla de compartimentos de cartón e íconos temáticos para ilustrar nombre, tipo y contenido mutable.
+  - Caso histórico Y2K: diseñado con maquetación de periódico vintage y botón de pánico tipográfico para motivar la importancia de la elección correcta de tipos de datos.
+- **Compiladores interactivos OneCompiler en Java**:
+  - Para conceptos donde ver el comportamiento en tiempo de ejecución es clave (ej: desbordamiento aritmético con `short x = 32767`, subdesbordamiento con `short x = -32768`, y la inmutabilidad de constantes declaradas con `final`), se proveen diapositivas secundarias verticales (`↓`).
+  - Cada compilador vertical cuenta con botón de restauración rápida ("Restaurar Código") y mecanismo de reintentos progresivos (`sendCodeWithRetries`).
+
 
 
 
