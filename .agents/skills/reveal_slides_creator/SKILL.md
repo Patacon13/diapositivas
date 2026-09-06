@@ -179,6 +179,10 @@ Al simplificar búsquedas secuenciales a tiempo constante $O(1)$ usando arreglos
   - El footer `.branding-footer` se posiciona de forma absoluta a `bottom: 30px`.
   - El contenido total de una diapositiva no debe exceder los ~520px de altura efectiva dentro del canvas base de 720px.
   - En diapositivas con bloques de código extensos, diagramas o botones de navegación vertical (`.down-arrow-hint` como *"Presioná Flecha Abajo..."*), se debe condensar el código (e.g. maquetación en dos columnas con comentarios alineados) y mantener paddings y márgenes reducidos (márgenes de título $\le 22$px, callouts compactos con padding de 10-12px) para asegurar que ningún elemento quede cortado o solape el footer institucional.
+- **Manejo Correcto de Orientación Vertical y Móviles (Sin Diapositivas en Blanco)**:
+  - **Orden de ejecución crítico**: El aplanamiento de diapositivas y la eliminación de iframes de compiladores (`[id^="slide-compiler-"]`) debe ejecutarse **ANTES** de invocar `Reveal.initialize()`. Si se ejecuta con retardo o dentro de `DOMContentLoaded`, Reveal.js ya habrá registrado la matriz 2D de diapositivas en memoria, provocando que al deslizar hacia abajo el usuario caiga en una diapositiva en blanco.
+  - **Ocultamiento de indicaciones en vertical**: En modo vertical/portrait (`@media (max-aspect-ratio: 1/1)` o móvil), los botones `.down-arrow-hint` deben ocultarse con `display: none !important;`, ya que en esta orientación no existen compiladores anidados.
+  - **Adaptación de flujos a columna**: Componentes horizontales como diagramas de flujo (`ENTRADA` $\rightarrow$ `ALGORITMO` $\rightarrow$ `SALIDA`) deben transformarse en columna (`flex-direction: column`), rotar sus flechas 90 grados (`transform: rotate(90deg)`) y reconfigurar grillas a 1 columna para aprovechar el formato vertical del teléfono sin comprimir el texto.
 
 
 

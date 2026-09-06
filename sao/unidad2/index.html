@@ -231,18 +231,89 @@
         .step-card h4 { font-size: 19px; font-weight: 700; color: var(--utn-blue); margin-bottom: 6px; }
         .step-card p { font-size: 15px; color: var(--text-light); line-height: 1.4; margin: 0; }
 
-        @media (max-aspect-ratio: 1/1) {
-            .hero-container { flex-direction: column; padding: 20px; }
-            .hero-image { height: 230px; min-height: 230px; width: 100%; margin-bottom: 20px; }
+        .flow-cards-grid {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; max-width: 960px; margin: 10px auto 0 auto;
+        }
+        .types-objects-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 5px;
+        }
+
+        @media (max-aspect-ratio: 1/1), (max-width: 768px) {
+            .down-arrow-hint { display: none !important; }
+            .hero-container { flex-direction: column; padding: 15px; }
+            .hero-image { height: 180px; min-height: 180px; width: 100%; margin-bottom: 12px; }
             .hero-text { padding-left: 0; text-align: center; }
-            .hero-title { font-size: 38px !important; text-align: center; }
-            .staff-list h4 { text-align: center; }
+            .hero-title { font-size: 32px !important; text-align: center; margin-bottom: 10px !important; }
+            .staff-list { margin-bottom: 10px; }
+            .staff-list h4 { text-align: center; font-size: 17px; margin-bottom: 4px; }
             .staff-list ul { display: inline-block; text-align: left; }
-            .two-column, .y2k-grid, .box-analogy-grid, .types-tree-container { grid-template-columns: 1fr; gap: 20px; }
-            .operators-grid { grid-template-columns: 1fr; }
-            .strategy-grid { grid-template-columns: 1fr 1fr; }
-            .slide-title { font-size: 32px !important; margin-bottom: 20px !important; }
-            .compiler-window { height: 50vh; }
+            .staff-list li { font-size: 15px; margin-bottom: 3px; }
+
+            .slide-title { font-size: 26px !important; margin-bottom: 14px !important; border-left-width: 6px !important; padding-left: 12px !important; }
+            .reveal p, .reveal li { font-size: 16px !important; }
+
+            /* Slide 2: Diagrama de flujo vertical en portrait */
+            .flow-container { flex-direction: column !important; gap: 8px !important; margin: 10px 0 !important; }
+            .flow-arrow-shape { width: 85% !important; max-width: 260px !important; padding: 10px 16px !important; font-size: 16px !important; }
+            .flow-algoritmo { min-width: auto !important; height: auto !important; padding: 10px 16px !important; font-size: 18px !important; }
+            .flow-arrow-icon { transform: rotate(90deg) !important; font-size: 18px !important; }
+            .flow-cards-grid { grid-template-columns: 1fr !important; gap: 8px !important; }
+
+            /* Slide 3: Sintaxis y RAM */
+            .two-column { grid-template-columns: 1fr !important; gap: 12px !important; }
+            .code-anatomy-card { padding: 12px 16px !important; margin-bottom: 12px !important; }
+            .code-syntax-row { font-size: 20px !important; gap: 12px !important; }
+            .syntax-label { font-size: 11px !important; margin-top: 4px !important; }
+            .ram-chip-box { padding: 10px !important; gap: 8px !important; }
+            .ram-cell { padding: 10px 25px !important; font-size: 26px !important; }
+
+            /* Slide 4: Tipos en Java */
+            .types-tree-container { grid-template-columns: 1fr !important; gap: 12px !important; }
+            .types-card-primitives, .types-card-objects { padding: 12px !important; border-radius: 12px !important; }
+            .types-card-primitives h3, .types-card-objects h3 { font-size: 18px !important; }
+            .types-objects-grid { grid-template-columns: 1fr !important; gap: 6px !important; }
+            .type-pill { padding: 3px 8px !important; font-size: 12px !important; }
+
+            /* Slide 5: Tabla comparativa */
+            .reveal table.data-types-table { font-size: 12px !important; }
+            .reveal table.data-types-table th { padding: 5px 6px !important; font-size: 12px !important; }
+            .reveal table.data-types-table td { padding: 4px 6px !important; }
+
+            /* Slide 6: Y2K */
+            .y2k-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+            .vintage-newspaper { padding: 10px !important; }
+            .news-headline { font-size: 18px !important; }
+            .y2k-panic-box { padding: 12px !important; }
+            .y2k-key-cap { width: 65px !important; height: 65px !important; font-size: 15px !important; margin-bottom: 6px !important; }
+
+            /* Slide 9: Operadores */
+            .operators-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+            .operator-card { padding: 10px 14px !important; gap: 6px !important; }
+            .operator-card h3 { font-size: 16px !important; padding-bottom: 4px !important; }
+            .op-row { font-size: 14px !important; }
+
+            /* Slide 10: Gatitos en cajas */
+            .box-analogy-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+            .cardboard-grid-mockup { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; padding: 8px !important; }
+            .box-cell { height: 65px !important; font-size: 10px !important; }
+            .box-cat-icon { font-size: 18px !important; }
+
+            /* Slide 11: Identificadores */
+            .conventions-table { font-size: 12px !important; }
+            .conventions-table th { padding: 6px 10px !important; font-size: 13px !important; }
+            .conventions-table td { padding: 6px 10px !important; }
+
+            /* Slide 12: Constantes */
+            .reveal pre { font-size: 13px !important; padding: 6px !important; width: 100% !important; box-sizing: border-box !important; }
+
+            /* Slide 13: Estrategia */
+            .strategy-grid { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
+            .step-card { padding: 8px 10px !important; }
+            .step-num { font-size: 16px !important; margin-bottom: 2px !important; }
+            .step-card h4 { font-size: 13px !important; margin-bottom: 2px !important; }
+            .step-card p { font-size: 11px !important; }
+
+            .branding-footer { bottom: 10px !important; left: 15px !important; font-size: 11px !important; }
         }
     </style>
 </head>
@@ -299,7 +370,7 @@
                             <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 12px;"></i> SALIDA
                         </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; max-width: 960px; margin: 10px auto 0 auto;">
+                    <div class="flow-cards-grid">
                         <div style="background: var(--bg-neutral); padding: 12px 16px; border-radius: 10px; border-left: 4px solid #FCA5A5;">
                             <strong style="color: #DC2626; font-size: 17px;">Datos de Entrada</strong>
                             <p style="font-size: 14px; margin-top: 3px; margin-bottom: 0;">Capturados por teclado (<code>Scanner</code>), archivos o sensores.</p>
@@ -392,7 +463,7 @@
                             </h3>
                             <p style="font-size: 17px; color: #1E3A8A; margin: 10px 0;">Guardan referencias a direcciones de memoria. Poseen métodos y requieren invocación o `new`.</p>
                             
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 5px;">
+                            <div class="types-objects-grid">
                                 <div>
                                     <strong style="font-size: 16px; color: #1E3A8A;">Tipos Envoltorio (Wrappers):</strong>
                                     <div class="pill-cluster" style="margin-top: 6px;">
@@ -880,6 +951,28 @@ final long  DISTANCIA_SOL = 149_600_000L;
             };
         }
 
+        // -------------------------------------------------------------
+        // APLANAMIENTO EN MÓVILES / ORIENTACIÓN VERTICAL (PORTRAIT)
+        // Se ejecuta ANTES de Reveal.initialize() para evitar diapositivas en blanco
+        // -------------------------------------------------------------
+        const isMobileOrVertical = window.innerWidth < 768 || window.innerHeight > window.innerWidth;
+        if (isMobileOrVertical) {
+            // Eliminar diapositivas secundarias de compiladores en modo móvil/vertical
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+
+            // Aplanar secciones para que RevealJS construya una navegación lineal 100% horizontal
+            const slidesContainer = document.querySelector('.slides');
+            document.querySelectorAll('.slides > section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                slidesContainer.insertBefore(sec, parent);
+            });
+            document.querySelectorAll('.slides > section').forEach(sec => {
+                if (sec.children.length === 0) {
+                    sec.remove();
+                }
+            });
+        }
+
         let initialSize = getCanvasSize();
 
         Reveal.initialize({
@@ -909,7 +1002,7 @@ final long  DISTANCIA_SOL = 149_600_000L;
         });
 
         // -------------------------------------------------------------
-        // CÓDIGOS PARA COMPILADORES INTERACTIVOS ONECOMPILER
+        // CÓDIGOS PARA COMPILADORES INTERACTIVOS ONECOMPILER (MODO HORIZONTAL)
         // -------------------------------------------------------------
         const codeOverflow = `public class Main {
     public static void main(String[] args) {
@@ -982,33 +1075,13 @@ final long  DISTANCIA_SOL = 149_600_000L;
 
         // Detección de cambio de diapositiva para inyectar código
         Reveal.on('slidechanged', event => {
-            const slideId = event.currentSlide.id;
+            const slideId = event.currentSlide ? event.currentSlide.id : '';
             if (slideId === 'slide-compiler-overflow') {
                 sendCodeWithRetries('oc-editor-overflow', codeOverflow, 'java', 'Main.java');
             } else if (slideId === 'slide-compiler-underflow') {
                 sendCodeWithRetries('oc-editor-underflow', codeUnderflow, 'java', 'Main.java');
             } else if (slideId === 'slide-compiler-constants') {
                 sendCodeWithRetries('oc-editor-constants', codeConstants, 'java', 'Main.java');
-            }
-        });
-
-        // Aplanado en dispositivos móviles (< 768px)
-        document.addEventListener("DOMContentLoaded", function() {
-            const isMobileOrTablet = window.innerWidth < 768;
-            if (isMobileOrTablet) {
-                document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
-                
-                const slidesContainer = document.querySelector('.slides');
-                document.querySelectorAll('.slides > section > section').forEach(sec => {
-                    const parent = sec.parentNode;
-                    slidesContainer.insertBefore(sec, parent);
-                });
-                
-                document.querySelectorAll('.slides > section').forEach(sec => {
-                    if (sec.children.length === 0) {
-                        sec.remove();
-                    }
-                });
             }
         });
     </script>
