@@ -125,28 +125,81 @@
 
 /* Bloques de Código */
 .reveal pre {
-    background: #1A1A1B;
-    color: #D4D4D4;
-    padding: 20px;
+    background: #272822;
+    color: #f8f8f2;
+    padding: 16px 20px;
     border-radius: 14px;
     font-family: 'Fira Code', monospace;
-    font-size: 18px;
+    font-size: 19px;
     margin: 0;
     border-left: 6px solid var(--utn-gold);
     box-shadow: 0 15px 40px rgba(0,0,0,0.25);
     width: 100%;
+    box-sizing: border-box;
     font-variant-ligatures: none;
     font-feature-settings: "liga" 0, "calt" 0;
 }
 
-.reveal code {
+.reveal pre code {
     font-family: 'Fira Code', monospace;
     font-variant-ligatures: none;
     font-feature-settings: "liga" 0, "calt" 0;
+    background: transparent;
+    padding: 0;
+    line-height: 1.4;
 }
 
-/* Tablas Base */
-.reveal table {
+/* Números de Línea en Código (.hljs-ln) - Reset estricto para evitar colisión con tablas */
+.reveal pre table.hljs-ln,
+.reveal table.hljs-ln {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border: none !important;
+    margin: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.reveal table.hljs-ln tr,
+.reveal table.hljs-ln tr:nth-child(even),
+.reveal table.hljs-ln tr:nth-child(odd) {
+    background: transparent !important;
+    border: none !important;
+}
+
+.reveal table.hljs-ln tr.highlight-line {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.reveal table.hljs-ln td {
+    padding: 2px 0 !important;
+    border: none !important;
+    color: inherit !important;
+    font-family: 'Fira Code', monospace !important;
+    font-size: inherit !important;
+    line-height: 1.4 !important;
+}
+
+.reveal table.hljs-ln td.hljs-ln-numbers {
+    width: 36px !important;
+    min-width: 36px !important;
+    max-width: 44px !important;
+    text-align: right !important;
+    padding-right: 14px !important;
+    color: #75715e !important;
+    user-select: none !important;
+    border-right: 1px solid #49483e !important;
+    vertical-align: top !important;
+}
+
+.reveal table.hljs-ln td.hljs-ln-code {
+    padding-left: 14px !important;
+    color: #f8f8f2 !important;
+    vertical-align: top !important;
+}
+
+/* Tablas Base de Contenido (excluyendo tablas de números de línea de código) */
+.reveal table:not(.hljs-ln) {
     width: 100%;
     border-collapse: collapse;
     overflow: hidden;
@@ -155,7 +208,7 @@
     margin: 0;
 }
 
-.reveal th {
+.reveal table:not(.hljs-ln) th {
     background: var(--utn-blue);
     color: white;
     padding: 16px 20px;
@@ -164,13 +217,13 @@
     font-family: 'Poppins', sans-serif;
 }
 
-.reveal td {
+.reveal table:not(.hljs-ln) td {
     padding: 14px 20px;
     border-bottom: 1px solid #E2E8F0;
     color: var(--text-main);
 }
 
-.reveal tr:nth-child(even) {
+.reveal table:not(.hljs-ln) tr:nth-child(even) {
     background: var(--bg-neutral);
 }
 
