@@ -10,30 +10,33 @@ Esta skill define la arquitectura técnica, estándares de diseño, responsivida
 > [!NOTE]
 > Para las restricciones académicas específicas de cada materia (lenguaje, restricciones de código C++/Java, nómina de profesores y tutores), consultar los archivos de reglas de cátedra en cada subdirectorio:
 > - Reglas globales: `deploy/AGENTS.md`
-> - Cátedra AEDD (C++): `deploy/aedd/AGENTS.md`
-> - Cátedra SAO (Java): `deploy/sao/AGENTS.md`
-> - Cátedra PBA (Java): `deploy/pba/AGENTS.md`
+> - Cátedra AEDD (C++ / ISI): `deploy/aedd/AGENTS.md` $\rightarrow$ Tema: `aedd.css` | Plantilla: `template-aedd.html`
+> - Cátedra SAO (Java / TUTI): `deploy/sao/AGENTS.md` $\rightarrow$ Tema: `tuti.css` | Plantilla: `template-tuti.html`
+> - Cátedra PBA (Java / TUTI): `deploy/pba/AGENTS.md` $\rightarrow$ Tema: `tuti.css` | Plantilla: `template-tuti.html`
 
 ---
 
-## 1. Stack Técnico
+## 1. Stack Técnico y Arquitectura de Temas
 
 - **Motor**: [Reveal.js](https://revealjs.com/) (distribuido localmente en `deploy/dist/`).
-- **Tema común**: `deploy/dist/theme/utn-frsf.css` (estilos institucionales, componentes y media queries).
-- **Plugins Reveal.js requeridos**:
-  - `RevealHighlight` (resaltado de sintaxis con tema monokai en `deploy/plugin/highlight/`).
-  - `RevealNotes` (notas para el presentador).
-- **Tipografías (Google Fonts)**:
-  - Títulos: `'Poppins', sans-serif` (pesos 600, 700).
-  - Texto / Listados: `'Inter', sans-serif` (pesos 400, 500, 600).
-  - Código fuente: `'Fira Code', 'Ubuntu Mono', monospace`.
-- **Iconografía**: FontAwesome 6.5.1 (`https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css`).
+- **Sistema de Temas CSS en Capas**:
+  - `dist/theme/utn-core.css`: Variables maestras UTN (`#002B5B`, `#FFC107`), tipografías, footer institucional, contenedores base, `.compiler-window` universal y reglas responsive.
+  - `dist/theme/tuti.css`: Tema para la carrera **TUTI** (SAO, PBA). Agrega `--cyan-accent: #38bdf8`, layout Split Hero con fotos y listas de docentes/tutores.
+  - `dist/theme/aedd.css`: Tema para la carrera **ISI** (AEDD). Agrega portadas oscuras con gradientes, badges de incisos (`.inciso-badge`, `.points-badge`), puestas en común y diagramas de memoria.
+- **Plantillas listas para usar**:
+  - `deploy/templates/template-tuti.html`: Boilerplate para unidades de SAO o PBA.
+  - `deploy/templates/template-aedd.html`: Boilerplate para clases de AEDD.
+- **Plugins Reveal.js**:
+  - `RevealHighlight` (resaltado sintáctico con tema monokai en `deploy/plugin/highlight/`).
+  - `RevealNotes` (notas de presentador).
+- **Tipografías**: `'Poppins'` (títulos), `'Inter'` (cuerpo), `'Fira Code'` (código).
+- **Iconografía**: FontAwesome 6.5.1.
 
 ---
 
 ## 2. Sistema de Diseño Visual y Maquetación
 
-### Variables Institucionales (definidas en `utn-frsf.css`)
+### Variables Institucionales (definidas en `utn-core.css`)
 ```css
 :root {
     --utn-blue: #002B5B;      /* Azul institucional UTN */
@@ -41,21 +44,16 @@ Esta skill define la arquitectura técnica, estándares de diseño, responsivida
     --bg-neutral: #F8FAFC;    /* Fondo suave de contenedores */
     --text-main: #1E293B;     /* Slate oscuro de alta legibilidad */
     --text-light: #64748B;    /* Descripciones y subtítulos */
-    --cyan-accent: #38bdf8;   /* Azul cielo / cian para subtítulos */
     --danger-red: #EF4444;    /* Advertencias y overflow */
     --success-green: #10B981; /* Salidas válidas */
 }
 ```
 
-### Componentes de UI Reutilizables
+### Reglas de Maquetación Clave
 1. **Título (`.slide-title`)**: Poppins mayúsculas, borde izquierdo dorado de `10-12px`.
-2. **Subtítulo (`.slide-subtitle`)**: Color `--cyan-accent`.
-3. **Footer Institucional (`.branding-footer`)**: Posición fija absoluta a `bottom: 30px`.
+2. **Footer Institucional (`.branding-footer`)**: Posición fija a `bottom: 30px`.
    - **Regla de altura**: El contenido total de una diapositiva no debe superar los **~520px** de altura efectiva dentro del canvas base de 720px para evitar colisiones con el footer.
-4. **Portada / Hero Split (`.hero-container`)**:
-   - Izquierda: Imagen de alta calidad (`.hero-image`) con border-radius 20px.
-   - Derecha: Título (`.hero-title`), materia, unidad y nómina docente (`.staff-list`).
-5. **Cero Capturas Rasterizadas para Código**: Diagramas de memoria, celdas RAM o arreglos se maquetan en **HTML y CSS puro** (`.array-diagram`, `.ram-cell`, etc.).
+3. **Cero Capturas Rasterizadas para Código**: Diagramas de memoria, celdas RAM o arreglos se maquetan en **HTML y CSS puro** (`.array-diagram`, `.ram-cell`, etc.).
 
 ---
 

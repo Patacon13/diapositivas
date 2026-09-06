@@ -2,9 +2,15 @@
 
 Este archivo define las directrices arquitectónicas, de maquetación y de control de versiones para todas las diapositivas del repositorio (`aedd`, `sao`, `pba`).
 
-## 1. Motor y Presentaciones
+## 1. Motor y Arquitectura de Temas
 - **Framework oficial**: Reveal.js (alojado en `deploy/dist/` y `deploy/plugin/`).
-- **Tema común**: Importar `<link rel="stylesheet" href="../../dist/theme/utn-frsf.css" />` en todas las nuevas presentaciones para compartir variables, tipografías y componentes base.
+- **Sistema de Temas CSS en Capas**:
+  - `dist/theme/utn-core.css`: Base institucional compartida (colores `#002B5B`, `#FFC107`, fuentes Poppins/Inter/Fira Code, footer, OneCompiler).
+  - `dist/theme/tuti.css`: Tema oficial para la carrera **TUTI** (cátedras **SAO** y **PBA**). Incluye portada Split Hero, acento cian (`--cyan-accent: #38bdf8`), nómina de profesores y tutores.
+  - `dist/theme/aedd.css`: Tema oficial para la carrera **ISI** (cátedra **AEDD**). Incluye portadas oscuras con gradientes, badges de incisos (`.inciso-badge`, `.points-badge`), puestas en común y diagramas de memoria.
+- **Plantillas base listas para duplicar**:
+  - `deploy/templates/template-tuti.html` $\rightarrow$ Para nuevas clases de SAO o PBA.
+  - `deploy/templates/template-aedd.html` $\rightarrow$ Para nuevas clases de AEDD.
 - **Evitar solapamiento con el Footer**:
   - El footer institucional `.branding-footer` (`TUTI / UTN SANTA FE` o `AEDD / UTN SANTA FE`) se fija a `bottom: 30px`.
   - La altura útil del contenido de cualquier diapositiva no debe superar los **~520px** dentro del canvas estándar (720px) para evitar colisiones visuales.
@@ -25,5 +31,5 @@ Para mantener un historial limpio en el monorepo, los commits deben seguir el fo
 - `feat(pba):` Nueva clase o diapositiva de PBA.
 - `fix(responsive):` Correcciones de visualización en dispositivos móviles o vertical.
 - `fix(sao):`, `fix(aedd):` Correcciones de contenido específico.
-- `style(theme):` Mejoras en estilos compartidos (`utn-frsf.css`).
+- `style(theme):` Mejoras en temas (`utn-core.css`, `tuti.css`, `aedd.css`).
 - `docs(agents):` Actualizaciones en reglas, skills o plantillas.

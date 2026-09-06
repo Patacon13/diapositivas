@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AEDD - Clase X: Título del Tema - UTN FRSF</title>
+
+    <!-- Estilos Base Reveal.js -->
+    <link rel="stylesheet" href="../../dist/reset.css" />
+    <link rel="stylesheet" href="../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../dist/plugin/highlight/monokai.css" />
+
+    <!-- Tema AEDD (Extiende utn-core.css) -->
+    <link rel="stylesheet" href="../../dist/theme/aedd.css" />
+
+    <!-- Tipografías Oficiales & Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Agregá aquí solo estilos específicos y únicos para este ejercicio o clase */
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SLIDE 1: PORTADA INSTITUCIONAL AEDD (Oscura con Gradiente) -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <h1 style="color: white; font-size: 72px; line-height: 1.0; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 54px;">Clase X: Título del Tema</span></h1>
+                <p style="color: rgba(255,255,255,0.7); margin-top: 40px; text-align: center; font-size: 22px;">Docentes de práctica: Tomás Assenza, Facundo Sanchez</p>
+                <p style="color: rgba(255,255,255,0.35); margin-top: 10px; text-align: center; font-size: 16px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe (ISI)</p>
+            </section>
+
+            <!-- SLIDE 2: ENUNCIADO DE EJERCICIO / INCISO -->
+            <section data-background-color="#F8FAFC">
+                <div class="inciso-header">
+                    <span class="inciso-badge">a</span>
+                    <h2 class="slide-title" style="margin-bottom: 0 !important;">Enunciado del Ejercicio</h2>
+                    <span class="points-badge">10 pts</span>
+                </div>
+                <div class="texto-enunciado">
+                    <p>Describa el enunciado del problema a resolver por los estudiantes, indicando precondiciones, entradas requeridas y salidas esperadas.</p>
+                </div>
+                <div class="puesta-en-comun">
+                    <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución y análisis <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                </div>
+                <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+            </section>
+
+            <!-- SLIDE 3: SOLUCIÓN EN C++ + COMPILADOR INTERACTIVO VERTICAL -->
+            <section>
+                <!-- 3.A Diapositiva Horizontal: Solución C++ -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">a</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Implementación C++</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-12">
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    cout << "Valor ingresado: " << n << endl;
+    return 0;
+}
+                        </code></pre>
+                        <p class="instruccion">Presioná Flecha Abajo para probar en el compilador interactivo</p>
+                    </div>
+                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+                </section>
+
+                <!-- 3.B Diapositiva Vertical: Compilador OneCompiler C++ -->
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title" style="font-size: 28px !important; margin-bottom: 10px !important;">Compilador Online (C++)</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler - C++ Sandbox</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-1', sampleCppCode, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+                </section>
+            </section>
+
+            <!-- SLIDE 4: DIAGRAMA DE MEMORIA (Puro HTML/CSS) -->
+            <section>
+                <h2 class="slide-title">Estado de la Memoria</h2>
+                <div class="content-area">
+                    <p style="text-align: center; margin-bottom: 30px;">Representación esquemática del vector en memoria RAM:</p>
+                    <div class="array-diagram">
+                        <div class="array-cell filled">14<div class="array-index">0</div></div>
+                        <div class="array-cell filled">28<div class="array-index">1</div></div>
+                        <div class="array-cell highlight">42<div class="array-index">2</div></div>
+                        <div class="array-cell">0<div class="array-index">3</div></div>
+                        <div class="array-cell">0<div class="array-index">4</div></div>
+                    </div>
+                </div>
+                <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+            </section>
+
+            <!-- SLIDE 5: CIERRE INSTITUCIONAL -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2>¿DUDAS O CONSULTAS?</h2>
+                    <p>Espacio para puesta en común y preguntas</p>
+                </div>
+                <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Scripts de Reveal.js y Plugins -->
+    <script src="../../dist/reveal.js"></script>
+    <script src="../../dist/plugin/highlight/highlight.js"></script>
+    <script src="../../dist/plugin/notes/notes.js"></script>
+
+    <script>
+        const sampleCppCode = `#include <iostream>
+using namespace std;
+
+int main() {
+    int n = 42;
+    cout << "AEDD UTN Santa Fe: " << n << endl;
+    return 0;
+}`;
+
+        // =========================================================================
+        // REGLA CRÍTICA DE ORDEN DE EJECUCIÓN (Anti-Blank-Slide en Móviles/Vertical)
+        // =========================================================================
+        const isMobilePortrait = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
+        if (isMobilePortrait) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        // =========================================================================
+        // Canvas Adaptativo
+        // =========================================================================
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({ width: newSize.width, height: newSize.height });
+        });
+
+        // =========================================================================
+        // Protocolo de Inyección OneCompiler C++
+        // =========================================================================
+        function sendCode(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        Reveal.on('slidechanged', event => {
+            if (event.currentSlide && event.currentSlide.id === 'slide-compiler-1') {
+                sendCodeWithRetries('oc-editor-1', sampleCppCode, 'cpp', 'main.cpp');
+            }
+        });
+    </script>
+</body>
+</html>
