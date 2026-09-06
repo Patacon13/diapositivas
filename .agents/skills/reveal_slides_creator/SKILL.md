@@ -172,9 +172,13 @@ Al simplificar búsquedas secuenciales a tiempo constante $O(1)$ usando arreglos
   - Estructura de declaración de variables (`int age = 20;`) con desgloses sintácticos etiquetados y representación estilizada de celdas en la memoria RAM.
   - Analogía didáctica de "variables como cajas": diseñada con rejilla de compartimentos de cartón e íconos temáticos para ilustrar nombre, tipo y contenido mutable.
   - Caso histórico Y2K: diseñado con maquetación de periódico vintage y botón de pánico tipográfico para motivar la importancia de la elección correcta de tipos de datos.
-- **Compiladores interactivos OneCompiler en Java**:
-  - Para conceptos donde ver el comportamiento en tiempo de ejecución es clave (ej: desbordamiento aritmético con `short x = 32767`, subdesbordamiento con `short x = -32768`, y la inmutabilidad de constantes declaradas con `final`), se proveen diapositivas secundarias verticales (`↓`).
-  - Cada compilador vertical cuenta con botón de restauración rápida ("Restaurar Código") y mecanismo de reintentos progresivos (`sendCodeWithRetries`).
+- **Nómina Oficial de Docentes y Tutores (SAO)**:
+  - **Profesores**: Gastón Micheri, Tomás Assenza
+  - **Tutores**: Agustín Ramello, Micaela Assenza, Lijandy Jimenez Armas, Macarena Moya
+- **Prevención de colisiones con el Footer y límites verticales de RevealJS**:
+  - El footer `.branding-footer` se posiciona de forma absoluta a `bottom: 30px`.
+  - El contenido total de una diapositiva no debe exceder los ~520px de altura efectiva dentro del canvas base de 720px.
+  - En diapositivas con bloques de código extensos, diagramas o botones de navegación vertical (`.down-arrow-hint` como *"Presioná Flecha Abajo..."*), se debe condensar el código (e.g. maquetación en dos columnas con comentarios alineados) y mantener paddings y márgenes reducidos (márgenes de título $\le 22$px, callouts compactos con padding de 10-12px) para asegurar que ningún elemento quede cortado o solape el footer institucional.
 
 
 
