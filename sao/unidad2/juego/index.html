@@ -546,8 +546,15 @@
             to { opacity: 1; transform: scale(1); }
         }
 
+        /* Ocultar pistas de teclado en cualquier dispositivo táctil */
+        @media (pointer: coarse) {
+            .key-hint {
+                display: none !important;
+            }
+        }
+
         /* Responsive Móviles / Pantallas Pequeñas */
-        @media (max-width: 650px) {
+        @media (max-width: 768px) {
             body {
                 padding: 8px 6px;
                 justify-content: flex-start;
@@ -722,7 +729,7 @@
 
             /* Ocultar pistas de teclado en móviles táctiles */
             .key-hint {
-                display: none;
+                display: none !important;
             }
 
             /* Modales */
@@ -870,7 +877,7 @@
                 <p class="verdict-desc" id="verdict-text">Explicación del error o regla de Java.</p>
                 <button class="btn-next" id="btn-next" onclick="nextCase()">
                     <span>Siguiente Expediente</span> <i class="fa-solid fa-arrow-right"></i>
-                    <span style="font-size: 11px; opacity: 0.8; margin-left: 4px;">[Enter / Espacio]</span>
+                    <span class="key-hint" style="font-size: 11px; opacity: 0.8; margin-left: 4px;">[Enter / Espacio]</span>
                 </button>
             </div>
         </div>
