@@ -1676,47 +1676,158 @@
                     <circle cx="72" cy="46" r="6" fill="#00FF66" opacity="0.8" />
                 </svg>`;
             } else if (id === 'coronel') {
-                // Coronel / Profesor (Tomás): Traje formal, gafas oscuras cuadradas, corbata dorada
+                // Coronel / Profesor (Tomás): Traje formal negro a medida, camisa blanca cuello abierto (sin corbata ni lentes), pin celeste y blanco
                 return `<svg viewBox="0 0 100 100">
-                    <rect width="100" height="100" fill="#001B3A" />
-                    <rect x="28" y="22" width="44" height="48" fill="#F0D5BA" />
-                    <rect x="26" y="14" width="48" height="16" fill="#374151" />
-                    <rect x="32" y="34" width="14" height="8" fill="none" stroke="#002B5B" stroke-width="2.5" />
-                    <rect x="54" y="34" width="14" height="8" fill="none" stroke="#002B5B" stroke-width="2.5" />
-                    <line x1="46" y1="38" x2="54" y2="38" stroke="#002B5B" stroke-width="2" />
-                    <rect x="36" y="36" width="6" height="4" fill="#263238" />
-                    <rect x="58" y="36" width="6" height="4" fill="#263238" />
-                    <rect x="20" y="70" width="60" height="30" fill="#0F172A" />
-                    <polygon points="46,70 54,70 50,88" fill="#F59E0B" />
+                    <rect width="100" height="100" fill="#061A2B" />
+                    <circle cx="50" cy="50" r="46" fill="#08233A" />
+                    <!-- Cuello y pecho -->
+                    <rect x="42" y="58" width="16" height="16" fill="#ECCBB0" />
+                    <polygon points="42,66 50,76 58,66" fill="#E2BA9B" />
+                    <!-- Camisa blanca cuello abierto (sin corbata) -->
+                    <polygon points="36,66 50,82 64,66 60,62 50,74 40,62" fill="#FFFFFF" />
+                    <polygon points="34,62 44,76 41,78 31,64" fill="#E2E8F0" />
+                    <polygon points="66,62 56,76 59,78 69,64" fill="#E2E8F0" />
+                    <!-- Traje negro a medida -->
+                    <path d="M 16 100 L 16 78 Q 28 68 36 66 L 50 84 L 64 66 Q 72 68 84 78 L 84 100 Z" fill="#0F172A" />
+                    <!-- Solapas del saco -->
+                    <polygon points="26,72 38,66 46,84 32,90" fill="#1E293B" />
+                    <polygon points="74,72 62,66 54,84 68,90" fill="#1E293B" />
+                    <!-- Pin de solapa (Celeste y Blanco / Escudo) -->
+                    <circle cx="31" cy="74" r="2.5" fill="#38BDF8" />
+                    <circle cx="31" cy="74" r="1.5" fill="#FFFFFF" />
+                    <circle cx="31" cy="74" r="0.6" fill="#F59E0B" />
+                    <!-- Cabeza y rostro (afeitado, cálido) -->
+                    <rect x="30" y="24" width="40" height="42" rx="14" fill="#ECCBB0" />
+                    <!-- Orejas -->
+                    <circle cx="29" cy="45" r="4.5" fill="#E2BA9B" />
+                    <circle cx="71" cy="45" r="4.5" fill="#E2BA9B" />
+                    <!-- Ojos expresivos y cejas oscuras -->
+                    <rect x="33" y="36" width="10" height="2.5" rx="1" fill="#1E1E24" />
+                    <rect x="57" y="36" width="10" height="2.5" rx="1" fill="#1E1E24" />
+                    <ellipse cx="38" cy="43" rx="4" ry="3.5" fill="#FFFFFF" />
+                    <circle cx="38.5" cy="43" r="2.5" fill="#18181B" />
+                    <circle cx="37.5" cy="42" r="0.9" fill="#FFFFFF" />
+                    <ellipse cx="62" cy="43" rx="4" ry="3.5" fill="#FFFFFF" />
+                    <circle cx="61.5" cy="43" r="2.5" fill="#18181B" />
+                    <circle cx="60.5" cy="42" r="0.9" fill="#FFFFFF" />
+                    <!-- Nariz sutil -->
+                    <path d="M 49 44 L 48 51 L 52 51" fill="none" stroke="#D7A984" stroke-width="1.8" stroke-linecap="round" />
+                    <!-- Sonrisa agradable y prolija -->
+                    <path d="M 43 56 Q 50 61 57 56" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" />
+                    <line x1="45" y1="56" x2="55" y2="56" stroke="#FFFFFF" stroke-width="1.2" />
+                    <!-- Cabello castaño oscuro peinado con flequillo prolijo -->
+                    <path d="M 27 34 C 27 16 73 16 73 34 C 74 39 72 43 72 43 C 68 31 64 26 50 26 C 36 26 31 32 28 43 Z" fill="#26211E" />
+                    <path d="M 28 26 Q 42 22 56 27 Q 66 31 68 36 Q 54 30 40 33 Q 32 35 28 39 Z" fill="#3D342E" />
+                    <path d="M 40 26 Q 46 34 43 36 Q 48 31 52 27 Z" fill="#26211E" />
                 </svg>`;
             } else if (id === 'enlace') {
-                // Tutora de Enlace / Sys (Micaela): Auricular con micro, cabello castaño con coleta, chaqueta verde azulada
+                // Tutora de Enlace / Sys (Micaela): Cabello castaño largo suelto, campera puffer negra acolchada, remera rosa y medalla dorada
                 return `<svg viewBox="0 0 100 100">
-                    <rect width="100" height="100" fill="#042F2E" />
-                    <rect x="22" y="14" width="56" height="24" fill="#451A03" />
-                    <polygon points="22,25 12,45 22,50" fill="#451A03" />
-                    <rect x="30" y="24" width="40" height="46" fill="#FDE047" opacity="0.85" />
-                    <rect x="38" y="36" width="7" height="4" fill="#1C1917" />
-                    <rect x="55" y="36" width="7" height="4" fill="#1C1917" />
-                    <rect x="45" y="52" width="10" height="3" fill="#DC2626" />
-                    <circle cx="28" cy="42" r="6" fill="#0D9488" />
-                    <path d="M 28 42 Q 35 58 44 58" fill="none" stroke="#0D9488" stroke-width="2.5" />
-                    <circle cx="44" cy="58" r="3" fill="#00FF66" />
-                    <rect x="22" y="70" width="56" height="30" fill="#134E4A" />
-                    <rect x="46" y="70" width="8" height="30" fill="#0D9488" />
+                    <rect width="100" height="100" fill="#1C1917" />
+                    <circle cx="50" cy="50" r="46" fill="#292524" />
+                    <!-- Cabello largo por detrás de los hombros -->
+                    <path d="M 22 40 C 18 65 20 85 24 100 L 76 100 C 80 85 82 65 78 40 Z" fill="#261811" />
+                    <!-- Cuello y remera rosa suave -->
+                    <rect x="42" y="56" width="16" height="16" fill="#F8D3B8" />
+                    <polygon points="36,66 50,78 64,66 60,62 50,72 40,62" fill="#F472B6" />
+                    <polygon points="42,70 50,78 58,70" fill="#FBCFE8" />
+                    <!-- Campera Puffer Negra (acolchada con líneas horizontales) -->
+                    <path d="M 16 100 L 16 78 Q 28 66 38 66 L 50 78 L 62 66 Q 72 66 84 78 L 84 100 Z" fill="#111827" />
+                    <!-- Costuras horizontales acolchadas de la puffer -->
+                    <path d="M 18 84 Q 30 82 44 86" stroke="#374151" stroke-width="1.8" fill="none" />
+                    <path d="M 82 84 Q 70 82 56 86" stroke="#374151" stroke-width="1.8" fill="none" />
+                    <path d="M 18 94 Q 30 92 46 96" stroke="#374151" stroke-width="1.8" fill="none" />
+                    <path d="M 82 94 Q 70 92 54 96" stroke="#374151" stroke-width="1.8" fill="none" />
+                    <!-- Cinta azul marino de la medalla (lanyard) -->
+                    <path d="M 42 66 L 47 90 L 50 90 L 45 66 Z" fill="#1E3A8A" />
+                    <path d="M 58 66 L 53 90 L 50 90 L 55 66 Z" fill="#1E3A8A" />
+                    <!-- Medalla Dorada de Campeón (Colón 2021) -->
+                    <polygon points="47,90 53,90 55,98 45,98" fill="#F59E0B" />
+                    <rect x="46" y="91" width="8" height="9" rx="1" fill="#FCD34D" stroke="#D97706" stroke-width="0.8" />
+                    <text x="50" y="97" font-size="4" font-family="sans-serif" font-weight="bold" fill="#78350F" text-anchor="middle">★</text>
+                    <!-- Rostro -->
+                    <rect x="32" y="24" width="36" height="40" rx="12" fill="#F8D3B8" />
+                    <!-- Ojos cálidos y pestañas -->
+                    <rect x="35" y="36" width="9" height="2" rx="1" fill="#3E2723" />
+                    <rect x="56" y="36" width="9" height="2" rx="1" fill="#3E2723" />
+                    <ellipse cx="39" cy="42" rx="3.5" ry="3" fill="#FFFFFF" />
+                    <circle cx="39.5" cy="42" r="2.2" fill="#2E1B10" />
+                    <circle cx="38.5" cy="41" r="0.8" fill="#FFFFFF" />
+                    <ellipse cx="61" cy="42" rx="3.5" ry="3" fill="#FFFFFF" />
+                    <circle cx="60.5" cy="42" r="2.2" fill="#2E1B10" />
+                    <circle cx="59.5" cy="41" r="0.8" fill="#FFFFFF" />
+                    <!-- Nariz sutil -->
+                    <path d="M 49 43 L 48 49 L 52 49" fill="none" stroke="#E3B394" stroke-width="1.8" stroke-linecap="round" />
+                    <!-- Sonrisa dulce y cálida -->
+                    <path d="M 43 54 Q 50 59 57 54" fill="none" stroke="#E11D48" stroke-width="2" stroke-linecap="round" />
+                    <!-- Cabello largo castaño oscuro que cae enmarcando el rostro -->
+                    <path d="M 28 28 C 30 14 70 14 72 28 C 74 34 76 50 74 65 C 72 65 67 52 67 36 C 54 28 46 28 33 36 C 33 52 28 65 26 65 C 24 50 26 34 28 28 Z" fill="#3E2723" />
+                    <!-- Mechones con volumen y brillo -->
+                    <path d="M 30 26 Q 44 20 54 26 Q 66 22 70 28" fill="none" stroke="#5D4037" stroke-width="2" stroke-linecap="round" />
+                    <path d="M 26 42 Q 31 56 28 72" fill="none" stroke="#5D4037" stroke-width="2.5" stroke-linecap="round" />
+                    <path d="M 74 42 Q 69 56 72 72" fill="none" stroke="#5D4037" stroke-width="2.5" stroke-linecap="round" />
                 </svg>`;
-            } else if (id === 'mayor') {
-                // Mayor / Profesor (Gastón): Gafas aviador tácticas oscuras, cabello peinado hacia atrás, cuello tortuga y chaleco
+            } else if (id === 'capitan' || id === 'mayor') {
+                // Capitán / Profesor (Gastón): Rulos oscuros abundantes, buzo hoodie verde petróleo (teal) con cierre, barba recortada y amplia sonrisa
                 return `<svg viewBox="0 0 100 100">
-                    <rect width="100" height="100" fill="#1E1B4B" />
-                    <rect x="26" y="12" width="48" height="20" fill="#78716C" />
-                    <rect x="28" y="24" width="44" height="46" fill="#E2C799" />
-                    <polygon points="32,32 46,32 44,44 34,44" fill="#0F172A" stroke="#F59E0B" stroke-width="2" />
-                    <polygon points="54,32 68,32 66,44 56,44" fill="#0F172A" stroke="#F59E0B" stroke-width="2" />
-                    <line x1="46" y1="36" x2="54" y2="36" stroke="#F59E0B" stroke-width="2" />
-                    <rect x="20" y="70" width="60" height="30" fill="#312E81" />
-                    <rect x="42" y="66" width="16" height="14" fill="#1E1B4B" />
-                    <line x1="50" y1="70" x2="50" y2="100" stroke="#F59E0B" stroke-width="2" />
+                    <rect width="100" height="100" fill="#0A221E" />
+                    <circle cx="50" cy="50" r="46" fill="#0E332D" />
+                    <!-- Cuello -->
+                    <rect x="42" y="58" width="16" height="16" fill="#DDB188" />
+                    <!-- Buzo con capucha / Hoodie verde petróleo (teal) -->
+                    <path d="M 16 100 L 16 78 Q 28 66 40 68 L 50 78 L 60 68 Q 72 66 84 78 L 84 100 Z" fill="#0F5A51" />
+                    <!-- Capucha caída sobre los hombros -->
+                    <path d="M 28 72 Q 22 84 32 94 L 38 72 Z" fill="#0A433C" />
+                    <path d="M 72 72 Q 78 84 68 94 L 62 72 Z" fill="#0A433C" />
+                    <!-- Cierre metálico del buzo -->
+                    <line x1="50" y1="74" x2="50" y2="100" stroke="#CBD5E1" stroke-width="2.5" />
+                    <rect x="48.5" y="74" width="3" height="5" fill="#E2E8F0" />
+                    <!-- Cuello remera debajo -->
+                    <polygon points="44,70 50,76 56,70" fill="#1C1917" />
+                    <!-- Cabeza y rostro -->
+                    <rect x="30" y="24" width="40" height="42" rx="12" fill="#E8BE96" />
+                    <!-- Orejas -->
+                    <circle cx="29" cy="46" r="4.5" fill="#DDB188" />
+                    <circle cx="71" cy="46" r="4.5" fill="#DDB188" />
+                    <!-- Ojos cálidos y líneas de expresión / sonrisa -->
+                    <rect x="33" y="36" width="10" height="2.5" rx="1" fill="#26211E" />
+                    <rect x="57" y="36" width="10" height="2.5" rx="1" fill="#26211E" />
+                    <ellipse cx="38" cy="43" rx="4" ry="3" fill="#FFFFFF" />
+                    <circle cx="38.5" cy="43" r="2.3" fill="#261E1A" />
+                    <circle cx="37.5" cy="42" r="0.8" fill="#FFFFFF" />
+                    <!-- Arrugas amables de los ojos -->
+                    <path d="M 32 41 L 30 43 M 32 44 L 30 46" stroke="#C89D74" stroke-width="1.2" stroke-linecap="round" />
+                    <ellipse cx="62" cy="43" rx="4" ry="3" fill="#FFFFFF" />
+                    <circle cx="61.5" cy="43" r="2.3" fill="#261E1A" />
+                    <circle cx="60.5" cy="42" r="0.8" fill="#FFFFFF" />
+                    <path d="M 68 41 L 70 43 M 68 44 L 70 46" stroke="#C89D74" stroke-width="1.2" stroke-linecap="round" />
+                    <!-- Nariz -->
+                    <path d="M 49 43 L 48 50 L 52 50" fill="none" stroke="#C89D74" stroke-width="2" stroke-linecap="round" />
+                    <!-- Barba candado y bigote recortado (con toques canosos) -->
+                    <path d="M 34 52 Q 50 51 66 52 C 67 60 63 68 50 68 C 37 68 33 60 34 52 Z" fill="#292524" />
+                    <!-- Bigote marcado -->
+                    <path d="M 38 52 Q 44 50 50 53 Q 56 50 62 52 Q 50 56 38 52 Z" fill="#1C1917" />
+                    <!-- Sonrisa blanca y amplia -->
+                    <path d="M 42 55 Q 50 60 58 55" fill="#881337" />
+                    <polygon points="43,55 57,55 55,58 45,58" fill="#FFFFFF" />
+                    <!-- Canas sutiles en barba -->
+                    <line x1="37" y1="62" x2="41" y2="65" stroke="#A8A29E" stroke-width="1.2" />
+                    <line x1="63" y1="62" x2="59" y2="65" stroke="#A8A29E" stroke-width="1.2" />
+                    <line x1="48" y1="65" x2="52" y2="65" stroke="#A8A29E" stroke-width="1.2" />
+                    <!-- Cabello con rulos abundantes oscuros -->
+                    <circle cx="30" cy="18" r="8" fill="#1F1C19" />
+                    <circle cx="42" cy="14" r="8.5" fill="#292524" />
+                    <circle cx="56" cy="14" r="8.5" fill="#1F1C19" />
+                    <circle cx="68" cy="17" r="8" fill="#292524" />
+                    <circle cx="26" cy="27" r="7" fill="#1F1C19" />
+                    <circle cx="74" cy="27" r="7" fill="#292524" />
+                    <circle cx="25" cy="36" r="6" fill="#292524" />
+                    <circle cx="75" cy="36" r="6" fill="#1F1C19" />
+                    <!-- Detalle de rulos frontales -->
+                    <circle cx="36" cy="22" r="6" fill="#38322B" />
+                    <circle cx="48" cy="20" r="6.5" fill="#2E2823" />
+                    <circle cx="60" cy="21" r="6" fill="#38322B" />
+                    <path d="M 33 24 Q 40 20 44 26 Q 50 21 58 25 Q 64 22 67 26" fill="none" stroke="#443D36" stroke-width="2.5" stroke-linecap="round" />
                 </svg>`;
             } else if (id === 'logica') {
                 // Tutora de Lógica (Macarena): Gafas finas, guardapolvo técnico blanco con credencial SAO
@@ -1735,45 +1846,99 @@
                     <rect x="60" y="76" width="10" height="12" fill="#38BDF8" />
                 </svg>`;
             } else if (id === 'debugging') {
-                // Tutor de Debugging (Lijandy): ¡CUBANO! Boina verde con pin dorado, barba corta candado y guayabera
+                // Tutor de Debugging (Lijandy): ¡CUBANO Y BEISBOLISTA! Gorra de béisbol tricolor, jersey blanco deportivo, barba recortada y cero boinas
                 return `<svg viewBox="0 0 100 100">
-                    <rect width="100" height="100" fill="#14532D" />
-                    <path d="M 22 24 C 22 14 78 12 78 24 C 82 28 80 32 72 32 L 24 30 Z" fill="#047857" />
-                    <circle cx="50" cy="18" r="3" fill="#F59E0B" />
-                    <rect x="28" y="26" width="44" height="46" fill="#C28854" />
-                    <path d="M 36 50 Q 50 66 64 50 L 62 66 Q 50 72 38 66 Z" fill="#1C1917" />
-                    <rect x="44" y="52" width="12" height="3" fill="#1C1917" />
-                    <rect x="36" y="36" width="7" height="4" fill="#000" />
-                    <rect x="57" y="36" width="7" height="4" fill="#000" />
-                    <circle cx="72" cy="40" r="5" fill="#10B981" />
-                    <line x1="72" y1="35" x2="78" y2="24" stroke="#10B981" stroke-width="2" />
-                    <rect x="20" y="72" width="60" height="28" fill="#F5F5DC" />
-                    <line x1="32" y1="72" x2="32" y2="100" stroke="#047857" stroke-width="2" />
-                    <line x1="68" y1="72" x2="68" y2="100" stroke="#047857" stroke-width="2" />
+                    <rect width="100" height="100" fill="#0B1A30" />
+                    <circle cx="50" cy="50" r="46" fill="#0F2B48" />
+                    <!-- Cuello bronceado -->
+                    <rect x="42" y="58" width="16" height="16" fill="#B97E4E" />
+                    <!-- Camiseta de Béisbol (Jersey) Blanca con vivos rojos y azules -->
+                    <path d="M 16 100 L 16 80 Q 28 68 40 68 L 50 76 L 60 68 Q 72 68 84 80 L 84 100 Z" fill="#F8FAFC" />
+                    <!-- Cuello redondo rojo vivo de la camiseta -->
+                    <path d="M 40 68 Q 50 78 60 68 Q 50 74 40 68 Z" fill="#DC2626" />
+                    <!-- Detalle de mangas y hombrera con ribete rojo y logo azul -->
+                    <line x1="20" y1="84" x2="32" y2="74" stroke="#DC2626" stroke-width="2.5" />
+                    <line x1="80" y1="84" x2="68" y2="74" stroke="#DC2626" stroke-width="2.5" />
+                    <!-- Letras cursivas de béisbol en el pecho -->
+                    <path d="M 34 86 Q 42 82 50 86 Q 58 82 66 86" fill="none" stroke="#DC2626" stroke-width="3" stroke-linecap="round" />
+                    <path d="M 35 88 Q 43 84 51 88 Q 59 84 67 88" fill="none" stroke="#1D4ED8" stroke-width="1.5" stroke-linecap="round" />
+                    <!-- Parche circular en la manga -->
+                    <circle cx="26" cy="88" r="4" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="1" />
+                    <circle cx="26" cy="88" r="1.5" fill="#DC2626" />
+                    <!-- Cabeza y rostro -->
+                    <rect x="30" y="26" width="40" height="42" rx="12" fill="#C98B58" />
+                    <!-- Orejas -->
+                    <circle cx="29" cy="46" r="4.5" fill="#B97E4E" />
+                    <circle cx="71" cy="46" r="4.5" fill="#B97E4E" />
+                    <!-- Barba y bigote perfilados de atleta -->
+                    <path d="M 33 46 C 33 64 42 68 50 68 C 58 68 67 64 67 46 L 64 46 C 64 61 57 65 50 65 C 43 65 36 61 36 46 Z" fill="#1C1917" />
+                    <path d="M 40 54 Q 50 51 60 54 Q 50 57 40 54 Z" fill="#1C1917" />
+                    <path d="M 46 58 Q 50 62 54 58" fill="none" stroke="#1C1917" stroke-width="2" stroke-linecap="round" />
+                    <!-- Ojos concentrados y cejas firmes -->
+                    <rect x="34" y="38" width="10" height="2.5" rx="1" fill="#1C1917" />
+                    <rect x="56" y="38" width="10" height="2.5" rx="1" fill="#1C1917" />
+                    <ellipse cx="39" cy="43" rx="3.8" ry="3" fill="#FFFFFF" />
+                    <circle cx="39.5" cy="43" r="2.2" fill="#18181B" />
+                    <circle cx="38.5" cy="42" r="0.8" fill="#FFFFFF" />
+                    <ellipse cx="61" cy="43" rx="3.8" ry="3" fill="#FFFFFF" />
+                    <circle cx="60.5" cy="43" r="2.2" fill="#18181B" />
+                    <circle cx="59.5" cy="42" r="0.8" fill="#FFFFFF" />
+                    <!-- Nariz -->
+                    <path d="M 49 43 L 48 50 L 52 50" fill="none" stroke="#A76E3F" stroke-width="2" stroke-linecap="round" />
+                    <!-- GORRA DE BÉISBOL (Navy azul, frente blanca con logo 'P' y visera roja curvada) -->
+                    <!-- Copa azul trasera -->
+                    <path d="M 26 28 C 26 12 74 12 74 28 Z" fill="#1E3A8A" />
+                    <!-- Panel frontal blanco -->
+                    <path d="M 33 28 C 34 14 66 14 67 28 Z" fill="#F8FAFC" />
+                    <!-- Letra 'P' estilo béisbol en el frente de la gorra -->
+                    <path d="M 47 18 L 47 26 M 47 18 Q 53 18 53 22 Q 53 25 47 25" fill="none" stroke="#1D4ED8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                    <!-- Botón superior de la gorra -->
+                    <circle cx="50" cy="13" r="2" fill="#DC2626" />
+                    <!-- Visera roja curvada hacia adelante -->
+                    <ellipse cx="50" cy="30" rx="26" ry="6" fill="#DC2626" />
+                    <path d="M 24 30 Q 50 36 76 30 Q 50 32 24 30 Z" fill="#B91C1C" />
                 </svg>`;
             } else if (id === 'algoritmos') {
-                // Tutor de Algoritmos (Agustín): ¡OJOS AZULES BRILLANTES Y BIEN MARCADOS!, buzo tecnológico
+                // Tutor de Algoritmos (Agustín): Parka negra con capucha levantada, flequillo despeinado, sonrisa y ¡OJOS CELESTES/AZULES BRILLANTES!
                 return `<svg viewBox="0 0 100 100">
-                    <rect width="100" height="100" fill="#0369A1" />
-                    <rect x="26" y="14" width="48" height="20" fill="#5A3825" />
-                    <polygon points="26,20 18,32 26,30" fill="#5A3825" />
-                    <rect x="28" y="26" width="44" height="44" fill="#F8D3B0" />
-                    <!-- Cejas y OJOS AZULES BIEN DESTACADOS -->
-                    <rect x="33" y="32" width="11" height="3" fill="#3E2723" />
-                    <rect x="56" y="32" width="11" height="3" fill="#3E2723" />
-                    <!-- Ojos Azules Brillantes -->
-                    <rect x="33" y="36" width="11" height="8" fill="#0284C7" />
-                    <rect x="36" y="37" width="6" height="6" fill="#38BDF8" />
-                    <rect x="38" y="38" width="2.5" height="2.5" fill="#FFFFFF" />
-                    <rect x="56" y="36" width="11" height="8" fill="#0284C7" />
-                    <rect x="59" y="37" width="6" height="6" fill="#38BDF8" />
-                    <rect x="61" y="38" width="2.5" height="2.5" fill="#FFFFFF" />
-                    <!-- Auricular gamer -->
-                    <circle cx="26" cy="42" r="6" fill="#0284C7" />
-                    <rect x="24" y="48" width="4" height="12" fill="#38BDF8" />
-                    <!-- Buzo técnico -->
-                    <rect x="20" y="70" width="60" height="30" fill="#0F172A" />
-                    <polygon points="50,70 38,82 62,82" fill="#0284C7" />
+                    <rect width="100" height="100" fill="#0A192F" />
+                    <circle cx="50" cy="50" r="46" fill="#0D2544" />
+                    <!-- Parka de invierno negra con capucha envolvente -->
+                    <path d="M 16 100 L 16 78 Q 28 66 42 66 L 50 72 L 58 66 Q 72 66 84 78 L 84 100 Z" fill="#18181B" />
+                    <!-- Cuello alto de la campera con cierre -->
+                    <rect x="38" y="60" width="24" height="16" fill="#27272A" />
+                    <line x1="50" y1="60" x2="50" y2="100" stroke="#71717A" stroke-width="2" />
+                    <rect x="48.5" y="62" width="3" height="5" fill="#E4E4E7" />
+                    <!-- Capucha levantada que rodea la cabeza -->
+                    <path d="M 23 48 C 21 16 79 16 77 48 C 77 62 70 68 50 68 C 30 68 23 62 23 48 Z" fill="#09090B" />
+                    <path d="M 26 48 C 25 20 75 20 74 48 C 74 58 68 64 50 64 C 32 64 26 58 26 48 Z" fill="#18181B" />
+                    <!-- Rostro dentro de la capucha -->
+                    <rect x="32" y="28" width="36" height="36" rx="10" fill="#FCE2CD" />
+                    <!-- Flequillo castaño oscuro despeinado saliendo de la capucha -->
+                    <path d="M 30 26 Q 40 22 50 25 Q 60 21 70 27 Q 66 35 60 33 Q 52 38 46 32 Q 38 37 30 26 Z" fill="#27221F" />
+                    <path d="M 43 32 L 40 37 L 46 34" fill="#27221F" />
+                    <path d="M 52 32 L 56 38 L 58 33" fill="#27221F" />
+                    <!-- Cejas -->
+                    <rect x="34" y="37" width="9" height="2.2" rx="1" fill="#27221F" />
+                    <rect x="57" y="37" width="9" height="2.2" rx="1" fill="#27221F" />
+                    <!-- ¡OJOS AZULES / CELESTES BRILLANTES Y DESTACADOS! -->
+                    <ellipse cx="38.5" cy="43" rx="4.5" ry="3.5" fill="#FFFFFF" />
+                    <circle cx="38.5" cy="43" r="2.8" fill="#0284C7" />
+                    <circle cx="38.5" cy="43" r="1.8" fill="#38BDF8" />
+                    <circle cx="38.5" cy="43" r="0.9" fill="#0C4A6E" />
+                    <circle cx="37.5" cy="42" r="0.8" fill="#FFFFFF" />
+                    <ellipse cx="61.5" cy="43" rx="4.5" ry="3.5" fill="#FFFFFF" />
+                    <circle cx="61.5" cy="43" r="2.8" fill="#0284C7" />
+                    <circle cx="61.5" cy="43" r="1.8" fill="#38BDF8" />
+                    <circle cx="61.5" cy="43" r="0.9" fill="#0C4A6E" />
+                    <circle cx="60.5" cy="42" r="0.8" fill="#FFFFFF" />
+                    <!-- Nariz -->
+                    <path d="M 49 43 L 48 50 L 52 50" fill="none" stroke="#E3B394" stroke-width="1.8" stroke-linecap="round" />
+                    <!-- Barba suave / sombra de barba en mentón -->
+                    <path d="M 42 59 Q 50 63 58 59" stroke="#71717A" stroke-width="2" stroke-dasharray="1.5,1.5" fill="none" />
+                    <!-- Sonrisa amplia y amistosa -->
+                    <path d="M 41 54 Q 50 60 59 54" fill="#B91C1C" />
+                    <polygon points="43,54 57,54 55,57 45,57" fill="#FFFFFF" />
                 </svg>`;
             }
             return '';
@@ -1783,7 +1948,7 @@
         const codecContacts = [
             { freq: "140.85", id: "coronel", role: "CORONEL // PROFESOR SAO", speaker: "CORONEL // PROFESOR SAO", label: "CORONEL (140.85)", defaultScript: "call" },
             { freq: "140.96", id: "enlace", role: "TUTORA DE ENLACE // SYS", speaker: "TUTORA DE ENLACE // SYS", label: "ENLACE (140.96)", defaultScript: "enlace" },
-            { freq: "141.12", id: "mayor", role: "MAYOR // PROFESOR SAO", speaker: "MAYOR // PROFESOR SAO", label: "MAYOR (141.12)", defaultScript: "mayor" },
+            { freq: "141.12", id: "capitan", role: "CAPITÁN // PROFESOR SAO", speaker: "CAPITÁN // PROFESOR SAO", label: "CAPITÁN (141.12)", defaultScript: "capitan" },
             { freq: "141.40", id: "logica", role: "TUTORA DE LÓGICA // LAB", speaker: "TUTORA DE LÓGICA // LAB", label: "LÓGICA (141.40)", defaultScript: "logica" },
             { freq: "141.65", id: "debugging", role: "TUTOR DE DEBUGGING // LAB", speaker: "TUTOR DE DEBUGGING // LAB", label: "DEBUG (141.65)", defaultScript: "debugging" },
             { freq: "141.80", id: "algoritmos", role: "TUTOR DE ALGORITMOS // LAB", speaker: "TUTOR DE ALGORITMOS // LAB", label: "ALGORITMOS (141.80)", defaultScript: "algoritmos" }
@@ -1811,11 +1976,14 @@
                 { speaker: "TUTORA DE ENLACE // SYS", text: "Como reza el proverbio de la ingeniería de software: 'Aquel que prueba su código solo en producción, conocerá el desvelo; mas quien guarda sus checkpoints, conquistará la memoria'." },
                 { speaker: "TUTORA DE ENLACE // SYS", text: "Si estás herido o querés asegurar tus avances antes del Núcleo, ¡tocá GUARDAR CHECKPOINT!" }
             ],
+            capitan: [
+                { speaker: "CAPITÁN // PROFESOR SAO", text: "Solid Byte, escuchame bien. Tu estrategia en este laberinto debe aplicar la metodología Top-Down de la Unidad 4." },
+                { speaker: "CAPITÁN // PROFESOR SAO", text: "Divide y vencerás. No intentes abarcar toda la instalación como un solo bloque inmanejable de código." },
+                { speaker: "CAPITÁN // PROFESOR SAO", text: "Cada sector es como un método modular: recibe parámetros (tu sigilo y reflejos), ejecuta una tarea concreta (hackear la subestación) y devuelve un estado seguro." },
+                { speaker: "CAPITÁN // PROFESOR SAO", text: "Si un centinela patrulla tu camino, no vayas de frente. Planificá tu ruta y utilizá las columnas para desviar su trayectoria." }
+            ],
             mayor: [
-                { speaker: "MAYOR // PROFESOR SAO", text: "Solid Byte, escuchame bien. Tu estrategia en este laberinto debe aplicar la metodología Top-Down de la Unidad 4." },
-                { speaker: "MAYOR // PROFESOR SAO", text: "Divide y vencerás. No intentes abarcar toda la instalación como un solo bloque inmanejable de código." },
-                { speaker: "MAYOR // PROFESOR SAO", text: "Cada sector es como un método modular: recibe parámetros (tu sigilo y reflejos), ejecuta una tarea concreta (hackear la subestación) y devuelve un estado seguro." },
-                { speaker: "MAYOR // PROFESOR SAO", text: "Si un centinela patrulla tu camino, no vayas de frente. Planificá tu ruta y utilizá las columnas para desviar su trayectoria." }
+                { speaker: "CAPITÁN // PROFESOR SAO", text: "Solid Byte, recordá: metodología Top-Down y diseño modular para superar cualquier desafío." }
             ],
             logica: [
                 { speaker: "TUTORA DE LÓGICA // LAB", text: "Solid Byte, aquí el laboratorio de lógica. Estoy analizando la Terminal 01 del Sector 1." },
@@ -1824,10 +1992,10 @@
                 { speaker: "TUTORA DE LÓGICA // LAB", text: "¡Aplicá casting explícito anteponiendo (int) a la variable para compilar la calibración y abrir la compuerta láser!" }
             ],
             debugging: [
-                { speaker: "TUTOR DE DEBUGGING // LAB", text: "¡Oye, asere! ¿Qué bola, mi hermano? ¿Cómo te trata esa JVM?" },
-                { speaker: "TUTOR DE DEBUGGING // LAB", text: "Mira, chico, te tengo tremendo dato para la Terminal 02 del Sector 2. Esos centinelas creen que el bucle de seguridad está corriendo a toda máquina, pero le clavaron una trampa de sintaxis." },
+                { speaker: "TUTOR DE DEBUGGING // LAB", text: "¡Oye, asere! ¿Qué bola, mi hermano? ¡Aquí en el diamante del Almacén RAM listo para el bateo!" },
+                { speaker: "TUTOR DE DEBUGGING // LAB", text: "Mira, chico, para darle tremendo jonrón a esa JVM en la Terminal 02, tienes que cazar una trampa traicionera en el bucle for." },
                 { speaker: "TUTOR DE DEBUGGING // LAB", text: "Muchos meten un punto y coma traicionero justo al final de 'for(int i = 0; i < 5; i++);'. ¡Ay mi madre! Eso corta la cabecera en seco, deja el bucle vacío y lo que está entre llaves se ejecuta una sola vez." },
-                { speaker: "TUTOR DE DEBUGGING // LAB", text: "No te dejes engañar creyendo que itera cinco veces, asere. ¡Cazá ese punto y coma intruso, neutralizalo y métele candela!" }
+                { speaker: "TUTOR DE DEBUGGING // LAB", text: "No te dejes ponchar creyendo que itera cinco veces, asere. ¡Cazá ese punto y coma intruso, conecta un buen batazo y sácala del parque!" }
             ],
             algoritmos: [
                 { speaker: "TUTOR DE ALGORITMOS // LAB", text: "Byte, aquí el tutor de algoritmos. Veo que llegaste al mainframe de la Unidad 5." },
@@ -1844,9 +2012,9 @@
             ],
             victory: [
                 { speaker: "CORONEL // PROFESOR SAO", text: "¡Misión impecable, Solid Byte! El Metal Gear JVM-REX ha sido neutralizado y el mainframe central está a salvo." },
-                { speaker: "MAYOR // PROFESOR SAO", text: "Excelente ejecución táctica. Aplicaste a la perfección modularidad Top-Down, control de tipos y manipulación segura de vectores." },
+                { speaker: "CAPITÁN // PROFESOR SAO", text: "Excelente ejecución táctica. Aplicaste a la perfección modularidad Top-Down, control de tipos y manipulación segura de vectores." },
                 { speaker: "CORONEL // PROFESOR SAO", text: "Has regularizado con honores la infiltración en los sistemas de la UTN Santa Fe. ¡Sos el verdadero Big Boss de la JVM!" },
-                { speaker: "SOLID BYTE", text: "Misión cumplida, Coronel, Mayor. Me dirijo a la cantina de la facultad por esa ración de café bien merecida." }
+                { speaker: "SOLID BYTE", text: "Misión cumplida, Coronel, Capitán. Me dirijo a la cantina de la facultad por esa ración de café bien merecida." }
             ]
         };
 
@@ -2697,9 +2865,9 @@
             if (roomId === 'corridor') {
                 showToast("¡CORREDOR DE RACKS! Terminal 02 desactiva las rejillas láser.");
             } else if (roomId === 'warehouse') {
-                showToast("¡ALMACÉN RAM! Lijandy (141.65) en línea. ¡Buscá la Ración de Café!");
+                showToast("¡ALMACÉN RAM! Tutor de Debugging (141.65) en línea. ¡Buscá la Ración de Café!");
             } else if (roomId === 'modular_lab') {
-                showToast("¡LABORATORIO! Mayor Gastón (141.12) te asesora con métodos estáticos.");
+                showToast("¡LABORATORIO! El Capitán (141.12) te asesora con métodos estáticos.");
             } else if (roomId === 'core_boss') {
                 playSFX('boss-roar');
                 setTimeout(() => openCodecDialog('boss_briefing'), 400);
