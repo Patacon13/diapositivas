@@ -2698,7 +2698,7 @@
                                 x: 0, y: 175, w: 24, h: 100,
                                 targetRoom: 'corridor_u1',
                                 spawnX: 740, spawnY: 225,
-                                reqKey: 1,
+                                reqKey: 0,
                                 label: 'CORREDOR CENTRAL',
                                 orientation: 'W'
                             }
@@ -2721,7 +2721,7 @@
                             { text: "El sistema operativo (Windows/Linux) compila directamente a binario nativo sin generar bytecode intermedio.", correct: false },
                             { text: "La JVM traduce directamente el archivo .java sin requerir un compilador previo de Java.", correct: false }
                         ],
-                        explanation: "¡ACCESO CONCEDIDO! javac genera el bytecode (.class) independiente de la arquitectura. ¡AVANZÁ HACIA EL CORREDOR CENTRAL!",
+                        explanation: "¡ACCESO CONCEDIDO! javac genera el bytecode (.class) independiente de la plataforma. ¡KEYCARD NIVEL 1 OBTENIDA PARA EL CORREDOR CENTRAL!",
                         unlocked: false
                     },
                     {
@@ -2749,7 +2749,7 @@
                             { text: "short (8 bits) < byte (16 bits) < int (32 bits) < long (64 bits)", correct: false },
                             { text: "byte (8 bits) < int (16 bits) < short (32 bits) < long (64 bits)", correct: false }
                         ],
-                        explanation: "¡JERARQUÍA VALIDADA! byte(8b) cabe en short(16b), int(32b) y long(64b) sin pérdida. ¡KEYCARD NIVEL 1 OBTENIDA!",
+                        explanation: "¡JERARQUÍA VALIDADA! byte(8b) cabe en short(16b), int(32b) y long(64b) sin pérdida. ¡KEYCARD NIVEL 2 OBTENIDA PARA EL PATIO DE VULCAN!",
                         unlocked: false
                     },
                     {
@@ -2868,8 +2868,8 @@
                                 x: 776, y: 175, w: 24, h: 100,
                                 targetRoom: 'warehouse_junction',
                                 spawnX: 45, spawnY: 225,
-                                reqKey: 0,
-                                label: 'CRUCE CENTRAL',
+                                reqKey: 1,
+                                label: 'CRUCE CENTRAL [LV.1]',
                                 orientation: 'E'
                             }
                         ],
@@ -3096,7 +3096,7 @@
                                 x: 0, y: 175, w: 24, h: 100,
                                 targetRoom: 'warehouse_junction',
                                 spawnX: 740, spawnY: 225,
-                                reqKey: 2,
+                                reqKey: 0,
                                 label: 'CRUCE CENTRAL',
                                 orientation: 'W'
                             }
@@ -3119,7 +3119,7 @@
                             { text: "15 (Solo se ejecuta el bloque correspondiente al case 1)", correct: false },
                             { text: "0 (Al faltar el break salta inmediatamente al bloque default)", correct: false }
                         ],
-                        explanation: "¡VULNERABILIDAD DESCUBIERTA! La omisión de break produce ejecución en cascada. ¡PASO AL CRUCE HABILITADO!",
+                        explanation: "¡VULNERABILIDAD DESCUBIERTA! La omisión de break produce ejecución en cascada. ¡KEYCARD NIVEL 1 OBTENIDA PARA EL CRUCE RAM!",
                         unlocked: false
                     },
                     {
@@ -3147,7 +3147,7 @@
                             { text: "Porque la JVM exige obligatoriamente dos lecturas por sentencia de iteración.", correct: false },
                             { text: "Para reiniciar las variables contadoras y acumuladoras a cero en cada vuelta.", correct: false }
                         ],
-                        explanation: "¡CENTINELA OPERATIVO! La lectura al final del ciclo asegura la terminación. ¡KEYCARD NIVEL 2 OBTENIDA!",
+                        explanation: "¡CENTINELA OPERATIVO! La lectura al final del ciclo asegura la terminación. ¡KEYCARD NIVEL 2 OBTENIDA PARA LA CÁMARA OLYMPO!",
                         unlocked: false
                     },
                     {
@@ -3282,8 +3282,8 @@
                                 x: 776, y: 175, w: 24, h: 100,
                                 targetRoom: 'transit_conduit',
                                 spawnX: 45, spawnY: 225,
-                                reqKey: 0,
-                                label: 'CONDUCTO TRONCAL',
+                                reqKey: 1,
+                                label: 'CONDUCTO TRONCAL [LV.1]',
                                 orientation: 'E'
                             }
                         ],
@@ -3570,7 +3570,7 @@
                                 x: 0, y: 175, w: 24, h: 100,
                                 targetRoom: 'transit_conduit',
                                 spawnX: 740, spawnY: 225,
-                                reqKey: 2,
+                                reqKey: 0,
                                 label: 'CONDUCTO TRONCAL',
                                 orientation: 'W'
                             }
@@ -3593,7 +3593,7 @@
                             { text: "El arreglo se redimensiona automáticamente a 6 elementos para alojar el nuevo dato sin excepción.", correct: false },
                             { text: "Se asigna correctamente porque Java indexa internamente del 1 al 5.", correct: false }
                         ],
-                        explanation: "¡LÍMITES VALIDADOS! La indexación en Java es base cero (0 a length - 1). ¡KEYCARD NIVEL 1 OBTENIDA!",
+                        explanation: "¡LÍMITES VALIDADOS! La indexación en Java es base cero (0 a length - 1). ¡KEYCARD NIVEL 1 OBTENIDA PARA EL CONDUCTO TRONCAL!",
                         unlocked: false
                     },
                     {
@@ -3621,7 +3621,7 @@
                             { text: "rejilla.length indica la cantidad de columnas y rejilla[0].length el total de celdas.", correct: false },
                             { text: "Ambas expresiones devuelven siempre el producto total de filas por columnas (12).", correct: false }
                         ],
-                        explanation: "¡MATRIZ COMPROBADA! Filas con m.length y columnas con m[0].length. ¡KEYCARD NIVEL 2 OBTENIDA!",
+                        explanation: "¡MATRIZ COMPROBADA! Filas con m.length y columnas con m[0].length. ¡KEYCARD NIVEL 2 OBTENIDA PARA REX CORE!",
                         unlocked: false
                     },
                     {
@@ -3933,6 +3933,7 @@
 
             setMusicTheme('sneaking');
             showToast(`¡DESPLEGADO EN ${lvl.name}!`);
+            setTimeout(() => triggerRoomArrivalAdvice(lvl.startRoom), 700);
         }
 
 
@@ -4065,22 +4066,36 @@
         }
 
         function triggerRoomArrivalAdvice(roomId) {
-            if (roomId === 'filtration_u1') {
-                showToast("¡TÚNEL DE FILTRADO! Terminal 03 otorga Keycard 1. ¡Buscá la Ración de Café!");
+            if (roomId === 'dock') {
+                showToast("¡DÁRSENA DE ACCESO! Hackeá la Terminal 01 para obtener la Keycard Nivel 1.");
+            } else if (roomId === 'corridor_u1') {
+                showToast("¡CORREDOR CENTRAL! Vulcan [LV.2] requiere Keycard Nivel 2 y apagar láseres. Explorá el Túnel Norte.");
+            } else if (roomId === 'filtration_u1') {
+                showToast("¡TÚNEL DE FILTRADO! Hackeá la Terminal 03 para obtener la Keycard Nivel 2. ¡Buscá el Café!");
             } else if (roomId === 'arena_vulcan') {
                 playSFX('boss-roar');
                 setTimeout(() => openCodecDialog('boss_briefing_1'), 400);
+            } else if (roomId === 'warehouse_entry') {
+                showToast("¡ENTRADA RAM! Hackeá la Terminal 01 para obtener la Keycard Nivel 1.");
+            } else if (roomId === 'warehouse_junction') {
+                showToast("¡CRUCE CENTRAL! Olympo requiere Keycard Nivel 2 (Norte) y apagar láseres (Sur).");
             } else if (roomId === 'loop_storage') {
-                showToast("¡DEPÓSITO DE BUCLES! Terminal 03 otorga Keycard 2.");
+                showToast("¡DEPÓSITO DE BUCLES! Terminal 03 otorga la Keycard Nivel 2.");
             } else if (roomId === 'modular_lab_u2') {
                 showToast("¡LABORATORIO MODULAR! Terminal 04 apaga los láseres del cruce. ¡Hay café!");
             } else if (roomId === 'arena_olympo') {
                 playSFX('boss-roar');
                 setTimeout(() => openCodecDialog('boss_briefing_2'), 400);
+            } else if (roomId === 'vector_vault') {
+                showToast("¡BÓVEDA DE VECTORES! Hackeá la Terminal 01 para obtener la Keycard Nivel 1.");
+            } else if (roomId === 'transit_conduit') {
+                showToast("¡CONDUCTO TRONCAL! Rex Core requiere Keycard Nivel 2 (Sur) y apagar láseres (Este).");
+            } else if (roomId === 'string_archive') {
+                showToast("¡ARCHIVO DE STRINGS! Terminal 02 valida referencias de cadenas.");
             } else if (roomId === 'matrix_center') {
-                showToast("¡CENTRO MATRICIAL! Terminal 03 otorga Keycard 2 y café.");
+                showToast("¡CENTRO MATRICIAL! Terminal 03 otorga la Keycard Nivel 2. ¡Hay ración de café!");
             } else if (roomId === 'sorting_subcore') {
-                showToast("¡ORDENAMIENTO! Terminal 05 apaga los láseres de Rex Core.");
+                showToast("¡ORDENAMIENTO! Terminal 05 apaga los láseres cuánticos de Rex Core.");
             } else if (roomId === 'rex_core') {
                 playSFX('boss-roar');
                 setTimeout(() => openCodecDialog('boss_briefing_3'), 400);
@@ -4433,22 +4448,42 @@
 
                 if (activeTerminal.isBossBeacon) {
                     stunBoss(7.0);
+                } else if (activeTerminal.id === 'T1_1') {
+                    setPlayerKeycard(1);
+                    showToast("¡KEYCARD NIVEL 1 OBTENIDA! PUERTA AL CORREDOR HABILITADA.");
                 } else if (activeTerminal.id === 'T1_2') {
                     showToast("¡REJILLAS LÁSER DEL CORREDOR DESACTIVADAS!");
                 } else if (activeTerminal.id === 'T1_3') {
+                    setPlayerKeycard(2);
+                    showToast("¡KEYCARD NIVEL 2 OBTENIDA! ACCESO A VULCAN AUTORIZADO.");
+                } else if (activeTerminal.id === 'T1_4') {
+                    if (gameState.player) gameState.player.hp = Math.min(100, gameState.player.hp + 25);
+                    updateHealthHUD();
+                    showToast("¡CALIBRACIÓN EXITOSA! +25 HP RESTAURADOS.");
+                } else if (activeTerminal.id === 'T2_1') {
                     setPlayerKeycard(1);
-                    showToast("¡KEYCARD NIVEL 1 OBTENIDA!");
+                    showToast("¡KEYCARD NIVEL 1 OBTENIDA! ACCESO AL CRUCE CENTRAL HABILITADO.");
+                } else if (activeTerminal.id === 'T2_2') {
+                    showToast("¡BUCLE DO-WHILE VALIDADO! REGISTRO DEL ALMACÉN ACCEDIDO.");
                 } else if (activeTerminal.id === 'T2_3') {
                     setPlayerKeycard(2);
-                    showToast("¡KEYCARD NIVEL 2 OBTENIDA!");
+                    showToast("¡KEYCARD NIVEL 2 OBTENIDA! ACCESO A CÁMARA OLYMPO AUTORIZADO.");
                 } else if (activeTerminal.id === 'T2_4') {
                     showToast("¡REJILLAS LÁSER DEL CRUCE DESACTIVADAS!");
+                } else if (activeTerminal.id === 'T2_5') {
+                    if (gameState.player) gameState.player.hp = Math.min(100, gameState.player.hp + 25);
+                    updateHealthHUD();
+                    showToast("¡CALL STACK VERIFICADO! +25 HP RESTAURADOS.");
                 } else if (activeTerminal.id === 'T3_1') {
                     setPlayerKeycard(1);
-                    showToast("¡KEYCARD NIVEL 1 OBTENIDA!");
+                    showToast("¡KEYCARD NIVEL 1 OBTENIDA! CONDUCTO CENTRAL HABILITADO.");
+                } else if (activeTerminal.id === 'T3_2') {
+                    showToast("¡ARCHIVO DE STRINGS VALIDADO!");
                 } else if (activeTerminal.id === 'T3_3') {
                     setPlayerKeycard(2);
-                    showToast("¡KEYCARD NIVEL 2 OBTENIDA!");
+                    showToast("¡KEYCARD NIVEL 2 OBTENIDA! REACTOR JVM-REX AUTORIZADO.");
+                } else if (activeTerminal.id === 'T3_4') {
+                    showToast("¡BÚSQUEDA BINARIA VALIDADA! SUBRUTINAS SINCRONIZADAS.");
                 } else if (activeTerminal.id === 'T3_5') {
                     showToast("¡LÁSERES CUÁNTICOS DE REX CORE DESACTIVADOS!");
                 }
