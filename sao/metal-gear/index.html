@@ -282,18 +282,153 @@
 
         .codec-top {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
             border-bottom: 1px solid var(--mgs-green-dim);
             padding-bottom: 8px;
+            gap: 6px;
+        }
+
+        .codec-top-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .freq-tuner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .freq-tuner-btn {
+            background: rgba(0, 255, 102, 0.12);
+            border: 1px solid var(--mgs-green-dim);
+            color: var(--mgs-green);
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            transition: all 0.15s ease;
+        }
+
+        .freq-tuner-btn:hover, .freq-tuner-btn:active {
+            background: var(--mgs-green);
+            color: #000;
+            box-shadow: 0 0 8px var(--mgs-green);
         }
 
         .freq-display {
             font-family: 'VT323', monospace;
-            font-size: 32px;
+            font-size: 30px;
             color: var(--mgs-green);
             letter-spacing: 2px;
             text-shadow: 0 0 10px var(--mgs-green);
+            min-width: 130px;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .freq-chips-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .freq-chip {
+            background: rgba(0, 25, 10, 0.7);
+            border: 1px solid #143820;
+            color: var(--mgs-green-dim);
+            font-size: 10.5px;
+            padding: 3px 7px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: 'Share Tech Mono', monospace;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .freq-chip:hover {
+            border-color: var(--mgs-green);
+            color: var(--mgs-green);
+        }
+
+        .freq-chip.active {
+            background: rgba(0, 255, 102, 0.22);
+            border-color: var(--mgs-green);
+            color: #FFF;
+            box-shadow: 0 0 8px rgba(0, 255, 102, 0.45);
+            font-weight: 700;
+        }
+
+        .codec-save-panel {
+            display: none;
+            margin-top: 8px;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .save-btn {
+            background: rgba(0, 255, 102, 0.1);
+            border: 1px solid var(--mgs-green-dim);
+            color: var(--mgs-green);
+            padding: 4px 9px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-family: 'Share Tech Mono', monospace;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+
+        .save-btn:hover {
+            background: rgba(0, 255, 102, 0.3);
+            border-color: var(--mgs-green);
+            color: #FFF;
+        }
+
+        .save-btn.load-btn {
+            border-color: var(--mgs-amber);
+            color: var(--mgs-amber);
+        }
+
+        .save-btn.load-btn:hover {
+            background: rgba(255, 176, 0, 0.25);
+            color: #FFF;
+        }
+
+        /* Notificación Toast flotante */
+        .mgs-toast {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 43, 17, 0.95);
+            border: 1px solid var(--mgs-green);
+            color: #FFF;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+            z-index: 300;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .mgs-toast.visible {
+            opacity: 1;
         }
 
         .codec-mid {
@@ -737,10 +872,27 @@
             .codec-top {
                 font-size: 10px;
                 padding-bottom: 4px;
+                gap: 4px;
             }
 
             .freq-display {
-                font-size: 22px;
+                font-size: 20px;
+                min-width: 90px;
+            }
+
+            .freq-tuner-btn {
+                width: 22px;
+                height: 22px;
+                font-size: 10px;
+            }
+
+            .freq-chips-bar {
+                gap: 3px;
+            }
+
+            .freq-chip {
+                font-size: 8.5px;
+                padding: 2px 4px;
             }
 
             .codec-mid {
@@ -826,32 +978,33 @@
             }
 
             .mobile-touch-bar {
-                padding: 6px 10px;
+                padding: 6px 8px;
             }
 
             .dpad {
-                grid-template-columns: 42px 42px 42px;
-                grid-template-rows: 42px 42px;
-                gap: 4px;
+                grid-template-columns: 38px 38px 38px;
+                grid-template-rows: 38px 38px;
+                gap: 3px;
             }
 
             .dpad-btn {
-                font-size: 16px;
+                font-size: 15px;
                 border-radius: 6px;
             }
 
             .action-btns {
-                gap: 8px;
+                gap: 4px;
             }
 
             .touch-action-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 9px;
+                width: 44px;
+                height: 44px;
+                font-size: 8px;
+                gap: 1px;
             }
 
             .touch-action-btn i {
-                font-size: 15px;
+                font-size: 13px;
             }
 
             .debrief-title {
@@ -892,11 +1045,14 @@
             </div>
 
             <div class="hud-right">
+                <button class="hud-btn" id="btn-knock" onclick="performWallKnock()" title="Golpear Pared para Distraer [F]">
+                    <i class="fa-solid fa-hand-fist"></i> GOLPE [F]
+                </button>
                 <button class="hud-btn" id="btn-box-toggle" onclick="toggleCardboardBox()" title="Ponerse/Sacarse Caja de Cartón [B]">
                     <i class="fa-solid fa-box"></i> <span id="box-label">CAJA: OFF</span>
                 </button>
                 <button class="hud-btn" id="btn-codec-call" onclick="openCodecDialog('call')" title="Abrir Radio CODEC [C]">
-                    <i class="fa-solid fa-walkie-talkie"></i> 140.85
+                    <i class="fa-solid fa-walkie-talkie"></i> <span id="hud-freq-label">140.85</span>
                 </button>
                 <button class="hud-btn" id="btn-sound-toggle" onclick="toggleAudio()" title="Activar/Silenciar Audio">
                     <i class="fa-solid fa-volume-high" id="sound-icon"></i>
@@ -908,31 +1064,31 @@
         <div class="stage-area" id="stage-wrapper">
             <canvas id="mgs-canvas" width="800" height="450"></canvas>
 
+            <!-- Notificación Toast Flotante -->
+            <div class="mgs-toast" id="mgs-toast">¡MENSAJE DE SISTEMA!</div>
+
             <!-- 1. PANTALLA CODEC INTERACTIVA -->
             <div class="codec-overlay" id="codec-screen" onclick="handleCodecScreenClick(event)">
                 <div class="codec-top">
-                    <div style="font-size: 12px; color: var(--mgs-green-dim); letter-spacing: 1px;">ENCRYPTED TRANSCEIVER // MEMORY BUS 0xUTN</div>
-                    <div class="freq-display">140.85 MHz</div>
+                    <div class="codec-top-header">
+                        <div style="font-size: 11px; color: var(--mgs-green-dim); letter-spacing: 1px;">TRANSCEPTOR // ENLACE SAO UTN FRSF</div>
+                        <div class="freq-tuner">
+                            <button class="freq-tuner-btn" onclick="prevCodecContact(event)" title="Frecuencia anterior"><i class="fa-solid fa-chevron-left"></i></button>
+                            <div class="freq-display" id="freq-display">140.85 MHz</div>
+                            <button class="freq-tuner-btn" onclick="nextCodecContact(event)" title="Frecuencia siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <!-- Chips de acceso directo a los 6 integrantes -->
+                    <div class="freq-chips-bar" id="freq-chips-bar">
+                        <!-- Generados dinámicamente -->
+                    </div>
                 </div>
 
                 <div class="codec-mid">
                     <!-- Retrato Snake / Solid Byte -->
                     <div class="codec-portrait-box">
-                        <div class="portrait-frame">
-                            <svg viewBox="0 0 100 100">
-                                <rect width="100" height="100" fill="#042310" />
-                                <!-- Cabeza y bandana -->
-                                <rect x="30" y="25" width="40" height="45" fill="#78909C" />
-                                <rect x="25" y="32" width="50" height="12" fill="#1B5E20" /> <!-- Bandana verde -->
-                                <polygon points="25,38 10,48 20,52" fill="#1B5E20" /> <!-- Nudo bandana -->
-                                <!-- Barba y pelo -->
-                                <rect x="30" y="18" width="40" height="14" fill="#37474F" />
-                                <rect x="30" y="55" width="40" height="15" fill="#455A64" />
-                                <!-- Ojos y parche/auricular -->
-                                <rect x="36" y="36" width="8" height="4" fill="#E0E0E0" />
-                                <rect x="56" y="36" width="8" height="4" fill="#E0E0E0" />
-                                <circle cx="72" cy="46" r="6" fill="#00FF66" opacity="0.8" /> <!-- Auricular CODEC -->
-                            </svg>
+                        <div class="portrait-frame" id="codec-player-portrait">
+                            <!-- Inyectado dinámicamente -->
                         </div>
                         <span class="portrait-name">SOLID BYTE</span>
                     </div>
@@ -940,28 +1096,22 @@
                     <!-- Cuadro de Diálogo -->
                     <div class="codec-dialog-box">
                         <div>
-                            <div class="codec-speaker-tag" id="codec-speaker">PROFESOR TOMÁS // SAO UTN</div>
+                            <div class="codec-speaker-tag" id="codec-speaker">PROFESOR TITULAR // SAO</div>
                             <div class="codec-text" id="codec-message">Iniciando enlace táctico...</div>
+                            <div class="codec-save-panel" id="codec-save-panel">
+                                <button class="save-btn" onclick="saveGameCheckpoint(event)"><i class="fa-solid fa-floppy-disk"></i> GUARDAR CHECKPOINT</button>
+                                <button class="save-btn load-btn" onclick="loadGameCheckpoint(event)"><i class="fa-solid fa-rotate-left"></i> CARGAR CHECKPOINT</button>
+                            </div>
                         </div>
                         <div class="codec-action-hint" id="codec-hint">[Tocar pantalla / Espacio para avanzar ▶]</div>
                     </div>
 
-                    <!-- Retrato Docente / Coronel -->
+                    <!-- Retrato Docente / Tutor Dinámico -->
                     <div class="codec-portrait-box">
-                        <div class="portrait-frame">
-                            <svg viewBox="0 0 100 100">
-                                <rect width="100" height="100" fill="#001B3A" />
-                                <!-- Rostro Docente UTN con Anteojos -->
-                                <rect x="28" y="22" width="44" height="48" fill="#F0D5BA" />
-                                <rect x="26" y="14" width="48" height="16" fill="#424242" /> <!-- Cabello -->
-                                <rect x="32" y="34" width="14" height="8" fill="none" stroke="#002B5B" stroke-width="2.5" /> <!-- Anteojos -->
-                                <rect x="54" y="34" width="14" height="8" fill="none" stroke="#002B5B" stroke-width="2.5" />
-                                <line x1="46" y1="38" x2="54" y2="38" stroke="#002B5B" stroke-width="2" />
-                                <rect x="20" y="70" width="60" height="30" fill="#002B5B" /> <!-- Traje formal UTN -->
-                                <polygon points="46,70 54,70 50,85" fill="#FFC107" /> <!-- Corbata dorada -->
-                            </svg>
+                        <div class="portrait-frame" id="codec-contact-portrait">
+                            <!-- Inyectado dinámicamente -->
                         </div>
-                        <span class="portrait-name" style="color: var(--mgs-amber);">CÁTEDRA SAO</span>
+                        <span class="portrait-name" id="codec-contact-role" style="color: var(--mgs-amber);">PROFESOR TITULAR</span>
                     </div>
                 </div>
 
@@ -1039,6 +1189,9 @@
             <div class="action-btns">
                 <button class="touch-action-btn" id="btn-touch-action">
                     <i class="fa-solid fa-computer"></i> HACK
+                </button>
+                <button class="touch-action-btn" id="btn-touch-knock">
+                    <i class="fa-solid fa-hand-fist"></i> GOLPE
                 </button>
                 <button class="touch-action-btn" id="btn-touch-box">
                     <i class="fa-solid fa-box"></i> CAJA
@@ -1187,10 +1340,40 @@
                     g.connect(masterGain || ctx.destination);
                     osc.start(now);
                     osc.stop(now + 0.2);
+
+                } else if (name === 'knock') {
+                    // Golpe táctico en la pared (doble tap de nudillos seco)
+                    [0, 0.08].forEach(offset => {
+                        const osc = ctx.createOscillator();
+                        const g = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(260, now + offset);
+                        osc.frequency.exponentialRampToValueAtTime(75, now + offset + 0.05);
+                        g.gain.setValueAtTime(0.45, now + offset);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.05);
+                        osc.connect(g);
+                        g.connect(masterGain || ctx.destination);
+                        osc.start(now + offset);
+                        osc.stop(now + offset + 0.05);
+                    });
                 }
             } catch (e) {
                 console.warn(e);
             }
+        }
+
+        // Sistema de Notificaciones Flotantes (Toast)
+        let toastTimer = null;
+        function showToast(msg) {
+            const toast = document.getElementById('mgs-toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('visible');
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('visible');
+                toastTimer = null;
+            }, 2500);
         }
 
         // Bandas Sonoras Procedurales (Sneaking vs Alert Theme)
@@ -1252,39 +1435,290 @@
 
 
         // =========================================================================
-        // 2. DIÁLOGOS DEL CODEC (GUION MGS DE LA CÁTEDRA SAO)
+        // 2. SISTEMA CODEC MULTIFRECUENCIA & RETRATOS SVG DE LA CÁTEDRA
         // =========================================================================
+
+        function getPortraitSVG(id) {
+            if (id === 'solid_byte') {
+                return `<svg viewBox="0 0 100 100">
+                    <rect width="100" height="100" fill="#042310" />
+                    <rect x="30" y="25" width="40" height="45" fill="#78909C" />
+                    <rect x="25" y="32" width="50" height="12" fill="#1B5E20" />
+                    <polygon points="25,38 10,48 20,52" fill="#1B5E20" />
+                    <rect x="30" y="18" width="40" height="14" fill="#37474F" />
+                    <rect x="30" y="55" width="40" height="15" fill="#455A64" />
+                    <rect x="36" y="36" width="8" height="4" fill="#E0E0E0" />
+                    <rect x="56" y="36" width="8" height="4" fill="#E0E0E0" />
+                    <circle cx="72" cy="46" r="6" fill="#00FF66" opacity="0.8" />
+                </svg>`;
+            } else if (id === 'coronel') {
+                // Coronel / Profesor (Tomás): Traje formal, gafas oscuras cuadradas, corbata dorada
+                return `<svg viewBox="0 0 100 100">
+                    <rect width="100" height="100" fill="#001B3A" />
+                    <rect x="28" y="22" width="44" height="48" fill="#F0D5BA" />
+                    <rect x="26" y="14" width="48" height="16" fill="#374151" />
+                    <rect x="32" y="34" width="14" height="8" fill="none" stroke="#002B5B" stroke-width="2.5" />
+                    <rect x="54" y="34" width="14" height="8" fill="none" stroke="#002B5B" stroke-width="2.5" />
+                    <line x1="46" y1="38" x2="54" y2="38" stroke="#002B5B" stroke-width="2" />
+                    <rect x="36" y="36" width="6" height="4" fill="#263238" />
+                    <rect x="58" y="36" width="6" height="4" fill="#263238" />
+                    <rect x="20" y="70" width="60" height="30" fill="#0F172A" />
+                    <polygon points="46,70 54,70 50,88" fill="#F59E0B" />
+                </svg>`;
+            } else if (id === 'enlace') {
+                // Tutora de Enlace / Sys (Micaela): Auricular con micro, cabello castaño con coleta, chaqueta verde azulada
+                return `<svg viewBox="0 0 100 100">
+                    <rect width="100" height="100" fill="#042F2E" />
+                    <rect x="22" y="14" width="56" height="24" fill="#451A03" />
+                    <polygon points="22,25 12,45 22,50" fill="#451A03" />
+                    <rect x="30" y="24" width="40" height="46" fill="#FDE047" opacity="0.85" />
+                    <rect x="38" y="36" width="7" height="4" fill="#1C1917" />
+                    <rect x="55" y="36" width="7" height="4" fill="#1C1917" />
+                    <rect x="45" y="52" width="10" height="3" fill="#DC2626" />
+                    <circle cx="28" cy="42" r="6" fill="#0D9488" />
+                    <path d="M 28 42 Q 35 58 44 58" fill="none" stroke="#0D9488" stroke-width="2.5" />
+                    <circle cx="44" cy="58" r="3" fill="#00FF66" />
+                    <rect x="22" y="70" width="56" height="30" fill="#134E4A" />
+                    <rect x="46" y="70" width="8" height="30" fill="#0D9488" />
+                </svg>`;
+            } else if (id === 'mayor') {
+                // Mayor / Profesor (Gastón): Gafas aviador tácticas oscuras, cabello peinado hacia atrás, cuello tortuga y chaleco
+                return `<svg viewBox="0 0 100 100">
+                    <rect width="100" height="100" fill="#1E1B4B" />
+                    <rect x="26" y="12" width="48" height="20" fill="#78716C" />
+                    <rect x="28" y="24" width="44" height="46" fill="#E2C799" />
+                    <polygon points="32,32 46,32 44,44 34,44" fill="#0F172A" stroke="#F59E0B" stroke-width="2" />
+                    <polygon points="54,32 68,32 66,44 56,44" fill="#0F172A" stroke="#F59E0B" stroke-width="2" />
+                    <line x1="46" y1="36" x2="54" y2="36" stroke="#F59E0B" stroke-width="2" />
+                    <rect x="20" y="70" width="60" height="30" fill="#312E81" />
+                    <rect x="42" y="66" width="16" height="14" fill="#1E1B4B" />
+                    <line x1="50" y1="70" x2="50" y2="100" stroke="#F59E0B" stroke-width="2" />
+                </svg>`;
+            } else if (id === 'logica') {
+                // Tutora de Lógica (Macarena): Gafas finas, guardapolvo técnico blanco con credencial SAO
+                return `<svg viewBox="0 0 100 100">
+                    <rect width="100" height="100" fill="#1E293B" />
+                    <rect x="26" y="14" width="48" height="22" fill="#1E1E24" />
+                    <polygon points="74,24 82,38 74,48" fill="#1E1E24" />
+                    <rect x="30" y="26" width="40" height="44" fill="#FCE7D0" />
+                    <rect x="34" y="34" width="12" height="7" fill="none" stroke="#38BDF8" stroke-width="2" />
+                    <rect x="54" y="34" width="12" height="7" fill="none" stroke="#38BDF8" stroke-width="2" />
+                    <line x1="46" y1="37" x2="54" y2="37" stroke="#38BDF8" stroke-width="2" />
+                    <rect x="38" y="36" width="4" height="3" fill="#0284C7" />
+                    <rect x="58" y="36" width="4" height="3" fill="#0284C7" />
+                    <rect x="22" y="70" width="56" height="30" fill="#F1F5F9" />
+                    <polygon points="46,70 54,70 50,86" fill="#0284C7" />
+                    <rect x="60" y="76" width="10" height="12" fill="#38BDF8" />
+                </svg>`;
+            } else if (id === 'debugging') {
+                // Tutor de Debugging (Lijandy): ¡CUBANO! Boina verde con pin dorado, barba corta candado y guayabera
+                return `<svg viewBox="0 0 100 100">
+                    <rect width="100" height="100" fill="#14532D" />
+                    <path d="M 22 24 C 22 14 78 12 78 24 C 82 28 80 32 72 32 L 24 30 Z" fill="#047857" />
+                    <circle cx="50" cy="18" r="3" fill="#F59E0B" />
+                    <rect x="28" y="26" width="44" height="46" fill="#C28854" />
+                    <path d="M 36 50 Q 50 66 64 50 L 62 66 Q 50 72 38 66 Z" fill="#1C1917" />
+                    <rect x="44" y="52" width="12" height="3" fill="#1C1917" />
+                    <rect x="36" y="36" width="7" height="4" fill="#000" />
+                    <rect x="57" y="36" width="7" height="4" fill="#000" />
+                    <circle cx="72" cy="40" r="5" fill="#10B981" />
+                    <line x1="72" y1="35" x2="78" y2="24" stroke="#10B981" stroke-width="2" />
+                    <rect x="20" y="72" width="60" height="28" fill="#F5F5DC" />
+                    <line x1="32" y1="72" x2="32" y2="100" stroke="#047857" stroke-width="2" />
+                    <line x1="68" y1="72" x2="68" y2="100" stroke="#047857" stroke-width="2" />
+                </svg>`;
+            } else if (id === 'algoritmos') {
+                // Tutor de Algoritmos (Agustín): ¡OJOS AZULES BRILLANTES Y BIEN MARCADOS!, buzo tecnológico
+                return `<svg viewBox="0 0 100 100">
+                    <rect width="100" height="100" fill="#0369A1" />
+                    <rect x="26" y="14" width="48" height="20" fill="#5A3825" />
+                    <polygon points="26,20 18,32 26,30" fill="#5A3825" />
+                    <rect x="28" y="26" width="44" height="44" fill="#F8D3B0" />
+                    <!-- Cejas y OJOS AZULES BIEN DESTACADOS -->
+                    <rect x="33" y="32" width="11" height="3" fill="#3E2723" />
+                    <rect x="56" y="32" width="11" height="3" fill="#3E2723" />
+                    <!-- Ojos Azules Brillantes -->
+                    <rect x="33" y="36" width="11" height="8" fill="#0284C7" />
+                    <rect x="36" y="37" width="6" height="6" fill="#38BDF8" />
+                    <rect x="38" y="38" width="2.5" height="2.5" fill="#FFFFFF" />
+                    <rect x="56" y="36" width="11" height="8" fill="#0284C7" />
+                    <rect x="59" y="37" width="6" height="6" fill="#38BDF8" />
+                    <rect x="61" y="38" width="2.5" height="2.5" fill="#FFFFFF" />
+                    <!-- Auricular gamer -->
+                    <circle cx="26" cy="42" r="6" fill="#0284C7" />
+                    <rect x="24" y="48" width="4" height="12" fill="#38BDF8" />
+                    <!-- Buzo técnico -->
+                    <rect x="20" y="70" width="60" height="30" fill="#0F172A" />
+                    <polygon points="50,70 38,82 62,82" fill="#0284C7" />
+                </svg>`;
+            }
+            return '';
+        }
+
+        // Contactos del Transceptor CODEC
+        const codecContacts = [
+            { freq: "140.85", id: "coronel", role: "CORONEL // PROFESOR SAO", speaker: "CORONEL // PROFESOR SAO", label: "CORONEL (140.85)", defaultScript: "call" },
+            { freq: "140.96", id: "enlace", role: "TUTORA DE ENLACE // SYS", speaker: "TUTORA DE ENLACE // SYS", label: "ENLACE (140.96)", defaultScript: "enlace" },
+            { freq: "141.12", id: "mayor", role: "MAYOR // PROFESOR SAO", speaker: "MAYOR // PROFESOR SAO", label: "MAYOR (141.12)", defaultScript: "mayor" },
+            { freq: "141.40", id: "logica", role: "TUTORA DE LÓGICA // LAB", speaker: "TUTORA DE LÓGICA // LAB", label: "LÓGICA (141.40)", defaultScript: "logica" },
+            { freq: "141.65", id: "debugging", role: "TUTOR DE DEBUGGING // LAB", speaker: "TUTOR DE DEBUGGING // LAB", label: "DEBUG (141.65)", defaultScript: "debugging" },
+            { freq: "141.80", id: "algoritmos", role: "TUTOR DE ALGORITMOS // LAB", speaker: "TUTOR DE ALGORITMOS // LAB", label: "ALGORITMOS (141.80)", defaultScript: "algoritmos" }
+        ];
+
+        // Diálogos pedagógicos y narrativos
         const codecScripts = {
             intro: [
-                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "Solid Byte, ¿me escuchás? El enlace está asegurado en la frecuencia 140.85." },
-                { speaker: "SOLID BYTE", text: "Fuerte y claro, Profesor. Me infiltré en el ala de servidores de la UTN Santa Fe." },
-                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "Tu objetivo es desactivar el malware 'NullPointer'. Para avanzar por los pasillos, debés hackear las 3 terminales de seguridad resolviendo desafíos de Java." },
-                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "Cuidado con los Centinelas de la JVM. Tienen conos de visión activos. Si te detectan, ¡usá la Caja de Cartón [B] o corré a esconderte!" },
-                { speaker: "SOLID BYTE", text: "Entendido. Caja de Cartón lista. Comienzo la infiltración." }
+                { speaker: "CORONEL // PROFESOR SAO", text: "Solid Byte, ¿me escuchás? El enlace táctico está asegurado en la frecuencia 140.85." },
+                { speaker: "SOLID BYTE", text: "Fuerte y claro, Coronel. Me infiltré en el ala de servidores de la UTN Santa Fe." },
+                { speaker: "CORONEL // PROFESOR SAO", text: "Tu objetivo es desactivar el malware 'NullPointer' que amenaza los registros de SAO. Para avanzar por los pasillos, debés hackear las 3 terminales de seguridad resolviendo desafíos de Java." },
+                { speaker: "CORONEL // PROFESOR SAO", text: "Cuidado con los Centinelas de la JVM. Tienen conos de visión activos. Si te detectan, ¡usá la Caja de Cartón [B], golpeá paredes con [F] para distraerlos o corré a esconderte detrás de los racks!" },
+                { speaker: "CORONEL // PROFESOR SAO", text: "El equipo docente completo está en línea en distintas frecuencias. Sintonizalos con las flechas si necesitás asesoramiento técnico de las Unidades 1 a 5." },
+                { speaker: "SOLID BYTE", text: "Entendido. Caja de Cartón y transceptor listos. Comienzo la infiltración." }
             ],
             call: [
-                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "¿Necesitás apoyo táctico, Byte? Acordate:" },
-                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "1. En Java los bytes van de -128 a 127. No dejes que se desborden." },
-                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "2. Las condiciones cortocircuitan con '&&'. Si la primera es falsa, la segunda ni se evalúa." },
-                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "Si un guardia te persigue, rompeles la línea de visión detrás de una pared para volver a fase de PRECAUCIÓN." }
+                { speaker: "CORONEL // PROFESOR SAO", text: "Solid Byte, recordá las directivas tácticas para regularizar la misión:" },
+                { speaker: "CORONEL // PROFESOR SAO", text: "1. Cero pérdida de datos: respetá la jerarquía de tipos primitivos de la Unidad 2." },
+                { speaker: "CORONEL // PROFESOR SAO", text: "2. Si caes en estado de ALERTA, rompeles la línea de visión detrás de las paredes y racks para que los centinelas pasen a fase de PRECAUCIÓN." },
+                { speaker: "CORONEL // PROFESOR SAO", text: "Usá la mecánica de golpe en la pared [F] para atraer a los centinelas hacia donde vos quieras y abrirte paso." }
+            ],
+            enlace: [
+                { speaker: "TUTORA DE ENLACE // SYS", text: "Solid Byte, aquí la Tutora de Enlace de Sistemas. Superviso el enlace telemático y la persistencia de datos." },
+                { speaker: "TUTORA DE ENLACE // SYS", text: "Podés respaldar tu posición, vida y terminales hackeadas directamente en la memoria flash de tu navegador (localStorage) usando los botones de esta frecuencia." },
+                { speaker: "TUTORA DE ENLACE // SYS", text: "Como reza el proverbio de la ingeniería de software: 'Aquel que prueba su código solo en producción, conocerá el desvelo; mas quien guarda sus checkpoints, conquistará la memoria'." },
+                { speaker: "TUTORA DE ENLACE // SYS", text: "Si estás herido o querés asegurar tus avances antes del Núcleo, ¡tocá GUARDAR CHECKPOINT!" }
+            ],
+            mayor: [
+                { speaker: "MAYOR // PROFESOR SAO", text: "Solid Byte, escuchame bien. Tu estrategia en este laberinto debe aplicar la metodología Top-Down de la Unidad 4." },
+                { speaker: "MAYOR // PROFESOR SAO", text: "Divide y vencerás. No intentes abarcar toda la instalación como un solo bloque inmanejable de código." },
+                { speaker: "MAYOR // PROFESOR SAO", text: "Cada sector es como un método modular: recibe parámetros (tu sigilo y reflejos), ejecuta una tarea concreta (hackear la subestación) y devuelve un estado seguro." },
+                { speaker: "MAYOR // PROFESOR SAO", text: "Si un centinela patrulla tu camino, no vayas de frente. Planificá tu ruta y utilizá las columnas para desviar su trayectoria." }
+            ],
+            logica: [
+                { speaker: "TUTORA DE LÓGICA // LAB", text: "Solid Byte, aquí el laboratorio de lógica. Estoy analizando la Terminal 01 del Sector 1." },
+                { speaker: "TUTORA DE LÓGICA // LAB", text: "El sensor térmico de la compuerta láser entrega lecturas en coma flotante con tipo 'double'." },
+                { speaker: "TUTORA DE LÓGICA // LAB", text: "Pero el servomotor del cerrojo solo acepta un entero 'int'. Java es fuertemente tipado y no permite asignar un double a un int implícitamente por riesgo de pérdida de precisión decimal." },
+                { speaker: "TUTORA DE LÓGICA // LAB", text: "¡Aplicá casting explícito anteponiendo (int) a la variable para compilar la calibración y abrir la compuerta láser!" }
+            ],
+            debugging: [
+                { speaker: "TUTOR DE DEBUGGING // LAB", text: "¡Oye, asere! ¿Qué bola, mi hermano? ¿Cómo te trata esa JVM?" },
+                { speaker: "TUTOR DE DEBUGGING // LAB", text: "Mira, chico, te tengo tremendo dato para la Terminal 02 del Sector 2. Esos centinelas creen que el bucle de seguridad está corriendo a toda máquina, pero le clavaron una trampa de sintaxis." },
+                { speaker: "TUTOR DE DEBUGGING // LAB", text: "Muchos meten un punto y coma traicionero justo al final de 'for(int i = 0; i < 5; i++);'. ¡Ay mi madre! Eso corta la cabecera en seco, deja el bucle vacío y lo que está entre llaves se ejecuta una sola vez." },
+                { speaker: "TUTOR DE DEBUGGING // LAB", text: "No te dejes engañar creyendo que itera cinco veces, asere. ¡Cazá ese punto y coma intruso, neutralizalo y métele candela!" }
+            ],
+            algoritmos: [
+                { speaker: "TUTOR DE ALGORITMOS // LAB", text: "Byte, aquí el tutor de algoritmos. Veo que llegaste al núcleo en la Terminal 03." },
+                { speaker: "TUTOR DE ALGORITMOS // LAB", text: "Para restablecer el mainframe necesitás dominar el manejo de arreglos y el método de ordenamiento Burbuja de la Unidad 5." },
+                { speaker: "TUTOR DE ALGORITMOS // LAB", text: "Para intercambiar dos elementos en un vector, nunca sobreescribas el primer elemento sin haberlo guardado antes en una variable auxiliar temporal 'tmp'." },
+                { speaker: "TUTOR DE ALGORITMOS // LAB", text: "El swap clásico es: 'tmp = registros[0]; registros[0] = registros[1]; registros[1] = tmp;'. Además recordá que si un vector tiene tamaño N, sus índices válidos van de 0 a N-1." }
             ],
             victory: [
-                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "¡Increíble trabajo, Solid Byte! Todas las terminales fueron restablecidas." },
-                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "Demostraste un dominio táctico impecable de variables, condicionales y vectores en Java." },
-                { speaker: "SOLID BYTE", text: "Misión cumplida. Me dirijo al punto de extracción en la cantina de la facultad." }
+                { speaker: "CORONEL // PROFESOR SAO", text: "¡Misión impecable, Solid Byte! Todas las subestaciones del mainframe fueron restablecidas." },
+                { speaker: "CORONEL // PROFESOR SAO", text: "Demostraste un dominio táctico supremo de los contenidos de SAO: casting explícito, control de bucles y algoritmos con vectores." },
+                { speaker: "SOLID BYTE", text: "Misión cumplida, Coronel. Me dirijo al punto de extracción en la cantina de la facultad por un café." }
             ]
         };
 
+        let currentContactIndex = 0;
         let currentCodecQueue = [];
         let currentCodecIndex = 0;
         let typewriterTimer = null;
+
+        function renderCodecChips() {
+            const bar = document.getElementById('freq-chips-bar');
+            if (!bar) return;
+            bar.innerHTML = '';
+            codecContacts.forEach((contact, idx) => {
+                const chip = document.createElement('button');
+                chip.className = `freq-chip ${idx === currentContactIndex ? 'active' : ''}`;
+                chip.innerHTML = `<i class="fa-solid fa-signal"></i> ${contact.label}`;
+                chip.onclick = (e) => {
+                    e.stopPropagation();
+                    tuneCodecContact(idx);
+                };
+                bar.appendChild(chip);
+            });
+        }
+
+        function tuneCodecContact(index) {
+            currentContactIndex = (index + codecContacts.length) % codecContacts.length;
+            const contact = codecContacts[currentContactIndex];
+            getAudioContext();
+            playSFX('codec-ring');
+
+            document.getElementById('freq-display').textContent = `${contact.freq} MHz`;
+            const hudFreq = document.getElementById('hud-freq-label');
+            if (hudFreq) hudFreq.textContent = contact.freq;
+            const callBtn = document.getElementById('btn-codec-call');
+            if (callBtn) callBtn.title = `Abrir Radio CODEC [C] (${contact.freq})`;
+
+            // Actualizar retrato del contacto
+            const portraitFrame = document.getElementById('codec-contact-portrait');
+            if (portraitFrame) portraitFrame.innerHTML = getPortraitSVG(contact.id);
+
+            const roleElem = document.getElementById('codec-contact-role');
+            if (roleElem) roleElem.textContent = contact.role;
+
+            // Mostrar u ocultar panel de guardado en 140.96
+            const savePanel = document.getElementById('codec-save-panel');
+            if (savePanel) {
+                savePanel.style.display = (contact.freq === "140.96") ? 'flex' : 'none';
+            }
+
+            renderCodecChips();
+
+            currentCodecQueue = codecScripts[contact.defaultScript] || codecScripts.call;
+            currentCodecIndex = 0;
+            renderCurrentCodecLine();
+        }
+
+        function prevCodecContact(e) {
+            if (e) e.stopPropagation();
+            tuneCodecContact(currentContactIndex - 1);
+        }
+
+        function nextCodecContact(e) {
+            if (e) e.stopPropagation();
+            tuneCodecContact(currentContactIndex + 1);
+        }
 
         function openCodecDialog(scriptKey) {
             getAudioContext();
             playSFX('codec-ring');
 
-            currentCodecQueue = codecScripts[scriptKey] || codecScripts.call;
+            // Asegurar retrato de Solid Byte
+            const playerPortrait = document.getElementById('codec-player-portrait');
+            if (playerPortrait && !playerPortrait.innerHTML.trim()) {
+                playerPortrait.innerHTML = getPortraitSVG('solid_byte');
+            }
+
+            if (scriptKey === 'intro') {
+                currentContactIndex = 0;
+                currentCodecQueue = codecScripts.intro;
+            } else if (scriptKey === 'victory') {
+                currentContactIndex = 0;
+                currentCodecQueue = codecScripts.victory;
+            } else {
+                const contact = codecContacts[currentContactIndex];
+                currentCodecQueue = codecScripts[contact.defaultScript] || codecScripts.call;
+            }
+
             currentCodecIndex = 0;
+
+            const contact = codecContacts[currentContactIndex];
+            document.getElementById('freq-display').textContent = `${contact.freq} MHz`;
+            const hudFreq = document.getElementById('hud-freq-label');
+            if (hudFreq) hudFreq.textContent = contact.freq;
+
+            const portraitFrame = document.getElementById('codec-contact-portrait');
+            if (portraitFrame) portraitFrame.innerHTML = getPortraitSVG(contact.id);
+
+            const roleElem = document.getElementById('codec-contact-role');
+            if (roleElem) roleElem.textContent = contact.role;
+
+            const savePanel = document.getElementById('codec-save-panel');
+            if (savePanel) savePanel.style.display = (contact.freq === "140.96") ? 'flex' : 'none';
+
+            renderCodecChips();
 
             const screen = document.getElementById('codec-screen');
             screen.style.display = 'flex';
@@ -1327,7 +1761,6 @@
 
         function advanceCodec() {
             if (typewriterTimer) {
-                // Saltear animación y mostrar texto completo
                 clearInterval(typewriterTimer);
                 typewriterTimer = null;
                 document.getElementById('codec-message').textContent = currentCodecQueue[currentCodecIndex].text;
@@ -1342,48 +1775,105 @@
             advanceCodec();
         }
 
+        // Guardado y Carga de Checkpoint en LocalStorage (Frecuencia 140.96)
+        function saveGameCheckpoint(e) {
+            if (e) e.stopPropagation();
+            try {
+                const saveObj = {
+                    player: {
+                        x: Math.round(gameState.player.x),
+                        y: Math.round(gameState.player.y),
+                        hp: gameState.player.hp,
+                        dir: gameState.player.dir
+                    },
+                    terminals: hackTerminals.map(t => t.unlocked),
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('sao_mgs_checkpoint', JSON.stringify(saveObj));
+                playSFX('hack-success');
+                showToast("¡PARTIDA GUARDADA EN MEMORIA FLASH!");
+                const hint = document.getElementById('codec-hint');
+                if (hint) hint.textContent = "[CHECKPOINT GUARDADO CON ÉXITO]";
+            } catch(err) {
+                console.warn(err);
+                showToast("ERROR AL ACCEDER A LOCALSTORAGE");
+            }
+        }
+
+        function loadGameCheckpoint(e) {
+            if (e) e.stopPropagation();
+            try {
+                const raw = localStorage.getItem('sao_mgs_checkpoint');
+                if (!raw) {
+                    showToast("NO HAY CHECKPOINT GUARDADO EN MEMORIA");
+                    return;
+                }
+                const saveObj = JSON.parse(raw);
+                if (saveObj.player) {
+                    gameState.player.x = saveObj.player.x || 60;
+                    gameState.player.y = saveObj.player.y || 225;
+                    gameState.player.hp = (saveObj.player.hp !== undefined) ? saveObj.player.hp : 100;
+                    gameState.player.dir = saveObj.player.dir || 0;
+                    document.getElementById('life-bar').style.width = `${gameState.player.hp}%`;
+                }
+                if (Array.isArray(saveObj.terminals)) {
+                    saveObj.terminals.forEach((unlocked, idx) => {
+                        if (hackTerminals[idx]) {
+                            hackTerminals[idx].unlocked = unlocked;
+                        }
+                    });
+                }
+                playSFX('box');
+                showToast("¡CHECKPOINT RESTAURADO CON ÉXITO!");
+                closeCodecDialog();
+            } catch(err) {
+                console.warn(err);
+                showToast("ERROR AL RESTAURAR CHECKPOINT");
+            }
+        }
+
 
         // =========================================================================
-        // 3. BASE DE DATOS DE HACKEOS DE CÓDIGO (CURRICULAR SAO)
+        // 3. BASE DE DATOS DE HACKEOS DE CÓDIGO (CURRICULAR SAO UNIDADES 2, 3, 5)
         // =========================================================================
         const hackTerminals = [
             {
                 id: "T1",
-                name: "TERMINAL 01 // CALIBRADOR DE REGISTROS (UNIDAD 2)",
-                code: "byte nivelSeguridad = 127;\n// Se intenta forzar el registro de hardware:\nnivelSeguridad = (byte) (nivelSeguridad + 1);",
-                question: "¿Cuál será el valor numérico en el registro tras el desbordamiento (Overflow)?",
+                name: "TERMINAL 01 // CALIBRADOR DE HARDWARE (UNIDAD 2)",
+                code: "double lecturaSensor = 104.75;\n// El servomotor requiere un int exacto para destrabar el láser:\nint calibracion = lecturaSensor; // Error: possible lossy conversion",
+                question: "El compilador rechaza la asignación directa. ¿Cómo se debe corregir la línea para forzar la conversión explícita según la Unidad 2?",
                 options: [
-                    { text: "-128 (El valor da la vuelta al mínimo negativo con signo)", correct: true },
-                    { text: "128 (Se guarda como positivo sin errores)", correct: false },
-                    { text: "0 (Se resetea a cero automáticamente)", correct: false }
+                    { text: "int calibracion = (int) lecturaSensor; (Casting explícito truncando decimales a 104)", correct: true },
+                    { text: "int calibracion = lecturaSensor.toInt(); (Invocar método inexistente en primitivo)", correct: false },
+                    { text: "int calibracion = (double) lecturaSensor; (Reiterar tipo incompatible double)", correct: false }
                 ],
-                explanation: "¡HACKEO EXITOSO! Desbordamiento comprendido (-128). REJILLA LÁSER DEL SECTOR 1 DESACTIVADA.",
+                explanation: "¡CALIBRACIÓN EXITOSA! Casting explícito (int) aplicado. REJILLA LÁSER DEL SECTOR 1 DESACTIVADA.",
                 unlocked: false
             },
             {
                 id: "T2",
-                name: "TERMINAL 02 // CORTACIRCUITO DE REJILLA LÁSER (UNIDAD 3)",
-                code: "boolean laserActivo = true;\nint codigo = 42;\n\nif (laserActivo && (codigo > 50)) {\n    alarmaSonora();\n}",
-                question: "¿Por qué se desactiva la alarma sonora en esta instrucción condicional?",
+                name: "TERMINAL 02 // SUBESTACIÓN DE PERIFÉRICOS (UNIDAD 3)",
+                code: "int activaciones = 0;\nfor (int i = 0; i < 5; i++);\n{\n    activaciones++;\n}",
+                question: "¿Cuál será el valor final de 'activaciones' al ejecutarse este fragmento y por qué según la Unidad 3?",
                 options: [
-                    { text: "Porque 'codigo > 50' es falso y el operador '&&' exige que ambas sean verdaderas", correct: true },
-                    { text: "Porque 'laserActivo' es falso y corta el circuito", correct: false },
-                    { text: "Porque en Java los números enteros no pueden compararse en un if", correct: false }
+                    { text: "1 (El ';' al final del for deja el bucle vacío; el bloque { } se ejecuta una sola vez)", correct: true },
+                    { text: "5 (El bucle itera 5 veces incrementando la variable en cada ciclo)", correct: false },
+                    { text: "0 (La presencia del punto y coma produce un error sintáctico de compilación)", correct: false }
                 ],
-                explanation: "¡HACKEO EXITOSO! Cortocircuito lógico '&&' ejecutado. REJILLA LÁSER DEL SECTOR 2 DESACTIVADA.",
+                explanation: "¡VULNERABILIDAD NEUTRALIZADA! Trampa del punto y coma descubierta. REJILLA LÁSER DEL SECTOR 2 DESACTIVADA.",
                 unlocked: false
             },
             {
                 id: "T3",
-                name: "TERMINAL 03 // COMPUERTAS DEL NÚCLEO (UNIDAD 4)",
-                code: "int[] codigosAcceso = { 101, 204, 309 };\nfor (int i = 0; i <= codigosAcceso.length; i++) {\n    verificarNodo(codigosAcceso[i]);\n}",
-                question: "¿Qué grave fallo de ejecución se produce al correr este bucle?",
+                name: "TERMINAL 03 // MAINFRAME CENTRAL (UNIDAD 5)",
+                code: "int[] registros = { 85, 42 };\n// Intercambio de claves en el algoritmo de ordenamiento Burbuja:\nint tmp = registros[0];\nregistros[0] = registros[1];\nregistros[1] = /* ??? */;",
+                question: "¿Qué expresión debe colocarse en '/* ??? */' para completar el intercambio (swap) sin perder el valor original?",
                 options: [
-                    { text: "ArrayIndexOutOfBoundsException (el índice llega a 3, pero los índices van de 0 a 2)", correct: true },
-                    { text: "Compila y recorre los 3 elementos sin problemas", correct: false },
-                    { text: "Error de tipos: int no puede guardarse en un vector", correct: false }
+                    { text: "tmp; (Se asigna la variable temporal que resguardó el valor original de registros[0])", correct: true },
+                    { text: "registros[0]; (Se reasigna el elemento actual que ya fue sobreescrito con 42)", correct: false },
+                    { text: "registros.length; (Se asigna la longitud del arreglo en lugar del dato guardado)", correct: false }
                 ],
-                explanation: "¡NÚCLEO PRINCIPAL RESTABLECIDO! Índice 3 capturado. Malware NullPointer purgado de la UTN.",
+                explanation: "¡MAINFRAME RESTABLECIDO! Swap de burbuja completado con variable temporal. ¡Malware neutralizado!",
                 unlocked: false
             }
         ];
@@ -1429,7 +1919,7 @@
                 setTimeout(() => {
                     closeHackTerminal();
 
-                    // Si se hackearon todas, abrir diálogo final
+                    // Si se hackearon todas, abrir diálogo final de victoria
                     const allUnlocked = hackTerminals.every(t => t.unlocked);
                     if (allUnlocked) {
                         gameState.missionCompleted = true;
@@ -1439,7 +1929,7 @@
 
             } else {
                 playSFX('alert');
-                triggerAlert(99.99);
+                triggerAlert();
                 document.getElementById('hack-feedback').innerHTML = `<span style="color: var(--mgs-red); font-weight: 700;">¡ERROR DE COMPILACIÓN! Alarma activada en los servidores.</span>`;
                 setTimeout(() => closeHackTerminal(), 1000);
             }
@@ -1479,7 +1969,9 @@
                     dirY: 1,
                     angle: Math.PI / 2, // mirando hacia abajo
                     fov: Math.PI / 3,   // 60 grados
-                    viewDist: 155
+                    viewDist: 155,
+                    investigateTarget: null,
+                    investigateTimer: 0
                 },
                 {
                     id: 2,
@@ -1494,7 +1986,9 @@
                     dirY: -1,
                     angle: -Math.PI / 2, // mirando hacia arriba
                     fov: Math.PI / 3,
-                    viewDist: 155
+                    viewDist: 155,
+                    investigateTarget: null,
+                    investigateTimer: 0
                 }
             ],
             terminals: [
@@ -1523,6 +2017,7 @@
                 { x: 620, y: 16, w: 24, h: 144 },
                 { x: 620, y: 290, w: 24, h: 144 }
             ],
+            soundWaves: [],
             alertTimer: 0,
             alertState: 'normal', // 'normal' | 'caution' | 'alert'
             lastSeenX: 60,
@@ -1563,6 +2058,55 @@
             }
         }
 
+        // Golpe Táctico en la Pared (Knock / Distracción)
+        function performWallKnock() {
+            getAudioContext();
+            const p = gameState.player;
+            let nearWall = false;
+
+            for (let w of gameState.walls) {
+                const closestX = Math.max(w.x, Math.min(p.x, w.x + w.w));
+                const closestY = Math.max(w.y, Math.min(p.y, w.y + w.h));
+                const dist = Math.hypot(p.x - closestX, p.y - closestY);
+                if (dist <= p.radius + 18) {
+                    nearWall = true;
+                    break;
+                }
+            }
+
+            if (nearWall) {
+                playSFX('knock');
+                gameState.soundWaves.push({
+                    x: p.x,
+                    y: p.y,
+                    radius: 6,
+                    maxRadius: 180,
+                    alpha: 0.95
+                });
+                showToast("¡TOC TOC! (Golpe en la pared)");
+
+                // Distraer centinelas dentro del radio de audición táctico (220px)
+                gameState.guards.forEach(g => {
+                    const dist = Math.hypot(p.x - g.x, p.y - g.y);
+                    if (dist < 220) {
+                        if (gameState.alertState !== 'alert') {
+                            g.investigateTarget = { x: p.x, y: p.y };
+                            g.angle = Math.atan2(p.y - g.y, p.x - g.x);
+                            g.investigateTimer = 4.0;
+                            gameState.alertState = 'caution';
+                            gameState.alertTimer = Math.max(gameState.alertTimer, 4.0);
+                            const alertBox = document.getElementById('alert-box');
+                            if (alertBox) alertBox.className = 'alert-gauge active caution';
+                            const tag = document.getElementById('alert-tag');
+                            if (tag) tag.textContent = '? PRECAUCIÓN';
+                        }
+                    }
+                });
+            } else {
+                playTone(180, 0.05, 'triangle', 0.08);
+            }
+        }
+
         // Detección de Teclado
         window.addEventListener('keydown', (e) => {
             const key = e.key.toLowerCase();
@@ -1570,7 +2114,11 @@
 
             const codecScreen = document.getElementById('codec-screen');
             if (codecScreen.style.display === 'flex') {
-                if (key === ' ' || key === 'enter') {
+                if (key === 'arrowleft') {
+                    prevCodecContact();
+                } else if (key === 'arrowright') {
+                    nextCodecContact();
+                } else if (key === ' ' || key === 'enter') {
                     advanceCodec();
                 } else if (key === 'escape') {
                     closeCodecDialog();
@@ -1582,6 +2130,8 @@
                 toggleCardboardBox();
             } else if (key === 'c') {
                 openCodecDialog('call');
+            } else if (key === 'f' || key === 'k') {
+                performWallKnock();
             } else if (key === 'e' || key === ' ') {
                 checkTerminalInteraction();
             }
@@ -1633,6 +2183,7 @@
         }
 
         bindFastAction('btn-touch-action', () => checkTerminalInteraction());
+        bindFastAction('btn-touch-knock', () => performWallKnock());
         bindFastAction('btn-touch-box', () => toggleCardboardBox());
         bindFastAction('btn-touch-codec', () => openCodecDialog('call'));
 
@@ -1754,6 +2305,26 @@
                         takeDamage(0.6);
                     }
 
+                } else if (g.investigateTimer > 0) {
+                    // Investigando el golpe táctico en la pared
+                    g.investigateTimer -= dt;
+                    if (g.investigateTarget) {
+                        const dxTgt = g.investigateTarget.x - g.x;
+                        const dyTgt = g.investigateTarget.y - g.y;
+                        const distToTgt = Math.hypot(dxTgt, dyTgt);
+                        if (distToTgt > 18) {
+                            const ang = Math.atan2(dyTgt, dxTgt);
+                            g.angle = ang;
+                            const invSpeed = 1.15;
+                            const nextGx = g.x + Math.cos(ang) * invSpeed;
+                            const nextGy = g.y + Math.sin(ang) * invSpeed;
+                            if (!checkWallCollision(nextGx, g.y, g.radius)) g.x = nextGx;
+                            if (!checkWallCollision(g.x, nextGy, g.radius)) g.y = nextGy;
+                        } else {
+                            g.angle += Math.sin(Date.now() * 0.006 + g.id) * 0.04;
+                        }
+                    }
+
                 } else if (gameState.alertState === 'caution') {
                     // Fase PRECAUCIÓN: El guardia barre su cono de visión y vuelve lentamente
                     g.angle += Math.sin(Date.now() * 0.005 + g.id) * 0.035;
@@ -1837,11 +2408,9 @@
         }
 
         function lineIntersectsRect(x1, y1, x2, y2, rx, ry, rw, rh) {
-            // 1. Si algún punto está dentro de la pared
             if (x1 >= rx && x1 <= rx + rw && y1 >= ry && y1 <= ry + rh) return true;
             if (x2 >= rx && x2 <= rx + rw && y2 >= ry && y2 <= ry + rh) return true;
 
-            // 2. Si el segmento cruza alguno de los 4 bordes del rectángulo
             return segmentsIntersect(x1, y1, x2, y2, rx, ry, rx + rw, ry) ||
                    segmentsIntersect(x1, y1, x2, y2, rx, ry + rh, rx + rw, ry + rh) ||
                    segmentsIntersect(x1, y1, x2, y2, rx, ry, rx, ry + rh) ||
@@ -1897,12 +2466,15 @@
                 g.y = g.spawnY;
                 g.dirY = (g.id === 1) ? 1 : -1;
                 g.angle = (g.id === 1) ? Math.PI / 2 : -Math.PI / 2;
+                g.investigateTarget = null;
+                g.investigateTimer = 0;
             });
 
-            // 3. Reiniciar Alerta a Normal
+            // 3. Reiniciar Alerta y Ondas
             gameState.alertTimer = 0;
             gameState.alertState = 'normal';
             gameState.missionCompleted = false;
+            gameState.soundWaves = [];
 
             const alertBox = document.getElementById('alert-box');
             if (alertBox) alertBox.className = 'alert-gauge';
@@ -1942,6 +2514,22 @@
                 ctx.lineTo(canvas.width, y);
                 ctx.stroke();
             }
+
+            // 1.5. Ondas acústicas tácticas (Knock en pared)
+            gameState.soundWaves.forEach(wave => {
+                ctx.save();
+                ctx.strokeStyle = `rgba(0, 255, 102, ${wave.alpha})`;
+                ctx.lineWidth = 2.5;
+                ctx.shadowColor = '#00FF66';
+                ctx.shadowBlur = 8;
+                ctx.beginPath();
+                ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.restore();
+                wave.radius += 3.4;
+                wave.alpha -= 0.022;
+            });
+            gameState.soundWaves = gameState.soundWaves.filter(w => w.alpha > 0);
 
             // 2. Dibujar Paredes y Racks de Servidores
             gameState.walls.forEach(w => {
