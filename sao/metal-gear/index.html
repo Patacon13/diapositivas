@@ -1744,9 +1744,11 @@
             }, 2500);
         }
 
-        // Bandas Sonoras Procedurales (Sneaking vs Alert Theme)
+        // Bandas Sonoras Procedurales (Sneaking, Alert, Boss Battle & Boss Rage)
         const sneakingBass = [110, 0, 110, 130.81, 0, 110, 146.83, 130.81];
         const alertArp = [220, 261.63, 293.66, 349.23, 392, 349.23, 293.66, 261.63];
+        const bossBass = [73.42, 73.42, 87.31, 73.42, 98.0, 87.31, 73.42, 110.0];
+        const bossRageArp = [146.83, 174.61, 220, 293.66, 349.23, 293.66, 220, 174.61];
 
         function setMusicTheme(theme) {
             if (musicTheme === theme) return;
@@ -1768,14 +1770,13 @@
                         playTone(bass, 0.18, 'sawtooth', 0.08);
                     }
                     if (musicStep % 4 === 0) {
-                        // Radar ping tenue
                         playTone(1760, 0.06, 'sine', 0.02);
                     }
                     musicStep++;
                 }, 140);
 
             } else if (theme === 'alert') {
-                // Tema de Persecución Acelerado (145 BPM)
+                // Tema de Persecución Centinelas (145 BPM)
                 musicInterval = setInterval(() => {
                     if (!soundEnabled || musicTheme !== 'alert') return;
                     const note = alertArp[musicStep % alertArp.length];
@@ -1785,6 +1786,32 @@
                     }
                     musicStep++;
                 }, 100);
+
+            } else if (theme === 'boss') {
+                // Tema de Combate contra Boss (Heavy Industrial Synth 135 BPM)
+                musicInterval = setInterval(() => {
+                    if (!soundEnabled || musicTheme !== 'boss') return;
+                    const note = bossBass[musicStep % bossBass.length];
+                    playTone(note, 0.16, 'sawtooth', 0.16);
+                    if (musicStep % 4 === 0) {
+                        playTone(146.83, 0.22, 'square', 0.12);
+                    } else if (musicStep % 2 === 0) {
+                        playTone(55, 0.2, 'triangle', 0.22);
+                    }
+                    musicStep++;
+                }, 110);
+
+            } else if (theme === 'boss-rage') {
+                // Tema de Furia del Boss (Ultra-rápido 165 BPM)
+                musicInterval = setInterval(() => {
+                    if (!soundEnabled || musicTheme !== 'boss-rage') return;
+                    const note = bossRageArp[musicStep % bossRageArp.length];
+                    playTone(note, 0.08, 'sawtooth', 0.18);
+                    if (musicStep % 2 === 0) {
+                        playTone(73.42, 0.15, 'square', 0.25);
+                    }
+                    musicStep++;
+                }, 90);
             }
         }
 
@@ -2144,21 +2171,21 @@
                 { speaker: "TUTORA DE LÓGICA // LAB", text: "¡No intentes campear detrás de los muros! Vulcan avanza periódicamente con sus orugas disparando ráfagas pesadas de bytecode con rebote." },
                 { speaker: "TUTORA DE LÓGICA // LAB", text: "Para dañarlo debés hackear las balizas terminales de la arena. ¡Atención: solo una baliza está activa a la vez y rotan de posición cuando la desactivás!" },
                 { speaker: "TUTORA DE LÓGICA // LAB", text: "Al resolver la baliza activa, Vulcan quedará aturdido por 7 segundos. ¡Acercate a su reactor central y asestale daño crítico con [E] / HACK!" },
-                { speaker: "SOLID BYTE", text: "Recibido, Macarena. A moverse constantemente y cazar las balizas activas. ¡En marcha!" }
+                { speaker: "SOLID BYTE", text: "Recibido. A moverse constantemente y cazar las balizas activas. ¡En marcha!" }
             ],
             boss_briefing_2: [
                 { speaker: "CAPITÁN // PROFESOR SAO", text: "¡Solid Byte, alerta máxima! ¡Cyber Olympo está activo! Una araña mecánica modular Top-Down." },
                 { speaker: "CAPITÁN // PROFESOR SAO", text: "Esta máquina no es estática: realiza saltos mecánicos por toda la arena y despliega minas EMP de proximidad que restringen tu paso." },
                 { speaker: "CAPITÁN // PROFESOR SAO", text: "Buscá la baliza terminal que emite señal en los cuadrantes de la cámara. Aplica modularidad para sobrecargar sus circuitos." },
                 { speaker: "CAPITÁN // PROFESOR SAO", text: "Cuando colapsen sus patas y se abra su CPU modular durante 7 segundos, ¡aproximáte y golpeá el núcleo con [E]!" },
-                { speaker: "SOLID BYTE", text: "Entendido, Gastón. Cuidado con los saltos y las minas EMP. ¡Iniciando combate!" }
+                { speaker: "SOLID BYTE", text: "Entendido, Capitán. Cuidado con los saltos y las minas EMP. ¡Iniciando combate!" }
             ],
             boss_briefing_3: [
                 { speaker: "TUTOR DE ALGORITMOS // LAB", text: "¡Solid Byte! ¡El Metal Gear JVM-REX Prime! La supermáquina definitiva de ejecución de la UTN Santa Fe." },
                 { speaker: "TUTOR DE ALGORITMOS // LAB", text: "¡ADVERTENCIA CRÍTICA: NO TE QUEDES ATRÁS DE LAS PAREDES! Rex dispara misiles teledirigidos verticales que caen directamente desde el cielo sobre tu posición." },
                 { speaker: "TUTOR DE ALGORITMOS // LAB", text: "Cuando veas la retícula roja en el suelo, ¡corré inmediatamente! Además, su cañón Railgun atraviesa la arena con disparos de alta energía." },
                 { speaker: "TUTOR DE ALGORITMOS // LAB", text: "Caza las balizas activas rotativas de la Unidad 5 (límites Tope y ordenamiento Burbuja) para desestabilizar su reactor nuclear y asestarle el golpe final con [E]." },
-                { speaker: "SOLID BYTE", text: "La batalla decisiva de la carrera. ¡Todo o nada por regularizar SAO!" }
+                { speaker: "SOLID BYTE", text: "La batalla decisiva de la misión. ¡Todo o nada por salvar los sistemas de la cátedra!" }
             ],
             victory_1: [
                 { speaker: "CORONEL // PROFESOR SAO", text: "¡Excelente trabajo, Solid Byte! Vulcan Bytemaster ha sido neutralizado y la dársena está despejada." },
@@ -2175,7 +2202,7 @@
             victory: [
                 { speaker: "CORONEL // PROFESOR SAO", text: "¡Misión impecable, Solid Byte! El Metal Gear JVM-REX Prime ha sido aniquilado y los registros de SAO están a salvo." },
                 { speaker: "CAPITÁN // PROFESOR SAO", text: "Resolviste arreglos unidimensionales, matrices por filas y columnas, búsqueda binaria y el swap con variable temporal en la Burbuja." },
-                { speaker: "CORONEL // PROFESOR SAO", text: "Has regularizado con honores la infiltración en los sistemas de la UTN Santa Fe. ¡Sos el verdadero Big Boss de la JVM!" },
+                { speaker: "CORONEL // PROFESOR SAO", text: "Has completado con honores la infiltración táctica en los servidores de la UTN Santa Fe. ¡Sos el verdadero Big Boss de la JVM!" },
                 { speaker: "SOLID BYTE", text: "Misión cumplida, profesores y tutores. Me dirijo a la cantina de la facultad por esa merecida ración de café." }
             ],
             call: [
@@ -2267,13 +2294,13 @@
         }
 
         function prevCodecContact(e) {
-            if (e) e.stopPropagation();
+            if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
             if (isMandatoryCodec) return;
             tuneCodecContact(currentContactIndex - 1);
         }
 
         function nextCodecContact(e) {
-            if (e) e.stopPropagation();
+            if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
             if (isMandatoryCodec) return;
             tuneCodecContact(currentContactIndex + 1);
         }
@@ -2365,8 +2392,24 @@
             }, 18);
         }
 
+        function updateHealthHUD() {
+            const bar = document.getElementById('life-bar');
+            if (bar && gameState.player) {
+                bar.style.width = `${Math.max(0, Math.min(100, gameState.player.hp))}%`;
+            }
+        }
+
+        function handleCodecScreenClick(e) {
+            if (e) {
+                if (e.target.closest('button') || e.target.closest('.freq-chips-bar') || e.target.closest('.codec-save-panel')) {
+                    return;
+                }
+            }
+            advanceCodec(e);
+        }
+
         function advanceCodec(e) {
-            if (e) e.stopPropagation();
+            if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
             getAudioContext();
             if (typewriterTimer) {
                 clearInterval(typewriterTimer);
@@ -2381,7 +2424,7 @@
         }
 
         function saveGameCheckpoint(e) {
-            if (e) e.stopPropagation();
+            if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
             try {
                 const saveObj = {
                     levelIndex: currentLevelIndex,
@@ -2409,7 +2452,7 @@
         }
 
         function loadGameCheckpoint(e) {
-            if (e) e.stopPropagation();
+            if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
             try {
                 const raw = localStorage.getItem('sao_mgs_checkpoint');
                 if (!raw) {
@@ -2555,7 +2598,9 @@
                             { x: 784, y: 0, w: 16, h: 175 },
                             { x: 784, y: 275, w: 16, h: 175 },
                             { x: 220, y: 110, w: 32, h: 220 },
-                            { x: 550, y: 110, w: 32, h: 220 }
+                            { x: 550, y: 110, w: 32, h: 220 },
+                            { x: 676, y: 16, w: 18, h: 159 },
+                            { x: 676, y: 275, w: 18, h: 159 }
                         ],
                         doors: [
                             {
@@ -2908,7 +2953,9 @@
                             { x: 784, y: 0, w: 16, h: 175 },
                             { x: 784, y: 275, w: 16, h: 175 },
                             { x: 200, y: 120, w: 30, h: 200 },
-                            { x: 570, y: 120, w: 30, h: 200 }
+                            { x: 570, y: 120, w: 30, h: 200 },
+                            { x: 666, y: 16, w: 18, h: 159 },
+                            { x: 666, y: 275, w: 18, h: 159 }
                         ],
                         doors: [
                             {
@@ -2951,11 +2998,11 @@
                         guards: [
                             {
                                 id: 7,
-                                spawnX: 340, spawnY: 225,
-                                x: 340, y: 225,
+                                spawnX: 280, spawnY: 225,
+                                x: 280, y: 225,
                                 radius: 14,
-                                patrolYMin: 120, patrolYMax: 330,
-                                speed: 1.7, dirY: -1,
+                                patrolYMin: 165, patrolYMax: 285,
+                                speed: 1.5, dirY: -1,
                                 angle: -Math.PI / 2,
                                 fov: Math.PI / 3,
                                 viewDist: 155,
@@ -3322,7 +3369,9 @@
                             { x: 784, y: 0, w: 16, h: 175 },
                             { x: 784, y: 275, w: 16, h: 175 },
                             { x: 220, y: 110, w: 30, h: 220 },
-                            { x: 550, y: 110, w: 30, h: 220 }
+                            { x: 550, y: 110, w: 30, h: 220 },
+                            { x: 666, y: 16, w: 18, h: 159 },
+                            { x: 666, y: 275, w: 18, h: 159 }
                         ],
                         doors: [
                             {
@@ -4365,7 +4414,7 @@
             if (currentRoom.hasBoss && gameState.boss.state === 'stunned' && gameState.boss.hp > 0) {
                 const distToCore = Math.hypot(p.x - (gameState.boss.x - 40), p.y - gameState.boss.y);
                 if (distToCore < 80) {
-                    damageBoss(50);
+                    damageBoss(25);
                     return;
                 }
             }
@@ -4375,6 +4424,11 @@
                 const activePos = arenaBeaconPositions[currentActiveBeaconIdx];
                 const distToBeacon = Math.hypot(p.x - (activePos.x + activePos.w / 2), p.y - (activePos.y + activePos.h / 2));
                 if (distToBeacon < 50) {
+                    if ((gameState.bossBeaconCooldown || 0) > 0) {
+                        playSFX('door-locked');
+                        showToast(`¡BALIZA BLOQUEADA! Protocolo de defensa: ${(gameState.bossBeaconCooldown).toFixed(1)}s`);
+                        return;
+                    }
                     // Obtener pregunta de baliza según el nivel
                     const lvl = campaignLevels[currentLevelIndex];
                     const beaconData = lvl.bossBeacons[currentActiveBeaconIdx % lvl.bossBeacons.length];
@@ -4493,10 +4547,55 @@
                 }, 1200);
 
             } else {
-                playSFX('alert');
-                triggerAlert();
-                document.getElementById('hack-feedback').innerHTML = `<span style="color: var(--mgs-red); font-weight: 700;">¡ERROR DE COMPILACIÓN! Alarma activada en los servidores.</span>`;
-                setTimeout(() => closeHackTerminal(), 1000);
+                // Si la terminal es una baliza de boss o estamos en sala de boss:
+                if (activeTerminal.isBossBeacon || (facilityRooms[gameState.currentRoomId] && facilityRooms[gameState.currentRoomId].hasBoss)) {
+                    playSFX('boss-roar');
+                    playSFX('damage');
+                    setMusicTheme('boss-rage');
+
+                    // Cooldown en la baliza para impedir apretar 'E' inmediatamente
+                    gameState.bossBeaconCooldown = 4.0;
+
+                    // Contraataque inmediato del Boss por error del jugador
+                    if (gameState.boss && gameState.boss.hp > 0) {
+                        const bType = gameState.boss.type;
+                        if (bType === 'vulcan') {
+                            gameState.boss.chargeTimer = 2.4;
+                            gameState.screenShake = 0.5;
+                            showToast("¡ERROR DE COMPILACIÓN! ¡VULCAN EMBISTE EN FURIA!");
+                        } else if (bType === 'olympo') {
+                            // Salto furioso picado hacia el jugador
+                            gameState.boss.leapStart = { x: gameState.boss.x, y: gameState.boss.y };
+                            gameState.boss.leapTarget = { x: gameState.player.x, y: gameState.player.y };
+                            gameState.boss.leapProgress = 0.8;
+                            showToast("¡ERROR DE COMPILACIÓN! ¡CYBER OLYMPO SALTA AL ATAQUE!");
+                        } else if (bType === 'rex') {
+                            gameState.boss.missileStrikes.push({
+                                targetX: gameState.player.x,
+                                targetY: gameState.player.y,
+                                timer: 1.8,
+                                maxBlast: 80
+                            });
+                            gameState.screenShake = 0.6;
+                            showToast("¡ERROR DE COMPILACIÓN! ¡REX DISPARA MISIL TELEDIRIGIDO!");
+                        }
+                    }
+
+                    document.getElementById('hack-feedback').innerHTML = `<span style="color: var(--mgs-red); font-weight: 700;">¡ERROR DE COMPILACIÓN! Protocolo de defensa del Boss activado. ¡Esquivá el contraataque!</span>`;
+                    setTimeout(() => {
+                        closeHackTerminal();
+                        setTimeout(() => {
+                            if (facilityRooms[gameState.currentRoomId]?.hasBoss) setMusicTheme('boss');
+                        }, 5000);
+                    }, 1200);
+
+                } else {
+                    // Alarma normal de centinelas fuera de arenas
+                    playSFX('alert');
+                    triggerAlert();
+                    document.getElementById('hack-feedback').innerHTML = `<span style="color: var(--mgs-red); font-weight: 700;">¡ERROR DE COMPILACIÓN! Alarma activada en los servidores.</span>`;
+                    setTimeout(() => closeHackTerminal(), 1000);
+                }
             }
         }
 
@@ -4623,13 +4722,18 @@
                 else actBtn.classList.remove('active-target');
             }
 
-            // 2. IA de Centinelas
+            // 2. IA de Centinelas (Sin congelamientos ni conductas anómalas)
+            if (gameState.roomGraceTimer > 0) {
+                gameState.roomGraceTimer -= dt;
+            }
+
             if (currentRoom.guards) {
                 currentRoom.guards.forEach(g => {
                     const distToPlayer = Math.hypot(p.x - g.x, p.y - g.y);
 
                     let seesPlayerNow = false;
-                    if (distToPlayer < g.viewDist) {
+                    // Solo detectar si terminó el período de gracia de entrada
+                    if ((gameState.roomGraceTimer || 0) <= 0 && distToPlayer < g.viewDist) {
                         const angleToPlayer = Math.atan2(p.y - g.y, p.x - g.x);
                         let diff = Math.abs(angleToPlayer - g.angle);
                         while (diff > Math.PI) diff = Math.abs(diff - 2 * Math.PI);
@@ -4650,14 +4754,31 @@
                     }
 
                     if (gameState.alertState === 'alert') {
-                        const chaseAngle = Math.atan2(gameState.lastSeenY - g.y, gameState.lastSeenX - g.x);
-                        g.angle = chaseAngle;
-                        const chaseSpeed = 1.25;
-                        const nextGx = g.x + Math.cos(chaseAngle) * chaseSpeed;
-                        const nextGy = g.y + Math.sin(chaseAngle) * chaseSpeed;
+                        const distToLastSeen = Math.hypot(gameState.lastSeenX - g.x, gameState.lastSeenY - g.y);
+                        
+                        if (distToLastSeen > 22) {
+                            const chaseAngle = Math.atan2(gameState.lastSeenY - g.y, gameState.lastSeenX - g.x);
+                            g.angle = chaseAngle;
+                            const chaseSpeed = 1.35;
+                            const nGx = g.x + Math.cos(chaseAngle) * chaseSpeed;
+                            const nGy = g.y + Math.sin(chaseAngle) * chaseSpeed;
 
-                        if (!checkWallCollision(nextGx, g.y, g.radius, currentRoom.walls)) g.x = nextGx;
-                        if (!checkWallCollision(g.x, nextGy, g.radius, currentRoom.walls)) g.y = nextGy;
+                            let moved = false;
+                            if (!checkWallCollision(nGx, g.y, g.radius, currentRoom.walls)) { g.x = nGx; moved = true; }
+                            if (!checkWallCollision(g.x, nGy, g.radius, currentRoom.walls)) { g.y = nGy; moved = true; }
+                            // Si se traba contra un muro, barrer ángulo tangencial
+                            if (!moved) {
+                                const slideAngle = chaseAngle + Math.PI / 2;
+                                const sGx = g.x + Math.cos(slideAngle) * (chaseSpeed * 0.8);
+                                const sGy = g.y + Math.sin(slideAngle) * (chaseSpeed * 0.8);
+                                if (!checkWallCollision(sGx, sGy, g.radius, currentRoom.walls)) {
+                                    g.x = sGx; g.y = sGy;
+                                }
+                            }
+                        } else {
+                            // Al llegar a la última posición conocida, barrer activamente el entorno buscando
+                            g.angle += Math.sin(Date.now() * 0.007 + g.id) * 0.06;
+                        }
 
                         if (distToPlayer < p.radius + g.radius + 2) {
                             playSFX('damage');
@@ -4684,12 +4805,22 @@
                         }
 
                     } else if (gameState.alertState === 'caution') {
-                        g.angle += Math.sin(Date.now() * 0.005 + g.id) * 0.035;
-                        if (Math.abs(g.x - g.spawnX) > 4) {
-                            g.x += (g.spawnX - g.x) * 0.02;
+                        // En precaución: retornar suavemente al puesto original con detección de muros
+                        const distToHome = Math.hypot(g.spawnX - g.x, g.spawnY - g.y);
+                        if (distToHome > 12) {
+                            const angHome = Math.atan2(g.spawnY - g.y, g.spawnX - g.x);
+                            g.angle = angHome;
+                            const retSpeed = 0.95;
+                            const nGx = g.x + Math.cos(angHome) * retSpeed;
+                            const nGy = g.y + Math.sin(angHome) * retSpeed;
+                            if (!checkWallCollision(nGx, g.y, g.radius, currentRoom.walls)) g.x = nGx;
+                            if (!checkWallCollision(g.x, nGy, g.radius, currentRoom.walls)) g.y = nGy;
+                        } else {
+                            g.angle += Math.sin(Date.now() * 0.005 + g.id) * 0.035;
                         }
 
                     } else {
+                        // Patrulla normal vertical
                         g.y += g.speed * g.dirY;
                         if (g.y >= g.patrolYMax) {
                             g.dirY = -1;
@@ -4699,8 +4830,12 @@
                             g.angle = Math.PI / 2;
                         }
 
+                        // Reencaminar X si se desvió ligeramente
                         if (Math.abs(g.x - g.spawnX) > 2) {
-                            g.x += (g.spawnX - g.x) * 0.04;
+                            const stepX = (g.spawnX - g.x) * 0.05;
+                            if (!checkWallCollision(g.x + stepX, g.y, g.radius, currentRoom.walls)) {
+                                g.x += stepX;
+                            }
                         }
                     }
                 });
@@ -5074,7 +5209,7 @@
                     }
                 } else {
                     desc.innerText = "¡Completaste toda la campaña curricular de SAO! Neutralizaste al legendario Metal Gear JVM-REX Prime.";
-                    rank.innerText = "CODENAME: BIG BOSS DE LA JVM // CURSO REGULARIZADO";
+                    rank.innerText = "CODENAME: BIG BOSS DE LA JVM // MISIÓN CUMPLIDA";
                     if (nextBtn) {
                         nextBtn.style.display = 'inline-flex';
                         nextBtn.innerHTML = '<i class="fa-solid fa-trophy"></i> ¡VER SELECCIÓN DE MISIONES!';
@@ -5110,6 +5245,9 @@
 
             // Screen Shake táctico
             ctx.save();
+            if (gameState.bossBeaconCooldown > 0) {
+                gameState.bossBeaconCooldown = Math.max(0, gameState.bossBeaconCooldown - dt);
+            }
             if (gameState.screenShake > 0) {
                 const shakeX = (Math.random() - 0.5) * gameState.screenShake * 16;
                 const shakeY = (Math.random() - 0.5) * gameState.screenShake * 16;
@@ -5312,10 +5450,17 @@
                         // Etiqueta de aproximación
                         const distP = Math.hypot(gameState.player.x - (bPos.x + bPos.w / 2), gameState.player.y - (bPos.y + bPos.h / 2));
                         if (distP < 55) {
-                            ctx.fillStyle = '#FFF';
-                            ctx.font = 'bold 11px Share Tech Mono';
-                            const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-                            ctx.fillText(isTouch ? "¡HACK BALIZA!" : "[E] HACK BALIZA", bPos.x + bPos.w / 2, bPos.y - 8);
+                            const isCooldown = (gameState.bossBeaconCooldown || 0) > 0;
+                            if (isCooldown) {
+                                ctx.fillStyle = '#EF4444';
+                                ctx.font = 'bold 9.5px Share Tech Mono';
+                                ctx.fillText(`[BLOQUEO: ${(gameState.bossBeaconCooldown).toFixed(1)}s]`, bPos.x + bPos.w / 2, bPos.y - 8);
+                            } else {
+                                ctx.fillStyle = '#FFF';
+                                ctx.font = 'bold 11px Share Tech Mono';
+                                const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+                                ctx.fillText(isTouch ? "¡HACK BALIZA!" : "[E] HACK BALIZA", bPos.x + bPos.w / 2, bPos.y - 8);
+                            }
                         }
                     } else {
                         // Baliza inactiva offline
