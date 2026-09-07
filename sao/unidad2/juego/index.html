@@ -452,18 +452,21 @@
             justify-content: center;
             z-index: 100;
             padding: 20px;
+            overflow-y: auto;
         }
 
         .modal-card {
             background: #1E293B;
             border: 2px solid rgba(255, 255, 255, 0.12);
             border-radius: 24px;
-            padding: 36px;
-            max-width: 520px;
+            padding: 32px 28px;
+            max-width: 550px;
             width: 100%;
             text-align: center;
             box-shadow: 0 25px 60px rgba(0,0,0,0.6);
             animation: zoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 95vh;
+            overflow-y: auto;
         }
 
         .modal-title {
@@ -480,6 +483,29 @@
             color: #94A3B8;
             margin-bottom: 20px;
             line-height: 1.5;
+        }
+
+        .modal-rule-box {
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-left: 4px solid var(--utn-gold);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 12px 0 16px 0;
+            text-align: left;
+            font-size: 13.5px;
+            line-height: 1.45;
+            color: #F1F5F9;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .modal-rule-box i {
+            color: var(--utn-gold);
+            font-size: 18px;
+            margin-top: 2px;
+            flex-shrink: 0;
         }
 
         .modal-btn {
@@ -753,6 +779,17 @@
                 line-height: 1.45;
             }
 
+            .modal-rule-box {
+                padding: 10px 12px;
+                font-size: 12px;
+                margin: 10px 0 12px 0;
+                gap: 8px;
+            }
+
+            .modal-rule-box i {
+                font-size: 15px;
+            }
+
             .modal-btn {
                 padding: 10px 18px;
                 font-size: 14px;
@@ -904,10 +941,22 @@
                 <i class="fa-solid fa-stamp"></i>
             </div>
             <h1 class="modal-title">JVM INSPECTOR</h1>
-            <p class="modal-sub">
-                Sos el inspector en jefe del compilador <strong>javac</strong> en la UTN Santa Fe. Tu deber es examinar fragmentos de código Java de la <strong>Unidad 2</strong> (variables, tipos primitivos, palabras reservadas, constantes, desbordamientos y divisiones).
-                <br><br>
-                ¿Compila o tiene error de sintaxis/lógica? ¡Sellá con precisión! A los <strong>3 strikes</strong> el servidor colapsa.
+            <p class="modal-sub" style="margin-bottom: 12px;">
+                Sos el inspector en jefe del compilador <strong>javac</strong> en la UTN Santa Fe. Tu deber es examinar las consultas y fragmentos de código Java de la <strong>Unidad 2</strong> (variables, tipos primitivos, palabras reservadas, constantes, casting y operadores).
+            </p>
+
+            <div class="modal-rule-box">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <div>
+                    <strong style="color: #F8FAFC;">Instrucción de guardia:</strong> Ante la frase de un alumno sobre su ejercicio, se debe indicar únicamente <strong>si su código compila o no</strong>.
+                    <div style="margin-top: 6px; font-size: 13px; color: #CBD5E1; line-height: 1.45;">
+                        Solo evaluamos <strong>errores de compilación</strong> (sintaxis, palabras reservadas y compatibilidad de tipos). <em>No debés juzgar si el código está bien resuelto lógicamente ni si es la mejor práctica posible</em>: si para <strong style="color: var(--utn-gold);">javac</strong> es sintácticamente válido, el código debe <strong>COMPILAR</strong>.
+                    </div>
+                </div>
+            </div>
+
+            <p class="modal-sub" style="margin-bottom: 22px;">
+                ¿Compila sin errores o debe ser rechazado? ¡Sellá con precisión! A los <strong>3 strikes</strong> el servidor colapsa.
             </p>
             <button class="modal-btn" onclick="startGame()">
                 <i class="fa-solid fa-play"></i> INICIAR TURNO DE GUARDIA

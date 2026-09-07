@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Metal Gear Java: Tactical Bytecode Action | SAO - UTN FRSF</title>
+
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Fira+Code:wght@500;700&family=Poppins:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --mgs-green: #00FF66;
+            --mgs-green-dim: #008F39;
+            --mgs-green-dark: #002B11;
+            --mgs-red: #FF2A2A;
+            --mgs-amber: #FFB000;
+            --mgs-bg: #050E08;
+            --mgs-panel: #0A1A10;
+            --mgs-border: #143820;
+            --crt-scanline: rgba(0, 255, 102, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--mgs-bg);
+            color: #C8E6C9;
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 10px;
+            position: relative;
+        }
+
+        /* Efecto CRT Scanlines & Glow */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 999;
+            background-size: 100% 3px, 6px 100%;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: radial-gradient(circle at center, transparent 65%, rgba(0, 0, 0, 0.75) 100%);
+            z-index: 998;
+            pointer-events: none;
+        }
+
+        /* Marco Principal de la Consola */
+        .mgs-console {
+            width: 100%;
+            max-width: 900px;
+            background: var(--mgs-panel);
+            border: 2px solid var(--mgs-green-dim);
+            border-radius: 12px;
+            box-shadow: 0 0 35px rgba(0, 255, 102, 0.15), inset 0 0 20px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* HUD Superior */
+        .hud-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: rgba(0, 43, 17, 0.85);
+            border-bottom: 2px solid var(--mgs-border);
+            gap: 12px;
+        }
+
+        .hud-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .hud-brand {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hud-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--mgs-green);
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px var(--mgs-green);
+        }
+
+        .hud-sub {
+            font-size: 10px;
+            color: var(--mgs-green-dim);
+            letter-spacing: 1px;
+        }
+
+        /* Barra de Vida (LIFE) */
+        .life-meter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meter-label {
+            font-size: 11px;
+            color: var(--mgs-green);
+            font-weight: 700;
+        }
+
+        .meter-track {
+            width: 110px;
+            height: 12px;
+            background: #001A08;
+            border: 1px solid var(--mgs-green-dim);
+            border-radius: 3px;
+            overflow: hidden;
+            padding: 1px;
+        }
+
+        .meter-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #00FF66, #A7F3D0);
+            box-shadow: 0 0 6px var(--mgs-green);
+            transition: width 0.2s ease;
+        }
+
+        /* Estado de Alerta (ALERT GAUGE) */
+        .alert-gauge {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 42, 42, 0.2);
+            border: 1px solid var(--mgs-red);
+            padding: 4px 10px;
+            border-radius: 6px;
+            animation: alertBlink 0.6s infinite alternate;
+        }
+
+        .alert-gauge.active {
+            display: flex;
+        }
+
+        .alert-tag {
+            font-size: 13px;
+            font-weight: 900;
+            color: var(--mgs-red);
+            letter-spacing: 1px;
+        }
+
+        .alert-num {
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            color: #FFF;
+            line-height: 1;
+        }
+
+        @keyframes alertBlink {
+            from { opacity: 1; border-color: var(--mgs-red); }
+            to { opacity: 0.5; border-color: transparent; }
+        }
+
+        .hud-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hud-btn {
+            background: rgba(0, 255, 102, 0.08);
+            border: 1px solid var(--mgs-green-dim);
+            color: var(--mgs-green);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hud-btn:hover {
+            background: rgba(0, 255, 102, 0.25);
+            border-color: var(--mgs-green);
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
+            transform: scale(1.04);
+        }
+
+        .hud-btn.active {
+            background: var(--mgs-green);
+            color: var(--mgs-bg);
+            border-color: var(--mgs-green);
+            box-shadow: 0 0 12px var(--mgs-green);
+        }
+
+        /* Lienzo Principal del Juego (Canvas & Overlays) */
+        .stage-area {
+            position: relative;
+            width: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        canvas#mgs-canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            background: #030805;
+            image-rendering: pixelated;
+        }
+
+        /* =========================================================================
+           PANTALLA DEL SISTEMA CODEC (FRECUENCIA 140.85)
+           ========================================================================= */
+        .codec-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 15, 8, 0.96);
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 16px 22px;
+            z-index: 150;
+            border: 2px solid var(--mgs-green);
+            box-shadow: inset 0 0 35px rgba(0, 255, 102, 0.3);
+            animation: codecOpen 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        @keyframes codecOpen {
+            from { transform: scaleY(0.02); opacity: 0; }
+            to { transform: scaleY(1); opacity: 1; }
+        }
+
+        .codec-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--mgs-green-dim);
+            padding-bottom: 8px;
+        }
+
+        .freq-display {
+            font-family: 'VT323', monospace;
+            font-size: 32px;
+            color: var(--mgs-green);
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--mgs-green);
+        }
+
+        .codec-mid {
+            display: grid;
+            grid-template-columns: 130px minmax(0, 1fr) 130px;
+            gap: 16px;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .codec-portrait-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .portrait-frame {
+            width: 110px;
+            height: 110px;
+            border: 2px solid var(--mgs-green-dim);
+            background: #001F0D;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+        }
+
+        .portrait-frame svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .portrait-name {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--mgs-green);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .codec-dialog-box {
+            background: rgba(0, 25, 10, 0.6);
+            border: 1px solid var(--mgs-green-dim);
+            border-radius: 8px;
+            padding: 14px 18px;
+            min-height: 115px;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .codec-speaker-tag {
+            font-size: 12px;
+            color: var(--mgs-amber);
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .codec-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #E2FCE5;
+            min-height: 48px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        .codec-action-hint {
+            font-size: 10px;
+            color: var(--mgs-green-dim);
+            text-align: right;
+            margin-top: 6px;
+        }
+
+        .codec-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--mgs-green-dim);
+            padding-top: 8px;
+        }
+
+        .vumeter {
+            display: flex;
+            gap: 3px;
+            align-items: flex-end;
+            height: 16px;
+        }
+
+        .vumeter-bar {
+            width: 4px;
+            background: var(--mgs-green);
+            height: 4px;
+            transition: height 0.08s ease;
+        }
+
+        /* =========================================================================
+           TERMINAL DE HACKEO DE CÓDIGO (JAVA SECURITY TERMINAL)
+           ========================================================================= */
+        .hack-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 14, 8, 0.95);
+            display: none;
+            flex-direction: column;
+            padding: 18px 24px;
+            z-index: 140;
+            border: 2px solid var(--mgs-amber);
+            box-shadow: 0 0 35px rgba(255, 176, 0, 0.25);
+            animation: fadeIn 0.2s ease;
+        }
+
+        .hack-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(255, 176, 0, 0.3);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .hack-title {
+            font-size: 16px;
+            color: var(--mgs-amber);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 1px;
+        }
+
+        .hack-body {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 16px;
+            flex-grow: 1;
+        }
+
+        .code-container {
+            background: #000;
+            border: 1px solid #1E3A24;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .code-snippet {
+            font-family: 'Fira Code', monospace;
+            font-size: 13.5px;
+            color: #A7F3D0;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .hack-puzzle {
+            background: rgba(0, 30, 12, 0.5);
+            border: 1px solid var(--mgs-green-dim);
+            border-radius: 8px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .puzzle-question {
+            font-size: 13.5px;
+            color: #FFF;
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+
+        .hack-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .hack-btn {
+            background: rgba(0, 255, 102, 0.06);
+            border: 1px solid var(--mgs-green-dim);
+            color: #E2FCE5;
+            padding: 9px 12px;
+            border-radius: 6px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12.5px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.15s;
+        }
+
+        .hack-btn:hover {
+            background: rgba(255, 176, 0, 0.2);
+            border-color: var(--mgs-amber);
+            color: #FFF;
+            transform: translateX(4px);
+        }
+
+        /* Pantalla de Fin de Misión / Game Over */
+        .debrief-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 8, 4, 0.96);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            z-index: 180;
+            text-align: center;
+        }
+
+        .debrief-title {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .debrief-title.success {
+            color: var(--mgs-green);
+            text-shadow: 0 0 15px var(--mgs-green);
+        }
+
+        .debrief-title.failure {
+            color: var(--mgs-red);
+            text-shadow: 0 0 15px var(--mgs-red);
+        }
+
+        .codenametag {
+            font-family: 'VT323', monospace;
+            font-size: 32px;
+            color: var(--mgs-amber);
+            border: 2px solid var(--mgs-amber);
+            padding: 4px 18px;
+            border-radius: 8px;
+            margin: 14px 0;
+            display: inline-block;
+        }
+
+        /* Controles Móviles Virtuales */
+        .mobile-touch-bar {
+            display: none;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #020A05;
+            border-top: 1px solid var(--mgs-border);
+        }
+
+        .dpad {
+            display: grid;
+            grid-template-columns: 44px 44px 44px;
+            grid-template-rows: 44px 44px;
+            gap: 4px;
+        }
+
+        .dpad-btn {
+            background: rgba(0, 255, 102, 0.12);
+            border: 1px solid var(--mgs-green-dim);
+            color: var(--mgs-green);
+            border-radius: 8px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .dpad-btn:active {
+            background: var(--mgs-green);
+            color: #000;
+        }
+
+        .dpad-up { grid-column: 2; grid-row: 1; }
+        .dpad-left { grid-column: 1; grid-row: 2; }
+        .dpad-down { grid-column: 2; grid-row: 2; }
+        .dpad-right { grid-column: 3; grid-row: 2; }
+
+        .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .touch-action-btn {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: rgba(0, 255, 102, 0.12);
+            border: 2px solid var(--mgs-green-dim);
+            color: var(--mgs-green);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            touch-action: manipulation;
+            gap: 2px;
+        }
+
+        .touch-action-btn i {
+            font-size: 16px;
+        }
+
+        .touch-action-btn:active {
+            background: var(--mgs-green);
+            color: #000;
+        }
+
+        /* Footer de la consola */
+        footer {
+            margin-top: 10px;
+            font-size: 11px;
+            color: var(--mgs-green-dim);
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        footer a {
+            color: var(--mgs-green);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            .codec-overlay {
+                padding: 10px 12px;
+            }
+
+            .mobile-touch-bar {
+                display: flex;
+            }
+
+            .codec-mid {
+                grid-template-columns: 75px minmax(0, 1fr) 75px;
+                gap: 8px;
+            }
+
+            .portrait-frame {
+                width: 70px;
+                height: 70px;
+            }
+
+            .codec-dialog-box {
+                padding: 10px 12px;
+                min-height: 90px;
+            }
+
+            .codec-text {
+                font-size: 12px;
+                line-height: 1.4;
+                min-height: 40px;
+            }
+
+            .hack-body {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .code-snippet {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Marco de Consola Táctica -->
+    <div class="mgs-console">
+
+        <!-- Barra Superior HUD -->
+        <div class="hud-bar">
+            <div class="hud-left">
+                <div class="hud-brand">
+                    <span class="hud-title">METAL GEAR JAVA</span>
+                    <span class="hud-sub">TACTICAL BYTECODE ACTION // UTN FRSF</span>
+                </div>
+                
+                <div class="life-meter">
+                    <span class="meter-label">LIFE</span>
+                    <div class="meter-track">
+                        <div class="meter-fill" id="life-bar"></div>
+                    </div>
+                </div>
+
+                <div class="alert-gauge" id="alert-box">
+                    <span class="alert-tag">! ALERTA</span>
+                    <span class="alert-num" id="alert-timer">99.99</span>
+                </div>
+            </div>
+
+            <div class="hud-right">
+                <button class="hud-btn" id="btn-box-toggle" onclick="toggleCardboardBox()" title="Ponerse/Sacarse Caja de Cartón [B]">
+                    <i class="fa-solid fa-box"></i> <span id="box-label">CAJA: OFF</span>
+                </button>
+                <button class="hud-btn" id="btn-codec-call" onclick="openCodecDialog('call')" title="Abrir Radio CODEC [C]">
+                    <i class="fa-solid fa-walkie-talkie"></i> 140.85
+                </button>
+                <button class="hud-btn" id="btn-sound-toggle" onclick="toggleAudio()" title="Activar/Silenciar Audio">
+                    <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Área de Acción (Canvas 2D + Pantallas Flotantes) -->
+        <div class="stage-area" id="stage-wrapper">
+            <canvas id="mgs-canvas" width="800" height="450"></canvas>
+
+            <!-- 1. PANTALLA CODEC INTERACTIVA -->
+            <div class="codec-overlay" id="codec-screen">
+                <div class="codec-top">
+                    <div style="font-size: 12px; color: var(--mgs-green-dim); letter-spacing: 1px;">ENCRYPTED TRANSCEIVER // MEMORY BUS 0xUTN</div>
+                    <div class="freq-display">140.85 MHz</div>
+                </div>
+
+                <div class="codec-mid">
+                    <!-- Retrato Snake / Solid Byte -->
+                    <div class="codec-portrait-box">
+                        <div class="portrait-frame">
+                            <svg viewBox="0 0 100 100">
+                                <rect width="100" height="100" fill="#042310" />
+                                <!-- Cabeza y bandana -->
+                                <rect x="30" y="25" width="40" height="45" fill="#78909C" />
+                                <rect x="25" y="32" width="50" height="12" fill="#1B5E20" /> <!-- Bandana verde -->
+                                <polygon points="25,38 10,48 20,52" fill="#1B5E20" /> <!-- Nudo bandana -->
+                                <!-- Barba y pelo -->
+                                <rect x="30" y="18" width="40" height="14" fill="#37474F" />
+                                <rect x="30" y="55" width="40" height="15" fill="#455A64" />
+                                <!-- Ojos y parche/auricular -->
+                                <rect x="36" y="36" width="8" height="4" fill="#E0E0E0" />
+                                <rect x="56" y="36" width="8" height="4" fill="#E0E0E0" />
+                                <circle cx="72" cy="46" r="6" fill="#00FF66" opacity="0.8" /> <!-- Auricular CODEC -->
+                            </svg>
+                        </div>
+                        <span class="portrait-name">SOLID BYTE</span>
+                    </div>
+
+                    <!-- Cuadro de Diálogo -->
+                    <div class="codec-dialog-box" onclick="advanceCodec()">
+                        <div>
+                            <div class="codec-speaker-tag" id="codec-speaker">PROFESOR TOMÁS // SAO UTN</div>
+                            <div class="codec-text" id="codec-message">Iniciando enlace táctico...</div>
+                        </div>
+                        <div class="codec-action-hint">[Click / Enter / Espacio para avanzar]</div>
+                    </div>
+
+                    <!-- Retrato Docente / Coronel -->
+                    <div class="codec-portrait-box">
+                        <div class="portrait-frame">
+                            <svg viewBox="0 0 100 100">
+                                <rect width="100" height="100" fill="#001B3A" />
+                                <!-- Rostro Docente UTN con Anteojos -->
+                                <rect x="28" y="22" width="44" height="48" fill="#F0D5BA" />
+                                <rect x="26" y="14" width="48" height="16" fill="#424242" /> <!-- Cabello -->
+                                <rect x="32" y="34" width="14" height="8" fill="none" stroke="#002B5B" stroke-width="2.5" /> <!-- Anteojos -->
+                                <rect x="54" y="34" width="14" height="8" fill="none" stroke="#002B5B" stroke-width="2.5" />
+                                <line x1="46" y1="38" x2="54" y2="38" stroke="#002B5B" stroke-width="2" />
+                                <rect x="20" y="70" width="60" height="30" fill="#002B5B" /> <!-- Traje formal UTN -->
+                                <polygon points="46,70 54,70 50,85" fill="#FFC107" /> <!-- Corbata dorada -->
+                            </svg>
+                        </div>
+                        <span class="portrait-name" style="color: var(--mgs-amber);">CÁTEDRA SAO</span>
+                    </div>
+                </div>
+
+                <div class="codec-bottom">
+                    <div class="vumeter" id="codec-vumeter">
+                        <div class="vumeter-bar"></div>
+                        <div class="vumeter-bar"></div>
+                        <div class="vumeter-bar"></div>
+                        <div class="vumeter-bar"></div>
+                        <div class="vumeter-bar"></div>
+                    </div>
+                    <button class="hud-btn" onclick="closeCodecDialog()"><i class="fa-solid fa-xmark"></i> CORTAR ENLACE</button>
+                </div>
+            </div>
+
+            <!-- 2. PANTALLA DE HACKEO DE TERMINALES JAVA -->
+            <div class="hack-overlay" id="hack-screen">
+                <div class="hack-header">
+                    <div class="hack-title">
+                        <i class="fa-solid fa-terminal"></i>
+                        <span id="hack-terminal-name">TERMINAL DE SEGURIDAD // SUBESTACIÓN 01</span>
+                    </div>
+                    <button class="hud-btn" onclick="closeHackTerminal()" style="border-color: var(--mgs-red); color: var(--mgs-red);">
+                        <i class="fa-solid fa-xmark"></i> ABORTAR
+                    </button>
+                </div>
+
+                <div class="hack-body">
+                    <div class="code-container">
+                        <div style="font-size: 11px; color: var(--mgs-green-dim); margin-bottom: 6px;">
+                            <i class="fa-brands fa-java"></i> BUFFER DE ENTRADA // JVM INSPECTION
+                        </div>
+                        <div class="code-snippet" id="hack-code-view">// Código Java interceptado</div>
+                        <div style="font-size: 10px; color: #64748B; margin-top: 6px;">SECURITY LEVEL: CRITICAL</div>
+                    </div>
+
+                    <div class="hack-puzzle">
+                        <div>
+                            <p class="puzzle-question" id="hack-question">Analizando vulnerabilidad del compilador...</p>
+                            <div class="hack-options" id="hack-options-list">
+                                <!-- Opciones inyectadas dinámicamente -->
+                            </div>
+                        </div>
+                        <div style="font-size: 11px; color: var(--mgs-amber); margin-top: 10px;" id="hack-feedback">
+                            Seleccioná la directiva de compilación correcta para neutralizar la barrera.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. PANTALLA DE FIN DE MISIÓN / DEBRIEFING -->
+            <div class="debrief-overlay" id="debrief-screen">
+                <h2 class="debrief-title" id="debrief-status">¡MISIÓN CUMPLIDA!</h2>
+                <p id="debrief-desc" style="max-width: 550px; line-height: 1.5; color: #A7F3D0; margin-bottom: 12px;">
+                    Has neutralizado el virus de desbordamiento de memoria y restablecido el servidor central de la UTN Santa Fe.
+                </p>
+                <div class="codenametag" id="debrief-rank">RANGO: BIG BOSS DE LA JVM</div>
+                <div style="display: flex; gap: 12px; margin-top: 16px;">
+                    <button class="hud-btn" onclick="restartMission()"><i class="fa-solid fa-rotate-right"></i> REPETIR MISIÓN</button>
+                    <a href="../unidad2/index.html" class="hud-btn" style="text-decoration: none;"><i class="fa-solid fa-arrow-left"></i> VOLVER A CLASES</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Controles Táctiles en Pantalla (Mobile) -->
+        <div class="mobile-touch-bar">
+            <div class="dpad">
+                <button class="dpad-btn dpad-up" id="btn-touch-up"><i class="fa-solid fa-caret-up"></i></button>
+                <button class="dpad-btn dpad-left" id="btn-touch-left"><i class="fa-solid fa-caret-left"></i></button>
+                <button class="dpad-btn dpad-down" id="btn-touch-down"><i class="fa-solid fa-caret-down"></i></button>
+                <button class="dpad-btn dpad-right" id="btn-touch-right"><i class="fa-solid fa-caret-right"></i></button>
+            </div>
+
+            <div class="action-btns">
+                <button class="touch-action-btn" id="btn-touch-action">
+                    <i class="fa-solid fa-computer"></i> HACK
+                </button>
+                <button class="touch-action-btn" id="btn-touch-box">
+                    <i class="fa-solid fa-box"></i> CAJA
+                </button>
+                <button class="touch-action-btn" id="btn-touch-codec">
+                    <i class="fa-solid fa-walkie-talkie"></i> CODEC
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Pie de página -->
+    <footer>
+        <span>UTN SANTA FE — CÁTEDRA SAO // TUTI</span>
+        <a href="../unidad2/index.html"><i class="fa-solid fa-book-open"></i> Diapositivas Unidad 2</a>
+        <a href="../unidad2/juego/index.html"><i class="fa-solid fa-stamp"></i> JVM Inspector</a>
+    </footer>
+
+    <!-- MOTOR DEL JUEGO & AUDIO PROCEDURAL -->
+    <script>
+        // =========================================================================
+        // 1. MOTOR DE AUDIO NATIVO (Web Audio API)
+        // =========================================================================
+        let audioCtx = null;
+        let masterGain = null;
+        let soundEnabled = true;
+        let musicTheme = 'none'; // 'none' | 'sneaking' | 'alert'
+        let musicInterval = null;
+        let musicStep = 0;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioClass) {
+                    audioCtx = new AudioClass();
+                    masterGain = audioCtx.createGain();
+                    masterGain.gain.setValueAtTime(0.32, audioCtx.currentTime);
+                    masterGain.connect(audioCtx.destination);
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        // Reanudar contexto al primer gesto
+        ['pointerdown', 'keydown', 'click'].forEach(evt => {
+            document.addEventListener(evt, () => getAudioContext(), { once: true });
+        });
+
+        function playTone(freq, duration, type = 'square', vol = 0.1) {
+            const ctx = getAudioContext();
+            if (!ctx || freq <= 0 || !soundEnabled) return;
+            try {
+                if (ctx.state === 'suspended') ctx.resume();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const now = ctx.currentTime;
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, now);
+                gain.gain.setValueAtTime(vol, now);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+                osc.connect(gain);
+                gain.connect(masterGain || ctx.destination);
+                osc.start(now);
+                osc.stop(now + duration);
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+
+        // Efectos de Sonido Icónicos de Metal Gear
+        function playSFX(name) {
+            const ctx = getAudioContext();
+            if (!ctx || !soundEnabled) return;
+            const now = ctx.currentTime;
+
+            try {
+                if (name === 'alert') {
+                    // ¡ALERTA! El clásico aguijonazo agudo (Brass Sting MGS)
+                    const osc1 = ctx.createOscillator();
+                    const osc2 = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    osc1.type = 'sawtooth';
+                    osc2.type = 'sawtooth';
+                    osc1.frequency.setValueAtTime(880, now);
+                    osc1.frequency.exponentialRampToValueAtTime(1760, now + 0.08);
+                    osc2.frequency.setValueAtTime(932, now); // Disonancia semitono
+                    osc2.frequency.exponentialRampToValueAtTime(1864, now + 0.08);
+                    g.gain.setValueAtTime(0.65, now);
+                    g.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                    osc1.connect(g);
+                    osc2.connect(g);
+                    g.connect(masterGain || ctx.destination);
+                    osc1.start(now);
+                    osc2.start(now);
+                    osc1.stop(now + 0.35);
+                    osc2.stop(now + 0.35);
+
+                } else if (name === 'codec-ring') {
+                    // Tono de llamada CODEC MGS (Doble beeping agudo)
+                    [0, 0.16].forEach(offset => {
+                        const osc = ctx.createOscillator();
+                        const g = ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(1900, now + offset);
+                        g.gain.setValueAtTime(0.3, now + offset);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.08);
+                        osc.connect(g);
+                        g.connect(masterGain || ctx.destination);
+                        osc.start(now + offset);
+                        osc.stop(now + offset + 0.08);
+                    });
+
+                } else if (name === 'codec-text') {
+                    // Bip al tipear texto en el CODEC
+                    playTone(850, 0.03, 'sine', 0.04);
+
+                } else if (name === 'box') {
+                    // Ruido sordo al ponerse la caja
+                    playTone(120, 0.12, 'triangle', 0.4);
+
+                } else if (name === 'hack-success') {
+                    // Melodía de hackeo exitoso
+                    [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+                        setTimeout(() => playTone(f, 0.18, 'sine', 0.15), i * 70);
+                    });
+
+                } else if (name === 'damage') {
+                    // Impacto / Disparo de centinela
+                    const osc = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(160, now);
+                    osc.frequency.linearRampToValueAtTime(40, now + 0.2);
+                    g.gain.setValueAtTime(0.5, now);
+                    g.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                    osc.connect(g);
+                    g.connect(masterGain || ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+
+        // Bandas Sonoras Procedurales (Sneaking vs Alert Theme)
+        const sneakingBass = [110, 0, 110, 130.81, 0, 110, 146.83, 130.81];
+        const alertArp = [220, 261.63, 293.66, 349.23, 392, 349.23, 293.66, 261.63];
+
+        function setMusicTheme(theme) {
+            if (musicTheme === theme) return;
+            musicTheme = theme;
+            if (musicInterval) clearInterval(musicInterval);
+            musicInterval = null;
+
+            if (!soundEnabled || theme === 'none') return;
+
+            const ctx = getAudioContext();
+            musicStep = 0;
+
+            if (theme === 'sneaking') {
+                // Tema de Sigilo Ambiental (105 BPM)
+                musicInterval = setInterval(() => {
+                    if (!soundEnabled || musicTheme !== 'sneaking') return;
+                    const bass = sneakingBass[musicStep % sneakingBass.length];
+                    if (bass > 0) {
+                        playTone(bass, 0.18, 'sawtooth', 0.08);
+                    }
+                    if (musicStep % 4 === 0) {
+                        // Radar ping tenue
+                        playTone(1760, 0.06, 'sine', 0.02);
+                    }
+                    musicStep++;
+                }, 140);
+
+            } else if (theme === 'alert') {
+                // Tema de Persecución Acelerado (145 BPM)
+                musicInterval = setInterval(() => {
+                    if (!soundEnabled || musicTheme !== 'alert') return;
+                    const note = alertArp[musicStep % alertArp.length];
+                    playTone(note, 0.09, 'square', 0.11);
+                    if (musicStep % 2 === 0) {
+                        playTone(110, 0.14, 'sawtooth', 0.14);
+                    }
+                    musicStep++;
+                }, 100);
+            }
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            if (icon) {
+                icon.className = soundEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+            }
+            if (!soundEnabled) {
+                setMusicTheme('none');
+            } else {
+                setMusicTheme(gameState.alertTimer > 0 ? 'alert' : 'sneaking');
+            }
+        }
+
+
+        // =========================================================================
+        // 2. DIÁLOGOS DEL CODEC (GUION MGS DE LA CÁTEDRA SAO)
+        // =========================================================================
+        const codecScripts = {
+            intro: [
+                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "Solid Byte, ¿me escuchás? El enlace está asegurado en la frecuencia 140.85." },
+                { speaker: "SOLID BYTE", text: "Fuerte y claro, Profesor. Me infiltré en el ala de servidores de la UTN Santa Fe." },
+                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "Tu objetivo es desactivar el malware 'NullPointer'. Para avanzar por los pasillos, debés hackear las 3 terminales de seguridad resolviendo desafíos de Java." },
+                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "Cuidado con los Centinelas de la JVM. Tienen conos de visión activos. Si te detectan, ¡usá la Caja de Cartón [B] o corré a esconderte!" },
+                { speaker: "SOLID BYTE", text: "Entendido. Caja de Cartón lista. Comienzo la infiltración." }
+            ],
+            call: [
+                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "¿Necesitás apoyo táctico, Byte? Acordate:" },
+                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "1. En Java los bytes van de -128 a 127. No dejes que se desborden." },
+                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "2. Las condiciones cortocircuitan con '&&'. Si la primera es falsa, la segunda ni se evalúa." },
+                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "Si un guardia te persigue, rompeles la línea de visión detrás de una pared para volver a fase de PRECAUCIÓN." }
+            ],
+            victory: [
+                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "¡Increíble trabajo, Solid Byte! Todas las terminales fueron restablecidas." },
+                { speaker: "PROFESOR TOMÁS // SAO UTN", text: "Demostraste un dominio táctico impecable de variables, condicionales y vectores en Java." },
+                { speaker: "SOLID BYTE", text: "Misión cumplida. Me dirijo al punto de extracción en la cantina de la facultad." }
+            ]
+        };
+
+        let currentCodecQueue = [];
+        let currentCodecIndex = 0;
+        let typewriterTimer = null;
+
+        function openCodecDialog(scriptKey) {
+            getAudioContext();
+            playSFX('codec-ring');
+
+            currentCodecQueue = codecScripts[scriptKey] || codecScripts.call;
+            currentCodecIndex = 0;
+
+            const screen = document.getElementById('codec-screen');
+            screen.style.display = 'flex';
+            renderCurrentCodecLine();
+        }
+
+        function closeCodecDialog() {
+            if (typewriterTimer) clearInterval(typewriterTimer);
+            document.getElementById('codec-screen').style.display = 'none';
+            if (gameState.missionCompleted) {
+                showDebriefing(true);
+            }
+        }
+
+        function renderCurrentCodecLine() {
+            if (currentCodecIndex >= currentCodecQueue.length) {
+                closeCodecDialog();
+                return;
+            }
+
+            const item = currentCodecQueue[currentCodecIndex];
+            document.getElementById('codec-speaker').textContent = item.speaker;
+            const textElem = document.getElementById('codec-message');
+            textElem.textContent = "";
+
+            let charIdx = 0;
+            if (typewriterTimer) clearInterval(typewriterTimer);
+
+            typewriterTimer = setInterval(() => {
+                if (charIdx < item.text.length) {
+                    charIdx++;
+                    textElem.textContent = item.text.substring(0, charIdx);
+                    if (charIdx % 3 === 0) playSFX('codec-text');
+                } else {
+                    clearInterval(typewriterTimer);
+                    typewriterTimer = null;
+                }
+            }, 24);
+        }
+
+        function advanceCodec() {
+            if (typewriterTimer) {
+                // Saltear animación y mostrar texto completo
+                clearInterval(typewriterTimer);
+                typewriterTimer = null;
+                document.getElementById('codec-message').textContent = currentCodecQueue[currentCodecIndex].text;
+            } else {
+                currentCodecIndex++;
+                renderCurrentCodecLine();
+            }
+        }
+
+
+        // =========================================================================
+        // 3. BASE DE DATOS DE HACKEOS DE CÓDIGO (CURRICULAR SAO)
+        // =========================================================================
+        const hackTerminals = [
+            {
+                id: "T1",
+                name: "TERMINAL 01 // CALIBRADOR DE REGISTROS (UNIDAD 2)",
+                code: "byte nivelSeguridad = 127;\n// Se intenta forzar el registro de hardware:\nnivelSeguridad = (byte) (nivelSeguridad + 1);",
+                question: "¿Cuál será el valor numérico en el registro tras el desbordamiento (Overflow)?",
+                options: [
+                    { text: "-128 (El valor da la vuelta al mínimo negativo con signo)", correct: true },
+                    { text: "128 (Se guarda como positivo sin errores)", correct: false },
+                    { text: "0 (Se resetea a cero automáticamente)", correct: false }
+                ],
+                explanation: "¡HACKEO EXITOSO! En Java, el tipo 'byte' tiene 8 bits con signo (-128 a 127). Al sumarle 1 a 127 ocurre wrap-around a -128.",
+                unlocked: false
+            },
+            {
+                id: "T2",
+                name: "TERMINAL 02 // CORTACIRCUITO DE REJILLA LÁSER (UNIDAD 3)",
+                code: "boolean laserActivo = true;\nint codigo = 42;\n\nif (laserActivo && (codigo > 50)) {\n    alarmaSonora();\n}",
+                question: "¿Por qué se desactiva la alarma sonora en esta instrucción condicional?",
+                options: [
+                    { text: "Porque 'codigo > 50' es falso y el operador '&&' exige que ambas sean verdaderas", correct: true },
+                    { text: "Porque 'laserActivo' es falso y corta el circuito", correct: false },
+                    { text: "Porque en Java los números enteros no pueden compararse en un if", correct: false }
+                ],
+                explanation: "¡BARRERA LÁSER DESACTIVADA! El operador lógico '&&' evalúa la segunda expresión; al ser falsa (42 > 50 da false), no entra al bloque.",
+                unlocked: false
+            },
+            {
+                id: "T3",
+                name: "TERMINAL 03 // COMPUERTAS DEL NÚCLEO (UNIDAD 4)",
+                code: "int[] codigosAcceso = { 101, 204, 309 };\nfor (int i = 0; i <= codigosAcceso.length; i++) {\n    verificarNodo(codigosAcceso[i]);\n}",
+                question: "¿Qué grave fallo de ejecución se produce al correr este bucle?",
+                options: [
+                    { text: "ArrayIndexOutOfBoundsException (el índice llega a 3, pero los índices van de 0 a 2)", correct: true },
+                    { text: "Compila y recorre los 3 elementos sin problemas", correct: false },
+                    { text: "Error de tipos: int no puede guardarse en un vector", correct: false }
+                ],
+                explanation: "¡NÚCLEO PRINCIPAL DESBLOQUEADO! La longitud es 3. Al usar '<=' el índice 'i' vale 3 en la última iteración, arrojando ArrayIndexOutOfBounds.",
+                unlocked: false
+            }
+        ];
+
+        let activeTerminal = null;
+
+        function openHackTerminal(terminal) {
+            if (terminal.unlocked) return;
+            activeTerminal = terminal;
+            getAudioContext();
+
+            document.getElementById('hack-terminal-name').innerText = terminal.name;
+            document.getElementById('hack-code-view').innerText = terminal.code;
+            document.getElementById('hack-question').innerText = terminal.question;
+            document.getElementById('hack-feedback').innerText = "Seleccioná la directiva de compilación correcta para neutralizar la barrera.";
+
+            const optList = document.getElementById('hack-options-list');
+            optList.innerHTML = '';
+            terminal.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'hack-btn';
+                btn.innerHTML = `<span style="color: var(--mgs-amber); margin-right: 6px;">[0${idx+1}]</span> ${opt.text}`;
+                btn.onclick = () => solveHack(opt.correct);
+                optList.appendChild(btn);
+            });
+
+            document.getElementById('hack-screen').style.display = 'flex';
+        }
+
+        function closeHackTerminal() {
+            document.getElementById('hack-screen').style.display = 'none';
+            activeTerminal = null;
+        }
+
+        function solveHack(isCorrect) {
+            if (!activeTerminal) return;
+
+            if (isCorrect) {
+                playSFX('hack-success');
+                activeTerminal.unlocked = true;
+                document.getElementById('hack-feedback').innerHTML = `<span style="color: var(--mgs-green); font-weight: 700;">${activeTerminal.explanation}</span>`;
+
+                setTimeout(() => {
+                    closeHackTerminal();
+
+                    // Si se hackearon todas, abrir diálogo final
+                    const allUnlocked = hackTerminals.every(t => t.unlocked);
+                    if (allUnlocked) {
+                        gameState.missionCompleted = true;
+                        setTimeout(() => openCodecDialog('victory'), 500);
+                    }
+                }, 1200);
+
+            } else {
+                playSFX('alert');
+                triggerAlert(99.99);
+                document.getElementById('hack-feedback').innerHTML = `<span style="color: var(--mgs-red); font-weight: 700;">¡ERROR DE COMPILACIÓN! Alarma activada en los servidores.</span>`;
+                setTimeout(() => closeHackTerminal(), 1000);
+            }
+        }
+
+
+        // =========================================================================
+        // 4. MOTOR DE JUEGO CANVAS 2D (TOP-DOWN TACTICAL STEALTH)
+        // =========================================================================
+        const canvas = document.getElementById('mgs-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Estado Global de la Partida
+        const gameState = {
+            player: {
+                x: 60,
+                y: 225,
+                radius: 14,
+                speed: 2.8,
+                vx: 0,
+                vy: 0,
+                dir: 0, // radianes
+                inBox: false,
+                hp: 100
+            },
+            guards: [
+                {
+                    x: 270,
+                    y: 110,
+                    radius: 14,
+                    patrolYMin: 90,
+                    patrolYMax: 360,
+                    speed: 1.8,
+                    dirY: 1,
+                    angle: Math.PI / 2, // mirando hacia abajo
+                    fov: Math.PI / 3,   // 60 grados
+                    viewDist: 170
+                },
+                {
+                    x: 520,
+                    y: 350,
+                    radius: 14,
+                    patrolYMin: 90,
+                    patrolYMax: 360,
+                    speed: 2.0,
+                    dirY: -1,
+                    angle: -Math.PI / 2, // mirando hacia arriba
+                    fov: Math.PI / 3,
+                    viewDist: 170
+                }
+            ],
+            terminals: [
+                { x: 190, y: 70, w: 32, h: 32, dataIdx: 0 },
+                { x: 440, y: 70, w: 32, h: 32, dataIdx: 1 },
+                { x: 690, y: 70, w: 32, h: 32, dataIdx: 2 }
+            ],
+            lasers: [
+                { x1: 370, y1: 180, x2: 370, y2: 450, active: true, terminalIdx: 1 }
+            ],
+            walls: [
+                // Bordes exteriores
+                { x: 0, y: 0, w: 800, h: 16 },
+                { x: 0, y: 434, w: 800, h: 16 },
+                { x: 0, y: 0, w: 16, h: 450 },
+                { x: 784, y: 0, w: 16, h: 450 },
+                // Columnas y mamparas de servidores
+                { x: 140, y: 150, w: 24, h: 180 },
+                { x: 370, y: 16, w: 24, h: 160 },
+                { x: 620, y: 150, w: 24, h: 180 }
+            ],
+            alertTimer: 0,
+            missionCompleted: false,
+            keys: {}
+        };
+
+        function triggerAlert(seconds = 99.99) {
+            if (gameState.alertTimer <= 0) {
+                playSFX('alert');
+                setMusicTheme('alert');
+            }
+            gameState.alertTimer = seconds;
+            document.getElementById('alert-box').classList.add('active');
+        }
+
+        function toggleCardboardBox() {
+            gameState.player.inBox = !gameState.player.inBox;
+            playSFX('box');
+            const btn = document.getElementById('btn-box-toggle');
+            const label = document.getElementById('box-label');
+            if (gameState.player.inBox) {
+                btn.classList.add('active');
+                label.innerText = "CAJA: ON (JAVA.ZIP)";
+            } else {
+                btn.classList.remove('active');
+                label.innerText = "CAJA: OFF";
+            }
+        }
+
+        // Detección de Teclado
+        window.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            gameState.keys[key] = true;
+
+            const codecScreen = document.getElementById('codec-screen');
+            if (codecScreen.style.display === 'flex') {
+                if (key === ' ' || key === 'enter') {
+                    advanceCodec();
+                } else if (key === 'escape') {
+                    closeCodecDialog();
+                }
+                return;
+            }
+
+            if (key === 'b') {
+                toggleCardboardBox();
+            } else if (key === 'c') {
+                openCodecDialog('call');
+            } else if (key === 'e' || key === ' ') {
+                checkTerminalInteraction();
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            gameState.keys[e.key.toLowerCase()] = false;
+        });
+
+        // Controles Táctiles Mobile
+        function bindTouch(btnId, keyName) {
+            const el = document.getElementById(btnId);
+            if (!el) return;
+            const start = (e) => { e.preventDefault(); gameState.keys[keyName] = true; };
+            const end = (e) => { e.preventDefault(); gameState.keys[keyName] = false; };
+            el.addEventListener('touchstart', start);
+            el.addEventListener('touchend', end);
+            el.addEventListener('mousedown', start);
+            el.addEventListener('mouseup', end);
+        }
+
+        bindTouch('btn-touch-up', 'arrowup');
+        bindTouch('btn-touch-down', 'arrowdown');
+        bindTouch('btn-touch-left', 'arrowleft');
+        bindTouch('btn-touch-right', 'arrowright');
+
+        document.getElementById('btn-touch-action').addEventListener('click', () => checkTerminalInteraction());
+        document.getElementById('btn-touch-box').addEventListener('click', () => toggleCardboardBox());
+        document.getElementById('btn-touch-codec').addEventListener('click', () => openCodecDialog('call'));
+
+        function checkTerminalInteraction() {
+            const p = gameState.player;
+            gameState.terminals.forEach((term, idx) => {
+                const dist = Math.hypot(p.x - (term.x + term.w / 2), p.y - (term.y + term.h / 2));
+                if (dist < 46) {
+                    openHackTerminal(hackTerminals[term.dataIdx]);
+                }
+            });
+        }
+
+
+        // =========================================================================
+        // 5. CICLO PRINCIPAL (LOOP & RENDERIZADO 60 FPS)
+        // =========================================================================
+        let lastTime = performance.now();
+
+        function updateGame(dt) {
+            const p = gameState.player;
+
+            // Diálogos o Hackeo pausan el movimiento
+            const codecOpen = document.getElementById('codec-screen').style.display === 'flex';
+            const hackOpen = document.getElementById('hack-screen').style.display === 'flex';
+            if (codecOpen || hackOpen || gameState.missionCompleted) return;
+
+            // 1. Movimiento del Jugador
+            let dx = 0;
+            let dy = 0;
+            if (gameState.keys['w'] || gameState.keys['arrowup']) dy -= 1;
+            if (gameState.keys['s'] || gameState.keys['arrowdown']) dy += 1;
+            if (gameState.keys['a'] || gameState.keys['arrowleft']) dx -= 1;
+            if (gameState.keys['d'] || gameState.keys['arrowright']) dx += 1;
+
+            if (dx !== 0 && dy !== 0) {
+                dx *= 0.7071;
+                dy *= 0.7071;
+            }
+
+            const currentSpeed = p.inBox ? p.speed * 0.55 : p.speed;
+            const nextX = p.x + dx * currentSpeed;
+            const nextY = p.y + dy * currentSpeed;
+
+            if (dx !== 0 || dy !== 0) {
+                p.dir = Math.atan2(dy, dx);
+            }
+
+            // Colisión con Paredes
+            if (!checkWallCollision(nextX, p.y, p.radius)) p.x = nextX;
+            if (!checkWallCollision(p.x, nextY, p.radius)) p.y = nextY;
+
+            // Colisión con Rejilla Láser (Terminal 2 desactiva)
+            const laserActive = !hackTerminals[1].unlocked;
+            if (laserActive) {
+                gameState.lasers.forEach(laser => {
+                    if (Math.abs(p.x - laser.x1) < p.radius + 4 && p.y >= laser.y1 && p.y <= laser.y2) {
+                        // Impacto eléctrico láser
+                        playSFX('damage');
+                        triggerAlert(99.99);
+                        p.x -= 15; // rebote
+                        takeDamage(12);
+                    }
+                });
+            }
+
+            // 2. IA de Centinelas y Patrullas
+            gameState.guards.forEach(g => {
+                g.y += g.speed * g.dirY;
+                if (g.y >= g.patrolYMax) {
+                    g.dirY = -1;
+                    g.angle = -Math.PI / 2;
+                } else if (g.y <= g.patrolYMin) {
+                    g.dirY = 1;
+                    g.angle = Math.PI / 2;
+                }
+
+                // Detección de Campo Visual (FOV Cone)
+                const distToPlayer = Math.hypot(p.x - g.x, p.y - g.y);
+                if (distToPlayer < g.viewDist) {
+                    const angleToPlayer = Math.atan2(p.y - g.y, p.x - g.x);
+                    let diff = Math.abs(angleToPlayer - g.angle);
+                    while (diff > Math.PI) diff = Math.abs(diff - 2 * Math.PI);
+
+                    if (diff < g.fov / 2) {
+                        // ¿Línea de visión bloqueada por paredes?
+                        if (!isRayBlockedByWalls(g.x, g.y, p.x, p.y)) {
+                            // Si está dentro de la caja y quieto a más de 55px, el centinela no sospecha
+                            if (p.inBox && dx === 0 && dy === 0 && distToPlayer > 55) {
+                                // Engañado por la caja "JAVA.ZIP"
+                            } else {
+                                triggerAlert(99.99);
+                            }
+                        }
+                    }
+                }
+
+                // Si está en alerta, los guardias persiguen ligeramente al jugador
+                if (gameState.alertTimer > 0) {
+                    const chaseAngle = Math.atan2(p.y - g.y, p.x - g.x);
+                    g.x += Math.cos(chaseAngle) * 0.8;
+                    g.angle = chaseAngle;
+
+                    // Si el centinela alcanza a Snake: combate cuerpo a cuerpo
+                    if (distToPlayer < p.radius + g.radius + 2) {
+                        playSFX('damage');
+                        takeDamage(0.6);
+                    }
+                }
+            });
+
+            // 3. Temporizador de Alerta (Cuenta regresiva hacia EVASIÓN y NORMAL)
+            if (gameState.alertTimer > 0) {
+                gameState.alertTimer -= dt;
+                document.getElementById('alert-timer').innerText = Math.max(0, gameState.alertTimer).toFixed(2);
+                if (gameState.alertTimer <= 0) {
+                    gameState.alertTimer = 0;
+                    document.getElementById('alert-box').classList.remove('active');
+                    setMusicTheme('sneaking');
+                }
+            }
+        }
+
+        function checkWallCollision(x, y, radius) {
+            for (let w of gameState.walls) {
+                if (x + radius > w.x && x - radius < w.x + w.w &&
+                    y + radius > w.y && y - radius < w.y + w.h) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function isRayBlockedByWalls(x1, y1, x2, y2) {
+            for (let w of gameState.walls) {
+                // Intersección simple de segmento con rectángulos
+                if (lineIntersectsRect(x1, y1, x2, y2, w.x, w.y, w.w, w.h)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function lineIntersectsRect(x1, y1, x2, y2, rx, ry, rw, rh) {
+            // Chequeo rápido de bounding box
+            const minX = Math.min(x1, x2), maxX = Math.max(x1, x2);
+            const minY = Math.min(y1, y2), maxY = Math.max(y1, y2);
+            if (maxX < rx || minX > rx + rw || maxY < ry || minY > ry + rh) return false;
+            return true;
+        }
+
+        function takeDamage(amount) {
+            gameState.player.hp = Math.max(0, gameState.player.hp - amount);
+            document.getElementById('life-bar').style.width = `${gameState.player.hp}%`;
+            if (gameState.player.hp <= 0) {
+                showDebriefing(false);
+            }
+        }
+
+        function showDebriefing(won) {
+            setMusicTheme('none');
+            const scr = document.getElementById('debrief-screen');
+            const title = document.getElementById('debrief-status');
+            const desc = document.getElementById('debrief-desc');
+            const rank = document.getElementById('debrief-rank');
+
+            if (won) {
+                playSFX('hack-success');
+                title.className = "debrief-title success";
+                title.innerText = "¡MISIÓN CUMPLIDA!";
+                desc.innerText = "Lograste infiltrarte, burlar a los centinelas y hackear los 3 módulos del mainframe de la UTN Santa Fe.";
+                rank.innerText = "CODENAME: BIG BOSS DE LA JVM";
+            } else {
+                playSFX('damage');
+                title.className = "debrief-title failure";
+                title.innerText = "SNAKE? SNAKE?! ¡SNAAAAKE!";
+                desc.innerText = "El servidor colapsó tras múltiples desbordamientos y los centinelas de la JVM te interceptaron.";
+                rank.innerText = "CODENAME: RECLUTA EN RECUPERATORIO";
+            }
+            scr.style.display = 'flex';
+        }
+
+        function restartMission() {
+            document.getElementById('debrief-screen').style.display = 'none';
+            document.getElementById('codec-screen').style.display = 'none';
+            document.getElementById('hack-screen').style.display = 'none';
+
+            gameState.player.x = 60;
+            gameState.player.y = 225;
+            gameState.player.hp = 100;
+            gameState.player.inBox = false;
+            gameState.alertTimer = 0;
+            gameState.missionCompleted = false;
+            document.getElementById('life-bar').style.width = '100%';
+            document.getElementById('alert-box').classList.remove('active');
+
+            hackTerminals.forEach(t => t.unlocked = false);
+            setMusicTheme('sneaking');
+        }
+
+
+        // =========================================================================
+        // 6. RENDERIZADO VISUAL DEL CANVAS (ESTILO TÁCTICO MGS)
+        // =========================================================================
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Suelo de baldosas de alta tecnología (Grid táctico)
+            ctx.strokeStyle = '#051A0D';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 40) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            // 2. Dibujar Paredes y Racks de Servidores
+            gameState.walls.forEach(w => {
+                ctx.fillStyle = '#082613';
+                ctx.fillRect(w.x, w.y, w.w, w.h);
+
+                ctx.strokeStyle = '#00FF66';
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(w.x, w.y, w.w, w.h);
+
+                // Ranuras de rack
+                ctx.fillStyle = '#003D1A';
+                for (let ry = w.y + 10; ry < w.y + w.h - 10; ry += 16) {
+                    ctx.fillRect(w.x + 4, ry, w.w - 8, 4);
+                }
+            });
+
+            // 3. Rejillas Láser
+            const laserActive = !hackTerminals[1].unlocked;
+            if (laserActive) {
+                gameState.lasers.forEach(laser => {
+                    ctx.strokeStyle = '#FF2A2A';
+                    ctx.lineWidth = 3;
+                    ctx.shadowColor = '#FF2A2A';
+                    ctx.shadowBlur = 12;
+                    ctx.beginPath();
+                    ctx.moveTo(laser.x1, laser.y1);
+                    ctx.lineTo(laser.x2, laser.y2);
+                    ctx.stroke();
+                    ctx.shadowBlur = 0; // reset
+                });
+            }
+
+            // 4. Terminales de Hackeo
+            gameState.terminals.forEach((term, idx) => {
+                const data = hackTerminals[term.dataIdx];
+                ctx.fillStyle = data.unlocked ? '#00FF66' : '#FFB000';
+                ctx.shadowColor = ctx.fillStyle;
+                ctx.shadowBlur = 10;
+                ctx.fillRect(term.x, term.y, term.w, term.h);
+                ctx.shadowBlur = 0;
+
+                ctx.fillStyle = '#000';
+                ctx.font = 'bold 11px Share Tech Mono';
+                ctx.textAlign = 'center';
+                ctx.fillText(`T0${idx+1}`, term.x + term.w / 2, term.y + 20);
+
+                // Indicador de interacción si el jugador está cerca
+                const dist = Math.hypot(gameState.player.x - (term.x + term.w/2), gameState.player.y - (term.y + term.h/2));
+                if (dist < 46 && !data.unlocked) {
+                    ctx.fillStyle = '#FFF';
+                    ctx.font = 'bold 12px Share Tech Mono';
+                    ctx.fillText("[E] HACK", term.x + term.w / 2, term.y - 8);
+                }
+            });
+
+            // 5. Centinelas y sus Conos de Visión (FOV)
+            gameState.guards.forEach(g => {
+                // Cono de visión
+                ctx.save();
+                ctx.fillStyle = (gameState.alertTimer > 0) ? 'rgba(255, 42, 42, 0.28)' : 'rgba(0, 255, 102, 0.14)';
+                ctx.strokeStyle = (gameState.alertTimer > 0) ? 'rgba(255, 42, 42, 0.7)' : 'rgba(0, 255, 102, 0.4)';
+                ctx.beginPath();
+                ctx.moveTo(g.x, g.y);
+                ctx.arc(g.x, g.y, g.viewDist, g.angle - g.fov / 2, g.angle + g.fov / 2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                ctx.restore();
+
+                // Cuerpo del Centinela
+                ctx.fillStyle = (gameState.alertTimer > 0) ? '#DC2626' : '#1E40AF';
+                ctx.beginPath();
+                ctx.arc(g.x, g.y, g.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#FFF';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // Línea de vista / Cañón del guardia
+                ctx.strokeStyle = '#FFF';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(g.x, g.y);
+                ctx.lineTo(g.x + Math.cos(g.angle) * 22, g.y + Math.sin(g.angle) * 22);
+                ctx.stroke();
+
+                // Signo de exclamación ¡! sobre la cabeza en Alerta
+                if (gameState.alertTimer > 0) {
+                    ctx.fillStyle = '#FF2A2A';
+                    ctx.font = '900 24px Poppins, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText("!", g.x, g.y - 20);
+                }
+            });
+
+            // 6. Solid Byte (El Jugador)
+            const p = gameState.player;
+            if (p.inBox) {
+                // Caja de Cartón rotulada "JAVA.ZIP"
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.fillStyle = '#B45309'; // Marrón cartón
+                ctx.fillRect(-16, -16, 32, 32);
+                ctx.strokeStyle = '#78350F';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(-16, -16, 32, 32);
+
+                ctx.fillStyle = '#FDE68A';
+                ctx.font = 'bold 8px Share Tech Mono';
+                ctx.textAlign = 'center';
+                ctx.fillText("JAVA.ZIP", 0, 3);
+                ctx.restore();
+            } else {
+                // Snake con bandana verde
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.dir);
+
+                // Cuerpo
+                ctx.fillStyle = '#374151';
+                ctx.beginPath();
+                ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#10B981';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Bandana verde
+                ctx.fillStyle = '#059669';
+                ctx.fillRect(-6, -p.radius, 12, 5);
+
+                // Miras hacia adelante
+                ctx.strokeStyle = '#34D399';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(p.radius + 6, 0);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // 7. Radar Soliton Miniatura (Esquina superior derecha del canvas)
+            drawMiniRadar();
+        }
+
+        function drawMiniRadar() {
+            const rx = 670, ry = 20, rw = 110, rh = 80;
+            ctx.save();
+            ctx.fillStyle = 'rgba(0, 25, 10, 0.75)';
+            ctx.strokeStyle = '#00FF66';
+            ctx.lineWidth = 1;
+            ctx.fillRect(rx, ry, rw, rh);
+            ctx.strokeRect(rx, ry, rw, rh);
+
+            // Escala del radar (800x450 -> 110x80)
+            const sx = rw / canvas.width;
+            const sy = rh / canvas.height;
+
+            // Punto de Solid Byte
+            ctx.fillStyle = '#00FF66';
+            ctx.beginPath();
+            ctx.arc(rx + gameState.player.x * sx, ry + gameState.player.y * sy, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Puntos de los Centinelas
+            gameState.guards.forEach(g => {
+                ctx.fillStyle = (gameState.alertTimer > 0) ? '#FF2A2A' : '#EF4444';
+                ctx.beginPath();
+                ctx.arc(rx + g.x * sx, ry + g.y * sy, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            ctx.fillStyle = 'rgba(0, 255, 102, 0.7)';
+            ctx.font = '8px Share Tech Mono';
+            ctx.fillText("SOLITON RADAR", rx + 4, ry + 10);
+            ctx.restore();
+        }
+
+        function gameLoop(now) {
+            const dt = (now - lastTime) / 1000;
+            lastTime = now;
+
+            updateGame(dt);
+            draw();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // =========================================================================
+        // 7. ARRANQUE INICIAL
+        // =========================================================================
+        window.addEventListener('DOMContentLoaded', () => {
+            // Abrir automáticamente el CODEC con la cinemática introductoria
+            setTimeout(() => {
+                openCodecDialog('intro');
+                setMusicTheme('sneaking');
+            }, 300);
+
+            requestAnimationFrame(gameLoop);
+        });
+    </script>
+</body>
+</html>
