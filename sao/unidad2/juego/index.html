@@ -546,16 +546,250 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* Responsive Móviles */
+        /* Responsive Móviles / Pantallas Pequeñas */
         @media (max-width: 650px) {
-            header { flex-direction: column; gap: 10px; align-items: stretch; }
-            .stats-bar { justify-content: space-between; }
-            .brand-title { font-size: 15px; }
-            .dossier { padding: 18px 14px; }
-            .code-desk pre { font-size: 15px; }
-            .controls-desk { gap: 10px; }
-            .stamp-btn { font-size: 16px; padding: 14px 10px; }
-            .stamp { font-size: 36px; padding: 8px 16px; }
+            body {
+                padding: 8px 6px;
+                justify-content: flex-start;
+                gap: 8px;
+            }
+
+            /* Header ultra compacto */
+            header {
+                flex-direction: column;
+                padding: 8px 12px;
+                border-radius: 12px;
+                margin-bottom: 6px;
+                gap: 8px;
+                align-items: stretch;
+            }
+
+            .brand-box {
+                gap: 8px;
+            }
+
+            .brand-badge {
+                font-size: 11px;
+                padding: 2px 7px;
+            }
+
+            .brand-title {
+                font-size: 14px;
+            }
+
+            .brand-sub {
+                display: none;
+            }
+
+            .stats-bar {
+                gap: 5px;
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .stat-pill {
+                padding: 4px 6px;
+                border-radius: 8px;
+            }
+
+            .stat-label {
+                font-size: 8px;
+                letter-spacing: 0.5px;
+            }
+
+            .stat-val {
+                font-size: 13px;
+            }
+
+            .lives-container {
+                font-size: 12px;
+                gap: 3px;
+            }
+
+            .sound-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 13px;
+                border-radius: 8px;
+            }
+
+            /* Carpeta del Expediente */
+            .dossier {
+                padding: 14px 12px;
+                border-radius: 12px;
+                transform: none !important;
+            }
+
+            .dossier::before {
+                width: 80px;
+                height: 12px;
+                top: -5px;
+            }
+
+            .dossier-top {
+                padding-bottom: 8px;
+                margin-bottom: 8px;
+            }
+
+            .dossier-id {
+                font-size: 11.5px;
+            }
+
+            .applicant-info {
+                gap: 8px;
+            }
+
+            .applicant-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+
+            .applicant-name {
+                font-size: 13px;
+            }
+
+            .applicant-role {
+                font-size: 11px;
+            }
+
+            .claim-bubble {
+                padding: 8px 10px;
+                font-size: 12.5px;
+                margin-bottom: 10px;
+                gap: 6px;
+            }
+
+            /* Bloque de código */
+            .code-desk {
+                padding: 10px 12px;
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+
+            .code-desk pre {
+                font-size: 13.5px;
+                line-height: 1.4;
+            }
+
+            /* Sello estampado */
+            .stamp {
+                font-size: 28px;
+                padding: 6px 14px;
+                letter-spacing: 2px;
+                border-width: 4px;
+                border-radius: 8px;
+            }
+
+            /* Panel de veredicto */
+            .verdict-box {
+                padding: 10px 12px;
+                margin-top: 8px;
+                border-radius: 8px;
+            }
+
+            .verdict-header {
+                font-size: 13.5px;
+                margin-bottom: 4px;
+            }
+
+            .verdict-desc {
+                font-size: 12px;
+                line-height: 1.4;
+            }
+
+            .btn-next {
+                padding: 8px 16px;
+                font-size: 13px;
+                margin-top: 8px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* Botones de sello */
+            .controls-desk {
+                gap: 8px;
+                margin-top: 8px;
+            }
+
+            .stamp-btn {
+                padding: 12px 8px;
+                font-size: 15px;
+                border-radius: 12px;
+                border-bottom-width: 3px;
+                gap: 6px;
+            }
+
+            /* Ocultar pistas de teclado en móviles táctiles */
+            .key-hint {
+                display: none;
+            }
+
+            /* Modales */
+            .modal-overlay {
+                padding: 12px;
+            }
+
+            .modal-card {
+                padding: 22px 16px;
+                border-radius: 16px;
+            }
+
+            .modal-title {
+                font-size: 20px;
+                margin-bottom: 6px;
+            }
+
+            .modal-sub {
+                font-size: 12.5px;
+                margin-bottom: 14px;
+                line-height: 1.45;
+            }
+
+            .modal-btn {
+                padding: 10px 18px;
+                font-size: 14px;
+                border-radius: 10px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .badge-rank {
+                font-size: 14px;
+                padding: 6px 14px;
+                margin: 10px 0;
+            }
+
+            /* Footer */
+            footer {
+                margin-top: 6px;
+                font-size: 10.5px;
+                gap: 12px;
+            }
+        }
+
+        /* Pantallas muy estrechas (ej. iPhone SE / < 380px) */
+        @media (max-width: 380px) {
+            .stat-pill {
+                padding: 3px 5px;
+            }
+
+            .stat-label {
+                font-size: 7px;
+            }
+
+            .stat-val {
+                font-size: 12px;
+            }
+
+            .stamp-btn {
+                font-size: 13.5px;
+                padding: 10px 6px;
+            }
+
+            .code-desk pre {
+                font-size: 12.5px;
+            }
         }
     </style>
 </head>
