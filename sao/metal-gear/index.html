@@ -806,6 +806,121 @@
             display: inline-block;
         }
 
+        /* =========================================================================
+           SELECTOR DE MISIONES / NIVELES (OVERLAY & CARDS)
+           ========================================================================= */
+        .level-select-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 12, 7, 0.96);
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 16px 22px;
+            z-index: 175;
+            border: 2px solid var(--mgs-green);
+            box-shadow: inset 0 0 35px rgba(0, 255, 102, 0.25);
+            animation: codecOpen 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .level-select-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--mgs-green-dim);
+            padding-bottom: 8px;
+            width: 100%;
+        }
+
+        .level-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 14px;
+            margin: 14px 0;
+            width: 100%;
+        }
+
+        .level-card {
+            background: rgba(0, 30, 15, 0.85);
+            border: 1.5px solid var(--mgs-border);
+            border-radius: 8px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .level-card:hover:not(.locked) {
+            border-color: var(--mgs-green);
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .level-card.active {
+            border-color: var(--mgs-amber);
+            background: rgba(255, 176, 0, 0.1);
+            box-shadow: 0 0 16px rgba(255, 176, 0, 0.25);
+        }
+
+        .level-card.locked {
+            opacity: 0.45;
+            cursor: not-allowed;
+            filter: grayscale(0.9);
+        }
+
+        .level-card-badge {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            align-self: flex-start;
+        }
+
+        .level-card-badge.status-active {
+            background: var(--mgs-amber);
+            color: #000;
+        }
+
+        .level-card-badge.status-cleared {
+            background: var(--mgs-green);
+            color: #000;
+        }
+
+        .level-card-badge.status-locked {
+            background: #475569;
+            color: #E2E8F0;
+        }
+
+        .level-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #E2FCE5;
+        }
+
+        .level-card-units {
+            font-size: 11px;
+            color: var(--mgs-green-dim);
+        }
+
+        .level-card-boss {
+            font-size: 11px;
+            color: #CBD5E1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-top: 1px dashed rgba(0, 255, 102, 0.2);
+            padding-top: 6px;
+            margin-top: 4px;
+        }
+
         /* Controles Móviles Virtuales */
         .mobile-touch-bar {
             display: none;
@@ -1213,6 +1328,9 @@
             </div>
 
             <div class="hud-right">
+                <button class="hud-btn" id="btn-level-select" onclick="openLevelSelectDialog()" title="Seleccionar Misión / Nivel [M]">
+                    <i class="fa-solid fa-list-check"></i> <span id="hud-level-label">MISIÓN 1</span>
+                </button>
                 <button class="hud-btn" id="btn-knock" onclick="performWallKnock()" title="Golpear Pared para Distraer [F]">
                     <i class="fa-solid fa-hand-fist"></i> GOLPE [F]
                 </button>
@@ -1231,6 +1349,30 @@
         <!-- Área de Acción (Canvas 2D + Pantallas Flotantes) -->
         <div class="stage-area" id="stage-wrapper">
             <canvas id="mgs-canvas" width="800" height="450"></canvas>
+
+            <!-- 0. PANTALLA SELECTOR DE MISIONES Y NIVELES -->
+            <div class="level-select-overlay" id="level-select-screen">
+                <div class="level-select-header">
+                    <div style="font-size: 15px; font-weight: 700; color: var(--mgs-green); letter-spacing: 1px;">
+                        <i class="fa-solid fa-shield-halved"></i> SELECCIÓN DE OPERACIÓN // CÁTEDRA SAO
+                    </div>
+                    <button class="hud-btn" onclick="closeLevelSelectDialog()" style="border-color: var(--mgs-red); color: var(--mgs-red);">
+                        <i class="fa-solid fa-xmark"></i> CERRAR [ESC]
+                    </button>
+                </div>
+                <p style="font-size: 11.5px; color: #94A3B8; margin-top: 6px;">
+                    Seleccioná la operación para iniciar la infiltración o repasar los contenidos curriculares de las Unidades 1 a 5:
+                </p>
+                <div class="level-cards-grid" id="level-cards-container">
+                    <!-- Inyectado dinámicamente -->
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--mgs-border); padding-top: 10px; flex-wrap: wrap; gap: 8px;">
+                    <button class="hud-btn" onclick="toggleCheatUnlockAll()" style="font-size: 11px; color: var(--mgs-amber); border-color: var(--mgs-amber);">
+                        <i class="fa-solid fa-graduation-cap"></i> MODO CÁTEDRA: DESBLOQUEAR TODO
+                    </button>
+                    <span style="font-size: 10.5px; color: #64748B;">UTN FRSF // TACTICAL BYTECODE ACTION</span>
+                </div>
+            </div>
 
             <!-- Cartel indicador de Sala / Sector -->
             <div class="room-title-banner" id="room-banner">
@@ -1352,12 +1494,14 @@
             <div class="debrief-overlay" id="debrief-screen">
                 <h2 class="debrief-title" id="debrief-status">¡MISIÓN CUMPLIDA!</h2>
                 <p id="debrief-desc" style="max-width: 550px; line-height: 1.5; color: #A7F3D0; margin-bottom: 12px;">
-                    Has neutralizado el virus de desbordamiento de memoria y restablecido el servidor central de la UTN Santa Fe.
+                    Has neutralizado la amenaza en el sector de la instalación.
                 </p>
                 <div class="codenametag" id="debrief-rank">RANGO: BIG BOSS DE LA JVM</div>
-                <div style="display: flex; gap: 12px; margin-top: 16px;">
+                <div style="display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; justify-content: center;">
+                    <button class="hud-btn" id="debrief-next-btn" onclick="handleNextMissionBtn()" style="background: rgba(0, 255, 102, 0.22); border-color: var(--mgs-green);"><i class="fa-solid fa-forward-step"></i> SIGUIENTE MISIÓN</button>
                     <button class="hud-btn" onclick="restartMission()"><i class="fa-solid fa-rotate-right"></i> REPETIR MISIÓN</button>
-                    <a href="../unidad2/index.html" class="hud-btn" style="text-decoration: none;"><i class="fa-solid fa-arrow-left"></i> VOLVER A CLASES</a>
+                    <button class="hud-btn" onclick="openLevelSelectDialog()"><i class="fa-solid fa-list-check"></i> SELECCIONAR NIVEL</button>
+                    <a href="../unidad2/index.html" class="hud-btn" style="text-decoration: none;"><i class="fa-solid fa-arrow-left"></i> CLASES</a>
                 </div>
             </div>
 
@@ -1984,6 +2128,35 @@
 
         // Diálogos pedagógicos y narrativos
         const codecScripts = {
+            
+            boss_briefing_1: [
+                { speaker: "TUTORA DE LÓGICA // LAB", text: "¡Solid Byte! ¡Cuidado! Es el Vulcan Bytemaster, el centinela blindado de compilación." },
+                { speaker: "TUTORA DE LÓGICA // LAB", text: "Sus cañones de ráfaga repelen ataques directos. Tenés que hackear los dos submódulos de la arena: Identificadores Válidos y Paridad con Módulo %." },
+                { speaker: "TUTORA DE LÓGICA // LAB", text: "Al resolver cada uno, sus condensadores se sobrecargarán por 7 segundos. ¡Acercate a su matriz de bytecode y pulsá [E] / HACK para asestarle daño crítico!" },
+                { speaker: "SOLID BYTE", text: "Entendido. A cubrirme tras las columnas térmicas y buscar los submódulos. ¡En marcha!" }
+            ],
+            boss_briefing_2: [
+                { speaker: "CAPITÁN // PROFESOR SAO", text: "¡Solid Byte, alerta máxima! ¡Cyber Olympo está activo! Una araña mecánica modular con emisores EMP y rayo director." },
+                { speaker: "CAPITÁN // PROFESOR SAO", text: "Aplica la metodología Top-Down: divide y vencerás. Neutralizá los dos submódulos: Trampa del Punto y Coma en bucle For y Cláusulas Return en Métodos." },
+                { speaker: "CAPITÁN // PROFESOR SAO", text: "Cuando colapsen sus rutinas modulares durante 7 segundos, ¡aproximáte a su CPU central y hackeala con [E]!" },
+                { speaker: "SOLID BYTE", text: "Recibido, Capitán. Cuidado con las minas EMP. ¡Iniciando maniobra de flanqueo!" }
+            ],
+            boss_briefing_3: [
+                { speaker: "TUTOR DE ALGORITMOS // LAB", text: "¡Solid Byte! ¡El Metal Gear JVM-REX Prime! La supermáquina definitiva de ejecución de la UTN Santa Fe." },
+                { speaker: "TUTOR DE ALGORITMOS // LAB", text: "Protegete detrás de las columnas térmicas cuando barra con su láser infrarrojo. Hackeá los submódulos de Límites de Vector con Tope y Swap de Burbuja." },
+                { speaker: "TUTOR DE ALGORITMOS // LAB", text: "¡Cada terminal aturde al Mech por 7 segundos! ¡Aprovechá esa ventana para golpear su reactor central!" },
+                { speaker: "SOLID BYTE", text: "La batalla decisiva. ¡Todo o nada por los registros de SAO!" }
+            ],
+            victory_1: [
+                { speaker: "CORONEL // PROFESOR SAO", text: "¡Excelente trabajo, Solid Byte! Vulcan Bytemaster ha sido neutralizado. Las compuertas de la dársena están abiertas." },
+                { speaker: "CAPITÁN // PROFESOR SAO", text: "Dominaste la compilación con javac y la jerarquía de tipos primitivos sin pérdida de precisión. Avanzá a la Operación 2: Almacén y Lab Modular." },
+                { speaker: "SOLID BYTE", text: "Recibido, Capitán. Prosigo la infiltración hacia la siguiente misión." }
+            ],
+            victory_2: [
+                { speaker: "CAPITÁN // PROFESOR SAO", text: "¡Brillante, Solid Byte! La araña Cyber Olympo colapsó gracias a la descomposición modular Top-Down." },
+                { speaker: "TUTORA DE LÓGICA // LAB", text: "Neutralizaste las trampas de bucles y el fall-through del switch. Solo queda el Mainframe Core y el temible Metal Gear JVM-REX Prime." },
+                { speaker: "SOLID BYTE", text: "Rumbo al mainframe central. Vamos por la victoria definitiva." }
+            ],
             intro: [
                 { speaker: "CORONEL // PROFESOR SAO", text: "Solid Byte, ¿me escuchás? El enlace táctico está asegurado en la frecuencia 140.85." },
                 { speaker: "SOLID BYTE", text: "Fuerte y claro, Coronel. Me infiltré en el ala de servidores de la UTN Santa Fe." },
@@ -2287,491 +2460,1108 @@
         }
 
 
+                // =========================================================================
+        // 3. BASE DE DATOS DE CAMPAÑA TRILOGÍA (UNIDADES 1 A 5 // 3 MISIONES)
         // =========================================================================
-        // 3. BASE DE DATOS DE HACKEOS DE CÓDIGO (CURRICULAR SAO UNIDADES 1 A 5)
-        // =========================================================================
-        const hackTerminals = [
+        const campaignLevels = [
+            // ---------------------------------------------------------------------
+            // NIVEL 1: OPERACIÓN DÁRSENA BYTECODE (UNIDADES 1 Y 2)
+            // ---------------------------------------------------------------------
             {
-                id: "T1",
-                roomId: "dock",
-                name: "TERMINAL 01 // DÁRSENA DE ACCESO (UNIDAD 1)",
-                code: "String fuente = \"SolidByte.java\";\n// ¿Qué herramienta genera el bytecode ejecutable (.class)?\nbyte[] bytecode = compilar(fuente);",
-                question: "Para transformar el código fuente (.java) en bytecode (.class) que la máquina virtual pueda procesar en cualquier plataforma, ¿cuál es la herramienta responsable según la Unidad 1?",
-                options: [
-                    { text: "javac genera el bytecode (.class) independiente de la arquitectura, y la JVM lo interpreta/ejecuta en tiempo de ejecución.", correct: true },
-                    { text: "El sistema operativo (Windows/Linux) compila directamente a binario máquina sin generar bytecode intermedio.", correct: false },
-                    { text: "La JVM traduce directamente el archivo .java sin requerir un compilador previo de Java.", correct: false }
+                id: 1,
+                code: "OP-01",
+                name: "OPERACIÓN 01: DÁRSENA BYTECODE",
+                shortName: "MISIÓN 1: DÁRSENA",
+                subtitle: "UNIDADES 1 Y 2 // COMPILACIÓN JAVAC & TIPOS PRIMITIVOS",
+                topics: "Compilación (.java -> javac -> .class / JVM), clasificación de errores, jerarquía de tipos y casting explícito.",
+                bossName: "VULCAN BYTEMASTER",
+                bossSub: "CENTINELA BLINDADO DE COMPILACIÓN",
+                bossType: "vulcan",
+                startRoom: "dock",
+                startPlayerX: 70,
+                startPlayerY: 225,
+                rooms: {
+                    dock: {
+                        id: 'dock',
+                        title: 'SALA 01: DÁRSENA DE ACCESO',
+                        subtitle: 'UNIDAD 1 // BYTECODE & COMPILACIÓN (JAVAC VS JVM)',
+                        visited: true,
+                        walls: [
+                            { x: 0, y: 0, w: 800, h: 16 },
+                            { x: 0, y: 434, w: 800, h: 16 },
+                            { x: 0, y: 0, w: 16, h: 450 },
+                            { x: 784, y: 0, w: 16, h: 175 },
+                            { x: 784, y: 275, w: 16, h: 175 },
+                            { x: 180, y: 70, w: 32, h: 120 },
+                            { x: 180, y: 260, w: 32, h: 120 },
+                            { x: 440, y: 150, w: 40, h: 150 }
+                        ],
+                        doors: [
+                            {
+                                id: 'dock_east',
+                                x: 776, y: 175, w: 24, h: 100,
+                                targetRoom: 'vault_u2',
+                                spawnX: 45, spawnY: 225,
+                                reqKey: 1,
+                                label: 'COMPUERTA A CÁMARA [LV.1]',
+                                orientation: 'E'
+                            }
+                        ],
+                        guards: [
+                            {
+                                id: 1,
+                                spawnX: 320, spawnY: 100,
+                                x: 320, y: 100,
+                                radius: 14,
+                                patrolYMin: 70, patrolYMax: 380,
+                                speed: 1.5, dirY: 1,
+                                angle: Math.PI / 2,
+                                fov: Math.PI / 3,
+                                viewDist: 150,
+                                investigateTarget: null, investigateTimer: 0
+                            },
+                            {
+                                id: 2,
+                                spawnX: 610, spawnY: 350,
+                                x: 610, y: 350,
+                                radius: 14,
+                                patrolYMin: 80, patrolYMax: 370,
+                                speed: 1.6, dirY: -1,
+                                angle: -Math.PI / 2,
+                                fov: Math.PI / 3,
+                                viewDist: 150,
+                                investigateTarget: null, investigateTimer: 0
+                            }
+                        ],
+                        terminals: [
+                            { x: 100, y: 55, w: 34, h: 34, terminalId: 'T1_1' },
+                            { x: 440, y: 350, w: 34, h: 34, terminalId: 'T1_2' }
+                        ],
+                        lasers: [],
+                        items: []
+                    },
+                    vault_u2: {
+                        id: 'vault_u2',
+                        title: 'SALA 02: CÁMARA DE TIPOS PRIMITIVOS',
+                        subtitle: 'UNIDAD 2 // JERARQUÍA DE TIPOS & CASTING EXPLÍCITO',
+                        visited: false,
+                        walls: [
+                            { x: 0, y: 0, w: 800, h: 16 },
+                            { x: 0, y: 434, w: 800, h: 16 },
+                            { x: 0, y: 0, w: 16, h: 175 },
+                            { x: 0, y: 275, w: 16, h: 175 },
+                            { x: 784, y: 0, w: 16, h: 175 },
+                            { x: 784, y: 275, w: 16, h: 175 },
+                            { x: 220, y: 90, w: 32, h: 220 },
+                            { x: 550, y: 90, w: 32, h: 220 }
+                        ],
+                        doors: [
+                            {
+                                id: 'vault_west',
+                                x: 0, y: 175, w: 24, h: 100,
+                                targetRoom: 'dock',
+                                spawnX: 740, spawnY: 225,
+                                reqKey: 0,
+                                label: 'DÁRSENA',
+                                orientation: 'W'
+                            },
+                            {
+                                id: 'vault_east',
+                                x: 776, y: 175, w: 24, h: 100,
+                                targetRoom: 'arena_vulcan',
+                                spawnX: 55, spawnY: 225,
+                                reqKey: 1,
+                                label: 'PATIO VULCAN [LV.1]',
+                                orientation: 'E'
+                            }
+                        ],
+                        guards: [
+                            {
+                                id: 3,
+                                spawnX: 330, spawnY: 340,
+                                x: 330, y: 340,
+                                radius: 14,
+                                patrolYMin: 90, patrolYMax: 360,
+                                speed: 1.7, dirY: -1,
+                                angle: -Math.PI / 2,
+                                fov: Math.PI / 3,
+                                viewDist: 155,
+                                investigateTarget: null, investigateTimer: 0
+                            },
+                            {
+                                id: 4,
+                                spawnX: 450, spawnY: 110,
+                                x: 450, y: 110,
+                                radius: 14,
+                                patrolYMin: 90, patrolYMax: 360,
+                                speed: 1.7, dirY: 1,
+                                angle: Math.PI / 2,
+                                fov: Math.PI / 3,
+                                viewDist: 155,
+                                investigateTarget: null, investigateTimer: 0
+                            }
+                        ],
+                        terminals: [
+                            { x: 380, y: 80, w: 34, h: 34, terminalId: 'T1_3' },
+                            { x: 380, y: 340, w: 34, h: 34, terminalId: 'T1_4' }
+                        ],
+                        lasers: [
+                            { x1: 680, y1: 175, x2: 680, y2: 275, terminalId: 'T1_4' }
+                        ],
+                        items: [
+                            {
+                                id: 'coffee_l1',
+                                x: 120, y: 90, w: 28, h: 28,
+                                type: 'coffee',
+                                name: 'RACIÓN DE CAFÉ (+50 HP)',
+                                heal: 50,
+                                taken: false
+                            }
+                        ]
+                    },
+                    arena_vulcan: {
+                        id: 'arena_vulcan',
+                        title: 'SALA 03: PATIO DEL CENTINELA // BOSS ARENA',
+                        subtitle: 'UNIDAD 1 Y 2 // BOSS: VULCAN BYTEMASTER (COMPILACIÓN)',
+                        visited: false,
+                        hasBoss: true,
+                        walls: [
+                            { x: 0, y: 0, w: 800, h: 16 },
+                            { x: 0, y: 434, w: 800, h: 16 },
+                            { x: 0, y: 0, w: 16, h: 175 },
+                            { x: 0, y: 275, w: 16, h: 175 },
+                            { x: 784, y: 0, w: 16, h: 450 },
+                            { x: 240, y: 80, w: 45, h: 90 },
+                            { x: 240, y: 280, w: 45, h: 90 }
+                        ],
+                        doors: [
+                            {
+                                id: 'vulcan_west',
+                                x: 0, y: 175, w: 24, h: 100,
+                                targetRoom: 'vault_u2',
+                                spawnX: 740, spawnY: 225,
+                                reqKey: 1,
+                                label: 'CÁMARA DATOS',
+                                orientation: 'W'
+                            }
+                        ],
+                        guards: [],
+                        terminals: [
+                            { x: 245, y: 25, w: 34, h: 34, terminalId: 'T1_BOSS_A' },
+                            { x: 245, y: 390, w: 34, h: 34, terminalId: 'T1_BOSS_B' }
+                        ],
+                        lasers: [],
+                        items: []
+                    }
+                },
+                terminals: [
+                    {
+                        id: "T1_1",
+                        roomId: "dock",
+                        name: "TERMINAL 01 // DÁRSENA DE ACCESO (UNIDAD 1)",
+                        code: "String fuente = \"SolidByte.java\";\n// ¿Qué herramienta genera el bytecode ejecutable (.class)?\nbyte[] bytecode = compilar(fuente);",
+                        question: "Para transformar el código fuente (.java) en bytecode (.class) que la máquina virtual pueda procesar en cualquier plataforma, ¿cuál es la herramienta responsable según la Unidad 1?",
+                        options: [
+                            { text: "javac compila el código a bytecode (.class) independiente de la arquitectura, y la JVM lo interpreta/ejecuta en tiempo de ejecución.", correct: true },
+                            { text: "El sistema operativo (Windows/Linux) compila directamente a binario nativo sin generar bytecode intermedio.", correct: false },
+                            { text: "La JVM traduce directamente el archivo .java sin requerir un compilador previo de Java.", correct: false }
+                        ],
+                        explanation: "¡ACCESO CONCEDIDO! Bytecode validado. El compilador javac genera el archivo .class que ejecuta la JVM. ¡KEYCARD NIVEL 1 OBTENIDA!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T1_2",
+                        roomId: "dock",
+                        name: "TERMINAL 02 // SUBESTACIÓN DÁRSENA (UNIDAD 1)",
+                        code: "int dividendo = 100;\nint divisor = 0;\nint resultado = dividendo / divisor; // Compila sin error sintáctico",
+                        question: "Según la clasificación de errores de la Unidad 1 de SAO, ¿a qué categoría corresponde el fallo provocado por la división por cero?",
+                        options: [
+                            { text: "Error en tiempo de ejecución (Run-time error / ArithmeticException por división por cero).", correct: true },
+                            { text: "Error sintáctico detectado inmediatamente en tiempo de compilación por javac.", correct: false },
+                            { text: "Error de enlace (Linker error) de librerías del sistema operativo anfitrión.", correct: false }
+                        ],
+                        explanation: "¡DIAGNÓSTICO EXACTO! La división por cero es una excepción en tiempo de ejecución. ¡CIRCUITOS AUXILIARES DESPEJADOS!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T1_3",
+                        roomId: "vault_u2",
+                        name: "TERMINAL 03 // CÁMARA DE DATOS (UNIDAD 2)",
+                        code: "byte b = 100; // 8 bits (-128 a 127)\nint entero = b; // Promoción implícita\n// Jerarquía estricta de tipos enteros primitivos en Java",
+                        question: "¿Cuál es el orden ascendente estricto por tamaño de memoria en bits de los tipos enteros primitivos en Java?",
+                        options: [
+                            { text: "byte (8 bits) < short (16 bits) < int (32 bits) < long (64 bits)", correct: true },
+                            { text: "short (8 bits) < byte (16 bits) < int (32 bits) < long (64 bits)", correct: false },
+                            { text: "byte (8 bits) < int (16 bits) < short (32 bits) < long (64 bits)", correct: false }
+                        ],
+                        explanation: "¡JERARQUÍA VALIDADA! byte(8b) cabe en short(16b), int(32b) y long(64b) sin riesgo de pérdida de datos.",
+                        unlocked: false
+                    },
+                    {
+                        id: "T1_4",
+                        roomId: "vault_u2",
+                        name: "TERMINAL 04 // SERVO CERROJO LÁSER (UNIDAD 2)",
+                        code: "double lecturaSensor = 104.75;\n// El servomotor requiere un int exacto para destrabar el láser:\nint calibracion = lecturaSensor; // Error: possible lossy conversion",
+                        question: "El compilador javac rechaza la conversión implícita por pérdida de precisión decimal. ¿Cómo se debe aplicar el casting explícito según la Unidad 2?",
+                        options: [
+                            { text: "int calibracion = (int) lecturaSensor; (Casting explícito truncando decimales a 104)", correct: true },
+                            { text: "int calibracion = lecturaSensor.toInt(); (Método inexistente en tipos primitivos)", correct: false },
+                            { text: "int calibracion = (double) lecturaSensor; (Reitera el tipo incompatible double)", correct: false }
+                        ],
+                        explanation: "¡CALIBRACIÓN EXITOSA! Casting explícito (int) aplicado. ¡REJILLAS LÁSER DE LA CÁMARA DESACTIVADAS!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T1_BOSS_A",
+                        roomId: "arena_vulcan",
+                        name: "SUBMÓDULO A // IDENTIFICADORES VÁLIDOS (UNIDAD 1 & 2)",
+                        code: "// Evaluación léxica de identificadores en Java:\nint 1erSensor = 10;        // Opción A\nint total_acumulado$ = 25; // Opción B\nint class = 99;            // Opción C",
+                        question: "Según las normas léxicas de Java vistas en Unidades 1 y 2, ¿cuál de los identificadores es plenamente legal para compilar?",
+                        options: [
+                            { text: "total_acumulado$ (Permite letras, dígitos, guión bajo y $, pero no puede comenzar con dígito ni ser palabra reservada)", correct: true },
+                            { text: "1erSensor (Los identificadores en Java pueden comenzar libremente con dígitos numéricos)", correct: false },
+                            { text: "class (Las palabras clave reservadas del lenguaje se pueden reutilizar como nombres de variables)", correct: false }
+                        ],
+                        explanation: "¡CONDENSADOR SOBRECARGADO! Identificador validado. ¡VULCAN BYTEMASTER ATURDIDO POR 7 SEGUNDOS!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T1_BOSS_B",
+                        roomId: "arena_vulcan",
+                        name: "SUBMÓDULO B // OPERADOR MÓDULO % & PARIDAD (UNIDAD 2)",
+                        code: "int registro = 48;\n// Condición booleana estricta para determinar si 'registro' es un número par:\nboolean esPar = (/* ??? */);",
+                        question: "¿Qué expresión lógica evalúa correctamente si un número entero es estrictamente par en Java utilizando el operador módulo?",
+                        options: [
+                            { text: "registro % 2 == 0 (El resto de la división entera por 2 es exactamente cero)", correct: true },
+                            { text: "registro / 2 == 0 (Evalúa si el cociente entero es cero, lo cual no determina paridad)", correct: false },
+                            { text: "registro % 2 == 1 (Evalúa si el número es impar)", correct: false }
+                        ],
+                        explanation: "¡SISTEMA MOTRIZ DESESTABILIZADO! Operador módulo % verificado. ¡VULCAN BYTEMASTER ATURDIDO!",
+                        unlocked: false
+                    }
                 ],
-                explanation: "¡ACCESO CONCEDIDO! Bytecode validado. El compilador javac genera el archivo .class que ejecuta la JVM. ¡KEYCARD NIVEL 1 OBTENIDA!",
-                unlocked: false
+                radarNodes: {
+                    dock: { x: 678, y: 51, w: 22, h: 16, code: 'R1' },
+                    vault_u2: { x: 708, y: 51, w: 22, h: 16, code: 'R2' },
+                    arena_vulcan: { x: 738, y: 45, w: 38, h: 28, code: 'BOSS' }
+                }
             },
+
+            // ---------------------------------------------------------------------
+            // NIVEL 2: OPERACIÓN ALMACÉN Y LAB MODULAR (UNIDADES 3 Y 4)
+            // ---------------------------------------------------------------------
             {
-                id: "T2",
-                roomId: "corridor",
-                name: "TERMINAL 02 // CORREDOR DE RACKS (UNIDAD 2)",
-                code: "double lecturaSensor = 104.75;\n// El servomotor requiere un int exacto para destrabar el láser:\nint calibracion = lecturaSensor; // Error: possible lossy conversion",
-                question: "El compilador rechaza la asignación directa por riesgo de pérdida de precisión. ¿Cómo se debe corregir la línea para forzar la conversión explícita según la Unidad 2?",
-                options: [
-                    { text: "int calibracion = (int) lecturaSensor; (Casting explícito truncando decimales a 104)", correct: true },
-                    { text: "int calibracion = lecturaSensor.toInt(); (Invocar método inexistente en tipo primitivo)", correct: false },
-                    { text: "int calibracion = (double) lecturaSensor; (Reiterar tipo incompatible double)", correct: false }
+                id: 2,
+                code: "OP-02",
+                name: "OPERACIÓN 02: ALMACÉN Y LAB MODULAR",
+                shortName: "MISIÓN 2: ALMACÉN",
+                subtitle: "UNIDADES 3 Y 4 // CONTROL DE FLUJO & METODOLOGÍA TOP-DOWN",
+                topics: "Switch-case (fall-through / break), bucles while/do-while/for, lectura con centinela, metodología Top-Down, métodos static y paso por valor.",
+                bossName: "CYBER OLYMPO",
+                bossSub: "ARAÑA MECÁNICA MODULAR TOP-DOWN",
+                bossType: "olympo",
+                startRoom: "warehouse_u3",
+                startPlayerX: 70,
+                startPlayerY: 225,
+                rooms: {
+                    warehouse_u3: {
+                        id: 'warehouse_u3',
+                        title: 'SALA 01: ALMACÉN DE CONTROL DE FLUJO',
+                        subtitle: 'UNIDAD 3 // SWITCH-CASE, BUCLES & FALL-THROUGH',
+                        visited: true,
+                        walls: [
+                            { x: 0, y: 0, w: 800, h: 16 },
+                            { x: 0, y: 434, w: 800, h: 16 },
+                            { x: 0, y: 0, w: 16, h: 450 },
+                            { x: 784, y: 0, w: 16, h: 175 },
+                            { x: 784, y: 275, w: 16, h: 175 },
+                            { x: 90, y: 70, w: 100, h: 80 },
+                            { x: 250, y: 70, w: 120, h: 70 },
+                            { x: 450, y: 70, w: 120, h: 70 },
+                            { x: 630, y: 70, w: 80, h: 170 },
+                            { x: 90, y: 220, w: 90, h: 140 },
+                            { x: 250, y: 210, w: 150, h: 90 },
+                            { x: 460, y: 210, w: 90, h: 140 }
+                        ],
+                        doors: [
+                            {
+                                id: 'warehouse_east',
+                                x: 776, y: 175, w: 24, h: 100,
+                                targetRoom: 'lab_u4',
+                                spawnX: 45, spawnY: 225,
+                                reqKey: 1,
+                                label: 'LAB MODULAR [LV.1]',
+                                orientation: 'E'
+                            }
+                        ],
+                        guards: [
+                            {
+                                id: 5,
+                                spawnX: 360, spawnY: 150,
+                                x: 360, y: 150,
+                                radius: 14,
+                                patrolYMin: 140, patrolYMax: 350,
+                                speed: 1.6, dirY: 1,
+                                angle: Math.PI / 2,
+                                fov: Math.PI / 3,
+                                viewDist: 150,
+                                investigateTarget: null, investigateTimer: 0
+                            },
+                            {
+                                id: 6,
+                                spawnX: 600, spawnY: 340,
+                                x: 600, y: 340,
+                                radius: 14,
+                                patrolYMin: 100, patrolYMax: 370,
+                                speed: 1.7, dirY: -1,
+                                angle: -Math.PI / 2,
+                                fov: Math.PI / 3,
+                                viewDist: 155,
+                                investigateTarget: null, investigateTimer: 0
+                            }
+                        ],
+                        terminals: [
+                            { x: 120, y: 60, w: 34, h: 34, terminalId: 'T2_1' },
+                            { x: 270, y: 340, w: 34, h: 34, terminalId: 'T2_2' }
+                        ],
+                        lasers: [
+                            { x1: 580, y1: 175, x2: 580, y2: 275, terminalId: 'T2_2' }
+                        ],
+                        items: [
+                            {
+                                id: 'coffee_l2',
+                                x: 120, y: 180, w: 28, h: 28,
+                                type: 'coffee',
+                                name: 'RACIÓN DE CAFÉ (+50 HP)',
+                                heal: 50,
+                                taken: false
+                            }
+                        ]
+                    },
+                    lab_u4: {
+                        id: 'lab_u4',
+                        title: 'SALA 02: LABORATORIO MODULAR TOP-DOWN',
+                        subtitle: 'UNIDAD 4 // MÉTODOS PUBLIC STATIC & PASO POR VALOR',
+                        visited: false,
+                        walls: [
+                            { x: 0, y: 0, w: 800, h: 16 },
+                            { x: 0, y: 434, w: 800, h: 16 },
+                            { x: 0, y: 0, w: 16, h: 175 },
+                            { x: 0, y: 275, w: 16, h: 175 },
+                            { x: 784, y: 0, w: 16, h: 175 },
+                            { x: 784, y: 275, w: 16, h: 175 },
+                            { x: 200, y: 40, w: 26, h: 140 },
+                            { x: 200, y: 270, w: 26, h: 140 },
+                            { x: 500, y: 60, w: 26, h: 130 },
+                            { x: 500, y: 260, w: 26, h: 130 }
+                        ],
+                        doors: [
+                            {
+                                id: 'lab_west',
+                                x: 0, y: 175, w: 24, h: 100,
+                                targetRoom: 'warehouse_u3',
+                                spawnX: 740, spawnY: 225,
+                                reqKey: 0,
+                                label: 'ALMACÉN',
+                                orientation: 'W'
+                            },
+                            {
+                                id: 'lab_east',
+                                x: 776, y: 175, w: 24, h: 100,
+                                targetRoom: 'arena_olympo',
+                                spawnX: 55, spawnY: 225,
+                                reqKey: 2,
+                                label: 'CÁMARA OLYMPO [LV.2]',
+                                orientation: 'E'
+                            }
+                        ],
+                        guards: [
+                            {
+                                id: 7,
+                                spawnX: 350, spawnY: 100,
+                                x: 350, y: 100,
+                                radius: 14,
+                                patrolYMin: 60, patrolYMax: 380,
+                                speed: 1.8, dirY: 1,
+                                angle: Math.PI / 2,
+                                fov: Math.PI / 3,
+                                viewDist: 160,
+                                investigateTarget: null, investigateTimer: 0
+                            },
+                            {
+                                id: 8,
+                                spawnX: 640, spawnY: 340,
+                                x: 640, y: 340,
+                                radius: 14,
+                                patrolYMin: 70, patrolYMax: 380,
+                                speed: 1.9, dirY: -1,
+                                angle: -Math.PI / 2,
+                                fov: Math.PI / 3,
+                                viewDist: 160,
+                                investigateTarget: null, investigateTimer: 0
+                            }
+                        ],
+                        terminals: [
+                            { x: 140, y: 60, w: 34, h: 34, terminalId: 'T2_3' },
+                            { x: 350, y: 210, w: 34, h: 34, terminalId: 'T2_4' },
+                            { x: 560, y: 60, w: 34, h: 34, terminalId: 'T2_5' }
+                        ],
+                        lasers: [],
+                        items: [
+                            {
+                                id: 'coffee_l2_b',
+                                x: 650, y: 210, w: 28, h: 28,
+                                type: 'coffee',
+                                name: 'RACIÓN DE CAFÉ (+50 HP)',
+                                heal: 50,
+                                taken: false
+                            }
+                        ]
+                    },
+                    arena_olympo: {
+                        id: 'arena_olympo',
+                        title: 'SALA 03: NÚCLEO MODULAR // BOSS ARENA',
+                        subtitle: 'UNIDADES 3 Y 4 // BOSS: CYBER OLYMPO (MÉTODOS & FLUJO)',
+                        visited: false,
+                        hasBoss: true,
+                        walls: [
+                            { x: 0, y: 0, w: 800, h: 16 },
+                            { x: 0, y: 434, w: 800, h: 16 },
+                            { x: 0, y: 0, w: 16, h: 175 },
+                            { x: 0, y: 275, w: 16, h: 175 },
+                            { x: 784, y: 0, w: 16, h: 450 },
+                            { x: 230, y: 80, w: 45, h: 90 },
+                            { x: 230, y: 280, w: 45, h: 90 }
+                        ],
+                        doors: [
+                            {
+                                id: 'olympo_west',
+                                x: 0, y: 175, w: 24, h: 100,
+                                targetRoom: 'lab_u4',
+                                spawnX: 740, spawnY: 225,
+                                reqKey: 2,
+                                label: 'LAB MODULAR',
+                                orientation: 'W'
+                            }
+                        ],
+                        guards: [],
+                        terminals: [
+                            { x: 235, y: 25, w: 34, h: 34, terminalId: 'T2_BOSS_A' },
+                            { x: 235, y: 390, w: 34, h: 34, terminalId: 'T2_BOSS_B' }
+                        ],
+                        lasers: [],
+                        items: []
+                    }
+                },
+                terminals: [
+                    {
+                        id: "T2_1",
+                        roomId: "warehouse_u3",
+                        name: "TERMINAL 01 // ALMACÉN DE SELECTIVAS (UNIDAD 3)",
+                        code: "int opcion = 1; int valor = 10;\nswitch (opcion) {\n    case 1: valor += 5;\n    case 2: valor += 10; break;\n    default: valor = 0;\n}",
+                        question: "Debido a la ausencia del break en el case 1, ¿cuál será el valor final de 'valor' por el efecto fall-through (ejecución en cascada)?",
+                        options: [
+                            { text: "25 (Ejecuta case 1 llevando valor a 15, cae por cascada a case 2 sumando 10, y el break corta allí)", correct: true },
+                            { text: "15 (Solo se ejecuta el bloque del case 1)", correct: false },
+                            { text: "0 (Al faltar break salta inmediatamente al default)", correct: false }
+                        ],
+                        explanation: "¡VULNERABILIDAD DESCUBIERTA! La omisión de break produce ejecución en cascada. ¡KEYCARD NIVEL 1 OBTENIDA!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T2_2",
+                        roomId: "warehouse_u3",
+                        name: "TERMINAL 02 // CERROJO LÁSER DE BUCLES (UNIDAD 3)",
+                        code: "int x = 10;\ndo {\n    x++;\n} while (x < 5);",
+                        question: "¿Cuántas veces se ejecuta el cuerpo del bucle do-while anterior y cuál es el valor resultante de x?",
+                        options: [
+                            { text: "Se ejecuta exactamente 1 vez (el do-while evalúa la condición al final / post-condición), dejando x = 11.", correct: true },
+                            { text: "Se ejecuta 0 veces porque la condición inicial (10 < 5) es falsa.", correct: false },
+                            { text: "Entra en un bucle infinito que bloquea la JVM.", correct: false }
+                        ],
+                        explanation: "¡POST-CONDICIÓN VALIDADA! El do-while siempre garantiza al menos una ejecución. ¡REJILLAS LÁSER DEL ALMACÉN DESACTIVADAS!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T2_3",
+                        roomId: "lab_u4",
+                        name: "TERMINAL 03 // LAB DE CENTINELAS (UNIDAD 3)",
+                        code: "int legajo = leerLegajo();\nwhile (legajo != 0) {\n    cantEmpleados++;\n    totalSueldos += leerSueldo();\n    legajo = leerLegajo(); // Lectura antes de cerrar el ciclo\n}",
+                        question: "¿Por qué es fundamental realizar una nueva lectura de la variable de control antes de cerrar el bucle con centinela?",
+                        options: [
+                            { text: "Para actualizar la condición con el siguiente dato y permitir la salida cuando se ingrese el valor centinela (0), evitando un bucle infinito.", correct: true },
+                            { text: "Porque la JVM exige obligatoriamente dos lecturas por sentencia de iteración.", correct: false },
+                            { text: "Para reiniciar las variables contadoras y acumuladoras a cero en cada vuelta.", correct: false }
+                        ],
+                        explanation: "¡CENTINELA OPERATIVO! La lectura al final del ciclo asegura el avance y terminación. ¡KEYCARD NIVEL 2 OBTENIDA!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T2_4",
+                        roomId: "lab_u4",
+                        name: "TERMINAL 04 // LAB MODULAR TOP-DOWN (UNIDAD 4)",
+                        code: "public class ModuloLab {\n    // Método estático para desarmar el blindaje sin instanciar la clase:\n    /* ??? */ void desarmarBlindaje(int codigoAcceso) {\n        // Rutina modular\n    }\n}",
+                        question: "¿Qué modificadores debe llevar la cabecera del método para ser invocado directamente desde el main de la misma clase (enfoque modular de Unidad 4)?",
+                        options: [
+                            { text: "public static (Método de clase accesible directamente sin instanciar un objeto receptor)", correct: true },
+                            { text: "private dynamic (Exige instanciación dinámica en Heap)", correct: false },
+                            { text: "void static (Sintaxis inválida: static debe preceder al tipo de retorno)", correct: false }
+                        ],
+                        explanation: "¡MODULARIZACIÓN COMPLETA! Método estático de clase validado. ¡COMPUERTA A CÁMARA OLYMPO DESBLOQUEADA!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T2_5",
+                        roomId: "lab_u4",
+                        name: "TERMINAL 05 // ÁMBITO & CALL STACK (UNIDAD 4)",
+                        code: "public static void duplicar(int n) {\n    n = n * 2;\n}\n// En el método main:\nint valor = 5;\nduplicar(valor);\nSystem.out.println(valor);",
+                        question: "En Java los tipos primitivos se pasan estrictamente por valor (copia). ¿Qué imprimirá por consola la instrucción System.out.println(valor)?",
+                        options: [
+                            { text: "5 (El método recibe una copia en su propio frame del Call Stack; la variable original del main no se modifica)", correct: true },
+                            { text: "10 (El método modifica directamente la variable original en la memoria del main)", correct: false },
+                            { text: "0 (Al ser el método void, la variable se vacía)", correct: false }
+                        ],
+                        explanation: "¡CALL STACK VERIFICADO! Los tipos primitivos se pasan por copia y sus frames de pila son independientes.",
+                        unlocked: false
+                    },
+                    {
+                        id: "T2_BOSS_A",
+                        roomId: "arena_olympo",
+                        name: "SUBMÓDULO A // TRAMPA DEL PUNTO Y COMA (UNIDAD 3)",
+                        code: "int activaciones = 0;\nfor (int i = 0; i < 5; i++);\n{\n    activaciones++;\n}",
+                        question: "¿Cuál será el valor final de 'activaciones' al ejecutarse este fragmento y por qué según la Unidad 3?",
+                        options: [
+                            { text: "1 (El ';' al final de la línea del for deja el bucle vacío; el bloque { } se ejecuta una sola vez tras finalizar la iteración)", correct: true },
+                            { text: "5 (El bucle itera 5 veces incrementando la variable en cada ciclo normal)", correct: false },
+                            { text: "0 (La presencia del punto y coma produce un error sintáctico de compilación)", correct: false }
+                        ],
+                        explanation: "¡TRAMPA NEUTRALIZADA! Punto y coma al final de cabecera detectado. ¡CYBER OLYMPO ATURDIDO POR 7 SEGUNDOS!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T2_BOSS_B",
+                        roomId: "arena_olympo",
+                        name: "SUBMÓDULO B // RETORNO Y CLÁUSULA RETURN (UNIDAD 4)",
+                        code: "public static boolean verificarAcceso(int codigo) {\n    if (codigo == 999) {\n        return true;\n    }\n    // Falta contemplar la rama else: Error missing return statement\n}",
+                        question: "Si un método declara devolver un tipo de dato (ej. boolean), ¿qué exige estrictamente el compilador javac respecto a la sentencia return?",
+                        options: [
+                            { text: "Todas las ramas lógicas posibles de ejecución deben retornar un valor del tipo declarado.", correct: true },
+                            { text: "Solo se exige return en la rama verdadera if; la rama falsa devuelve null por defecto.", correct: false },
+                            { text: "Los métodos estáticos no pueden devolver valores booleanos.", correct: false }
+                        ],
+                        explanation: "¡SOBRECARGA MODULAR APLICADA! Retorno completo en todas las ramas. ¡CYBER OLYMPO DESESTABILIZADO!",
+                        unlocked: false
+                    }
                 ],
-                explanation: "¡CALIBRACIÓN EXITOSA! Casting explícito (int) aplicado. ¡REJILLAS LÁSER DEL CORREDOR DESACTIVADAS!",
-                unlocked: false
+                radarNodes: {
+                    warehouse_u3: { x: 678, y: 51, w: 22, h: 16, code: 'R1' },
+                    lab_u4: { x: 708, y: 51, w: 22, h: 16, code: 'R2' },
+                    arena_olympo: { x: 738, y: 45, w: 38, h: 28, code: 'BOSS' }
+                }
             },
+
+            // ---------------------------------------------------------------------
+            // NIVEL 3: OPERACIÓN MAINFRAME CORE (UNIDAD 5)
+            // ---------------------------------------------------------------------
             {
-                id: "T3",
-                roomId: "warehouse",
-                name: "TERMINAL 03 // ALMACÉN DE MEMORIA RAM (UNIDAD 3)",
-                code: "int activaciones = 0;\nfor (int i = 0; i < 5; i++);\n{\n    activaciones++;\n}",
-                question: "¿Cuál será el valor final de 'activaciones' al ejecutarse este fragmento y por qué según la Unidad 3?",
-                options: [
-                    { text: "1 (El ';' al final del for deja el bucle vacío; el bloque { } se ejecuta una sola vez)", correct: true },
-                    { text: "5 (El bucle itera 5 veces incrementando la variable en cada ciclo)", correct: false },
-                    { text: "0 (La presencia del punto y coma produce un error sintáctico de compilación)", correct: false }
+                id: 3,
+                code: "OP-03",
+                name: "OPERACIÓN 03: MAINFRAME CORE",
+                shortName: "MISIÓN 3: MAINFRAME",
+                subtitle: "UNIDAD 5 // ESTRUCTURAS DE DATOS: ARREGLOS, MATRICES & ORDENAMIENTO",
+                topics: "Arreglos 1D, puntero Tope, inserción/eliminación, Strings inmutables (.equals vs ==), matrices 2D, Búsqueda Binaria y Bubble Sort.",
+                bossName: "METAL GEAR JVM-REX PRIME",
+                bossSub: "SUPERMÁQUINA FINAL DE EJECUCIÓN",
+                bossType: "rex",
+                startRoom: "vector_vault",
+                startPlayerX: 70,
+                startPlayerY: 225,
+                rooms: {
+                    vector_vault: {
+                        id: 'vector_vault',
+                        title: 'SALA 01: CÁMARA DE VECTORES Y STRINGS',
+                        subtitle: 'UNIDAD 5 // ARREGLOS 1D, ÍNDICES & COMPARACIÓN DE CADENAS',
+                        visited: true,
+                        walls: [
+                            { x: 0, y: 0, w: 800, h: 16 },
+                            { x: 0, y: 434, w: 800, h: 16 },
+                            { x: 0, y: 0, w: 16, h: 450 },
+                            { x: 784, y: 0, w: 16, h: 175 },
+                            { x: 784, y: 275, w: 16, h: 175 },
+                            { x: 190, y: 60, w: 34, h: 130 },
+                            { x: 190, y: 260, w: 34, h: 130 },
+                            { x: 480, y: 140, w: 40, h: 170 }
+                        ],
+                        doors: [
+                            {
+                                id: 'vector_east',
+                                x: 776, y: 175, w: 24, h: 100,
+                                targetRoom: 'matrix_chamber',
+                                spawnX: 45, spawnY: 225,
+                                reqKey: 1,
+                                label: 'CÁMARA MATRICES [LV.1]',
+                                orientation: 'E'
+                            }
+                        ],
+                        guards: [
+                            {
+                                id: 9,
+                                spawnX: 320, spawnY: 100,
+                                x: 320, y: 100,
+                                radius: 14,
+                                patrolYMin: 70, patrolYMax: 380,
+                                speed: 1.7, dirY: 1,
+                                angle: Math.PI / 2,
+                                fov: Math.PI / 3,
+                                viewDist: 155,
+                                investigateTarget: null, investigateTimer: 0
+                            },
+                            {
+                                id: 10,
+                                spawnX: 620, spawnY: 340,
+                                x: 620, y: 340,
+                                radius: 14,
+                                patrolYMin: 80, patrolYMax: 370,
+                                speed: 1.8, dirY: -1,
+                                angle: -Math.PI / 2,
+                                fov: Math.PI / 3,
+                                viewDist: 155,
+                                investigateTarget: null, investigateTimer: 0
+                            }
+                        ],
+                        terminals: [
+                            { x: 110, y: 60, w: 34, h: 34, terminalId: 'T3_1' },
+                            { x: 480, y: 350, w: 34, h: 34, terminalId: 'T3_2' }
+                        ],
+                        lasers: [],
+                        items: [
+                            {
+                                id: 'coffee_l3',
+                                x: 110, y: 350, w: 28, h: 28,
+                                type: 'coffee',
+                                name: 'RACIÓN DE CAFÉ (+50 HP)',
+                                heal: 50,
+                                taken: false
+                            }
+                        ]
+                    },
+                    matrix_chamber: {
+                        id: 'matrix_chamber',
+                        title: 'SALA 02: CÁMARA DE MATRICES Y ALGORITMOS',
+                        subtitle: 'UNIDAD 5 // MATRICES 2D, BÚSQUEDA BINARIA & BURBUJA',
+                        visited: false,
+                        walls: [
+                            { x: 0, y: 0, w: 800, h: 16 },
+                            { x: 0, y: 434, w: 800, h: 16 },
+                            { x: 0, y: 0, w: 16, h: 175 },
+                            { x: 0, y: 275, w: 16, h: 175 },
+                            { x: 784, y: 0, w: 16, h: 175 },
+                            { x: 784, y: 275, w: 16, h: 175 },
+                            { x: 220, y: 80, w: 30, h: 120 },
+                            { x: 220, y: 250, w: 30, h: 120 },
+                            { x: 520, y: 80, w: 30, h: 120 },
+                            { x: 520, y: 250, w: 30, h: 120 }
+                        ],
+                        doors: [
+                            {
+                                id: 'matrix_west',
+                                x: 0, y: 175, w: 24, h: 100,
+                                targetRoom: 'vector_vault',
+                                spawnX: 740, spawnY: 225,
+                                reqKey: 0,
+                                label: 'VECTORES 1D',
+                                orientation: 'W'
+                            },
+                            {
+                                id: 'matrix_east',
+                                x: 776, y: 175, w: 24, h: 100,
+                                targetRoom: 'rex_core',
+                                spawnX: 55, spawnY: 225,
+                                reqKey: 2,
+                                label: 'MAINFRAME CORE [LV.2]',
+                                orientation: 'E'
+                            }
+                        ],
+                        guards: [
+                            {
+                                id: 11,
+                                spawnX: 370, spawnY: 340,
+                                x: 370, y: 340,
+                                radius: 14,
+                                patrolYMin: 70, patrolYMax: 380,
+                                speed: 1.8, dirY: -1,
+                                angle: -Math.PI / 2,
+                                fov: Math.PI / 3,
+                                viewDist: 160,
+                                investigateTarget: null, investigateTimer: 0
+                            },
+                            {
+                                id: 12,
+                                spawnX: 450, spawnY: 100,
+                                x: 450, y: 100,
+                                radius: 14,
+                                patrolYMin: 70, patrolYMax: 380,
+                                speed: 1.9, dirY: 1,
+                                angle: Math.PI / 2,
+                                fov: Math.PI / 3,
+                                viewDist: 160,
+                                investigateTarget: null, investigateTimer: 0
+                            }
+                        ],
+                        terminals: [
+                            { x: 140, y: 60, w: 34, h: 34, terminalId: 'T3_3' },
+                            { x: 370, y: 210, w: 34, h: 34, terminalId: 'T3_4' },
+                            { x: 600, y: 60, w: 34, h: 34, terminalId: 'T3_5' }
+                        ],
+                        lasers: [
+                            { x1: 670, y1: 175, x2: 670, y2: 275, terminalId: 'T3_4' }
+                        ],
+                        items: [
+                            {
+                                id: 'coffee_l3_b',
+                                x: 650, y: 340, w: 28, h: 28,
+                                type: 'coffee',
+                                name: 'RACIÓN DE CAFÉ (+50 HP)',
+                                heal: 50,
+                                taken: false
+                            }
+                        ]
+                    },
+                    rex_core: {
+                        id: 'rex_core',
+                        title: 'SALA 03: MAINFRAME CORE // BOSS ARENA',
+                        subtitle: 'UNIDAD 5 // BOSS: METAL GEAR JVM-REX PRIME',
+                        visited: false,
+                        hasBoss: true,
+                        walls: [
+                            { x: 0, y: 0, w: 800, h: 16 },
+                            { x: 0, y: 434, w: 800, h: 16 },
+                            { x: 0, y: 0, w: 16, h: 175 },
+                            { x: 0, y: 275, w: 16, h: 175 },
+                            { x: 784, y: 0, w: 16, h: 450 },
+                            { x: 230, y: 80, w: 45, h: 90 },
+                            { x: 230, y: 280, w: 45, h: 90 }
+                        ],
+                        doors: [
+                            {
+                                id: 'core_west',
+                                x: 0, y: 175, w: 24, h: 100,
+                                targetRoom: 'matrix_chamber',
+                                spawnX: 740, spawnY: 225,
+                                reqKey: 2,
+                                label: 'CÁMARA MATRICES',
+                                orientation: 'W'
+                            }
+                        ],
+                        guards: [],
+                        terminals: [
+                            { x: 235, y: 25, w: 34, h: 34, terminalId: 'T3_BOSS_A' },
+                            { x: 235, y: 390, w: 34, h: 34, terminalId: 'T3_BOSS_B' }
+                        ],
+                        lasers: [],
+                        items: []
+                    }
+                },
+                terminals: [
+                    {
+                        id: "T3_1",
+                        roomId: "vector_vault",
+                        name: "TERMINAL 01 // CÁMARA DE VECTORES 1D (UNIDAD 5)",
+                        code: "int[] buffer = new int[5]; // Capacidad 5 elementos\n// Índices válidos: 0, 1, 2, 3, 4\nbuffer[5] = 100; // ¿Qué ocurre en tiempo de ejecución?",
+                        question: "En un arreglo en Java declarado con tamaño 5, ¿cuáles son los índices válidos y qué ocurre al intentar acceder a la posición 5?",
+                        options: [
+                            { text: "Los índices van de 0 a 4 (longitud - 1). Intentar acceder al índice 5 lanza ArrayIndexOutOfBoundsException.", correct: true },
+                            { text: "El arreglo se redimensiona automáticamente a 6 elementos para alojar el dato.", correct: false },
+                            { text: "Se asigna correctamente porque Java indexa del 1 al 5.", correct: false }
+                        ],
+                        explanation: "¡LÍMITES VALIDADOS! La indexación en Java es base cero de 0 a length - 1. ¡KEYCARD NIVEL 1 OBTENIDA!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T3_2",
+                        roomId: "vector_vault",
+                        name: "TERMINAL 02 // CADENAS STRING & .EQUALS (UNIDAD 5)",
+                        code: "String pass1 = new String(\"REX\");\nString pass2 = new String(\"REX\");\nboolean porReferencia = (pass1 == pass2); // false\nboolean porContenido = pass1.equals(pass2); // true",
+                        question: "¿Por qué en Java los objetos de tipo String deben compararse utilizando el método .equals() en lugar del operador ==?",
+                        options: [
+                            { text: "Porque '==' compara las direcciones de memoria (referencias), mientras que .equals() compara el contenido textual de los caracteres.", correct: true },
+                            { text: "Porque '==' solo compara el primer carácter de la cadena.", correct: false },
+                            { text: "Porque .equals() convierte automáticamente la cadena a un número entero.", correct: false }
+                        ],
+                        explanation: "¡IDENTIFICACIÓN CORRECTA! String es un objeto inmutable y su contenido se compara con .equals().",
+                        unlocked: false
+                    },
+                    {
+                        id: "T3_3",
+                        roomId: "matrix_chamber",
+                        name: "TERMINAL 03 // MATRICES BIDIMENSIONALES (UNIDAD 5)",
+                        code: "int[][] rejilla = new int[3][4]; // 3 filas, 4 columnas\nfor (int i = 0; i < rejilla.length; i++) {\n    for (int j = 0; j < rejilla[i].length; j++) {\n        procesar(rejilla[i][j]);\n    }\n}",
+                        question: "¿Cuál es el significado de rejilla.length y rejilla[0].length en una matriz bidimensional regular en Java?",
+                        options: [
+                            { text: "rejilla.length indica la cantidad de filas (3) y rejilla[0].length la cantidad de columnas de la fila 0 (4).", correct: true },
+                            { text: "rejilla.length indica la cantidad de columnas y rejilla[0].length el total de celdas.", correct: false },
+                            { text: "Ambas expresiones devuelven siempre la multiplicación de filas por columnas (12).", correct: false }
+                        ],
+                        explanation: "¡MATRIZ COMPROBADA! Filas con m.length y columnas con m[0].length. ¡KEYCARD NIVEL 2 OBTENIDA!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T3_4",
+                        roomId: "matrix_chamber",
+                        name: "TERMINAL 04 // BÚSQUEDA BINARIA VS LINEAL (UNIDAD 5)",
+                        code: "// Algoritmo de Búsqueda Binaria en arreglos (O(log N)):\n// Divide el espacio de búsqueda a la mitad en cada paso.\n// Condición previa requerida para operar:",
+                        question: "Según la Unidad 5 de SAO, ¿cuál es la precondición obligatoria e innegociable para poder aplicar el algoritmo de Búsqueda Binaria sobre un arreglo?",
+                        options: [
+                            { text: "El arreglo debe estar estrictamente ordenado (de menor a mayor o viceversa) por la clave de búsqueda.", correct: true },
+                            { text: "El arreglo no debe contener números primos ni valores impares.", correct: false },
+                            { text: "El arreglo debe tener un tamaño que sea potencia de dos y todos sus elementos positivos.", correct: false }
+                        ],
+                        explanation: "¡PRECONDICIÓN VERIFICADA! Sin vector ordenado la búsqueda binaria falla. ¡REJILLAS LÁSER DE MATRIZ DESACTIVADAS!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T3_5",
+                        roomId: "matrix_chamber",
+                        name: "TERMINAL 05 // ORDENAMIENTO BURBUJA (UNIDAD 5)",
+                        code: "// Método de Ordenamiento de la Burbuja (Bubble Sort):\n// Compara pares de elementos adyacentes y los intercambia si están desordenados.\n// Si no hubo ningún intercambio en una pasada completa:",
+                        question: "En una implementación optimizada de Bubble Sort, ¿qué significa que en una pasada no se haya realizado ningún intercambio (swap)?",
+                        options: [
+                            { text: "El arreglo ya se encuentra completamente ordenado y el algoritmo puede finalizar anticipadamente.", correct: true },
+                            { text: "El arreglo está en orden inverso y se debe reiniciar el proceso.", correct: false },
+                            { text: "Se ha producido un desbordamiento de índice en la memoria caché.", correct: false }
+                        ],
+                        explanation: "¡OPTIMIZACIÓN VALIDADA! Bandera de orden detectada. ¡COMPUERTA DEL MAINFRAME CORE HABILITADA!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T3_BOSS_A",
+                        roomId: "rex_core",
+                        name: "SUBMÓDULO A // PUNTERO TOPE & LÍMITES (UNIDAD 5)",
+                        code: "int[] registrosMemoria = new int[50];\nint tope = 0; // Elementos cargados válidos\n// Se recorren únicamente las posiciones válidas cargadas:\nfor (int i = 0; /* ??? */; i++) {\n    inspeccionar(registrosMemoria[i]);\n}",
+                        question: "Si el arreglo tiene capacidad 50 pero solo se cargaron 'tope' datos válidos, ¿cuál debe ser la condición de corte del for para no leer basura ni desbordar?",
+                        options: [
+                            { text: "i < tope (Itera desde 0 hasta tope - 1, cubriendo exactamente los elementos cargados sin desbordar)", correct: true },
+                            { text: "i <= 50 (Provocará ArrayIndexOutOfBoundsException al intentar acceder al índice 50)", correct: false },
+                            { text: "i <= tope (Intenta acceder a la posición 'tope' que aún no ha sido cargada)", correct: false }
+                        ],
+                        explanation: "¡DESINCRONIZACIÓN LOGRADA! Puntero y límites de vector ajustados. ¡ESCUDO DEL METAL GEAR DESACTIVADO POR 7 SEGUNDOS!",
+                        unlocked: false
+                    },
+                    {
+                        id: "T3_BOSS_B",
+                        roomId: "rex_core",
+                        name: "SUBMÓDULO B // SWAP CON VARIABLE AUXILIAR (UNIDAD 5)",
+                        code: "int[] registros = { 85, 42 };\n// Intercambio de claves en el algoritmo de ordenamiento Burbuja:\nint tmp = registros[0];\nregistros[0] = registros[1];\nregistros[1] = /* ??? */;",
+                        question: "¿Qué expresión debe colocarse en '/* ??? */' para completar el intercambio (swap) sin perder el valor original de 85?",
+                        options: [
+                            { text: "tmp; (Se asigna la variable auxiliar que resguardó el valor original antes de la sobreescritura)", correct: true },
+                            { text: "registros[0]; (Se reasigna el elemento que ya fue sobreescrito con 42)", correct: false },
+                            { text: "registros.length; (Se asigna la longitud del arreglo en lugar del dato resguardado)", correct: false }
+                        ],
+                        explanation: "¡SOBRECARGA APLICADA! Swap de burbuja completado con variable temporal. ¡METAL GEAR JVM-REX ATURDIDO!",
+                        unlocked: false
+                    }
                 ],
-                explanation: "¡VULNERABILIDAD NEUTRALIZADA! Trampa del punto y coma descubierta. ¡KEYCARD NIVEL 2 OBTENIDA!",
-                unlocked: false
-            },
-            {
-                id: "T4",
-                roomId: "modular_lab",
-                name: "TERMINAL 04 // LABORATORIO MODULAR (UNIDAD 4)",
-                code: "public class MainframeLab {\n    // Subprograma para desarmar el blindaje sin instanciar la clase:\n    /* ??? */ void desarmarBlindaje(int codigoAcceso) {\n        // Rutina modular Top-Down\n    }\n}",
-                question: "¿Qué modificadores debe llevar la cabecera del método para que pueda ser invocado directamente desde el main de la misma clase sin instanciar un objeto (enfoque modular de Unidad 4)?",
-                options: [
-                    { text: "public static (Método de clase accesible sin instanciar la clase receptora)", correct: true },
-                    { text: "private dynamic (Obliga a instanciar en memoria dinámica un objeto receptor)", correct: false },
-                    { text: "void static (Sintaxis inválida: el modificador static debe anteceder al tipo de retorno)", correct: false }
-                ],
-                explanation: "¡MODULARIZACIÓN COMPLETA! Enfoque Top-Down y método estático verificado. ¡COMPUERTA DEL NÚCLEO HABILITADA!",
-                unlocked: false
-            },
-            {
-                id: "T5A",
-                roomId: "core_boss",
-                name: "SUBMÓDULO A // LÍMITES Y VECTOR DE MEMORIA (UNIDAD 5)",
-                code: "int[] registrosMemoria = new int[50];\nint tope = 0; // Elementos cargados válidos\n// Se recorren únicamente las posiciones válidas:\nfor (int i = 0; /* ??? */; i++) {\n    inspeccionar(registrosMemoria[i]);\n}",
-                question: "Si el arreglo tiene capacidad 50 pero solo se cargaron 'tope' datos válidos, ¿cuál debe ser la condición de corte del for para no leer basura ni desbordar?",
-                options: [
-                    { text: "i < tope (Itera desde 0 hasta tope - 1, cubriendo exactamente los elementos cargados)", correct: true },
-                    { text: "i <= 50 (Provocará ArrayIndexOutOfBoundsException al intentar acceder al índice 50)", correct: false },
-                    { text: "i <= tope (Intenta acceder a la posición 'tope' que aún no ha sido cargada)", correct: false }
-                ],
-                explanation: "¡DESINCRONIZACIÓN LOGRADA! Puntero y límites de arreglo ajustados. ¡ESCUDO DEL METAL GEAR DESACTIVADO TEMPORALMENTE!",
-                unlocked: false
-            },
-            {
-                id: "T5B",
-                roomId: "core_boss",
-                name: "SUBMÓDULO B // ORDENAMIENTO BURBUJA & SWAP (UNIDAD 5)",
-                code: "int[] registros = { 85, 42 };\n// Intercambio de claves en el algoritmo de ordenamiento Burbuja:\nint tmp = registros[0];\nregistros[0] = registros[1];\nregistros[1] = /* ??? */;",
-                question: "¿Qué expresión debe colocarse en '/* ??? */' para completar el intercambio (swap) sin perder el valor original de 85?",
-                options: [
-                    { text: "tmp; (Se asigna la variable auxiliar que resguardó el valor original de registros[0])", correct: true },
-                    { text: "registros[0]; (Se reasigna el elemento actual que ya fue sobreescrito con 42)", correct: false },
-                    { text: "registros.length; (Se asigna la longitud del arreglo en lugar del dato resguardado)", correct: false }
-                ],
-                explanation: "¡SOBRECARGA APLICADA! Swap de burbuja completado con variable temporal. ¡METAL GEAR JVM ATURDIDO!",
-                unlocked: false
+                radarNodes: {
+                    vector_vault: { x: 678, y: 51, w: 22, h: 16, code: 'R1' },
+                    matrix_chamber: { x: 708, y: 51, w: 22, h: 16, code: 'R2' },
+                    rex_core: { x: 738, y: 45, w: 38, h: 28, code: 'BOSS' }
+                }
             }
         ];
 
-        let activeTerminal = null;
 
-        function openHackTerminal(terminal) {
-            if (terminal.unlocked) return;
-            activeTerminal = terminal;
+        // =========================================================================
+        // 4. GESTIÓN DE NIVELES, PROGRESIÓN Y MODO CÁTEDRA
+        // =========================================================================
+        let currentLevelIndex = 0;
+        let facilityRooms = {};
+        let hackTerminals = [];
+
+        function getUnlockedLevel() {
+            if (isCheatUnlocked()) return 3;
+            try {
+                const saved = parseInt(localStorage.getItem('sao_mgs_unlocked_level'), 10);
+                return (saved && saved >= 1 && saved <= 3) ? saved : 1;
+            } catch(e) {
+                return 1;
+            }
+        }
+
+        function setUnlockedLevel(lvl) {
+            try {
+                localStorage.setItem('sao_mgs_unlocked_level', lvl.toString());
+            } catch(e) {}
+        }
+
+        function isCheatUnlocked() {
+            try {
+                return localStorage.getItem('sao_mgs_cheat_unlocked') === 'true';
+            } catch(e) {
+                return false;
+            }
+        }
+
+        function toggleCheatUnlockAll() {
             getAudioContext();
+            const current = isCheatUnlocked();
+            const next = !current;
+            try {
+                localStorage.setItem('sao_mgs_cheat_unlocked', next ? 'true' : 'false');
+            } catch(e) {}
 
-            document.getElementById('hack-terminal-name').innerText = terminal.name;
-            document.getElementById('hack-code-view').innerText = terminal.code;
-            document.getElementById('hack-question').innerText = terminal.question;
-            document.getElementById('hack-feedback').innerText = "Seleccioná la directiva de compilación correcta para neutralizar la barrera.";
-
-            const optList = document.getElementById('hack-options-list');
-            optList.innerHTML = '';
-            terminal.options.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'hack-btn';
-                btn.innerHTML = `<span style="color: var(--mgs-amber); margin-right: 6px;">[0${idx+1}]</span> ${opt.text}`;
-                btn.onclick = () => solveHack(opt.correct);
-                optList.appendChild(btn);
-            });
-
-            document.getElementById('hack-screen').style.display = 'flex';
+            playSFX(next ? 'hack-success' : 'box');
+            showToast(next ? "¡MODO CÁTEDRA ACTIVADO! TODAS LAS MISIONES DESBLOQUEADAS" : "MODO CÁTEDRA DESACTIVADO: PROGRESIÓN ESTÁNDAR");
+            renderLevelCards();
         }
 
-        function closeHackTerminal() {
-            document.getElementById('hack-screen').style.display = 'none';
-            activeTerminal = null;
+        function openLevelSelectDialog() {
+            getAudioContext();
+            playSFX('codec-ring');
+            const scr = document.getElementById('level-select-screen');
+            if (scr) {
+                scr.style.display = 'flex';
+                renderLevelCards();
+            }
         }
 
-        function solveHack(isCorrect) {
-            if (!activeTerminal) return;
+        function closeLevelSelectDialog() {
+            const scr = document.getElementById('level-select-screen');
+            if (scr) scr.style.display = 'none';
+        }
 
-            if (isCorrect) {
-                playSFX('hack-success');
-                activeTerminal.unlocked = true;
-                document.getElementById('hack-feedback').innerHTML = `<span style="color: var(--mgs-green); font-weight: 700;">${activeTerminal.explanation}</span>`;
+        function renderLevelCards() {
+            const container = document.getElementById('level-cards-container');
+            if (!container) return;
 
-                if (activeTerminal.id === 'T1') {
-                    setPlayerKeycard(1);
-                    showToast("¡KEYCARD NIVEL 1 OBTENIDA!");
-                } else if (activeTerminal.id === 'T2') {
-                    showToast("¡REJILLAS LÁSER DEL CORREDOR DESACTIVADAS!");
-                } else if (activeTerminal.id === 'T3') {
-                    setPlayerKeycard(2);
-                    showToast("¡KEYCARD NIVEL 2 OBTENIDA!");
-                } else if (activeTerminal.id === 'T4') {
-                    showToast("¡COMPUERTA BLINDADA DEL NÚCLEO ABIERTA!");
-                } else if (activeTerminal.id === 'T5A' || activeTerminal.id === 'T5B') {
-                    stunBoss(7.0);
+            const unlocked = getUnlockedLevel();
+            const cheat = isCheatUnlocked();
+
+            container.innerHTML = '';
+            campaignLevels.forEach((lvl, idx) => {
+                const isCurrent = (idx === currentLevelIndex);
+                const isLevelUnlocked = (lvl.id <= unlocked) || cheat;
+
+                const card = document.createElement('div');
+                card.className = `level-card ${isLevelUnlocked ? 'unlocked' : 'locked'}`;
+
+                let statusBadge = '';
+                let btnHtml = '';
+
+                if (isCurrent) {
+                    statusBadge = '<span class="level-card-status current"><i class="fa-solid fa-play"></i> EN CURSO</span>';
+                    btnHtml = `<button class="level-card-btn" onclick="selectLevelFromCard(${idx})"><i class="fa-solid fa-rotate-right"></i> REINICIAR MISIÓN</button>`;
+                } else if (isLevelUnlocked) {
+                    statusBadge = '<span class="level-card-status completed"><i class="fa-solid fa-circle-check"></i> DISPONIBLE</span>';
+                    btnHtml = `<button class="level-card-btn" onclick="selectLevelFromCard(${idx})"><i class="fa-solid fa-crosshairs"></i> DESPLEGAR OPERACIÓN</button>`;
+                } else {
+                    statusBadge = '<span class="level-card-status locked"><i class="fa-solid fa-lock"></i> BLOQUEADA</span>';
+                    btnHtml = `<button class="level-card-btn" disabled><i class="fa-solid fa-lock"></i> COMPLETAR ANTERIOR</button>`;
                 }
 
-                setTimeout(() => {
-                    closeHackTerminal();
-                }, 1200);
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+                        <span class="level-card-num">${lvl.code}</span>
+                        ${statusBadge}
+                    </div>
+                    <div class="level-card-title">${lvl.name}</div>
+                    <div class="level-card-subtitle">${lvl.subtitle}</div>
+                    <div class="level-card-topics"><i class="fa-solid fa-bookmark" style="color: var(--mgs-green-dim); margin-right: 4px;"></i>${lvl.topics}</div>
+                    <div class="level-card-boss"><i class="fa-solid fa-robot"></i> BOSS: ${lvl.bossName}</div>
+                    ${btnHtml}
+                `;
+                container.appendChild(card);
+            });
+        }
 
+        function selectLevelFromCard(lvlIndex) {
+            closeLevelSelectDialog();
+            loadLevel(lvlIndex, true);
+        }
+
+        function handleNextMissionBtn() {
+            const scr = document.getElementById('debrief-screen');
+            if (scr) scr.style.display = 'none';
+
+            if (currentLevelIndex < campaignLevels.length - 1) {
+                loadLevel(currentLevelIndex + 1, true);
             } else {
-                playSFX('alert');
-                triggerAlert();
-                document.getElementById('hack-feedback').innerHTML = `<span style="color: var(--mgs-red); font-weight: 700;">¡ERROR DE COMPILACIÓN! Alarma activada en los servidores.</span>`;
-                setTimeout(() => closeHackTerminal(), 1000);
+                openLevelSelectDialog();
             }
+        }
+
+        function loadLevel(levelIndex, resetPlayer) {
+            if (levelIndex < 0 || levelIndex >= campaignLevels.length) levelIndex = 0;
+            currentLevelIndex = levelIndex;
+            const lvl = campaignLevels[levelIndex];
+
+            // Cargar salas y terminales clonando datos
+            facilityRooms = JSON.parse(JSON.stringify(lvl.rooms));
+            hackTerminals = JSON.parse(JSON.stringify(lvl.terminals));
+
+            // Configurar Boss según el nivel
+            gameState.boss.type = lvl.bossType;
+            gameState.boss.name = lvl.bossName;
+            gameState.boss.sub = lvl.bossSub;
+            gameState.boss.hp = 100;
+            gameState.boss.maxHp = 100;
+            gameState.boss.state = 'active';
+            gameState.boss.stunTimer = 0;
+            gameState.boss.attackTimer = 2.8;
+            gameState.boss.laserSweeping = false;
+            gameState.boss.projectiles = [];
+            gameState.boss.particles = [];
+            gameState.boss.mines = [];
+
+            // Actualizar HUD del Boss
+            const bNameEl = document.querySelector('#boss-hud .boss-name');
+            if (bNameEl) bNameEl.innerHTML = `<i class="fa-solid fa-robot"></i> ${lvl.bossName}`;
+            updateBossHud();
+            const bossHud = document.getElementById('boss-hud');
+            if (bossHud) bossHud.classList.remove('visible');
+
+            // Posicionar jugador
+            if (resetPlayer) {
+                gameState.currentRoomId = lvl.startRoom;
+                gameState.player.x = lvl.startPlayerX;
+                gameState.player.y = lvl.startPlayerY;
+                gameState.player.hp = 100;
+                gameState.player.inBox = false;
+                gameState.player.dir = 0;
+                setPlayerKeycard(0);
+                document.getElementById('life-bar').style.width = '100%';
+            }
+
+            // Reiniciar Alertas y Controles
+            gameState.alertTimer = 0;
+            gameState.alertState = 'normal';
+            gameState.missionCompleted = false;
+            gameState.soundWaves = [];
+            const alertBox = document.getElementById('alert-box');
+            if (alertBox) alertBox.className = 'alert-gauge';
+
+            // Actualizar etiqueta del HUD superior
+            const lvlInd = document.getElementById('hud-level-indicator');
+            if (lvlInd) lvlInd.textContent = lvl.shortName;
+
+            const btnBox = document.getElementById('btn-box-toggle');
+            if (btnBox) btnBox.classList.remove('active');
+            const lblBox = document.getElementById('box-label');
+            if (lblBox) lblBox.innerText = "CAJA: OFF";
+
+            // Mostrar banner del sector de inicio
+            const startRm = facilityRooms[gameState.currentRoomId];
+            if (startRm) {
+                showRoomBanner(startRm.title, startRm.subtitle);
+            }
+
+            setMusicTheme('sneaking');
+            showToast(`¡DESPLEGADO EN ${lvl.name}!`);
         }
 
 
         // =========================================================================
-        // 4. MAPA DE INSTALACIÓN (GRAFO DE 5 SALAS // SHADOW MOSES UTN FRSF)
-        // =========================================================================
-        const facilityRooms = {
-            dock: {
-                id: 'dock',
-                title: 'SALA 01: DÁRSENA DE ACCESO',
-                subtitle: 'UNIDAD 1 // BYTECODE & COMPILACIÓN (JAVAC VS JVM)',
-                visited: true,
-                walls: [
-                    // Bordes exteriores (apertura al este y: 175..275)
-                    { x: 0, y: 0, w: 800, h: 16 },
-                    { x: 0, y: 434, w: 800, h: 16 },
-                    { x: 0, y: 0, w: 16, h: 450 },
-                    { x: 784, y: 0, w: 16, h: 175 },
-                    { x: 784, y: 275, w: 16, h: 175 },
-                    // Racks de filtrado de agua y carga de la dársena
-                    { x: 180, y: 70, w: 32, h: 120 },
-                    { x: 180, y: 260, w: 32, h: 120 },
-                    { x: 440, y: 150, w: 40, h: 150 }
-                ],
-                doors: [
-                    {
-                        id: 'dock_east',
-                        x: 776, y: 175, w: 24, h: 100,
-                        targetRoom: 'corridor',
-                        spawnX: 45, spawnY: 225,
-                        reqKey: 1,
-                        label: 'COMPUERTA A CORREDOR [LV.1]',
-                        orientation: 'E'
-                    }
-                ],
-                guards: [
-                    {
-                        id: 1,
-                        spawnX: 320, spawnY: 100,
-                        x: 320, y: 100,
-                        radius: 14,
-                        patrolYMin: 70, patrolYMax: 380,
-                        speed: 1.5, dirY: 1,
-                        angle: Math.PI / 2,
-                        fov: Math.PI / 3,
-                        viewDist: 150,
-                        investigateTarget: null, investigateTimer: 0
-                    },
-                    {
-                        id: 2,
-                        spawnX: 610, spawnY: 350,
-                        x: 610, y: 350,
-                        radius: 14,
-                        patrolYMin: 80, patrolYMax: 370,
-                        speed: 1.6, dirY: -1,
-                        angle: -Math.PI / 2,
-                        fov: Math.PI / 3,
-                        viewDist: 150,
-                        investigateTarget: null, investigateTimer: 0
-                    }
-                ],
-                terminals: [
-                    { x: 100, y: 55, w: 34, h: 34, terminalId: 'T1' }
-                ],
-                lasers: [],
-                items: []
-            },
-            corridor: {
-                id: 'corridor',
-                title: 'SALA 02: CORREDOR DE RACKS',
-                subtitle: 'UNIDAD 2 // TIPOS PRIMITIVOS & CASTING EXPLÍCITO',
-                visited: false,
-                walls: [
-                    // Bordes exteriores (Norte x: 350..450, Oeste y: 175..275, Este y: 175..275)
-                    { x: 0, y: 0, w: 350, h: 16 },
-                    { x: 450, y: 0, w: 350, h: 16 },
-                    { x: 0, y: 434, w: 800, h: 16 },
-                    { x: 0, y: 0, w: 16, h: 175 },
-                    { x: 0, y: 275, w: 16, h: 175 },
-                    { x: 784, y: 0, w: 16, h: 175 },
-                    { x: 784, y: 275, w: 16, h: 175 },
-                    // Racks centrales
-                    { x: 220, y: 120, w: 32, h: 210 },
-                    { x: 570, y: 120, w: 32, h: 210 }
-                ],
-                doors: [
-                    {
-                        id: 'corridor_west',
-                        x: 0, y: 175, w: 24, h: 100,
-                        targetRoom: 'dock',
-                        spawnX: 740, spawnY: 225,
-                        reqKey: 0,
-                        label: 'DÁRSENA',
-                        orientation: 'W'
-                    },
-                    {
-                        id: 'corridor_north',
-                        x: 350, y: 0, w: 100, h: 24,
-                        targetRoom: 'warehouse',
-                        spawnX: 400, spawnY: 395,
-                        reqKey: 1,
-                        label: 'ALMACÉN RAM [LV.1]',
-                        orientation: 'N'
-                    },
-                    {
-                        id: 'corridor_east',
-                        x: 776, y: 175, w: 24, h: 100,
-                        targetRoom: 'modular_lab',
-                        spawnX: 45, spawnY: 225,
-                        reqKey: 1,
-                        label: 'LABORATORIO [LV.1]',
-                        orientation: 'E'
-                    }
-                ],
-                guards: [
-                    {
-                        id: 3,
-                        spawnX: 330, spawnY: 340,
-                        x: 330, y: 340,
-                        radius: 14,
-                        patrolYMin: 90, patrolYMax: 360,
-                        speed: 1.7, dirY: -1,
-                        angle: -Math.PI / 2,
-                        fov: Math.PI / 3,
-                        viewDist: 155,
-                        investigateTarget: null, investigateTimer: 0
-                    },
-                    {
-                        id: 4,
-                        spawnX: 470, spawnY: 110,
-                        x: 470, y: 110,
-                        radius: 14,
-                        patrolYMin: 90, patrolYMax: 360,
-                        speed: 1.7, dirY: 1,
-                        angle: Math.PI / 2,
-                        fov: Math.PI / 3,
-                        viewDist: 155,
-                        investigateTarget: null, investigateTimer: 0
-                    }
-                ],
-                terminals: [
-                    { x: 383, y: 208, w: 34, h: 34, terminalId: 'T2' }
-                ],
-                lasers: [
-                    { x1: 680, y1: 175, x2: 680, y2: 275, terminalId: 'T2' }
-                ],
-                items: []
-            },
-            warehouse: {
-                id: 'warehouse',
-                title: 'SALA 03: ALMACÉN DE MEMORIA RAM',
-                subtitle: 'UNIDAD 3 // BUCLES, CONDICIONALES & RACIÓN DE CAFÉ',
-                visited: false,
-                walls: [
-                    // Bordes exteriores (apertura al sur x: 350..450)
-                    { x: 0, y: 0, w: 800, h: 16 },
-                    { x: 0, y: 0, w: 16, h: 450 },
-                    { x: 784, y: 0, w: 16, h: 450 },
-                    { x: 0, y: 434, w: 350, h: 16 },
-                    { x: 450, y: 434, w: 350, h: 16 },
-                    // Laberinto de cajas apiladas
-                    { x: 90, y: 70, w: 110, h: 80 },
-                    { x: 260, y: 70, w: 130, h: 70 },
-                    { x: 470, y: 70, w: 130, h: 70 },
-                    { x: 650, y: 70, w: 80, h: 180 },
-                    { x: 90, y: 220, w: 90, h: 140 },
-                    { x: 250, y: 210, w: 160, h: 90 },
-                    { x: 480, y: 200, w: 90, h: 140 }
-                ],
-                doors: [
-                    {
-                        id: 'warehouse_south',
-                        x: 350, y: 426, w: 100, h: 24,
-                        targetRoom: 'corridor',
-                        spawnX: 400, spawnY: 45,
-                        reqKey: 0,
-                        label: 'CORREDOR',
-                        orientation: 'S'
-                    }
-                ],
-                guards: [
-                    {
-                        id: 5,
-                        spawnX: 420, spawnY: 155,
-                        x: 420, y: 155,
-                        radius: 14,
-                        patrolYMin: 145, patrolYMax: 165,
-                        speed: 1.5, dirY: 1,
-                        angle: Math.PI / 2,
-                        fov: Math.PI / 3,
-                        viewDist: 150,
-                        investigateTarget: null, investigateTimer: 0
-                    },
-                    {
-                        id: 6,
-                        spawnX: 620, spawnY: 340,
-                        x: 620, y: 340,
-                        radius: 14,
-                        patrolYMin: 270, patrolYMax: 390,
-                        speed: 1.7, dirY: -1,
-                        angle: -Math.PI / 2,
-                        fov: Math.PI / 3,
-                        viewDist: 155,
-                        investigateTarget: null, investigateTimer: 0
-                    }
-                ],
-                terminals: [
-                    { x: 700, y: 350, w: 34, h: 34, terminalId: 'T3' }
-                ],
-                lasers: [],
-                items: [
-                    {
-                        id: 'coffee_1',
-                        x: 130, y: 180, w: 28, h: 28,
-                        type: 'coffee',
-                        name: 'RACIÓN DE CAFÉ (+50 HP)',
-                        heal: 50,
-                        taken: false
-                    }
-                ]
-            },
-            modular_lab: {
-                id: 'modular_lab',
-                title: 'SALA 04: LABORATORIO MODULAR',
-                subtitle: 'UNIDAD 4 // METODOLOGÍA TOP-DOWN & MÉTODOS STATIC',
-                visited: false,
-                walls: [
-                    // Bordes exteriores (Oeste y: 175..275, Este y: 175..275)
-                    { x: 0, y: 0, w: 800, h: 16 },
-                    { x: 0, y: 434, w: 800, h: 16 },
-                    { x: 0, y: 0, w: 16, h: 175 },
-                    { x: 0, y: 275, w: 16, h: 175 },
-                    { x: 784, y: 0, w: 16, h: 175 },
-                    { x: 784, y: 275, w: 16, h: 175 },
-                    // Módulos aislados de computación limpia
-                    { x: 200, y: 40, w: 26, h: 140 },
-                    { x: 200, y: 270, w: 26, h: 140 },
-                    { x: 500, y: 60, w: 26, h: 130 },
-                    { x: 500, y: 260, w: 26, h: 130 }
-                ],
-                doors: [
-                    {
-                        id: 'lab_west',
-                        x: 0, y: 175, w: 24, h: 100,
-                        targetRoom: 'corridor',
-                        spawnX: 740, spawnY: 225,
-                        reqKey: 0,
-                        label: 'CORREDOR',
-                        orientation: 'W'
-                    },
-                    {
-                        id: 'lab_east',
-                        x: 776, y: 175, w: 24, h: 100,
-                        targetRoom: 'core_boss',
-                        spawnX: 55, spawnY: 225,
-                        reqKey: 2,
-                        label: 'MAINFRAME CORE [LV.2]',
-                        orientation: 'E'
-                    }
-                ],
-                guards: [
-                    {
-                        id: 7,
-                        spawnX: 350, spawnY: 100,
-                        x: 350, y: 100,
-                        radius: 14,
-                        patrolYMin: 60, patrolYMax: 380,
-                        speed: 1.8, dirY: 1,
-                        angle: Math.PI / 2,
-                        fov: Math.PI / 3,
-                        viewDist: 160,
-                        investigateTarget: null, investigateTimer: 0
-                    },
-                    {
-                        id: 8,
-                        spawnX: 640, spawnY: 340,
-                        x: 640, y: 340,
-                        radius: 14,
-                        patrolYMin: 70, patrolYMax: 380,
-                        speed: 1.9, dirY: -1,
-                        angle: -Math.PI / 2,
-                        fov: Math.PI / 3,
-                        viewDist: 160,
-                        investigateTarget: null, investigateTimer: 0
-                    }
-                ],
-                terminals: [
-                    { x: 350, y: 208, w: 34, h: 34, terminalId: 'T4' }
-                ],
-                lasers: [],
-                items: []
-            },
-            core_boss: {
-                id: 'core_boss',
-                title: 'SALA 05: MAINFRAME CORE // BOSS ARENA',
-                subtitle: 'UNIDAD 5 // BOSS: METAL GEAR JVM-REX (VECTORES & BURBUJA)',
-                visited: false,
-                hasBoss: true,
-                walls: [
-                    // Bordes exteriores (Oeste y: 175..275)
-                    { x: 0, y: 0, w: 800, h: 16 },
-                    { x: 0, y: 434, w: 800, h: 16 },
-                    { x: 0, y: 0, w: 16, h: 175 },
-                    { x: 0, y: 275, w: 16, h: 175 },
-                    { x: 784, y: 0, w: 16, h: 450 },
-                    // Columnas de disipación térmica (cobertura táctica contra láser)
-                    { x: 230, y: 80, w: 45, h: 90 },
-                    { x: 230, y: 280, w: 45, h: 90 }
-                ],
-                doors: [
-                    {
-                        id: 'core_west',
-                        x: 0, y: 175, w: 24, h: 100,
-                        targetRoom: 'modular_lab',
-                        spawnX: 740, spawnY: 225,
-                        reqKey: 2,
-                        label: 'LABORATORIO',
-                        orientation: 'W'
-                    }
-                ],
-                guards: [],
-                terminals: [
-                    { x: 235, y: 25, w: 34, h: 34, terminalId: 'T5A' },
-                    { x: 235, y: 390, w: 34, h: 34, terminalId: 'T5B' }
-                ],
-                lasers: [],
-                items: []
-            }
-        };
-
-
-        // =========================================================================
-        // 5. ESTADO GLOBAL DE LA PARTIDA
+        // 5. ESTADO GLOBAL DE LA PARTIDA & CONTROLES
         // =========================================================================
         const canvas = document.getElementById('mgs-canvas');
         const ctx = canvas.getContext('2d');
@@ -2791,6 +3581,9 @@
                 keycard: 0 // 0, 1, 2
             },
             boss: {
+                type: 'vulcan',
+                name: 'VULCAN BYTEMASTER',
+                sub: 'CENTINELA BLINDADO',
                 x: 580,
                 y: 225,
                 radius: 46,
@@ -2803,7 +3596,8 @@
                 laserSweeping: false,
                 laserSweepDir: 1,
                 projectiles: [],
-                particles: []
+                particles: [],
+                mines: []
             },
             soundWaves: [],
             alertTimer: 0,
@@ -2890,15 +3684,23 @@
         }
 
         function triggerRoomArrivalAdvice(roomId) {
-            if (roomId === 'corridor') {
-                showToast("¡CORREDOR DE RACKS! Terminal 02 desactiva las rejillas láser.");
-            } else if (roomId === 'warehouse') {
-                showToast("¡ALMACÉN RAM! Tutor de Debugging (141.65) en línea. ¡Buscá la Ración de Café!");
-            } else if (roomId === 'modular_lab') {
-                showToast("¡LABORATORIO! El Capitán (141.12) te asesora con métodos estáticos.");
-            } else if (roomId === 'core_boss') {
+            if (roomId === 'vault_u2') {
+                showToast("¡CÁMARA DE DATOS! Terminal 04 desactiva las rejillas láser.");
+            } else if (roomId === 'arena_vulcan') {
                 playSFX('boss-roar');
-                setTimeout(() => openCodecDialog('boss_briefing'), 400);
+                setTimeout(() => openCodecDialog('boss_briefing_1'), 400);
+            } else if (roomId === 'warehouse_u3') {
+                showToast("¡ALMACÉN DE SELECTIVAS! Tutor de Debugging (141.65) en línea. ¡Buscá la Ración de Café!");
+            } else if (roomId === 'lab_u4') {
+                showToast("¡LABORATORIO MODULAR! El Capitán (141.12) te asesora con métodos estáticos.");
+            } else if (roomId === 'arena_olympo') {
+                playSFX('boss-roar');
+                setTimeout(() => openCodecDialog('boss_briefing_2'), 400);
+            } else if (roomId === 'matrix_chamber') {
+                showToast("¡CÁMARA DE MATRICES! Terminal 04 desactiva el láser de paso.");
+            } else if (roomId === 'rex_core') {
+                playSFX('boss-roar');
+                setTimeout(() => openCodecDialog('boss_briefing_3'), 400);
             }
         }
 
@@ -2918,9 +3720,10 @@
             updateBossHud();
 
             // Emitir chispas del impacto
+            const coreX = (gameState.boss.type === 'olympo') ? 540 : 520;
             for (let i = 0; i < 24; i++) {
                 gameState.boss.particles.push({
-                    x: 520,
+                    x: coreX,
                     y: 225,
                     vx: (Math.random() - 0.5) * 8,
                     vy: (Math.random() - 0.5) * 8,
@@ -2934,16 +3737,29 @@
                 gameState.boss.stunTimer = 0;
                 playSFX('boss-roar');
                 playSFX('hack-success');
-                showToast("¡METAL GEAR JVM-REX DESTRUIDO!");
+
+                const nextLvl = currentLevelIndex + 2;
+                if (nextLvl <= 3) {
+                    setUnlockedLevel(Math.max(getUnlockedLevel(), nextLvl));
+                }
+
+                const victoryToasts = [
+                    "¡VULCAN BYTEMASTER NEUTRALIZADO!",
+                    "¡CYBER OLYMPO DESTRUIDO!",
+                    "¡METAL GEAR JVM-REX PRIME ANIQUILADO!"
+                ];
+                showToast(victoryToasts[currentLevelIndex] || "¡BOSS DESTRUIDO!");
+
                 setTimeout(() => {
                     gameState.missionCompleted = true;
-                    openCodecDialog('victory');
+                    const victoryDialogs = ['victory_1', 'victory_2', 'victory'];
+                    openCodecDialog(victoryDialogs[currentLevelIndex] || 'victory');
                 }, 1300);
             } else {
                 gameState.boss.stunTimer = 0;
                 gameState.boss.state = 'active';
                 playSFX('boss-roar');
-                showToast("¡IMPACTO CRÍTICO EN EL REACTOR! JVM-REX AL 50%");
+                showToast(`¡IMPACTO CRÍTICO EN EL REACTOR! ${gameState.boss.name} AL ${gameState.boss.hp}%`);
             }
         }
 
@@ -2959,7 +3775,7 @@
                 } else if (gameState.boss.state === 'stunned') {
                     label.textContent = "¡REACTOR EXPUESTO! ¡APROXIMATE Y GOLPEA CON [E] / HACK!";
                 } else {
-                    label.textContent = "ESCUDOS ACTIVOS // HACKEAR SUBMÓDULOS 5A Y 5B";
+                    label.textContent = "ESCUDOS ACTIVOS // HACKEAR SUBMÓDULOS DE LA ARENA";
                 }
             }
         }
@@ -2996,13 +3812,13 @@
             }
         }
 
-        // Golpe Táctico en la Pared (Knock / Distracción)
         function performWallKnock() {
             getAudioContext();
             const p = gameState.player;
             const currentRoom = facilityRooms[gameState.currentRoomId];
-            let nearWall = false;
+            if (!currentRoom) return;
 
+            let nearWall = false;
             for (let w of currentRoom.walls) {
                 const closestX = Math.max(w.x, Math.min(p.x, w.x + w.w));
                 const closestY = Math.max(w.y, Math.min(p.y, w.y + w.h));
@@ -3066,7 +3882,17 @@
                 return;
             }
 
-            if (key === 'b') {
+            const levelSelectScreen = document.getElementById('level-select-screen');
+            if (levelSelectScreen && levelSelectScreen.style.display === 'flex') {
+                if (key === 'escape' || key === 'm') {
+                    closeLevelSelectDialog();
+                }
+                return;
+            }
+
+            if (key === 'm') {
+                openLevelSelectDialog();
+            } else if (key === 'b') {
                 toggleCardboardBox();
             } else if (key === 'c') {
                 openCodecDialog('call');
@@ -3130,11 +3956,13 @@
         function checkTerminalInteraction() {
             const p = gameState.player;
             const currentRoom = facilityRooms[gameState.currentRoomId];
+            if (!currentRoom) return;
 
             // Si estamos en la arena y el Boss está aturdido, golpear el reactor
             if (currentRoom.hasBoss && gameState.boss.state === 'stunned' && gameState.boss.hp > 0) {
-                const distToCore = Math.hypot(p.x - 520, p.y - 225);
-                if (distToCore < 70) {
+                const coreX = (gameState.boss.type === 'olympo') ? 540 : 520;
+                const distToCore = Math.hypot(p.x - coreX, p.y - 225);
+                if (distToCore < 75) {
                     damageBoss(50);
                     return;
                 }
@@ -3155,18 +3983,100 @@
 
 
         // =========================================================================
-        // 6. CICLO PRINCIPAL (LOOP & RENDERIZADO 60 FPS)
+        // 6. TERMINALES DE HACKEO & LÓGICA DE RECOMPENSAS
+        // =========================================================================
+        let activeTerminal = null;
+
+        function openHackTerminal(terminal) {
+            if (terminal.unlocked) return;
+            activeTerminal = terminal;
+            getAudioContext();
+
+            document.getElementById('hack-terminal-name').innerText = terminal.name;
+            document.getElementById('hack-code-view').innerText = terminal.code;
+            document.getElementById('hack-question').innerText = terminal.question;
+            document.getElementById('hack-feedback').innerText = "Seleccioná la directiva de compilación correcta para neutralizar la barrera.";
+
+            const optList = document.getElementById('hack-options-list');
+            optList.innerHTML = '';
+            terminal.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'hack-btn';
+                btn.innerHTML = `<span style="color: var(--mgs-amber); margin-right: 6px;">[0${idx+1}]</span> ${opt.text}`;
+                btn.onclick = () => solveHack(opt.correct);
+                optList.appendChild(btn);
+            });
+
+            document.getElementById('hack-screen').style.display = 'flex';
+        }
+
+        function closeHackTerminal() {
+            document.getElementById('hack-screen').style.display = 'none';
+            activeTerminal = null;
+        }
+
+        function solveHack(isCorrect) {
+            if (!activeTerminal) return;
+
+            if (isCorrect) {
+                playSFX('hack-success');
+                activeTerminal.unlocked = true;
+                document.getElementById('hack-feedback').innerHTML = `<span style="color: var(--mgs-green); font-weight: 700;">${activeTerminal.explanation}</span>`;
+
+                // Recompensas según ID de terminal
+                if (activeTerminal.id === 'T1_1') {
+                    setPlayerKeycard(1);
+                    showToast("¡KEYCARD NIVEL 1 OBTENIDA!");
+                } else if (activeTerminal.id === 'T1_4') {
+                    showToast("¡REJILLAS LÁSER DE CÁMARA DESACTIVADAS!");
+                } else if (activeTerminal.id === 'T2_1') {
+                    setPlayerKeycard(1);
+                    showToast("¡KEYCARD NIVEL 1 OBTENIDA!");
+                } else if (activeTerminal.id === 'T2_2') {
+                    showToast("¡REJILLAS LÁSER DEL ALMACÉN DESACTIVADAS!");
+                } else if (activeTerminal.id === 'T2_3') {
+                    setPlayerKeycard(2);
+                    showToast("¡KEYCARD NIVEL 2 OBTENIDA!");
+                } else if (activeTerminal.id === 'T3_1') {
+                    setPlayerKeycard(1);
+                    showToast("¡KEYCARD NIVEL 1 OBTENIDA!");
+                } else if (activeTerminal.id === 'T3_3') {
+                    setPlayerKeycard(2);
+                    showToast("¡KEYCARD NIVEL 2 OBTENIDA!");
+                } else if (activeTerminal.id === 'T3_4') {
+                    showToast("¡REJILLAS LÁSER DE MATRIZ DESACTIVADAS!");
+                } else if (activeTerminal.id.includes('BOSS')) {
+                    stunBoss(7.0);
+                }
+
+                setTimeout(() => {
+                    closeHackTerminal();
+                }, 1200);
+
+            } else {
+                playSFX('alert');
+                triggerAlert();
+                document.getElementById('hack-feedback').innerHTML = `<span style="color: var(--mgs-red); font-weight: 700;">¡ERROR DE COMPILACIÓN! Alarma activada en los servidores.</span>`;
+                setTimeout(() => closeHackTerminal(), 1000);
+            }
+        }
+
+
+        // =========================================================================
+        // 7. CICLO PRINCIPAL (LOOP & ACTUALIZACIÓN FÍSICA)
         // =========================================================================
         let lastTime = performance.now();
 
         function updateGame(dt) {
             const p = gameState.player;
             const currentRoom = facilityRooms[gameState.currentRoomId];
+            if (!currentRoom) return;
 
-            // Diálogos o Hackeo pausan el juego
+            // Diálogos, Selector de Nivel o Hackeo pausan el juego
             const codecOpen = document.getElementById('codec-screen').style.display === 'flex';
             const hackOpen = document.getElementById('hack-screen').style.display === 'flex';
-            if (codecOpen || hackOpen || gameState.missionCompleted) return;
+            const levelOpen = document.getElementById('level-select-screen') && document.getElementById('level-select-screen').style.display === 'flex';
+            if (codecOpen || hackOpen || levelOpen || gameState.missionCompleted) return;
 
             // 1. Movimiento del Jugador
             let dx = 0;
@@ -3189,11 +4099,11 @@
                 p.dir = Math.atan2(dy, dx);
             }
 
-            // Colisión con Paredes de la sala actual
+            // Colisión con Paredes
             if (!checkWallCollision(nextX, p.y, p.radius, currentRoom.walls)) p.x = nextX;
             if (!checkWallCollision(p.x, nextY, p.radius, currentRoom.walls)) p.y = nextY;
 
-            // 1.2. Transición de Salas por Puertas
+            // Transición de Salas por Puertas
             if (currentRoom.doors) {
                 currentRoom.doors.forEach(door => {
                     const overlap = (
@@ -3207,7 +4117,6 @@
                         if (p.keycard < door.reqKey) {
                             playSFX('door-locked');
                             showToast(`ACCESO BLOQUEADO // SE REQUIERE KEYCARD LV.${door.reqKey}`);
-                            // Empujar al jugador fuera del umbral
                             if (door.orientation === 'E') p.x = door.x - p.radius - 8;
                             else if (door.orientation === 'W') p.x = door.x + door.w + p.radius + 8;
                             else if (door.orientation === 'N') p.y = door.y + door.h + p.radius + 8;
@@ -3219,7 +4128,7 @@
                 });
             }
 
-            // 1.3. Colisión con Rejillas Láser
+            // Rejillas Láser
             if (currentRoom.lasers) {
                 currentRoom.lasers.forEach(laser => {
                     const term = hackTerminals.find(t => t.id === laser.terminalId);
@@ -3235,7 +4144,7 @@
                 });
             }
 
-            // 1.4. Recolección de Raciones de Café
+            // Raciones de Café
             if (currentRoom.items) {
                 currentRoom.items.forEach(item => {
                     if (!item.taken && item.type === 'coffee') {
@@ -3251,11 +4160,12 @@
                 });
             }
 
-            // 1.5. Resaltar botón HACK en móvil si estamos cerca de una terminal o del reactor expuesto
+            // Resaltar botón HACK en móvil si estamos cerca de una terminal o reactor expuesto
             let nearInteractive = false;
             if (currentRoom.hasBoss && gameState.boss.state === 'stunned' && gameState.boss.hp > 0) {
-                const distToCore = Math.hypot(p.x - 520, p.y - 225);
-                if (distToCore < 70) nearInteractive = true;
+                const coreX = (gameState.boss.type === 'olympo') ? 540 : 520;
+                const distToCore = Math.hypot(p.x - coreX, p.y - 225);
+                if (distToCore < 75) nearInteractive = true;
             }
             if (currentRoom.terminals) {
                 currentRoom.terminals.forEach(term => {
@@ -3272,7 +4182,7 @@
                 else actBtn.classList.remove('active-target');
             }
 
-            // 2. IA de Centinelas en la sala actual
+            // 2. IA de Centinelas
             if (currentRoom.guards) {
                 currentRoom.guards.forEach(g => {
                     const distToPlayer = Math.hypot(p.x - g.x, p.y - g.y);
@@ -3286,7 +4196,7 @@
                         if (diff < g.fov / 2) {
                             if (!isRayBlockedByWalls(g.x, g.y, p.x, p.y, currentRoom.walls)) {
                                 if (p.inBox && dx === 0 && dy === 0 && distToPlayer > 35) {
-                                    // Disfraz efectivo de caja
+                                    // Caja efectiva
                                 } else {
                                     seesPlayerNow = true;
                                 }
@@ -3355,25 +4265,27 @@
                 });
             }
 
-            // 3. IA del Jefe Final: METAL GEAR JVM-REX
+            // 3. IA de los Jefes (Vulcan Bytemaster, Cyber Olympo, Metal Gear Rex)
             if (currentRoom.hasBoss && gameState.boss.hp > 0) {
                 const boss = gameState.boss;
+                const bType = boss.type || 'vulcan';
 
                 if (boss.stunTimer > 0) {
                     boss.stunTimer -= dt;
                     boss.state = 'stunned';
                     boss.laserSweeping = false;
-                    document.getElementById('boss-status-label').textContent = `¡REACTOR EXPUESTO! ¡APROXIMATE Y GOLPEA! (${boss.stunTimer.toFixed(1)}s)`;
+                    const statusLabel = document.getElementById('boss-status-label');
+                    if (statusLabel) statusLabel.textContent = `¡REACTOR EXPUESTO! ¡APROXIMATE Y GOLPEA! (${boss.stunTimer.toFixed(1)}s)`;
 
                     // Chispas de desestabilización
-                    if (Math.random() < 0.3) {
+                    if (Math.random() < 0.35) {
                         boss.particles.push({
                             x: 520 + (Math.random() - 0.5) * 40,
                             y: 225 + (Math.random() - 0.5) * 40,
                             vx: (Math.random() - 0.5) * 4,
                             vy: (Math.random() - 0.5) * 4,
                             life: 0.5,
-                            color: '#00FF66'
+                            color: bType === 'olympo' ? '#38BDF8' : '#00FF66'
                         });
                     }
 
@@ -3385,47 +4297,118 @@
                 } else if (boss.state === 'active') {
                     boss.attackTimer -= dt;
 
-                    // Alternar ataques cada 3.2 segundos
-                    if (boss.attackTimer <= 0) {
-                        boss.attackTimer = 3.2;
-
-                        if (Math.random() < 0.5) {
-                            // Ataque 1: Ráfaga de 3 paquetes de datos en abanico
+                    if (bType === 'vulcan') {
+                        // IA Vulcan Bytemaster: ráfagas triples de bytecode
+                        if (boss.attackTimer <= 0) {
+                            boss.attackTimer = 3.2;
                             playSFX('boss-laser');
                             const angToP = Math.atan2(p.y - boss.y, p.x - boss.x);
-                            [-0.25, 0, 0.25].forEach(offset => {
+                            [-0.24, 0, 0.24].forEach(offset => {
                                 boss.projectiles.push({
                                     x: boss.x - 30,
                                     y: boss.y,
-                                    vx: Math.cos(angToP + offset) * 3.4,
-                                    vy: Math.sin(angToP + offset) * 3.4,
+                                    vx: Math.cos(angToP + offset) * 3.5,
+                                    vy: Math.sin(angToP + offset) * 3.5,
                                     radius: 7,
-                                    life: 2.8
+                                    life: 2.8,
+                                    color: '#00FF66'
                                 });
                             });
-                        } else {
-                            // Ataque 2: Barrido de Láser Infrarrojo
-                            playSFX('boss-laser');
-                            boss.laserSweeping = true;
-                            boss.laserAngle = Math.PI - 0.65;
-                            boss.laserSweepDir = 1;
+                        }
+
+                        // Descarga de choque si el jugador se acerca sin aturdirlo
+                        const distP = Math.hypot(p.x - boss.x, p.y - boss.y);
+                        if (distP < 95) {
+                            playSFX('damage');
+                            takeDamage(3);
+                            p.x = Math.max(50, p.x - 40);
+                            showToast("¡DESCARGA DE VOLTAJE VULCAN! ¡MANTENÉ DISTANCIA!");
+                        }
+
+                    } else if (bType === 'olympo') {
+                        // IA Cyber Olympo: rayo de barrido o minas EMP
+                        if (boss.attackTimer <= 0) {
+                            boss.attackTimer = 3.4;
+                            if (Math.random() < 0.55) {
+                                playSFX('boss-laser');
+                                boss.laserSweeping = true;
+                                boss.laserAngle = Math.PI - 0.65;
+                                boss.laserSweepDir = 1;
+                            } else {
+                                playSFX('knock');
+                                for (let m = 0; m < 2; m++) {
+                                    boss.mines.push({
+                                        x: 230 + Math.random() * 280,
+                                        y: 90 + Math.random() * 270,
+                                        timer: 2.8,
+                                        radius: 12,
+                                        maxBlast: 50
+                                    });
+                                }
+                                showToast("¡MINAS EMP DESPLEGADAS EN LA ARENA!");
+                            }
+                        }
+
+                        // Actualizar minas EMP
+                        boss.mines.forEach(mine => {
+                            mine.timer -= dt;
+                            if (mine.timer <= 0) {
+                                playSFX('damage');
+                                for (let k = 0; k < 12; k++) {
+                                    boss.particles.push({
+                                        x: mine.x, y: mine.y,
+                                        vx: (Math.random() - 0.5) * 6,
+                                        vy: (Math.random() - 0.5) * 6,
+                                        life: 0.5,
+                                        color: '#FFB000'
+                                    });
+                                }
+                                const distToMine = Math.hypot(p.x - mine.x, p.y - mine.y);
+                                if (distToMine < mine.maxBlast) {
+                                    takeDamage(12);
+                                }
+                            }
+                        });
+                        boss.mines = boss.mines.filter(m => m.timer > 0);
+
+                    } else if (bType === 'rex') {
+                        // IA Metal Gear JVM-REX Prime: ráfaga de datos o rayo infrarrojo
+                        if (boss.attackTimer <= 0) {
+                            boss.attackTimer = 3.2;
+                            if (Math.random() < 0.5) {
+                                playSFX('boss-laser');
+                                const angToP = Math.atan2(p.y - boss.y, p.x - boss.x);
+                                [-0.25, 0, 0.25].forEach(offset => {
+                                    boss.projectiles.push({
+                                        x: boss.x - 30,
+                                        y: boss.y,
+                                        vx: Math.cos(angToP + offset) * 3.4,
+                                        vy: Math.sin(angToP + offset) * 3.4,
+                                        radius: 7,
+                                        life: 2.8,
+                                        color: '#38BDF8'
+                                    });
+                                });
+                            } else {
+                                playSFX('boss-laser');
+                                boss.laserSweeping = true;
+                                boss.laserAngle = Math.PI - 0.65;
+                                boss.laserSweepDir = 1;
+                            }
                         }
                     }
 
-                    // Ejecutar barrido de láser
+                    // Ejecutar barrido de rayo láser (Olympo / Rex)
                     if (boss.laserSweeping) {
                         boss.laserAngle += 0.024 * boss.laserSweepDir;
                         if (boss.laserAngle > Math.PI + 0.65) {
                             boss.laserSweeping = false;
                         }
 
-                        // Colisión del rayo láser con Snake
                         const rayEndX = boss.x + Math.cos(boss.laserAngle) * 600;
                         const rayEndY = boss.y + Math.sin(boss.laserAngle) * 600;
 
-                        // Si el rayo choca con columnas de disipación, se bloquea
                         if (!isRayBlockedByWalls(boss.x - 20, boss.y, p.x, p.y, currentRoom.walls)) {
-                            // Verificar cercanía a la línea del rayo
                             const A = boss.x - 20, B = boss.y;
                             const C = rayEndX, D = rayEndY;
                             const d = Math.abs((D - B) * p.x - (C - A) * p.y + C * B - D * A) / Math.hypot(C - A, D - B);
@@ -3443,12 +4426,10 @@
                     proj.y += proj.vy;
                     proj.life -= dt;
 
-                    // Colisión con paredes o columnas térmicas
                     if (checkWallCollision(proj.x, proj.y, proj.radius, currentRoom.walls)) {
                         proj.life = 0;
                     }
 
-                    // Colisión con Snake
                     const distToPlayer = Math.hypot(p.x - proj.x, p.y - proj.y);
                     if (distToPlayer < p.radius + proj.radius) {
                         playSFX('damage');
@@ -3467,7 +4448,7 @@
                 boss.particles = boss.particles.filter(pt => pt.life > 0);
             }
 
-            // 4. Temporizador de Alerta & Transición Dinámica a Precaución
+            // 4. Temporizador de Alerta & Precaución
             if (gameState.alertTimer > 0) {
                 gameState.alertTimer -= dt;
 
@@ -3550,19 +4531,43 @@
             const title = document.getElementById('debrief-status');
             const desc = document.getElementById('debrief-desc');
             const rank = document.getElementById('debrief-rank');
+            const nextBtn = document.getElementById('debrief-next-btn');
+
+            const lvlData = campaignLevels[currentLevelIndex];
 
             if (won) {
                 playSFX('hack-success');
                 title.className = "debrief-title success";
                 title.innerText = "¡MISIÓN CUMPLIDA!";
-                desc.innerText = "Lograste infiltrarte por las 5 salas, burlar a los centinelas, obtener las Keycards y destruir al Metal Gear JVM-REX.";
-                rank.innerText = "CODENAME: BIG BOSS DE LA JVM";
+                if (currentLevelIndex === 0) {
+                    desc.innerText = "Neutralizaste la dársena, dominaste la jerarquía de tipos primitivos y destruiste a Vulcan Bytemaster.";
+                    rank.innerText = "RANGO: OPERADOR DE COMPILACIÓN";
+                    if (nextBtn) {
+                        nextBtn.style.display = 'inline-flex';
+                        nextBtn.innerHTML = '<i class="fa-solid fa-forward-step"></i> SIGUIENTE MISIÓN (NIVEL 2)';
+                    }
+                } else if (currentLevelIndex === 1) {
+                    desc.innerText = "Conquistaste el almacén y el laboratorio modular con metodología Top-Down, desmantelando a Cyber Olympo.";
+                    rank.innerText = "RANGO: ESPECIALISTA MODULAR";
+                    if (nextBtn) {
+                        nextBtn.style.display = 'inline-flex';
+                        nextBtn.innerHTML = '<i class="fa-solid fa-forward-step"></i> SIGUIENTE MISIÓN (NIVEL 3)';
+                    }
+                } else {
+                    desc.innerText = "¡Completaste toda la campaña curricular de SAO! Neutralizaste al legendario Metal Gear JVM-REX Prime.";
+                    rank.innerText = "CODENAME: BIG BOSS DE LA JVM // CURSO REGULARIZADO";
+                    if (nextBtn) {
+                        nextBtn.style.display = 'inline-flex';
+                        nextBtn.innerHTML = '<i class="fa-solid fa-trophy"></i> ¡VER SELECCIÓN DE MISIONES!';
+                    }
+                }
             } else {
                 playSFX('damage');
                 title.className = "debrief-title failure";
                 title.innerText = "SNAKE? SNAKE?! ¡SNAAAAKE!";
-                desc.innerText = "El servidor colapsó tras múltiples desbordamientos de pila y la JVM neutralizó a Solid Byte.";
+                desc.innerText = `La JVM neutralizó a Solid Byte en ${lvlData ? lvlData.name : 'la misión'}.`;
                 rank.innerText = "CODENAME: RECLUTA EN RECUPERATORIO";
+                if (nextBtn) nextBtn.style.display = 'none';
             }
             scr.style.display = 'flex';
         }
@@ -3572,74 +4577,19 @@
             document.getElementById('codec-screen').style.display = 'none';
             document.getElementById('hack-screen').style.display = 'none';
 
-            // 1. Reiniciar Solid Byte a la posición inicial en Dársena
-            gameState.currentRoomId = 'dock';
-            gameState.player.x = 70;
-            gameState.player.y = 225;
-            gameState.player.hp = 100;
-            gameState.player.inBox = false;
-            gameState.player.dir = 0;
-            setPlayerKeycard(0);
-
-            // 2. Reiniciar Boss y Ración de café
-            gameState.boss.hp = 100;
-            gameState.boss.state = 'active';
-            gameState.boss.stunTimer = 0;
-            gameState.boss.projectiles = [];
-            gameState.boss.particles = [];
-            updateBossHud();
-            const bossHud = document.getElementById('boss-hud');
-            if (bossHud) bossHud.classList.remove('visible');
-
-            if (facilityRooms.warehouse.items[0]) {
-                facilityRooms.warehouse.items[0].taken = false;
-            }
-
-            // 3. Reiniciar cada centinela
-            Object.values(facilityRooms).forEach(rm => {
-                if (rm.guards) {
-                    rm.guards.forEach(g => {
-                        g.x = g.spawnX;
-                        g.y = g.spawnY;
-                        g.dirY = (g.id % 2 === 1) ? 1 : -1;
-                        g.angle = (g.id % 2 === 1) ? Math.PI / 2 : -Math.PI / 2;
-                        g.investigateTarget = null;
-                        g.investigateTimer = 0;
-                    });
-                }
-            });
-
-            // 4. Reiniciar Alerta, Terminales y HUD
-            gameState.alertTimer = 0;
-            gameState.alertState = 'normal';
-            gameState.missionCompleted = false;
-            gameState.soundWaves = [];
-
-            const alertBox = document.getElementById('alert-box');
-            if (alertBox) alertBox.className = 'alert-gauge';
-
-            hackTerminals.forEach(t => t.unlocked = false);
-
-            document.getElementById('life-bar').style.width = '100%';
-            const btnBox = document.getElementById('btn-box-toggle');
-            if (btnBox) btnBox.classList.remove('active');
-            const lblBox = document.getElementById('box-label');
-            if (lblBox) lblBox.innerText = "CAJA: OFF";
-
-            showRoomBanner(facilityRooms.dock.title, facilityRooms.dock.subtitle);
-            setMusicTheme('sneaking');
+            loadLevel(currentLevelIndex, true);
         }
 
 
         // =========================================================================
-        // 7. RENDERIZADO VISUAL DEL CANVAS (ESTILO TÁCTICO MGS)
+        // 8. RENDERIZADO VISUAL DEL CANVAS (BOSSES, ESCENARIOS & HUD)
         // =========================================================================
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const currentRoom = facilityRooms[gameState.currentRoomId];
             if (!currentRoom) return;
 
-            // 1. Suelo de baldosas de alta tecnología (Grid táctico)
+            // 1. Suelo táctico
             ctx.strokeStyle = '#051A0D';
             ctx.lineWidth = 1;
             for (let x = 0; x < canvas.width; x += 40) {
@@ -3655,7 +4605,7 @@
                 ctx.stroke();
             }
 
-            // 1.5. Ondas acústicas tácticas (Knock en pared)
+            // Ondas acústicas de golpes
             gameState.soundWaves.forEach(wave => {
                 ctx.save();
                 ctx.strokeStyle = `rgba(0, 255, 102, ${wave.alpha})`;
@@ -3671,7 +4621,7 @@
             });
             gameState.soundWaves = gameState.soundWaves.filter(w => w.alpha > 0);
 
-            // 2. Paredes y Racks de Servidores de la sala actual
+            // 2. Paredes y Racks
             currentRoom.walls.forEach(w => {
                 ctx.fillStyle = '#082613';
                 ctx.fillRect(w.x, w.y, w.w, w.h);
@@ -3680,14 +4630,13 @@
                 ctx.lineWidth = 1.5;
                 ctx.strokeRect(w.x, w.y, w.w, w.h);
 
-                // Ranuras de ventilación / rack de datos
                 ctx.fillStyle = '#003D1A';
                 for (let ry = w.y + 10; ry < w.y + w.h - 10; ry += 16) {
                     ctx.fillRect(w.x + 4, ry, Math.max(0, w.w - 8), 4);
                 }
             });
 
-            // 2.5. Puertas y Umbrales de enlace
+            // Puertas
             if (currentRoom.doors) {
                 currentRoom.doors.forEach(door => {
                     const hasKey = gameState.player.keycard >= door.reqKey;
@@ -3699,7 +4648,6 @@
                     ctx.lineWidth = 2;
                     ctx.strokeRect(door.x, door.y, door.w, door.h);
 
-                    // Indicador de Nivel de Keycard sobre la puerta
                     ctx.fillStyle = hasKey ? '#00FF66' : '#FF2A2A';
                     ctx.font = 'bold 9px Share Tech Mono';
                     ctx.textAlign = 'center';
@@ -3709,7 +4657,7 @@
                 });
             }
 
-            // 3. Rejillas Láser
+            // Rejillas Láser
             if (currentRoom.lasers) {
                 currentRoom.lasers.forEach(laser => {
                     const term = hackTerminals.find(t => t.id === laser.terminalId);
@@ -3747,24 +4695,21 @@
                 });
             }
 
-            // 4. Ítems en el suelo (Ración de Café)
+            // Ítems (Ración de Café)
             if (currentRoom.items) {
                 currentRoom.items.forEach(item => {
                     if (!item.taken && item.type === 'coffee') {
                         ctx.save();
-                        // Aura pulsante dorada
                         const pulse = Math.sin(Date.now() * 0.005) * 4;
                         ctx.shadowColor = '#F59E0B';
                         ctx.shadowBlur = 12 + pulse;
 
-                        // Taza de café pixel art
                         ctx.fillStyle = '#FFFFFF';
                         ctx.fillRect(item.x + 4, item.y + 8, 16, 14);
-                        ctx.fillRect(item.x + 20, item.y + 11, 4, 8); // asa
+                        ctx.fillRect(item.x + 20, item.y + 11, 4, 8);
                         ctx.fillStyle = '#451A03';
-                        ctx.fillRect(item.x + 6, item.y + 9, 12, 4); // café líquido
+                        ctx.fillRect(item.x + 6, item.y + 9, 12, 4);
 
-                        // Vapores de humo aromático ascendente
                         ctx.strokeStyle = 'rgba(245, 158, 11, 0.7)';
                         ctx.lineWidth = 1.5;
                         const steamOffset = (Date.now() * 0.04) % 12;
@@ -3773,7 +4718,6 @@
                         ctx.lineTo(item.x + 13, item.y + 2 - steamOffset);
                         ctx.stroke();
 
-                        // Etiqueta al aproximarse
                         const distToP = Math.hypot(gameState.player.x - (item.x + 12), gameState.player.y - (item.y + 12));
                         if (distToP < 55) {
                             ctx.fillStyle = '#FDE68A';
@@ -3786,7 +4730,7 @@
                 });
             }
 
-            // 5. Terminales de Hackeo de la sala
+            // Terminales de Hackeo
             if (currentRoom.terminals) {
                 currentRoom.terminals.forEach(term => {
                     const data = hackTerminals.find(t => t.id === term.terminalId);
@@ -3799,9 +4743,10 @@
                     ctx.shadowBlur = 0;
 
                     ctx.fillStyle = '#000';
-                    ctx.font = 'bold 10px Share Tech Mono';
+                    ctx.font = 'bold 9px Share Tech Mono';
                     ctx.textAlign = 'center';
-                    ctx.fillText(data.id, term.x + term.w / 2, term.y + 21);
+                    const shortTermId = data.id.replace('T1_', 'T').replace('T2_', 'T').replace('T3_', 'T');
+                    ctx.fillText(shortTermId, term.x + term.w / 2, term.y + 21);
 
                     const dist = Math.hypot(gameState.player.x - (term.x + term.w / 2), gameState.player.y - (term.y + term.h / 2));
                     if (dist < 48 && !data.unlocked) {
@@ -3813,7 +4758,7 @@
                 });
             }
 
-            // 6. Centinelas y Conos de Visión (FOV)
+            // Centinelas
             if (currentRoom.guards) {
                 currentRoom.guards.forEach(g => {
                     ctx.save();
@@ -3835,7 +4780,6 @@
                     ctx.stroke();
                     ctx.restore();
 
-                    // Cuerpo del Centinela
                     ctx.fillStyle = (gameState.alertState === 'alert') ? '#DC2626' : (gameState.alertState === 'caution' ? '#D97706' : '#1E40AF');
                     ctx.beginPath();
                     ctx.arc(g.x, g.y, g.radius, 0, Math.PI * 2);
@@ -3844,7 +4788,6 @@
                     ctx.lineWidth = 1.5;
                     ctx.stroke();
 
-                    // Línea de cañón
                     ctx.strokeStyle = '#FFF';
                     ctx.lineWidth = 3;
                     ctx.beginPath();
@@ -3852,7 +4795,6 @@
                     ctx.lineTo(g.x + Math.cos(g.angle) * 22, g.y + Math.sin(g.angle) * 22);
                     ctx.stroke();
 
-                    // Signos ! y ?
                     if (gameState.alertState === 'alert') {
                         ctx.fillStyle = '#FF2A2A';
                         ctx.font = '900 24px Poppins, sans-serif';
@@ -3867,140 +4809,21 @@
                 });
             }
 
-            // 7. Jefe Final: METAL GEAR JVM-REX (Sala 05)
+            // Renderizar Boss según Tipo
             if (currentRoom.hasBoss) {
-                const boss = gameState.boss;
-
-                // Sombra del Mech
-                ctx.save();
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-                ctx.beginPath();
-                ctx.ellipse(boss.x, boss.y + 40, 75, 24, 0, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Piernas hidráulicas
-                ctx.strokeStyle = '#374151';
-                ctx.lineWidth = 8;
-                // Pierna izquierda
-                ctx.beginPath();
-                ctx.moveTo(boss.x - 24, boss.y + 10);
-                ctx.lineTo(boss.x - 42, boss.y + 44);
-                ctx.stroke();
-                // Pierna derecha
-                ctx.beginPath();
-                ctx.moveTo(boss.x + 24, boss.y + 10);
-                ctx.lineTo(boss.x + 42, boss.y + 44);
-                ctx.stroke();
-
-                // Chasis principal (Blindaje pesado)
-                ctx.fillStyle = boss.state === 'stunned' ? '#374151' : '#14532D';
-                ctx.fillRect(boss.x - 44, boss.y - 36, 88, 72);
-                ctx.strokeStyle = boss.state === 'stunned' ? '#9CA3AF' : '#00FF66';
-                ctx.lineWidth = 2.5;
-                ctx.strokeRect(boss.x - 44, boss.y - 36, 88, 72);
-
-                // Cañón Railgun Izquierdo
-                ctx.fillStyle = '#1F2937';
-                ctx.fillRect(boss.x - 76, boss.y - 32, 38, 12);
-                ctx.strokeStyle = '#38BDF8';
-                ctx.lineWidth = 2;
-                ctx.strokeRect(boss.x - 76, boss.y - 32, 38, 12);
-
-                // Radome Sensor Derecho (Antena parabólica Soliton)
-                ctx.fillStyle = '#0F172A';
-                ctx.beginPath();
-                ctx.arc(boss.x + 36, boss.y - 26, 16, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.strokeStyle = '#00FF66';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-
-                // Cabeza / Visor del piloto
-                ctx.fillStyle = '#111827';
-                ctx.fillRect(boss.x - 28, boss.y - 12, 30, 24);
-                ctx.fillStyle = boss.state === 'stunned' ? '#4B5563' : '#FF2A2A';
-                ctx.fillRect(boss.x - 32, boss.y - 4, 8, 8); // Visor monocular rojo
-
-                // Reactor Central
-                const coreX = 520, coreY = 225;
-                if (boss.state === 'stunned') {
-                    // Reactor al descubierto pulsando
-                    const coreGlow = Math.sin(Date.now() * 0.01) * 8 + 14;
-                    ctx.shadowColor = '#FF2A2A';
-                    ctx.shadowBlur = coreGlow;
-                    ctx.fillStyle = '#FF2A2A';
-                    ctx.beginPath();
-                    ctx.arc(coreX, coreY, 14, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.shadowBlur = 0;
-
-                    ctx.strokeStyle = '#FFB000';
-                    ctx.lineWidth = 2.5;
-                    ctx.beginPath();
-                    ctx.arc(coreX, coreY, 20 + Math.sin(Date.now() * 0.01) * 3, 0, Math.PI * 2);
-                    ctx.stroke();
-
-                    // Prompt de interacción de golpe
-                    ctx.fillStyle = '#FFF';
-                    ctx.font = 'bold 12px Share Tech Mono';
-                    ctx.textAlign = 'center';
-                    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-                    ctx.fillText(isTouch ? "¡GOLPEAR REACTOR!" : "[E] GOLPEAR REACTOR", coreX, coreY - 26);
-
-                } else if (boss.hp > 0) {
-                    // Escudo electromagnético activo
-                    ctx.save();
-                    ctx.strokeStyle = 'rgba(56, 189, 248, 0.7)';
-                    ctx.lineWidth = 2;
-                    ctx.shadowColor = '#38BDF8';
-                    ctx.shadowBlur = 10;
-                    ctx.beginPath();
-                    ctx.arc(coreX + 15, coreY, 26, 0, Math.PI * 2);
-                    ctx.stroke();
-                    ctx.restore();
+                const bType = gameState.boss.type || 'vulcan';
+                if (bType === 'vulcan') {
+                    drawVulcanBytemaster(gameState.boss, ctx);
+                } else if (bType === 'olympo') {
+                    drawCyberOlympo(gameState.boss, ctx);
+                } else {
+                    drawMetalGearRex(gameState.boss, ctx);
                 }
-
-                // Barrido de Láser Infrarrojo
-                if (boss.laserSweeping) {
-                    ctx.save();
-                    const rayEndX = boss.x + Math.cos(boss.laserAngle) * 600;
-                    const rayEndY = boss.y + Math.sin(boss.laserAngle) * 600;
-                    ctx.strokeStyle = '#FF2A2A';
-                    ctx.lineWidth = 4;
-                    ctx.shadowColor = '#FF2A2A';
-                    ctx.shadowBlur = 16;
-                    ctx.beginPath();
-                    ctx.moveTo(boss.x - 20, boss.y);
-                    ctx.lineTo(rayEndX, rayEndY);
-                    ctx.stroke();
-                    ctx.restore();
-                }
-
-                // Proyectiles de datos del Boss
-                boss.projectiles.forEach(pr => {
-                    ctx.save();
-                    ctx.fillStyle = '#38BDF8';
-                    ctx.shadowColor = '#38BDF8';
-                    ctx.shadowBlur = 10;
-                    ctx.beginPath();
-                    ctx.arc(pr.x, pr.y, pr.radius, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                });
-
-                // Partículas del Boss
-                boss.particles.forEach(pt => {
-                    ctx.fillStyle = pt.color;
-                    ctx.fillRect(pt.x, pt.y, 3, 3);
-                });
-
-                ctx.restore();
             }
 
-            // 8. Solid Byte (El Jugador)
+            // Jugador (Solid Byte)
             const p = gameState.player;
             if (p.inBox) {
-                // Disfraz de Caja de Cartón
                 ctx.save();
                 ctx.translate(p.x, p.y);
                 ctx.fillStyle = '#B45309';
@@ -4015,12 +4838,10 @@
                 ctx.fillText("JAVA.ZIP", 0, 3);
                 ctx.restore();
             } else {
-                // Solid Byte con bandana verde táctica
                 ctx.save();
                 ctx.translate(p.x, p.y);
                 ctx.rotate(p.dir);
 
-                // Cuerpo
                 ctx.fillStyle = '#374151';
                 ctx.beginPath();
                 ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
@@ -4029,11 +4850,9 @@
                 ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // Bandana verde
                 ctx.fillStyle = '#059669';
                 ctx.fillRect(-6, -p.radius, 12, 5);
 
-                // Miras tácticas
                 ctx.strokeStyle = '#34D399';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
@@ -4043,10 +4862,352 @@
                 ctx.restore();
             }
 
-            // 9. Radar Soliton Miniatura (Esquema de Instalación de 5 Salas + Posición)
+            // Radar Soliton Miniatura
             drawMiniRadar();
         }
 
+        // Renderizado Boss 1: VULCAN BYTEMASTER
+        function drawVulcanBytemaster(boss, ctx) {
+            ctx.save();
+            // Sombra
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+            ctx.beginPath();
+            ctx.ellipse(boss.x, boss.y + 40, 70, 22, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Orugas de tracción pesada
+            ctx.fillStyle = '#0F172A';
+            ctx.fillRect(boss.x - 48, boss.y - 44, 96, 16); // oruga superior
+            ctx.fillRect(boss.x - 48, boss.y + 28, 96, 16); // oruga inferior
+            ctx.strokeStyle = '#38BDF8';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(boss.x - 48, boss.y - 44, 96, 16);
+            ctx.strokeRect(boss.x - 48, boss.y + 28, 96, 16);
+
+            // Chasis blindado
+            ctx.fillStyle = boss.state === 'stunned' ? '#334155' : '#047857';
+            ctx.fillRect(boss.x - 38, boss.y - 32, 76, 64);
+            ctx.strokeStyle = boss.state === 'stunned' ? '#94A3B8' : '#00FF66';
+            ctx.lineWidth = 2.5;
+            ctx.strokeRect(boss.x - 38, boss.y - 32, 76, 64);
+
+            // Cañones dobles de Bytecode
+            ctx.fillStyle = '#1E293B';
+            ctx.fillRect(boss.x - 68, boss.y - 20, 32, 10);
+            ctx.fillRect(boss.x - 68, boss.y + 10, 32, 10);
+            ctx.strokeStyle = '#00FF66';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(boss.x - 68, boss.y - 20, 32, 10);
+            ctx.strokeRect(boss.x - 68, boss.y + 10, 32, 10);
+
+            // Matriz Central / Reactor
+            const coreX = 520, coreY = 225;
+            if (boss.state === 'stunned') {
+                const glow = Math.sin(Date.now() * 0.01) * 8 + 14;
+                ctx.shadowColor = '#FF2A2A';
+                ctx.shadowBlur = glow;
+                ctx.fillStyle = '#FF2A2A';
+                ctx.beginPath();
+                ctx.arc(coreX, coreY, 14, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.strokeStyle = '#FFB000';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.arc(coreX, coreY, 20 + Math.sin(Date.now() * 0.01) * 3, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.fillStyle = '#FFF';
+                ctx.font = 'bold 12px Share Tech Mono';
+                ctx.textAlign = 'center';
+                const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+                ctx.fillText(isTouch ? "¡GOLPEAR REACTOR!" : "[E] GOLPEAR REACTOR", coreX, coreY - 26);
+            } else if (boss.hp > 0) {
+                ctx.save();
+                ctx.strokeStyle = 'rgba(0, 255, 102, 0.7)';
+                ctx.lineWidth = 2;
+                ctx.shadowColor = '#00FF66';
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(coreX + 15, coreY, 26, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // Proyectiles
+            boss.projectiles.forEach(pr => {
+                ctx.save();
+                ctx.fillStyle = pr.color || '#00FF66';
+                ctx.shadowColor = ctx.fillStyle;
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(pr.x, pr.y, pr.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            // Partículas
+            boss.particles.forEach(pt => {
+                ctx.fillStyle = pt.color;
+                ctx.fillRect(pt.x, pt.y, 3, 3);
+            });
+
+            ctx.restore();
+        }
+
+        // Renderizado Boss 2: CYBER OLYMPO (Araña Mecánica Modular)
+        function drawCyberOlympo(boss, ctx) {
+            ctx.save();
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+            ctx.beginPath();
+            ctx.ellipse(boss.x, boss.y + 40, 75, 24, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Patas mecánicas articuladas (6 patas)
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 5;
+            const legAngles = [-0.9, -0.4, 0.2, 0.6, 1.2, 1.7];
+            legAngles.forEach((ang, i) => {
+                const side = (i < 3) ? -1 : 1;
+                const baseX = boss.x + side * 24;
+                const baseY = boss.y - 10 + (i % 3) * 18;
+                const kneeX = baseX + side * 36;
+                const kneeY = baseY + Math.sin(ang) * 20;
+                const footX = kneeX + side * 18;
+                const footY = kneeY + 28;
+
+                ctx.beginPath();
+                ctx.moveTo(baseX, baseY);
+                ctx.lineTo(kneeX, kneeY);
+                ctx.lineTo(footX, footY);
+                ctx.stroke();
+            });
+
+            // Chasis Hexagonal Top-Down
+            ctx.fillStyle = boss.state === 'stunned' ? '#1E293B' : '#064E3B';
+            ctx.beginPath();
+            for (let a = 0; a < 6; a++) {
+                const rad = a * Math.PI / 3;
+                const hx = boss.x + Math.cos(rad) * 38;
+                const hy = boss.y + Math.sin(rad) * 38;
+                if (a === 0) ctx.moveTo(hx, hy);
+                else ctx.lineTo(hx, hy);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = boss.state === 'stunned' ? '#64748B' : '#2DD4BF';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+
+            // Ojo de sensor cian
+            ctx.fillStyle = boss.state === 'stunned' ? '#475569' : '#06B6D4';
+            ctx.beginPath();
+            ctx.arc(boss.x - 24, boss.y, 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Minas EMP en suelo
+            if (boss.mines) {
+                boss.mines.forEach(m => {
+                    ctx.save();
+                    const pulse = Math.sin(Date.now() * 0.01) * 3;
+                    ctx.strokeStyle = '#FFB000';
+                    ctx.lineWidth = 2;
+                    ctx.shadowColor = '#FFB000';
+                    ctx.shadowBlur = 10;
+                    ctx.beginPath();
+                    ctx.arc(m.x, m.y, m.radius + pulse, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.fillStyle = '#EF4444';
+                    ctx.beginPath();
+                    ctx.arc(m.x, m.y, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                });
+            }
+
+            // Rayo de barrido
+            if (boss.laserSweeping) {
+                ctx.save();
+                const rayEndX = boss.x + Math.cos(boss.laserAngle) * 600;
+                const rayEndY = boss.y + Math.sin(boss.laserAngle) * 600;
+                ctx.strokeStyle = '#06B6D4';
+                ctx.lineWidth = 4;
+                ctx.shadowColor = '#06B6D4';
+                ctx.shadowBlur = 16;
+                ctx.beginPath();
+                ctx.moveTo(boss.x - 20, boss.y);
+                ctx.lineTo(rayEndX, rayEndY);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // Reactor Central Top-Down
+            const coreX = 540, coreY = 225;
+            if (boss.state === 'stunned') {
+                const glow = Math.sin(Date.now() * 0.01) * 8 + 14;
+                ctx.shadowColor = '#FF2A2A';
+                ctx.shadowBlur = glow;
+                ctx.fillStyle = '#FF2A2A';
+                ctx.beginPath();
+                ctx.arc(coreX, coreY, 14, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.strokeStyle = '#2DD4BF';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.arc(coreX, coreY, 20 + Math.sin(Date.now() * 0.01) * 3, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.fillStyle = '#FFF';
+                ctx.font = 'bold 12px Share Tech Mono';
+                ctx.textAlign = 'center';
+                const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+                ctx.fillText(isTouch ? "¡GOLPEAR CPU!" : "[E] GOLPEAR CPU", coreX, coreY - 26);
+            } else if (boss.hp > 0) {
+                ctx.save();
+                ctx.strokeStyle = 'rgba(45, 212, 191, 0.7)';
+                ctx.lineWidth = 2;
+                ctx.shadowColor = '#2DD4BF';
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(coreX + 15, coreY, 26, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // Partículas
+            boss.particles.forEach(pt => {
+                ctx.fillStyle = pt.color;
+                ctx.fillRect(pt.x, pt.y, 3, 3);
+            });
+
+            ctx.restore();
+        }
+
+        // Renderizado Boss 3: METAL GEAR JVM-REX PRIME
+        function drawMetalGearRex(boss, ctx) {
+            ctx.save();
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+            ctx.beginPath();
+            ctx.ellipse(boss.x, boss.y + 40, 75, 24, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Piernas hidráulicas
+            ctx.strokeStyle = '#374151';
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            ctx.moveTo(boss.x - 24, boss.y + 10);
+            ctx.lineTo(boss.x - 42, boss.y + 44);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(boss.x + 24, boss.y + 10);
+            ctx.lineTo(boss.x + 42, boss.y + 44);
+            ctx.stroke();
+
+            // Chasis blindado
+            ctx.fillStyle = boss.state === 'stunned' ? '#374151' : '#14532D';
+            ctx.fillRect(boss.x - 44, boss.y - 36, 88, 72);
+            ctx.strokeStyle = boss.state === 'stunned' ? '#9CA3AF' : '#00FF66';
+            ctx.lineWidth = 2.5;
+            ctx.strokeRect(boss.x - 44, boss.y - 36, 88, 72);
+
+            // Railgun Izquierdo
+            ctx.fillStyle = '#1F2937';
+            ctx.fillRect(boss.x - 76, boss.y - 32, 38, 12);
+            ctx.strokeStyle = '#38BDF8';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(boss.x - 76, boss.y - 32, 38, 12);
+
+            // Radome Sensor Derecho
+            ctx.fillStyle = '#0F172A';
+            ctx.beginPath();
+            ctx.arc(boss.x + 36, boss.y - 26, 16, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#00FF66';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Visor del piloto
+            ctx.fillStyle = '#111827';
+            ctx.fillRect(boss.x - 28, boss.y - 12, 30, 24);
+            ctx.fillStyle = boss.state === 'stunned' ? '#4B5563' : '#FF2A2A';
+            ctx.fillRect(boss.x - 32, boss.y - 4, 8, 8);
+
+            // Reactor Central
+            const coreX = 520, coreY = 225;
+            if (boss.state === 'stunned') {
+                const coreGlow = Math.sin(Date.now() * 0.01) * 8 + 14;
+                ctx.shadowColor = '#FF2A2A';
+                ctx.shadowBlur = coreGlow;
+                ctx.fillStyle = '#FF2A2A';
+                ctx.beginPath();
+                ctx.arc(coreX, coreY, 14, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.strokeStyle = '#FFB000';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.arc(coreX, coreY, 20 + Math.sin(Date.now() * 0.01) * 3, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.fillStyle = '#FFF';
+                ctx.font = 'bold 12px Share Tech Mono';
+                ctx.textAlign = 'center';
+                const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+                ctx.fillText(isTouch ? "¡GOLPEAR REACTOR!" : "[E] GOLPEAR REACTOR", coreX, coreY - 26);
+            } else if (boss.hp > 0) {
+                ctx.save();
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.7)';
+                ctx.lineWidth = 2;
+                ctx.shadowColor = '#38BDF8';
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(coreX + 15, coreY, 26, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // Láser infrarrojo
+            if (boss.laserSweeping) {
+                ctx.save();
+                const rayEndX = boss.x + Math.cos(boss.laserAngle) * 600;
+                const rayEndY = boss.y + Math.sin(boss.laserAngle) * 600;
+                ctx.strokeStyle = '#FF2A2A';
+                ctx.lineWidth = 4;
+                ctx.shadowColor = '#FF2A2A';
+                ctx.shadowBlur = 16;
+                ctx.beginPath();
+                ctx.moveTo(boss.x - 20, boss.y);
+                ctx.lineTo(rayEndX, rayEndY);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // Proyectiles
+            boss.projectiles.forEach(pr => {
+                ctx.save();
+                ctx.fillStyle = pr.color || '#38BDF8';
+                ctx.shadowColor = ctx.fillStyle;
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(pr.x, pr.y, pr.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            // Partículas
+            boss.particles.forEach(pt => {
+                ctx.fillStyle = pt.color;
+                ctx.fillRect(pt.x, pt.y, 3, 3);
+            });
+
+            ctx.restore();
+        }
+
+        // Radar Soliton Miniatura Adaptativo
         function drawMiniRadar() {
             const rx = 670, ry = 15, rw = 115, rh = 88;
             ctx.save();
@@ -4056,66 +5217,42 @@
             ctx.fillRect(rx, ry, rw, rh);
             ctx.strokeRect(rx, ry, rw, rh);
 
-            // Título del Radar
+            const lvlData = campaignLevels[currentLevelIndex];
+            if (!lvlData) { ctx.restore(); return; }
+
             ctx.fillStyle = '#00FF66';
             ctx.font = '7.5px Share Tech Mono';
-            ctx.fillText("SOLITON // FACILITY MAP", rx + 5, ry + 10);
+            ctx.fillText(`SOLITON // ${lvlData.code}`, rx + 5, ry + 10);
 
-            // Coordenadas esquemáticas de las 5 salas en el radar
-            const mapNodes = {
-                dock:        { x: rx + 8,  y: ry + 44, w: 18, h: 14, code: 'R1' },
-                corridor:    { x: rx + 32, y: ry + 44, w: 18, h: 14, code: 'R2' },
-                warehouse:   { x: rx + 32, y: ry + 22, w: 18, h: 14, code: 'R3' },
-                modular_lab: { x: rx + 56, y: ry + 44, w: 18, h: 14, code: 'R4' },
-                core_boss:   { x: rx + 80, y: ry + 40, w: 26, h: 19, code: 'BOSS' }
-            };
+            const mapNodes = lvlData.radarNodes;
+            const nodesArr = Object.values(mapNodes);
 
-            // Líneas de conexión (Corredores y puertas)
             ctx.strokeStyle = 'rgba(0, 255, 102, 0.4)';
             ctx.lineWidth = 1.5;
 
-            // R1 <-> R2
-            ctx.beginPath();
-            ctx.moveTo(mapNodes.dock.x + mapNodes.dock.w, mapNodes.dock.y + 7);
-            ctx.lineTo(mapNodes.corridor.x, mapNodes.corridor.y + 7);
-            ctx.stroke();
+            // Conexión R1 <-> R2
+            if (nodesArr[0] && nodesArr[1]) {
+                ctx.beginPath();
+                ctx.moveTo(nodesArr[0].x + nodesArr[0].w, nodesArr[0].y + nodesArr[0].h / 2);
+                ctx.lineTo(nodesArr[1].x, nodesArr[1].y + nodesArr[1].h / 2);
+                ctx.stroke();
 
-            // R2 <-> R3 (Hacia el norte)
-            ctx.beginPath();
-            ctx.moveTo(mapNodes.corridor.x + 9, mapNodes.corridor.y);
-            ctx.lineTo(mapNodes.warehouse.x + 9, mapNodes.warehouse.y + mapNodes.warehouse.h);
-            ctx.stroke();
+                const pKey = gameState.player.keycard;
+                ctx.fillStyle = pKey >= 1 ? '#00FF66' : '#FF2A2A';
+                ctx.fillRect(nodesArr[0].x + nodesArr[0].w + 3, nodesArr[0].y + nodesArr[0].h / 2 - 2, 4, 4);
+            }
 
-            // R2 <-> R4
-            ctx.beginPath();
-            ctx.moveTo(mapNodes.corridor.x + mapNodes.corridor.w, mapNodes.corridor.y + 7);
-            ctx.lineTo(mapNodes.modular_lab.x, mapNodes.modular_lab.y + 7);
-            ctx.stroke();
+            // Conexión R2 <-> BOSS
+            if (nodesArr[1] && nodesArr[2]) {
+                ctx.beginPath();
+                ctx.moveTo(nodesArr[1].x + nodesArr[1].w, nodesArr[1].y + nodesArr[1].h / 2);
+                ctx.lineTo(nodesArr[2].x, nodesArr[2].y + nodesArr[2].h / 2);
+                ctx.stroke();
 
-            // R4 <-> BOSS
-            ctx.beginPath();
-            ctx.moveTo(mapNodes.modular_lab.x + mapNodes.modular_lab.w, mapNodes.modular_lab.y + 7);
-            ctx.lineTo(mapNodes.core_boss.x, mapNodes.core_boss.y + 9);
-            ctx.stroke();
-
-            // Indicadores de Keycard en las conexiones
-            const pKey = gameState.player.keycard;
-            // R1->R2 (reqKey: 1)
-            ctx.fillStyle = pKey >= 1 ? '#00FF66' : '#FF2A2A';
-            ctx.fillRect(mapNodes.dock.x + mapNodes.dock.w + 2, mapNodes.dock.y + 5.5, 3, 3);
-
-            // R2->R3 (reqKey: 1)
-            ctx.fillStyle = pKey >= 1 ? '#00FF66' : '#FF2A2A';
-            ctx.fillRect(mapNodes.corridor.x + 7.5, mapNodes.warehouse.y + mapNodes.warehouse.h + 2, 3, 3);
-
-            // R2->R4 (Láser T2)
-            const t2Unlocked = hackTerminals.find(t => t.id === 'T2')?.unlocked;
-            ctx.fillStyle = t2Unlocked ? '#00FF66' : '#FF2A2A';
-            ctx.fillRect(mapNodes.corridor.x + mapNodes.corridor.w + 2, mapNodes.corridor.y + 5.5, 3, 3);
-
-            // R4->BOSS (reqKey: 2)
-            ctx.fillStyle = pKey >= 2 ? '#00FF66' : '#FF2A2A';
-            ctx.fillRect(mapNodes.modular_lab.x + mapNodes.modular_lab.w + 2, mapNodes.modular_lab.y + 5.5, 3, 3);
+                const pKey = gameState.player.keycard;
+                ctx.fillStyle = (currentLevelIndex === 0) ? (pKey >= 1 ? '#00FF66' : '#FF2A2A') : (pKey >= 2 ? '#00FF66' : '#FF2A2A');
+                ctx.fillRect(nodesArr[1].x + nodesArr[1].w + 3, nodesArr[1].y + nodesArr[1].h / 2 - 2, 4, 4);
+            }
 
             // Dibujar cajas de salas
             Object.entries(mapNodes).forEach(([rId, node]) => {
@@ -4134,9 +5271,7 @@
                 ctx.textAlign = 'center';
                 ctx.fillText(node.code, node.x + node.w / 2, node.y + node.h / 2 + 2.5);
 
-                // Si es la sala activa, dibujar blips locales
                 if (isActive) {
-                    // Posición relativa de Snake dentro del mini rectángulo
                     const relX = (gameState.player.x / 800) * node.w;
                     const relY = (gameState.player.y / 450) * node.h;
                     ctx.fillStyle = '#00FF66';
@@ -4144,9 +5279,8 @@
                     ctx.arc(node.x + relX, node.y + relY, 2, 0, Math.PI * 2);
                     ctx.fill();
 
-                    // Centinelas en la sala
                     const curRm = facilityRooms[rId];
-                    if (curRm.guards) {
+                    if (curRm && curRm.guards) {
                         curRm.guards.forEach(g => {
                             const gx = (g.x / 800) * node.w;
                             const gy = (g.y / 450) * node.h;
@@ -4157,8 +5291,7 @@
                         });
                     }
 
-                    // Boss en la arena
-                    if (curRm.hasBoss && gameState.boss.hp > 0) {
+                    if (curRm && curRm.hasBoss && gameState.boss.hp > 0) {
                         const bx = (gameState.boss.x / 800) * node.w;
                         const by = (gameState.boss.y / 450) * node.h;
                         ctx.fillStyle = '#FF2A2A';
@@ -4169,18 +5302,12 @@
                 }
             });
 
-            // Texto de sector activo al pie del radar
             ctx.fillStyle = 'rgba(0, 255, 102, 0.85)';
             ctx.font = '7px Share Tech Mono';
             ctx.textAlign = 'left';
-            const shortRoomNames = {
-                dock: 'LOC: 01-DÁRSENA',
-                corridor: 'LOC: 02-CORREDOR',
-                warehouse: 'LOC: 03-ALMACÉN',
-                modular_lab: 'LOC: 04-LAB-MOD',
-                core_boss: 'LOC: 05-CORE-BOSS'
-            };
-            ctx.fillText(shortRoomNames[gameState.currentRoomId] || 'LOC: UNKNOWN', rx + 5, ry + rh - 4);
+            const curTitle = facilityRooms[gameState.currentRoomId]?.title || 'LOC: SECTOR ACTIVO';
+            const shortLabel = curTitle.split(':')[1] || curTitle;
+            ctx.fillText(shortLabel.trim().substring(0, 16), rx + 5, ry + rh - 4);
 
             ctx.restore();
         }
@@ -4195,11 +5322,12 @@
             requestAnimationFrame(gameLoop);
         }
 
+
         // =========================================================================
-        // 8. ARRANQUE INICIAL
+        // 9. ARRANQUE INICIAL & ENLACE DE EVENTOS
         // =========================================================================
         window.addEventListener('DOMContentLoaded', () => {
-            showRoomBanner(facilityRooms.dock.title, facilityRooms.dock.subtitle);
+            loadLevel(0, true);
 
             // Abrir automáticamente el CODEC con la cinemática introductoria
             setTimeout(() => {
@@ -4209,6 +5337,7 @@
 
             requestAnimationFrame(gameLoop);
         });
+
     </script>
 </body>
 </html>
