@@ -1010,17 +1010,62 @@ int frente(Cola c) {
         });
 
         // =========================================================================
-        // Códigos C++ para inyectar en OneCompiler
+        // Códigos C++ para inyectar en OneCompiler (con división modular pedagógica)
         // =========================================================================
 
         const cppCodeFiguras = `#include <iostream>
 using namespace std;
+
+// =============================================================================
+// ESTO IRIA EN: figuras.h (INTERFAZ DEL TDA)
+// - Definiciones de constantes y structs
+// - Prototipos de las operaciones primitivas
+// =============================================================================
 
 const float PI = 3.14159265f;
 
 struct Circulo {
     float radio;
 };
+
+struct Cuadrado {
+    float lado;
+};
+
+struct Rectangulo {
+    float base;
+    float altura;
+};
+
+struct Triangulo {
+    float base;
+    float altura;
+    float l1, l2, l3;
+};
+
+// Prototipos de funciones primitivas
+Circulo crear_circulo(float r);
+float perimetro(Circulo c);
+float area(Circulo c);
+
+Cuadrado crear_cuadrado(float l);
+float perimetro(Cuadrado c);
+float area(Cuadrado c);
+
+Rectangulo crear_rectangulo(float b, float h);
+float perimetro(Rectangulo r);
+float area(Rectangulo r);
+
+Triangulo crear_triangulo(float b, float h, float l1, float l2, float l3);
+float perimetro(Triangulo t);
+float area(Triangulo t);
+
+// =============================================================================
+// ESTO IRIA EN: figuras.cpp (IMPLEMENTACION DEL TDA)
+// - Debe incluir: #include "figuras.h"
+// - Desarrollo del algoritmo y cuerpo de cada función primitiva
+// =============================================================================
+
 Circulo crear_circulo(float r) {
     Circulo c;
     c.radio = r;
@@ -1033,9 +1078,6 @@ float area(Circulo c) {
     return PI * c.radio * c.radio;
 }
 
-struct Cuadrado {
-    float lado;
-};
 Cuadrado crear_cuadrado(float l) {
     Cuadrado c;
     c.lado = l;
@@ -1048,10 +1090,6 @@ float area(Cuadrado c) {
     return c.lado * c.lado;
 }
 
-struct Rectangulo {
-    float base;
-    float altura;
-};
 Rectangulo crear_rectangulo(float b, float h) {
     Rectangulo r;
     r.base = b;
@@ -1065,11 +1103,6 @@ float area(Rectangulo r) {
     return r.base * r.altura;
 }
 
-struct Triangulo {
-    float base;
-    float altura;
-    float l1, l2, l3;
-};
 Triangulo crear_triangulo(float b, float h, float l1, float l2, float l3) {
     Triangulo t;
     t.base = b;
@@ -1083,6 +1116,12 @@ float perimetro(Triangulo t) {
 float area(Triangulo t) {
     return (t.base * t.altura) / 2.0f;
 }
+
+// =============================================================================
+// ESTO IRIA EN: main.cpp (PROGRAMA CLIENTE)
+// - Debe incluir: #include "figuras.h"
+// - Utiliza el TDA a través de sus operaciones sin modificar datos internos
+// =============================================================================
 
 int main() {
     Circulo circ = crear_circulo(5.0f);
@@ -1112,9 +1151,28 @@ int main() {
 #include <string>
 using namespace std;
 
+// =============================================================================
+// ESTO IRIA EN: hora.h (INTERFAZ DEL TDA)
+// - Definición del struct Hora
+// - Prototipos de las primitivas que el cliente puede utilizar
+// =============================================================================
+
 struct Hora {
     int hora, min, seg;
 };
+
+Hora ponerAHora(int h, int m, int s);
+void mostrar24(Hora h);
+void mostrar12(Hora h);
+void adelantar(Hora &h, int minutos);
+void atrasar(Hora &h, int minutos);
+int diferenciaEnMinutos(Hora h1, Hora h2);
+
+// =============================================================================
+// ESTO IRIA EN: hora.cpp (IMPLEMENTACION DEL TDA)
+// - Debe incluir: #include "hora.h"
+// - Contiene la lógica interna de validación y cálculo
+// =============================================================================
 
 Hora ponerAHora(int h, int m, int s) {
     Hora nueva;
@@ -1172,6 +1230,12 @@ int diferenciaEnMinutos(Hora h1, Hora h2) {
     return diff;
 }
 
+// =============================================================================
+// ESTO IRIA EN: main.cpp (PROGRAMA CLIENTE)
+// - Debe incluir: #include "hora.h"
+// - Interactúa con el TDA mediante sus primitivas
+// =============================================================================
+
 int main() {
     Hora h = ponerAHora(14, 30, 0);
     cout << "Hora en 24hs: "; mostrar24(h);
@@ -1195,12 +1259,31 @@ int main() {
         const cppCodePila = `#include <iostream>
 using namespace std;
 
+// =============================================================================
+// ESTO IRIA EN: pila.h (INTERFAZ DEL TDA)
+// - Definición de constantes, tipo struct Pila
+// - Prototipos de operaciones primitivas (crear, apilar, desapilar, cima, vacia)
+// =============================================================================
+
 const int MAX_PILA = 100;
 
 struct Pila {
     int datos[MAX_PILA];
     int tope;
 };
+
+Pila crear();
+bool vacia(Pila p);
+bool llena(Pila p);
+void apilar(Pila &p, int elem);
+void desapilar(Pila &p);
+int cima(Pila p);
+
+// =============================================================================
+// ESTO IRIA EN: pila.cpp (IMPLEMENTACION DEL TDA)
+// - Debe incluir: #include "pila.h"
+// - Implementación del comportamiento LIFO y control de límites
+// =============================================================================
 
 Pila crear() {
     Pila p;
@@ -1237,6 +1320,12 @@ int cima(Pila p) {
     return elem;
 }
 
+// =============================================================================
+// ESTO IRIA EN: main.cpp (PROGRAMA CLIENTE)
+// - Debe incluir: #include "pila.h"
+// - Realiza las operaciones LIFO sin acceder directamente a datos[] ni a tope
+// =============================================================================
+
 int main() {
     Pila p = crear();
 
@@ -1268,12 +1357,31 @@ int main() {
         const cppCodeCola = `#include <iostream>
 using namespace std;
 
+// =============================================================================
+// ESTO IRIA EN: cola.h (INTERFAZ DEL TDA)
+// - Definición de constantes, tipo struct Cola
+// - Prototipos de operaciones primitivas (crear, encolar, desencolar, frente, vacia)
+// =============================================================================
+
 const int MAX_COLA = 100;
 
 struct Cola {
     int datos[MAX_COLA];
     int cant;
 };
+
+Cola crear();
+bool vacia(Cola c);
+bool llena(Cola c);
+void encolar(Cola &c, int elem);
+void desencolar(Cola &c);
+int frente(Cola c);
+
+// =============================================================================
+// ESTO IRIA EN: cola.cpp (IMPLEMENTACION DEL TDA)
+// - Debe incluir: #include "cola.h"
+// - Implementación del comportamiento FIFO con corrimiento
+// =============================================================================
 
 Cola crear() {
     Cola c;
@@ -1312,6 +1420,12 @@ int frente(Cola c) {
     }
     return elem;
 }
+
+// =============================================================================
+// ESTO IRIA EN: main.cpp (PROGRAMA CLIENTE)
+// - Debe incluir: #include "cola.h"
+// - Usa la cola respetando la abstracción FIFO sin manipular cant ni datos[]
+// =============================================================================
 
 int main() {
     Cola c = crear();
