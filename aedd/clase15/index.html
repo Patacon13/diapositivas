@@ -3,70 +3,134 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>AEDD - Clase 15: Tipos de Datos Abstractos (TDA) - UTN FRSF</title>
+    <title>AEDD - Clase 15: Tipos de Datos Abstractos (TDA)</title>
 
-    <!-- Estilos Base Reveal.js -->
     <link rel="stylesheet" href="../../dist/reset.css" />
     <link rel="stylesheet" href="../../dist/reveal.css" />
     <link rel="stylesheet" href="../../dist/theme/white.css" id="theme" />
     <link rel="stylesheet" href="../../dist/plugin/highlight/monokai.css" />
 
-    <!-- Tema AEDD (Extiende utn-core.css) -->
-    <link rel="stylesheet" href="../../dist/theme/aedd.css" />
-
-    <!-- Tipografías Oficiales & Iconos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        .concept-card {
-            background: white;
-            padding: 26px;
-            border-radius: 16px;
-            border: 1px solid #E2E8F0;
-            border-left: 8px solid var(--utn-gold);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --danger-red: #EF4444;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 22px; color: var(--text-main); line-height: 1.5; text-align: left; }
+        
+        .slide-title {
+            font-size: 48px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 35px !important; border-left: 12px solid var(--utn-gold);
+            padding-left: 24px; text-transform: uppercase !important; letter-spacing: -1.5px;
+            text-align: left; width: 100%;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; align-items: center; }
+
+        .tiled-content { display: flex; gap: 24px; width: 100%; justify-content: center; }
+        .tile { 
+            flex: 1; background: var(--bg-neutral); padding: 30px; border-radius: 20px;
+            border-bottom: 6px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: left;
         }
-        .concept-card h3 {
-            color: var(--utn-blue);
-            font-size: 24px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .tile:hover { transform: translateY(-8px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 15px 35px rgba(0,0,0,0.06); }
+        .tile h3 { font-size: 22px; color: var(--utn-blue); margin-bottom: 12px; }
+
+        .reveal pre {
+            background: #272822; padding: 20px; border-radius: 12px;
+            font-family: 'Fira Code', monospace; font-size: 17px; margin: 0;
+            border-left: 6px solid var(--utn-gold); box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            width: 100%;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
         }
+        .reveal code { 
+            font-family: 'Fira Code', monospace; 
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .section-title-layout { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .section-title-layout h2 { font-size: 80px !important; color: var(--utn-gold) !important; font-weight: 700 !important; letter-spacing: -2px; }
+        .section-title-layout p { color: rgba(255,255,255,0.7) !important; font-size: 26px !important; font-weight: 300 !important; letter-spacing: 4px; text-align: center; }
+
+        .branding-footer { position: absolute; bottom: 30px; left: 40px; color: #94A3B8; font-weight: 600; font-size: 14px; letter-spacing: 1px; z-index: 1000; }
+        .branding-footer span { color: var(--utn-gold); }
+
+        .inciso-badge {
+            display: inline-block; background: var(--utn-gold); color: var(--utn-blue);
+            font-weight: 700; font-size: 28px; width: 50px; height: 50px; line-height: 50px;
+            text-align: center; border-radius: 50%; margin-right: 15px; flex-shrink: 0;
+        }
+
+        .inciso-header {
+            display: flex; align-items: center; margin-bottom: 20px;
+        }
+
+        .points-badge {
+            display: inline-block; background: var(--utn-blue); color: white;
+            padding: 4px 14px; border-radius: 20px; font-size: 16px; font-weight: 600;
+            margin-left: auto;
+        }
+
+        .texto-enunciado {
+            background: white; padding: 25px 30px; border-radius: 16px; border: 1px solid #E2E8F0; text-align: left;
+        }
+
+        .puesta-en-comun {
+            background: white; padding: 18px 25px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 25px; text-align: left;
+        }
+        .puesta-en-comun p {
+            font-size: 18px; color: var(--text-light); margin: 0;
+        }
+
+        .concept-card {
+            background: white; padding: 24px; border-radius: 16px; border: 1px solid #E2E8F0;
+            border-left: 8px solid var(--utn-gold); box-shadow: 0 8px 24px rgba(0,0,0,0.04); text-align: left;
+        }
+        .concept-card h3 {
+            color: var(--utn-blue); font-size: 22px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px;
+        }
+
         .blackbox-diagram {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin: 25px 0;
+            display: flex; align-items: center; justify-content: center; gap: 25px; margin: 25px 0;
         }
         .blackbox-box {
-            background: var(--utn-blue);
-            color: white;
-            padding: 30px 40px;
-            border-radius: 16px;
-            border: 3px solid var(--utn-gold);
-            text-align: center;
-            box-shadow: 0 12px 30px rgba(0,43,91,0.25);
+            background: var(--utn-blue); color: white; padding: 25px 35px; border-radius: 16px;
+            border: 3px solid var(--utn-gold); text-align: center; box-shadow: 0 12px 30px rgba(0,43,91,0.25);
         }
         .blackbox-arrow {
-            font-size: 28px;
-            color: var(--utn-gold);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
+            font-size: 26px; color: var(--utn-gold); display: flex; flex-direction: column; align-items: center; gap: 4px;
         }
         .blackbox-arrow span {
-            font-size: 14px;
-            color: var(--text-light);
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
+            font-size: 13px; color: var(--text-light); font-family: 'Inter', sans-serif; font-weight: 600;
+        }
+
+        /* --- Estilos Especiales para Celulares Verticales --- */
+        @media (max-aspect-ratio: 1/1) {
+            .two-column { grid-template-columns: 1fr; gap: 25px; }
+            .tiled-content { flex-direction: column; gap: 15px; }
+            .slide-title { font-size: 40px !important; margin-bottom: 20px !important; }
+            .reveal p, .reveal li { font-size: 24px; }
+            .reveal pre { font-size: 18px; padding: 20px; overflow-x: auto; width: 100%; box-sizing: border-box; }
+            .section-title-layout h2 { font-size: 70px !important; }
+            .section-title-layout p { font-size: 22px !important; }
+            .tile { padding: 20px; }
+            .tile h3 { font-size: 20px; }
+            .branding-footer { bottom: 20px; left: 20px; }
         }
     </style>
 </head>
@@ -80,7 +144,7 @@
             <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
                 <h1 style="color: white; font-size: 72px; line-height: 1.0; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 54px;">Clase 15: Tipos de Datos Abstractos (TDA)</span></h1>
                 <p style="color: rgba(255,255,255,0.7); margin-top: 40px; text-align: center; font-size: 22px;">Docentes de práctica: Tomás Assenza, Facundo Sanchez</p>
-                <p style="color: rgba(255,255,255,0.35); margin-top: 10px; text-align: center; font-size: 16px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe (ISI)</p>
+                <p style="color: rgba(255,255,255,0.35); margin-top: 10px; text-align: center; font-size: 16px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe</p>
             </section>
 
             <!-- ================================================================== -->
@@ -100,8 +164,8 @@
                             <span>Entradas</span>
                         </div>
                         <div class="blackbox-box">
-                            <h4 style="color: var(--utn-gold); font-size: 26px; margin: 0 0 6px 0;">CAJA NEGRA</h4>
-                            <p style="color: white; font-size: 16px; margin: 0;">Ocultamiento de Información<br><em>(Representación interna privada)</em></p>
+                            <h4 style="color: var(--utn-gold); font-size: 24px; margin: 0 0 6px 0;">CAJA NEGRA</h4>
+                            <p style="color: white; font-size: 15px; margin: 0;">Ocultamiento de Información<br><em>(Representación interna privada)</em></p>
                         </div>
                         <div class="blackbox-arrow">
                             <i class="fa-solid fa-right-long"></i>
@@ -109,18 +173,17 @@
                         </div>
                     </div>
 
-                    <div class="tiled-content" style="margin-top: 10px;">
+                    <div class="tiled-content">
                         <div class="tile">
-                            <h3 style="font-size: 20px;"><i class="fa-solid fa-eye"></i> Interfaz Pública</h3>
+                            <h3 style="font-size: 19px;"><i class="fa-solid fa-eye" style="color: var(--utn-gold); margin-right: 6px;"></i> Interfaz Pública</h3>
                             <p style="font-size: 16px; margin: 0;">Define <strong>qué</strong> operaciones se pueden realizar (visibles para el usuario/cliente).</p>
                         </div>
                         <div class="tile">
-                            <h3 style="font-size: 20px;"><i class="fa-solid fa-lock"></i> Implementación Privada</h3>
+                            <h3 style="font-size: 19px;"><i class="fa-solid fa-lock" style="color: var(--utn-gold); margin-right: 6px;"></i> Implementación Privada</h3>
                             <p style="font-size: 16px; margin: 0;">Define <strong>cómo</strong> se almacenan los datos y cómo funcionan los algoritmos internos.</p>
                         </div>
                     </div>
                 </div>
-                <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
             </section>
 
             <!-- ================================================================== -->
@@ -157,7 +220,6 @@
                         </ul>
                     </div>
                 </div>
-                <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
             </section>
 
             <!-- ================================================================== -->
@@ -173,7 +235,7 @@
                     </div>
                     <div class="texto-enunciado">
                         <p>Implementar el <strong>TDA Contador</strong>. Su interfaz debe permitir crear variables del tipo e implementar las operaciones para incrementar (<code>++</code>) y decrementar (<code>--</code>) su valor.</p>
-                        <p style="margin-top: 10px; font-weight: 600; color: var(--utn-blue);">Interfaz pública propuesta:</p>
+                        <p style="margin-top: 15px; font-weight: 600; color: var(--utn-blue);">Interfaz pública propuesta:</p>
                         <ul style="font-size: 18px; font-family: 'Fira Code', monospace; line-height: 1.8;">
                             <li><code>Contador crear(int valor);</code></li>
                             <li><code>void incrementar(Contador &c, int pasos);</code></li>
@@ -184,7 +246,6 @@
                     <div class="puesta-en-comun">
                         <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución y análisis <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
 
                 <!-- 1.B Solución C++ (Vertical) -->
@@ -217,22 +278,26 @@ int toInteger(Contador c) {
     return c.valor;
 }
                         </code></pre>
-                        <p class="instruccion"><i class="fa-solid fa-arrow-down"></i> Presioná Flecha Abajo para probar en el compilador interactivo <i class="fa-solid fa-arrow-down"></i></p>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
 
                 <!-- 1.C Compilador OneCompiler (Vertical) -->
                 <section id="slide-compiler-1">
-                    <h2 class="slide-title" style="font-size: 28px !important; margin-bottom: 10px !important;">Compilador Online: TDA Contador</h2>
-                    <div class="compiler-window">
-                        <div class="header">
-                            <span><i class="fa-solid fa-code"></i> OneCompiler - C++ (TDA Contador)</span>
-                            <button onclick="sendCodeWithRetries('oc-editor-1', cppCodeContador, 'cpp', 'main.cpp')"><i class="fa-solid fa-rotate-left"></i> Restaurar Código</button>
+                    <h2 class="slide-title">Compilador Online: TDA Contador</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-1', cppCodeContador)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
                         </div>
-                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
             </section>
 
@@ -251,13 +316,13 @@ int toInteger(Contador c) {
                         <p>Implementar los siguientes TDAs y las operaciones que permitan cargar sus datos, calcular su <strong>perímetro</strong> y su <strong>área</strong>:</p>
                         <div class="two-column" style="gap: 20px; margin-top: 15px;">
                             <div>
-                                <p style="font-weight: 600; color: var(--utn-blue); margin-bottom: 4px;"><i class="fa-regular fa-circle"></i> Círculo</p>
+                                <p style="font-weight: 600; color: var(--utn-blue); margin-bottom: 4px;"><i class="fa-regular fa-circle" style="color: var(--utn-gold);"></i> Círculo</p>
                                 <ul style="font-size: 16px; margin: 0; padding-left: 20px;">
                                     <li><code>Circulo crear_circulo(float r);</code></li>
                                     <li><code>float perimetro(Circulo c);</code></li>
                                     <li><code>float area(Circulo c);</code></li>
                                 </ul>
-                                <p style="font-weight: 600; color: var(--utn-blue); margin: 12px 0 4px 0;"><i class="fa-regular fa-square"></i> Cuadrado</p>
+                                <p style="font-weight: 600; color: var(--utn-blue); margin: 12px 0 4px 0;"><i class="fa-regular fa-square" style="color: var(--utn-gold);"></i> Cuadrado</p>
                                 <ul style="font-size: 16px; margin: 0; padding-left: 20px;">
                                     <li><code>Cuadrado crear_cuadrado(float l);</code></li>
                                     <li><code>float perimetro(Cuadrado c);</code></li>
@@ -265,13 +330,13 @@ int toInteger(Contador c) {
                                 </ul>
                             </div>
                             <div>
-                                <p style="font-weight: 600; color: var(--utn-blue); margin-bottom: 4px;"><i class="fa-solid fa-vector-square"></i> Rectángulo</p>
+                                <p style="font-weight: 600; color: var(--utn-blue); margin-bottom: 4px;"><i class="fa-solid fa-vector-square" style="color: var(--utn-gold);"></i> Rectángulo</p>
                                 <ul style="font-size: 16px; margin: 0; padding-left: 20px;">
                                     <li><code>Rectangulo crear_rectangulo(float b, float h);</code></li>
                                     <li><code>float perimetro(Rectangulo r);</code></li>
                                     <li><code>float area(Rectangulo r);</code></li>
                                 </ul>
-                                <p style="font-weight: 600; color: var(--utn-blue); margin: 12px 0 4px 0;"><i class="fa-solid fa-play" style="transform: rotate(-90deg);"></i> Triángulo</p>
+                                <p style="font-weight: 600; color: var(--utn-blue); margin: 12px 0 4px 0;"><i class="fa-solid fa-play" style="color: var(--utn-gold); transform: rotate(-90deg);"></i> Triángulo</p>
                                 <ul style="font-size: 16px; margin: 0; padding-left: 20px;">
                                     <li><code>Triangulo crear_triangulo(float b, float h, ...);</code></li>
                                     <li><code>float perimetro(Triangulo t);</code></li>
@@ -283,7 +348,6 @@ int toInteger(Contador c) {
                     <div class="puesta-en-comun">
                         <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución y análisis <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
 
                 <!-- 2.B Solución C++ (Vertical) -->
@@ -362,22 +426,26 @@ float area(Triangulo t) {
     return (t.base * t.altura) / 2.0f;
 }
                         </code></pre>
-                        <p class="instruccion"><i class="fa-solid fa-arrow-down"></i> Presioná Flecha Abajo para probar en el compilador interactivo <i class="fa-solid fa-arrow-down"></i></p>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
 
                 <!-- 2.C Compilador OneCompiler (Vertical) -->
                 <section id="slide-compiler-2">
-                    <h2 class="slide-title" style="font-size: 28px !important; margin-bottom: 10px !important;">Compilador Online: TDAs Figuras</h2>
-                    <div class="compiler-window">
-                        <div class="header">
-                            <span><i class="fa-solid fa-code"></i> OneCompiler - C++ (Figuras Geométricas)</span>
-                            <button onclick="sendCodeWithRetries('oc-editor-2', cppCodeFiguras, 'cpp', 'main.cpp')"><i class="fa-solid fa-rotate-left"></i> Restaurar Código</button>
+                    <h2 class="slide-title">Compilador Online: TDAs Figuras</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-2', cppCodeFiguras)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
                         </div>
-                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
             </section>
 
@@ -399,12 +467,11 @@ float area(Triangulo t) {
                             <li>Mostrar el perímetro.</li>
                             <li>Mostrar el área.</li>
                         </ol>
-                        <p style="color: var(--danger-red); font-weight: 600; font-size: 18px;"><i class="fa-solid fa-triangle-exclamation"></i> <strong>Nota importante:</strong> Para poder mostrar perímetro y área, la figura debe haber sido creada previamente.</p>
+                        <p style="color: var(--danger-red); font-weight: 600; font-size: 18px; margin-top: 10px;"><i class="fa-solid fa-triangle-exclamation"></i> <strong>Nota importante:</strong> Para poder mostrar perímetro y área, la figura debe haber sido creada previamente.</p>
                     </div>
                     <div class="puesta-en-comun">
                         <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución y análisis <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
 
                 <!-- 3.B Solución C++ (Vertical) -->
@@ -450,22 +517,26 @@ void gestionarCirculo() {
     }
 }
                         </code></pre>
-                        <p class="instruccion"><i class="fa-solid fa-arrow-down"></i> Presioná Flecha Abajo para probar en el compilador interactivo <i class="fa-solid fa-arrow-down"></i></p>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
 
                 <!-- 3.C Compilador OneCompiler (Vertical) -->
                 <section id="slide-compiler-3">
-                    <h2 class="slide-title" style="font-size: 28px !important; margin-bottom: 10px !important;">Compilador Online: Menú de Figuras</h2>
-                    <div class="compiler-window">
-                        <div class="header">
-                            <span><i class="fa-solid fa-code"></i> OneCompiler - C++ (Menú Cliente)</span>
-                            <button onclick="sendCodeWithRetries('oc-editor-3', cppCodeMenu, 'cpp', 'main.cpp')"><i class="fa-solid fa-rotate-left"></i> Restaurar Código</button>
+                    <h2 class="slide-title">Compilador Online: Menú de Figuras</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-3', cppCodeMenu)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
                         </div>
-                        <iframe id="oc-editor-3" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                        <iframe id="oc-editor-3" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
             </section>
 
@@ -495,7 +566,6 @@ void gestionarCirculo() {
                     <div class="puesta-en-comun">
                         <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución y análisis <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
 
                 <!-- 4A.B Solución C++ (Vertical) -->
@@ -558,22 +628,26 @@ int diferenciaEnMinutos(Hora h1, Hora h2) {
     return diff;
 }
                         </code></pre>
-                        <p class="instruccion"><i class="fa-solid fa-arrow-down"></i> Presioná Flecha Abajo para probar en el compilador interactivo <i class="fa-solid fa-arrow-down"></i></p>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
 
                 <!-- 4A.C Compilador OneCompiler (Vertical) -->
                 <section id="slide-compiler-4">
-                    <h2 class="slide-title" style="font-size: 28px !important; margin-bottom: 10px !important;">Compilador Online: TDA Hora</h2>
-                    <div class="compiler-window">
-                        <div class="header">
-                            <span><i class="fa-solid fa-code"></i> OneCompiler - C++ (TDA Hora)</span>
-                            <button onclick="sendCodeWithRetries('oc-editor-4', cppCodeHora, 'cpp', 'main.cpp')"><i class="fa-solid fa-rotate-left"></i> Restaurar Código</button>
+                    <h2 class="slide-title">Compilador Online: TDA Hora</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-4', cppCodeHora)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
                         </div>
-                        <iframe id="oc-editor-4" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                        <iframe id="oc-editor-4" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
             </section>
 
@@ -595,7 +669,6 @@ int diferenciaEnMinutos(Hora h1, Hora h2) {
                     <div class="puesta-en-comun">
                         <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución y análisis <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
 
                 <!-- 4B.B Solución C++ (Vertical) -->
@@ -627,22 +700,26 @@ void cronogramaEventos(Evento eventos[], int cant, Hora inicio) {
     }
 }
                         </code></pre>
-                        <p class="instruccion"><i class="fa-solid fa-arrow-down"></i> Presioná Flecha Abajo para probar en el compilador interactivo <i class="fa-solid fa-arrow-down"></i></p>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
 
                 <!-- 4B.C Compilador OneCompiler (Vertical) -->
                 <section id="slide-compiler-5">
-                    <h2 class="slide-title" style="font-size: 28px !important; margin-bottom: 10px !important;">Compilador Online: Gestor de Eventos</h2>
-                    <div class="compiler-window">
-                        <div class="header">
-                            <span><i class="fa-solid fa-code"></i> OneCompiler - C++ (Gestor de Eventos)</span>
-                            <button onclick="sendCodeWithRetries('oc-editor-5', cppCodeEventos, 'cpp', 'main.cpp')"><i class="fa-solid fa-rotate-left"></i> Restaurar Código</button>
+                    <h2 class="slide-title">Compilador Online: Gestor de Eventos</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> OneCompiler - C++ (Gestor de Eventos)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-5', cppCodeEventos)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
                         </div>
-                        <iframe id="oc-editor-5" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                        <iframe id="oc-editor-5" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
                     </div>
-                    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
                 </section>
             </section>
 
@@ -657,18 +734,70 @@ void cronogramaEventos(Evento eventos[], int cant, Hora inicio) {
                         <p style="font-size: 18px !important; color: rgba(255,255,255,0.5) !important; letter-spacing: 2px;">AEDD - UTN SANTA FE - INGENIERÍA EN SISTEMAS</p>
                     </div>
                 </div>
-                <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
             </section>
 
         </div>
     </div>
 
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+
     <!-- Scripts de Reveal.js y Plugins -->
     <script src="../../dist/reveal.js"></script>
-    <script src="../../dist/plugin/highlight/highlight.js"></script>
-    <script src="../../dist/plugin/notes/notes.js"></script>
+    <script src="../../dist/plugin/notes.js"></script>
+    <script src="../../dist/plugin/highlight.js"></script>
 
     <script>
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        // Detectar si es un dispositivo móvil chico (celular) para simplificar el flujo
+        const isMobileOrTablet = window.innerWidth < 768;
+        if (isMobileOrTablet) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            controls: true,
+            progress: true,
+            center: true,
+            
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({
+                width: newSize.width,
+                height: newSize.height
+            });
+        });
+
         // =========================================================================
         // Códigos C++ para inyectar en OneCompiler
         // =========================================================================
@@ -1034,72 +1163,26 @@ int main() {
     return 0;
 }`;
 
-        // =========================================================================
-        // REGLA CRÍTICA DE ORDEN DE EJECUCIÓN (Anti-Blank-Slide en Móviles/Vertical)
-        // =========================================================================
-        const isMobilePortrait = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
-        if (isMobilePortrait) {
-            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
-            document.querySelectorAll('section > section').forEach(sec => {
-                const parent = sec.parentNode;
-                if (parent && parent.children.length === 1) {
-                    while (sec.firstChild) {
-                        parent.appendChild(sec.firstChild);
-                    }
-                    sec.remove();
-                }
-            });
-        }
-
-        // =========================================================================
-        // Canvas Adaptativo
-        // =========================================================================
-        function getCanvasSize() {
-            let isPortrait = window.innerHeight > window.innerWidth;
-            return {
-                width: isPortrait ? 720 : 1280,
-                height: isPortrait ? 1280 : 720
-            };
-        }
-
-        let initialSize = getCanvasSize();
-
-        Reveal.initialize({
-            hash: true,
-            slideNumber: 'c/t',
-            width: initialSize.width,
-            height: initialSize.height,
-            margin: 0.08,
-            minScale: 0.2,
-            maxScale: 2.0,
-            controls: true,
-            progress: true,
-            center: true,
-            transition: 'slide',
-            plugins: [ RevealHighlight, RevealNotes ]
-        });
-
-        window.addEventListener('resize', () => {
-            let newSize = getCanvasSize();
-            Reveal.configure({ width: newSize.width, height: newSize.height });
-        });
-
-        // =========================================================================
-        // Protocolo de Inyección OneCompiler C++
-        // =========================================================================
-        function sendCode(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+        // Función para enviar el código a un iframe de OneCompiler específico
+        function sendCode(iframeId, code) {
             const iframe = document.getElementById(iframeId);
             if (iframe && iframe.contentWindow) {
                 iframe.contentWindow.postMessage({
                     eventType: 'populateCode',
-                    language: language,
-                    files: [{ name: fileName, content: code }]
+                    language: 'cpp',
+                    files: [
+                        {
+                            name: 'main.cpp',
+                            content: code
+                        }
+                    ]
                 }, '*');
             }
         }
 
-        function sendCodeWithRetries(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
-            const send = () => sendCode(iframeId, code, language, fileName);
+        // Se envía el código en varios momentos clave para contrarrestar problemas de carga asíncrona
+        function sendCodeWithRetries(iframeId, code) {
+            const send = () => sendCode(iframeId, code);
             send();
             setTimeout(send, 200);
             setTimeout(send, 500);
@@ -1108,25 +1191,28 @@ int main() {
             setTimeout(send, 3500);
         }
 
+        // Comprobación de las diapositivas de compilador
         function checkCompilerSlides(slide) {
             if (!slide) return;
             if (slide.id === 'slide-compiler-1') {
-                sendCodeWithRetries('oc-editor-1', cppCodeContador, 'cpp', 'main.cpp');
+                sendCodeWithRetries('oc-editor-1', cppCodeContador);
             } else if (slide.id === 'slide-compiler-2') {
-                sendCodeWithRetries('oc-editor-2', cppCodeFiguras, 'cpp', 'main.cpp');
+                sendCodeWithRetries('oc-editor-2', cppCodeFiguras);
             } else if (slide.id === 'slide-compiler-3') {
-                sendCodeWithRetries('oc-editor-3', cppCodeMenu, 'cpp', 'main.cpp');
+                sendCodeWithRetries('oc-editor-3', cppCodeMenu);
             } else if (slide.id === 'slide-compiler-4') {
-                sendCodeWithRetries('oc-editor-4', cppCodeHora, 'cpp', 'main.cpp');
+                sendCodeWithRetries('oc-editor-4', cppCodeHora);
             } else if (slide.id === 'slide-compiler-5') {
-                sendCodeWithRetries('oc-editor-5', cppCodeEventos, 'cpp', 'main.cpp');
+                sendCodeWithRetries('oc-editor-5', cppCodeEventos);
             }
         }
 
+        // Escuchar cuando el usuario cambia de diapositiva
         Reveal.on('slidechanged', event => {
             checkCompilerSlides(event.currentSlide);
         });
 
+        // Escuchar cuando Reveal se ha inicializado
         Reveal.on('ready', event => {
             checkCompilerSlides(Reveal.getCurrentSlide());
         });
