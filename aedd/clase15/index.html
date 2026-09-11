@@ -23,6 +23,7 @@
             --text-main: #1E293B;
             --text-light: #64748B;
             --danger-red: #EF4444;
+            --success-green: #10B981;
         }
 
         .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
@@ -30,28 +31,28 @@
         .reveal p, .reveal li { font-size: 22px; color: var(--text-main); line-height: 1.5; text-align: left; }
         
         .slide-title {
-            font-size: 48px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
-            margin-bottom: 35px !important; border-left: 12px solid var(--utn-gold);
+            font-size: 46px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 30px !important; border-left: 12px solid var(--utn-gold);
             padding-left: 24px; text-transform: uppercase !important; letter-spacing: -1.5px;
             text-align: left; width: 100%;
         }
 
         .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
         
-        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; align-items: center; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 35px; width: 100%; align-items: center; }
 
-        .tiled-content { display: flex; gap: 24px; width: 100%; justify-content: center; }
+        .tiled-content { display: flex; gap: 20px; width: 100%; justify-content: center; }
         .tile { 
-            flex: 1; background: var(--bg-neutral); padding: 30px; border-radius: 20px;
+            flex: 1; background: var(--bg-neutral); padding: 25px; border-radius: 18px;
             border-bottom: 6px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: left;
         }
-        .tile:hover { transform: translateY(-8px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 15px 35px rgba(0,0,0,0.06); }
-        .tile h3 { font-size: 22px; color: var(--utn-blue); margin-bottom: 12px; }
+        .tile:hover { transform: translateY(-6px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 15px 35px rgba(0,0,0,0.06); }
+        .tile h3 { font-size: 20px; color: var(--utn-blue); margin-bottom: 10px; }
 
         .reveal pre {
             background: #272822; padding: 20px; border-radius: 12px;
-            font-family: 'Fira Code', monospace; font-size: 17px; margin: 0;
+            font-family: 'Fira Code', monospace; font-size: 16px; margin: 0;
             border-left: 6px solid var(--utn-gold); box-shadow: 0 15px 40px rgba(0,0,0,0.25);
             width: 100%;
             font-variant-ligatures: none;
@@ -87,18 +88,18 @@
         }
 
         .texto-enunciado {
-            background: white; padding: 25px 30px; border-radius: 16px; border: 1px solid #E2E8F0; text-align: left;
+            background: white; padding: 22px 28px; border-radius: 16px; border: 1px solid #E2E8F0; text-align: left;
         }
 
         .puesta-en-comun {
-            background: white; padding: 18px 25px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 25px; text-align: left;
+            background: white; padding: 16px 22px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 20px; text-align: left;
         }
         .puesta-en-comun p {
-            font-size: 18px; color: var(--text-light); margin: 0;
+            font-size: 17px; color: var(--text-light); margin: 0;
         }
 
         .concept-card {
-            background: white; padding: 24px; border-radius: 16px; border: 1px solid #E2E8F0;
+            background: white; padding: 22px; border-radius: 16px; border: 1px solid #E2E8F0;
             border-left: 8px solid var(--utn-gold); box-shadow: 0 8px 24px rgba(0,0,0,0.04); text-align: left;
         }
         .concept-card h3 {
@@ -106,10 +107,10 @@
         }
 
         .blackbox-diagram {
-            display: flex; align-items: center; justify-content: center; gap: 25px; margin: 25px 0;
+            display: flex; align-items: center; justify-content: center; gap: 25px; margin: 20px 0;
         }
         .blackbox-box {
-            background: var(--utn-blue); color: white; padding: 25px 35px; border-radius: 16px;
+            background: var(--utn-blue); color: white; padding: 22px 35px; border-radius: 16px;
             border: 3px solid var(--utn-gold); text-align: center; box-shadow: 0 12px 30px rgba(0,43,91,0.25);
         }
         .blackbox-arrow {
@@ -119,18 +120,117 @@
             font-size: 13px; color: var(--text-light); font-family: 'Inter', sans-serif; font-weight: 600;
         }
 
+        /* --- Estilos Visuales: TDA Pila (LIFO) & Cola (FIFO) --- */
+        .ds-diagram-container {
+            display: grid; grid-template-columns: 1fr 1.15fr; gap: 25px; width: 100%; align-items: stretch; margin-top: 10px;
+        }
+        .ds-card {
+            background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px 22px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.03); display: flex; flex-direction: column; text-align: left;
+        }
+        .ds-card h4 {
+            font-size: 18px; color: var(--utn-blue); margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px;
+        }
+
+        /* Pila Canister Visual */
+        .stack-interactive-wrap {
+            display: flex; flex-direction: column; align-items: center; position: relative; margin: 10px 0;
+        }
+        .stack-arrows-row {
+            display: flex; justify-content: space-between; width: 230px; margin-bottom: 6px;
+        }
+        .stack-arrow-action {
+            display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700;
+        }
+        .stack-cylinder {
+            width: 210px; height: 210px; border-left: 4px solid var(--utn-blue); border-right: 4px solid var(--utn-blue);
+            border-bottom: 6px solid var(--utn-blue); border-top: 1px dashed rgba(0,43,91,0.2);
+            border-radius: 0 0 14px 14px; background: rgba(0,43,91,0.02); display: flex;
+            flex-direction: column-reverse; padding: 8px; gap: 6px; position: relative;
+        }
+        .stack-element {
+            height: 42px; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+            font-family: 'Fira Code', monospace; font-weight: 600; font-size: 15px; position: relative;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .stack-element.item-base {
+            background: #E2E8F0; color: #475569; border: 1px solid #CBD5E1;
+        }
+        .stack-element.item-mid {
+            background: #93C5FD; color: #1E3A8A; border: 1px solid #60A5FA;
+        }
+        .stack-element.item-tos {
+            background: var(--utn-gold); color: var(--utn-blue); border: 2px solid #D97706; font-weight: 700;
+        }
+        .tos-pointer {
+            position: absolute; right: -125px; background: #FEF3C7; border: 1px solid var(--utn-gold);
+            color: #92400E; font-size: 11px; font-weight: 700; padding: 3px 7px; border-radius: 5px;
+            display: flex; align-items: center; gap: 4px; white-space: nowrap;
+        }
+
+        /* Memoria Call Stack */
+        .memory-stack {
+            width: 100%; border: 1px solid #CBD5E1; border-radius: 10px; overflow: hidden; font-family: 'Fira Code', monospace;
+            font-size: 12px; margin-top: 6px;
+        }
+        .memory-row {
+            display: flex; justify-content: space-between; padding: 7px 12px; border-bottom: 1px solid #E2E8F0;
+        }
+        .memory-addr { color: #94A3B8; font-weight: bold; }
+        .memory-desc { color: var(--text-main); }
+        .memory-row.active { background: #EFF6FF; border-left: 4px solid #3B82F6; }
+        .memory-row.global { background: #F8FAFC; color: #64748B; }
+
+        /* Cola Channel Visual */
+        .queue-channel-visual {
+            width: 100%; height: 75px; border-top: 4px solid var(--utn-blue); border-bottom: 4px solid var(--utn-blue);
+            background: rgba(0,43,91,0.02); display: flex; align-items: center; justify-content: center;
+            gap: 8px; position: relative; margin: 15px 0 10px 0; border-radius: 4px;
+        }
+        .queue-cell {
+            width: 62px; height: 50px; border-radius: 6px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; font-family: 'Fira Code', monospace;
+            font-size: 13px; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .queue-cell.front-cell {
+            background: var(--utn-gold); color: var(--utn-blue); border: 2px solid #D97706;
+        }
+        .queue-cell.mid-cell {
+            background: #93C5FD; color: #1E3A8A; border: 1px solid #60A5FA;
+        }
+        .queue-cell.rear-cell {
+            background: #E2E8F0; color: #475569; border: 1px solid #CBD5E1;
+        }
+        .queue-flow-actions {
+            display: flex; justify-content: space-between; width: 100%; font-size: 13px; font-weight: 700;
+        }
+
+        /* Servidor y Clientes Visual */
+        .server-flow {
+            display: flex; align-items: center; justify-content: space-between; background: #F8FAFC;
+            border: 1px dashed #CBD5E1; border-radius: 10px; padding: 10px 14px; margin-top: 8px;
+        }
+        .client-token {
+            width: 28px; height: 28px; border-radius: 50%; background: #3B82F6; color: white;
+            display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold;
+        }
+        .server-box {
+            background: var(--utn-blue); color: white; padding: 8px 14px; border-radius: 8px;
+            font-size: 13px; font-weight: 600; text-align: center;
+        }
+
         /* --- Estilos Especiales para Celulares Verticales --- */
         @media (max-aspect-ratio: 1/1) {
-            .two-column { grid-template-columns: 1fr; gap: 25px; }
-            .tiled-content { flex-direction: column; gap: 15px; }
-            .slide-title { font-size: 40px !important; margin-bottom: 20px !important; }
-            .reveal p, .reveal li { font-size: 24px; }
-            .reveal pre { font-size: 18px; padding: 20px; overflow-x: auto; width: 100%; box-sizing: border-box; }
-            .section-title-layout h2 { font-size: 70px !important; }
-            .section-title-layout p { font-size: 22px !important; }
-            .tile { padding: 20px; }
-            .tile h3 { font-size: 20px; }
-            .branding-footer { bottom: 20px; left: 20px; }
+            .two-column { grid-template-columns: 1fr; gap: 20px; }
+            .tiled-content { flex-direction: column; gap: 12px; }
+            .ds-diagram-container { grid-template-columns: 1fr; gap: 15px; }
+            .slide-title { font-size: 38px !important; margin-bottom: 20px !important; }
+            .reveal p, .reveal li { font-size: 20px; }
+            .reveal pre { font-size: 16px; padding: 15px; overflow-x: auto; width: 100%; box-sizing: border-box; }
+            .section-title-layout h2 { font-size: 65px !important; }
+            .section-title-layout p { font-size: 20px !important; }
+            .tile { padding: 18px; }
+            .branding-footer { bottom: 15px; left: 20px; font-size: 12px; }
         }
     </style>
 </head>
@@ -142,8 +242,8 @@
             <!-- PORTADA INSTITUCIONAL -->
             <!-- ================================================================== -->
             <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
-                <h1 style="color: white; font-size: 72px; line-height: 1.0; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 54px;">Clase 15: Tipos de Datos Abstractos (TDA)</span></h1>
-                <p style="color: rgba(255,255,255,0.7); margin-top: 40px; text-align: center; font-size: 22px;">Docentes de práctica: Tomás Assenza, Facundo Sanchez</p>
+                <h1 style="color: white; font-size: 68px; line-height: 1.05; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 50px;">Clase 15: Tipos de Datos Abstractos (TDA)</span></h1>
+                <p style="color: rgba(255,255,255,0.7); margin-top: 35px; text-align: center; font-size: 22px;">Docentes de práctica: Tomás Assenza, Facundo Sanchez</p>
                 <p style="color: rgba(255,255,255,0.35); margin-top: 10px; text-align: center; font-size: 16px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe</p>
             </section>
 
@@ -223,92 +323,13 @@
             </section>
 
             <!-- ================================================================== -->
-            <!-- EJERCICIO 1: TDA CONTADOR (Horizontal) -->
+            <!-- EJERCICIO 1: TDA FIGURAS GEOMÉTRICAS (Horizontal) -->
             <!-- ================================================================== -->
             <section>
                 <!-- 1.A Enunciado -->
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
                         <span class="inciso-badge">1</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA Contador</h2>
-                        <span class="points-badge">Guía Práctica</span>
-                    </div>
-                    <div class="texto-enunciado">
-                        <p>Implementar el <strong>TDA Contador</strong>. Su interfaz debe permitir crear variables del tipo e implementar las operaciones para incrementar (<code>++</code>) y decrementar (<code>--</code>) su valor.</p>
-                        <p style="margin-top: 15px; font-weight: 600; color: var(--utn-blue);">Interfaz pública propuesta:</p>
-                        <ul style="font-size: 18px; font-family: 'Fira Code', monospace; line-height: 1.8;">
-                            <li><code>Contador crear(int valor);</code></li>
-                            <li><code>void incrementar(Contador &c, int pasos);</code></li>
-                            <li><code>void decrementar(Contador &c, int pasos);</code></li>
-                            <li><code>int toInteger(Contador c);</code></li>
-                        </ul>
-                    </div>
-                    <div class="puesta-en-comun">
-                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución y análisis <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
-                    </div>
-                </section>
-
-                <!-- 1.B Solución C++ (Vertical) -->
-                <section>
-                    <div class="inciso-header">
-                        <span class="inciso-badge">1</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Contador</h2>
-                    </div>
-                    <div class="content-area">
-                        <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-3|5-9|11-13|15-17|19-21">
-struct Contador {
-    int valor;
-};
-
-Contador crear(int valor) {
-    Contador c;
-    c.valor = valor;
-    return c;
-}
-
-void incrementar(Contador &c, int pasos) {
-    c.valor += pasos;
-}
-
-void decrementar(Contador &c, int pasos) {
-    c.valor -= pasos;
-}
-
-int toInteger(Contador c) {
-    return c.valor;
-}
-                        </code></pre>
-                    </div>
-                </section>
-
-                <!-- 1.C Compilador OneCompiler (Vertical) -->
-                <section id="slide-compiler-1">
-                    <h2 class="slide-title">Compilador Online: TDA Contador</h2>
-                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
-                    
-                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
-                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
-                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
-                            <div style="display: flex; gap: 15px; align-items: center;">
-                                <button onclick="sendCode('oc-editor-1', cppCodeContador)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
-                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
-                                </button>
-                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
-                            </div>
-                        </div>
-                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
-                    </div>
-                </section>
-            </section>
-
-            <!-- ================================================================== -->
-            <!-- EJERCICIO 2: TDA FIGURAS GEOMÉTRICAS (Horizontal) -->
-            <!-- ================================================================== -->
-            <section>
-                <!-- 2.A Enunciado -->
-                <section data-background-color="#F8FAFC">
-                    <div class="inciso-header">
-                        <span class="inciso-badge">2</span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA Figuras Geométricas</h2>
                         <span class="points-badge">Guía Práctica</span>
                     </div>
@@ -350,14 +371,14 @@ int toInteger(Contador c) {
                     </div>
                 </section>
 
-                <!-- 2.B Solución C++ (Vertical) -->
+                <!-- 1.B Solución C++ (Vertical) -->
                 <section>
                     <div class="inciso-header">
-                        <span class="inciso-badge">2</span>
+                        <span class="inciso-badge">1</span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDAs Figuras</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 14px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-15|17-31|33-47|49-65">
+                        <pre style="font-size: 13.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-15|17-31|33-47|49-65">
 const float PI = 3.14159265f;
 
 struct Circulo {
@@ -429,8 +450,8 @@ float area(Triangulo t) {
                     </div>
                 </section>
 
-                <!-- 2.C Compilador OneCompiler (Vertical) -->
-                <section id="slide-compiler-2">
+                <!-- 1.C Compilador OneCompiler (Vertical) -->
+                <section id="slide-compiler-1">
                     <h2 class="slide-title">Compilador Online: TDAs Figuras</h2>
                     <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
                     
@@ -438,116 +459,25 @@ float area(Triangulo t) {
                         <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
                             <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
                             <div style="display: flex; gap: 15px; align-items: center;">
-                                <button onclick="sendCode('oc-editor-2', cppCodeFiguras)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                <button onclick="sendCode('oc-editor-1', cppCodeFiguras)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
                                     <i class="fa-solid fa-rotate-left"></i> Restaurar Código
                                 </button>
                                 <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
                             </div>
                         </div>
-                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
                     </div>
                 </section>
             </section>
 
             <!-- ================================================================== -->
-            <!-- EJERCICIO 3: MENÚ DE FIGURAS (Horizontal) -->
+            <!-- EJERCICIO 2: TDA HORA (Horizontal) -->
             <!-- ================================================================== -->
             <section>
-                <!-- 3.A Enunciado -->
+                <!-- 2.A Enunciado -->
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
-                        <span class="inciso-badge">3</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Menú Cliente de Figuras</h2>
-                        <span class="points-badge">Guía Práctica</span>
-                    </div>
-                    <div class="texto-enunciado">
-                        <p>Implementar un programa cliente que muestre un menú con las distintas formas geométricas y que al acceder a la elegida se presente un <strong>submenú</strong> con la posibilidad de:</p>
-                        <ol style="font-size: 18px; margin: 10px 0 10px 20px;">
-                            <li>Crear la figura.</li>
-                            <li>Mostrar el perímetro.</li>
-                            <li>Mostrar el área.</li>
-                        </ol>
-                        <p style="color: var(--danger-red); font-weight: 600; font-size: 18px; margin-top: 10px;"><i class="fa-solid fa-triangle-exclamation"></i> <strong>Nota importante:</strong> Para poder mostrar perímetro y área, la figura debe haber sido creada previamente.</p>
-                    </div>
-                    <div class="puesta-en-comun">
-                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución y análisis <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
-                    </div>
-                </section>
-
-                <!-- 3.B Solución C++ (Vertical) -->
-                <section>
-                    <div class="inciso-header">
-                        <span class="inciso-badge">3</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Programa Cliente</h2>
-                    </div>
-                    <div class="content-area">
-                        <pre style="font-size: 14px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-8|10-29|31-33">
-void gestionarCirculo() {
-    Circulo c;
-    bool creada = false;
-    int opcion = -1;
-
-    while (opcion != 0) {
-        cout << "1. Crear | 2. Perimetro | 3. Area | 0. Volver: ";
-        cin >> opcion;
-
-        switch (opcion) {
-            case 1: {
-                float r;
-                cout << "Radio: ";
-                cin >> r;
-                c = crear_circulo(r);
-                creada = true;
-                break;
-            }
-            case 2:
-                if (creada) cout << "Perimetro: " << perimetro(c) << endl;
-                else cout << "Error: Cree el circulo primero." << endl;
-                break;
-            case 3:
-                if (creada) cout << "Area: " << area(c) << endl;
-                else cout << "Error: Cree el circulo primero." << endl;
-                break;
-            case 0:
-                break;
-            default:
-                cout << "Opcion invalida." << endl;
-                break;
-        }
-    }
-}
-                        </code></pre>
-                    </div>
-                </section>
-
-                <!-- 3.C Compilador OneCompiler (Vertical) -->
-                <section id="slide-compiler-3">
-                    <h2 class="slide-title">Compilador Online: Menú de Figuras</h2>
-                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
-                    
-                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
-                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
-                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
-                            <div style="display: flex; gap: 15px; align-items: center;">
-                                <button onclick="sendCode('oc-editor-3', cppCodeMenu)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
-                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
-                                </button>
-                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
-                            </div>
-                        </div>
-                        <iframe id="oc-editor-3" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
-                    </div>
-                </section>
-            </section>
-
-            <!-- ================================================================== -->
-            <!-- EJERCICIO 4A: TDA HORA (Horizontal) -->
-            <!-- ================================================================== -->
-            <section>
-                <!-- 4A.A Enunciado -->
-                <section data-background-color="#F8FAFC">
-                    <div class="inciso-header">
-                        <span class="inciso-badge">4a</span>
+                        <span class="inciso-badge">2</span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA Hora y Operaciones</h2>
                         <span class="points-badge">Guía Práctica</span>
                     </div>
@@ -560,7 +490,6 @@ void gestionarCirculo() {
                             <li><code>void adelantar(Hora &h, int minutos)</code>: adelanta la hora X minutos.</li>
                             <li><code>void atrasar(Hora &h, int minutos)</code>: atrasa la hora X minutos.</li>
                             <li><code>int diferenciaEnMinutos(Hora h1, Hora h2)</code>: diferencia absoluta en minutos.</li>
-                            <li><code>int diferenciaEnSegundos(Hora h1, Hora h2)</code>: diferencia absoluta en segundos.</li>
                         </ul>
                     </div>
                     <div class="puesta-en-comun">
@@ -568,14 +497,14 @@ void gestionarCirculo() {
                     </div>
                 </section>
 
-                <!-- 4A.B Solución C++ (Vertical) -->
+                <!-- 2.B Solución C++ (Vertical) -->
                 <section>
                     <div class="inciso-header">
-                        <span class="inciso-badge">4a</span>
+                        <span class="inciso-badge">2</span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Hora</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-3|5-18|20-39|41-52|54-66">
+                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-3|5-18|20-39|41-52|54-61">
 struct Hora {
     int hora, min, seg;
 };
@@ -631,8 +560,8 @@ int diferenciaEnMinutos(Hora h1, Hora h2) {
                     </div>
                 </section>
 
-                <!-- 4A.C Compilador OneCompiler (Vertical) -->
-                <section id="slide-compiler-4">
+                <!-- 2.C Compilador OneCompiler (Vertical) -->
+                <section id="slide-compiler-2">
                     <h2 class="slide-title">Compilador Online: TDA Hora</h2>
                     <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
                     
@@ -640,85 +569,367 @@ int diferenciaEnMinutos(Hora h1, Hora h2) {
                         <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
                             <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
                             <div style="display: flex; gap: 15px; align-items: center;">
-                                <button onclick="sendCode('oc-editor-4', cppCodeHora)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                <button onclick="sendCode('oc-editor-2', cppCodeHora)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- EJERCICIO 3: TDA PILA (Stack - LIFO) (Horizontal) -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- 3.A Concepto y Diagrama LIFO -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">3</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA Pila: Acceso LIFO</h2>
+                        <span class="points-badge">Estructura Lineal</span>
+                    </div>
+
+                    <div class="ds-diagram-container">
+                        <!-- Columna 1: Mecánica de la Pila -->
+                        <div class="ds-card">
+                            <h4><i class="fa-solid fa-layer-group" style="color: var(--utn-gold);"></i> Estructura LIFO (Last-In, First-Out)</h4>
+                            <p style="font-size: 14.5px; margin: 0 0 10px 0; color: var(--text-light);">
+                                Solo se tiene acceso al último elemento ingresado: <strong>TOS</strong> (<em>Top of Stack</em> / Cima).
+                            </p>
+
+                            <div class="stack-interactive-wrap">
+                                <div class="stack-arrows-row">
+                                    <span class="stack-arrow-action" style="color: #10B981;"><i class="fa-solid fa-arrow-down"></i> Push (Apilar)</span>
+                                    <span class="stack-arrow-action" style="color: #EF4444;">Pop (Desapilar) <i class="fa-solid fa-arrow-up"></i></span>
+                                </div>
+                                <div class="stack-cylinder">
+                                    <div class="stack-element item-base">Dato Base [0]</div>
+                                    <div class="stack-element item-mid">Dato Intermedio [1]</div>
+                                    <div class="stack-element item-tos">
+                                        Dato Cima [2]
+                                        <div class="tos-pointer"><i class="fa-solid fa-arrow-left"></i> TOS (Cima)</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="font-size: 13px; color: #475569; margin: 4px 0 0 0; text-align: center;">
+                                <i class="fa-solid fa-utensils" style="color: var(--utn-gold);"></i> Analogía: Pila de platos (se coloca y retira siempre por arriba).
+                            </p>
+                        </div>
+
+                        <!-- Columna 2: Aplicación en Memoria (Call Stack) -->
+                        <div class="ds-card">
+                            <h4><i class="fa-solid fa-microchip" style="color: var(--utn-blue);"></i> En la Memoria: Call Stack</h4>
+                            <p style="font-size: 14.5px; margin: 0 0 10px 0; color: var(--text-light);">
+                                El procesador organiza las llamadas a funciones y sus variables locales utilizando exactamente una pila:
+                            </p>
+
+                            <div class="memory-stack">
+                                <div class="memory-row" style="background: #FEF3C7;">
+                                    <span class="memory-addr">0xFFFF</span>
+                                    <span class="memory-desc" style="font-weight: 700; color: #92400E;">Función activa (Cima / TOS)</span>
+                                </div>
+                                <div class="memory-row active">
+                                    <span class="memory-addr">0xFFE0</span>
+                                    <span class="memory-desc">Variables locales de <code>funcion()</code></span>
+                                </div>
+                                <div class="memory-row">
+                                    <span class="memory-addr">0xFA00</span>
+                                    <span class="memory-desc">Frame de llamada de <code>main()</code></span>
+                                </div>
+                                <div class="memory-row global">
+                                    <span class="memory-addr">0x0000</span>
+                                    <span class="memory-desc">Variables globales y código</span>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 12px; background: rgba(0,43,91,0.04); padding: 10px 14px; border-radius: 8px; border-left: 4px solid var(--utn-blue);">
+                                <p style="font-size: 13.5px; margin: 0; color: var(--utn-blue); font-weight: 500;">
+                                    Al invocar una función, se <strong>apila</strong> su marco; al retornar con <code>return</code>, se <strong>desapila</strong>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="puesta-en-comun" style="margin-top: 15px; padding: 12px 20px;">
+                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver las operaciones y código C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                    </div>
+                </section>
+
+                <!-- 3.B Enunciado Operaciones -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">3</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA Pila: Especificación</h2>
+                        <span class="points-badge">Operaciones Primitivas</span>
+                    </div>
+                    <div class="texto-enunciado">
+                        <p>Implementar el <strong>TDA Pila</strong> con un arreglo estático de enteros y su índice de tope. Debe proveer las siguientes operaciones:</p>
+                        <ul style="font-size: 17px; margin: 12px 0 0 15px; line-height: 1.8;">
+                            <li><code>Pila crear()</code>: inicializa y retorna una pila vacía (tope en <code>-1</code>).</li>
+                            <li><code>bool vacia(Pila p)</code>: devuelve <code>true</code> si la pila no tiene elementos.</li>
+                            <li><code>bool llena(Pila p)</code>: devuelve <code>true</code> si se alcanzó la capacidad máxima.</li>
+                            <li><code>void apilar(Pila &p, int elem)</code>: añade un nuevo elemento en la cima (push).</li>
+                            <li><code>void desapilar(Pila &p)</code>: elimina el elemento de la cima (pop).</li>
+                            <li><code>int cima(Pila p)</code>: devuelve el valor en la cima sin retirarlo (top/peek).</li>
+                        </ul>
+                    </div>
+                    <div class="puesta-en-comun">
+                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la implementación en C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                    </div>
+                </section>
+
+                <!-- 3.C Solución C++ (Vertical) -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">3</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Pila</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 13.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-13|15-27|29-39|41-48">
+const int MAX_PILA = 100;
+
+struct Pila {
+    int datos[MAX_PILA];
+    int tope;
+};
+
+Pila crear() {
+    Pila p;
+    p.tope = -1;
+    return p;
+}
+
+bool vacia(Pila p) {
+    return p.tope == -1;
+}
+
+bool llena(Pila p) {
+    return p.tope == MAX_PILA - 1;
+}
+
+void apilar(Pila &p, int elem) {
+    if (!llena(p)) {
+        p.tope++;
+        p.datos[p.tope] = elem;
+    }
+}
+
+void desapilar(Pila &p) {
+    if (!vacia(p)) {
+        p.tope--;
+    }
+}
+
+int cima(Pila p) {
+    int elem = -1;
+    if (!vacia(p)) {
+        elem = p.datos[p.tope];
+    }
+    return elem;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 3.D Compilador OneCompiler (Vertical) -->
+                <section id="slide-compiler-3">
+                    <h2 class="slide-title">Compilador Online: TDA Pila</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-3', cppCodePila)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-3" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- EJERCICIO 4: TDA COLA (Queue - FIFO) (Horizontal) -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- 4.A Concepto y Diagrama FIFO -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">4</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA Cola: Acceso FIFO</h2>
+                        <span class="points-badge">Estructura Lineal</span>
+                    </div>
+
+                    <div class="ds-diagram-container">
+                        <!-- Columna 1: Mecánica de la Cola -->
+                        <div class="ds-card">
+                            <h4><i class="fa-solid fa-people-line" style="color: var(--utn-gold);"></i> Estructura FIFO (First-In, First-Out)</h4>
+                            <p style="font-size: 14.5px; margin: 0 0 8px 0; color: var(--text-light);">
+                                Inserción por un extremo (<strong>Final</strong>) y extracción por el otro extremo (<strong>Frente</strong>).
+                            </p>
+
+                            <div class="queue-flow-actions">
+                                <span style="color: #EF4444;"><i class="fa-solid fa-arrow-left"></i> Desencolar (Pop / Frente)</span>
+                                <span style="color: #10B981;">Encolar (Push / Final) <i class="fa-solid fa-arrow-left"></i></span>
+                            </div>
+
+                            <div class="queue-channel-visual">
+                                <div class="queue-cell front-cell">
+                                    <span>D1</span>
+                                    <span style="font-size: 10px;">Frente</span>
+                                </div>
+                                <div class="queue-cell mid-cell">
+                                    <span>D2</span>
+                                    <span style="font-size: 10px;">En cola</span>
+                                </div>
+                                <div class="queue-cell mid-cell">
+                                    <span>D3</span>
+                                    <span style="font-size: 10px;">En cola</span>
+                                </div>
+                                <div class="queue-cell rear-cell">
+                                    <span>D4</span>
+                                    <span style="font-size: 10px;">Final</span>
+                                </div>
+                            </div>
+                            <p style="font-size: 13px; color: #475569; margin: 4px 0 0 0; text-align: center;">
+                                El primer elemento en ingresar es el primero en ser atendido y salir.
+                            </p>
+                        </div>
+
+                        <!-- Columna 2: Ejemplo Servidor / Clientes -->
+                        <div class="ds-card">
+                            <h4><i class="fa-solid fa-server" style="color: var(--utn-blue);"></i> En Sistemas: Peticiones al Servidor</h4>
+                            <p style="font-size: 14.5px; margin: 0 0 8px 0; color: var(--text-light);">
+                                Modelo clásico de atención de solicitudes en redes, colas de impresión y eventos de usuario:
+                            </p>
+
+                            <div class="server-flow">
+                                <div style="display: flex; gap: 6px; align-items: center;">
+                                    <span class="client-token">C3</span>
+                                    <span class="client-token">C2</span>
+                                    <span class="client-token">C1</span>
+                                    <i class="fa-solid fa-arrow-right" style="color: var(--utn-gold); margin-left: 6px;"></i>
+                                </div>
+                                <div class="server-box">
+                                    <i class="fa-solid fa-desktop" style="color: var(--utn-gold);"></i> SERVIDOR<br>
+                                    <span style="font-size: 11px; opacity: 0.85;">¡Atendiendo C1!</span>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 12px; background: rgba(0,43,91,0.04); padding: 10px 14px; border-radius: 8px; border-left: 4px solid var(--utn-blue);">
+                                <p style="font-size: 13.5px; margin: 0; color: var(--utn-blue); font-weight: 500;">
+                                    <strong>Usos frecuentes:</strong> Cola de impresión (Spooler), buffer del teclado en el SO, tareas en background.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="puesta-en-comun" style="margin-top: 15px; padding: 12px 20px;">
+                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver las operaciones y código C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                    </div>
+                </section>
+
+                <!-- 4.B Enunciado Operaciones -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">4</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA Cola: Especificación</h2>
+                        <span class="points-badge">Operaciones Primitivas</span>
+                    </div>
+                    <div class="texto-enunciado">
+                        <p>Implementar el <strong>TDA Cola</strong> con un arreglo estático de enteros y su contador de elementos. Debe proveer las siguientes operaciones:</p>
+                        <ul style="font-size: 17px; margin: 12px 0 0 15px; line-height: 1.8;">
+                            <li><code>Cola crear()</code>: inicializa y retorna una cola vacía (cantidad en <code>0</code>).</li>
+                            <li><code>bool vacia(Cola c)</code>: devuelve <code>true</code> si no hay elementos en la cola.</li>
+                            <li><code>bool llena(Cola c)</code>: devuelve <code>true</code> si se completó la capacidad máxima.</li>
+                            <li><code>void encolar(Cola &c, int elem)</code>: añade un elemento al final de la cola (push).</li>
+                            <li><code>void desencolar(Cola &c)</code>: retira el elemento frontal de la cola (pop).</li>
+                            <li><code>int frente(Cola c)</code>: devuelve el elemento frontal sin retirarlo (front).</li>
+                        </ul>
+                    </div>
+                    <div class="puesta-en-comun">
+                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la implementación en C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                    </div>
+                </section>
+
+                <!-- 4.C Solución C++ (Vertical) -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">4</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Cola</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-13|15-27|29-41|43-50">
+const int MAX_COLA = 100;
+
+struct Cola {
+    int datos[MAX_COLA];
+    int cant;
+};
+
+Cola crear() {
+    Cola c;
+    c.cant = 0;
+    return c;
+}
+
+bool vacia(Cola c) {
+    return c.cant == 0;
+}
+
+bool llena(Cola c) {
+    return c.cant == MAX_COLA;
+}
+
+void encolar(Cola &c, int elem) {
+    if (!llena(c)) {
+        c.datos[c.cant] = elem;
+        c.cant++;
+    }
+}
+
+void desencolar(Cola &c) {
+    if (!vacia(c)) {
+        for (int i = 0; i < c.cant - 1; i++) {
+            c.datos[i] = c.datos[i + 1];
+        }
+        c.cant--;
+    }
+}
+
+int frente(Cola c) {
+    int elem = -1;
+    if (!vacia(c)) {
+        elem = c.datos[0];
+    }
+    return elem;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 4.D Compilador OneCompiler (Vertical) -->
+                <section id="slide-compiler-4">
+                    <h2 class="slide-title">Compilador Online: TDA Cola</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-4', cppCodeCola)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
                                     <i class="fa-solid fa-rotate-left"></i> Restaurar Código
                                 </button>
                                 <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
                             </div>
                         </div>
                         <iframe id="oc-editor-4" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
-                    </div>
-                </section>
-            </section>
-
-            <!-- ================================================================== -->
-            <!-- EJERCICIO 4B: GESTOR DE EVENTOS (Horizontal) -->
-            <!-- ================================================================== -->
-            <section>
-                <!-- 4B.A Enunciado -->
-                <section data-background-color="#F8FAFC">
-                    <div class="inciso-header">
-                        <span class="inciso-badge">4b</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Gestor de Eventos</h2>
-                        <span class="points-badge">Guía Práctica</span>
-                    </div>
-                    <div class="texto-enunciado">
-                        <p>Escribir un programa cliente que, dada una <strong>lista de eventos</strong> (nombre y duración esperada en minutos) y la hora de inicio del primer evento, muestre por pantalla la <strong>hora de comienzo y fin</strong> de cada uno de los eventos.</p>
-                        <p style="font-size: 18px; color: var(--text-light); margin-top: 10px;"><i class="fa-solid fa-circle-info" style="color: var(--utn-blue);"></i> La lista de eventos se almacena en un arreglo estático de hasta <strong>10 elementos</strong>. Las horas se van encadenando progresivamente.</p>
-                    </div>
-                    <div class="puesta-en-comun">
-                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución y análisis <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
-                    </div>
-                </section>
-
-                <!-- 4B.B Solución C++ (Vertical) -->
-                <section>
-                    <div class="inciso-header">
-                        <span class="inciso-badge">4b</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Gestor de Eventos</h2>
-                    </div>
-                    <div class="content-area">
-                        <pre style="font-size: 14px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-15|17-27">
-struct Evento {
-    string nombre;
-    int duracionMinutos;
-};
-
-void cronogramaEventos(Evento eventos[], int cant, Hora inicio) {
-    Hora actual = inicio;
-
-    for (int i = 0; i < cant; i++) {
-        Hora fin = actual;
-        adelantar(fin, eventos[i].duracionMinutos);
-
-        cout << "Evento: " << eventos[i].nombre << endl;
-        cout << "  Inicio: "; mostrar24(actual);
-        cout << "  Fin:    "; mostrar24(fin);
-        cout << "--------------------" << endl;
-
-        actual = fin;
-    }
-}
-                        </code></pre>
-                    </div>
-                </section>
-
-                <!-- 4B.C Compilador OneCompiler (Vertical) -->
-                <section id="slide-compiler-5">
-                    <h2 class="slide-title">Compilador Online: Gestor de Eventos</h2>
-                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
-                    
-                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
-                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
-                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> OneCompiler - C++ (Gestor de Eventos)</span>
-                            <div style="display: flex; gap: 15px; align-items: center;">
-                                <button onclick="sendCode('oc-editor-5', cppCodeEventos)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
-                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
-                                </button>
-                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
-                            </div>
-                        </div>
-                        <iframe id="oc-editor-5" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
                     </div>
                 </section>
             </section>
@@ -756,8 +967,8 @@ void cronogramaEventos(Evento eventos[], int cant, Hora inicio) {
             };
         }
 
-        // Detectar si es un dispositivo móvil chico (celular) para simplificar el flujo
-        const isMobileOrTablet = window.innerWidth < 768;
+        // Detectar si es un dispositivo móvil chico (celular) para simplificar el flujo sincrónicamente
+        const isMobileOrTablet = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
         if (isMobileOrTablet) {
             document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
             document.querySelectorAll('section > section').forEach(sec => {
@@ -801,44 +1012,6 @@ void cronogramaEventos(Evento eventos[], int cant, Hora inicio) {
         // =========================================================================
         // Códigos C++ para inyectar en OneCompiler
         // =========================================================================
-
-        const cppCodeContador = `#include <iostream>
-using namespace std;
-
-struct Contador {
-    int valor;
-};
-
-Contador crear(int valor) {
-    Contador c;
-    c.valor = valor;
-    return c;
-}
-
-void incrementar(Contador &c, int pasos) {
-    c.valor += pasos;
-}
-
-void decrementar(Contador &c, int pasos) {
-    c.valor -= pasos;
-}
-
-int toInteger(Contador c) {
-    return c.valor;
-}
-
-int main() {
-    Contador c = crear(10);
-    cout << "Valor inicial: " << toInteger(c) << endl;
-
-    incrementar(c, 5);
-    cout << "Tras incrementar 5: " << toInteger(c) << endl;
-
-    decrementar(c, 3);
-    cout << "Tras decrementar 3: " << toInteger(c) << endl;
-
-    return 0;
-}`;
 
         const cppCodeFiguras = `#include <iostream>
 using namespace std;
@@ -935,74 +1108,6 @@ int main() {
     return 0;
 }`;
 
-        const cppCodeMenu = `#include <iostream>
-using namespace std;
-
-const float PI = 3.14159265f;
-
-struct Circulo {
-    float radio;
-};
-Circulo crear_circulo(float r) {
-    Circulo c;
-    c.radio = r;
-    return c;
-}
-float perimetro(Circulo c) {
-    return 2.0f * PI * c.radio;
-}
-float area(Circulo c) {
-    return PI * c.radio * c.radio;
-}
-
-int main() {
-    Circulo c;
-    bool creada = false;
-    int opcion = -1;
-
-    cout << "--- Submenu Circulo Demo ---" << endl;
-    while (opcion != 0) {
-        cout << "1: Crear circulo | 2: Perimetro | 3: Area | 0: Salir" << endl;
-        cout << "Ingrese opcion: ";
-        cin >> opcion;
-
-        switch (opcion) {
-            case 1: {
-                float r;
-                cout << "Ingrese radio: ";
-                cin >> r;
-                c = crear_circulo(r);
-                creada = true;
-                cout << "Circulo creado con radio " << r << endl;
-                break;
-            }
-            case 2:
-                if (creada) {
-                    cout << "Perimetro: " << perimetro(c) << endl;
-                } else {
-                    cout << "Error: Primero debe crear la figura (opcion 1)." << endl;
-                }
-                break;
-            case 3:
-                if (creada) {
-                    cout << "Area: " << area(c) << endl;
-                } else {
-                    cout << "Error: Primero debe crear la figura (opcion 1)." << endl;
-                }
-                break;
-            case 0:
-                cout << "Saliendo del menu..." << endl;
-                break;
-            default:
-                cout << "Opcion no valida." << endl;
-                break;
-        }
-        cout << endl;
-    }
-
-    return 0;
-}`;
-
         const cppCodeHora = `#include <iostream>
 #include <string>
 using namespace std;
@@ -1087,78 +1192,151 @@ int main() {
     return 0;
 }`;
 
-        const cppCodeEventos = `#include <iostream>
-#include <string>
+        const cppCodePila = `#include <iostream>
 using namespace std;
 
-struct Hora {
-    int hora, min, seg;
+const int MAX_PILA = 100;
+
+struct Pila {
+    int datos[MAX_PILA];
+    int tope;
 };
 
-Hora ponerAHora(int h, int m, int s) {
-    Hora nueva;
-    if (h >= 0 && h < 24) nueva.hora = h;
-    else nueva.hora = 0;
-
-    if (m >= 0 && m < 60) nueva.min = m;
-    else nueva.min = 0;
-
-    if (s >= 0 && s < 60) nueva.seg = s;
-    else nueva.seg = 0;
-
-    return nueva;
+Pila crear() {
+    Pila p;
+    p.tope = -1;
+    return p;
 }
 
-void imprimirDosDigitos(int n) {
-    if (n < 10) cout << "0";
-    cout << n;
+bool vacia(Pila p) {
+    return p.tope == -1;
 }
 
-void mostrar24(Hora h) {
-    imprimirDosDigitos(h.hora); cout << ":";
-    imprimirDosDigitos(h.min);  cout << ":";
-    imprimirDosDigitos(h.seg);  cout << endl;
+bool llena(Pila p) {
+    return p.tope == MAX_PILA - 1;
 }
 
-void adelantar(Hora &h, int minutos) {
-    int total = (h.hora * 60 + h.min + minutos) % (24 * 60);
-    if (total < 0) total += (24 * 60);
-    h.hora = total / 60;
-    h.min = total % 60;
-}
-
-struct Evento {
-    string nombre;
-    int duracionMinutos;
-};
-
-void cronogramaEventos(Evento eventos[], int cant, Hora inicio) {
-    Hora actual = inicio;
-
-    for (int i = 0; i < cant; i++) {
-        Hora fin = actual;
-        adelantar(fin, eventos[i].duracionMinutos);
-
-        cout << "Evento: " << eventos[i].nombre << " (" << eventos[i].duracionMinutos << " min)" << endl;
-        cout << "  Inicio: "; mostrar24(actual);
-        cout << "  Fin:    "; mostrar24(fin);
-        cout << "------------------------------------" << endl;
-
-        actual = fin;
+void apilar(Pila &p, int elem) {
+    if (!llena(p)) {
+        p.tope++;
+        p.datos[p.tope] = elem;
     }
 }
 
+void desapilar(Pila &p) {
+    if (!vacia(p)) {
+        p.tope--;
+    }
+}
+
+int cima(Pila p) {
+    int elem = -1;
+    if (!vacia(p)) {
+        elem = p.datos[p.tope];
+    }
+    return elem;
+}
+
 int main() {
-    Evento lista[10];
-    int cant = 3;
+    Pila p = crear();
 
-    lista[0] = {"Teoria TDA", 90};
-    lista[1] = {"Intervalo / Cafe", 15};
-    lista[2] = {"Taller Practico en Laboratorio", 120};
+    cout << "=== DEMO TDA PILA (LIFO) ===" << endl;
+    cout << "Pila vacia?: " << (vacia(p) ? "Si" : "No") << endl << endl;
 
-    Hora inicio = ponerAHora(8, 0, 0);
-    cout << "=== CRONOGRAMA DE LA JORNADA ===" << endl << endl;
-    cronogramaEventos(lista, cant, inicio);
+    cout << "Apilando elementos: 10, 20, 30..." << endl;
+    apilar(p, 10);
+    apilar(p, 20);
+    apilar(p, 30);
+
+    cout << "Elemento en cima (TOS): " << cima(p) << endl;
+
+    cout << endl << "Desapilando un elemento..." << endl;
+    desapilar(p);
+    cout << "Nueva cima tras desapilar: " << cima(p) << endl;
+
+    cout << endl << "Vaciando la pila en orden LIFO:" << endl;
+    while (!vacia(p)) {
+        cout << "Sale elemento: " << cima(p) << endl;
+        desapilar(p);
+    }
+
+    cout << endl << "Pila vacia?: " << (vacia(p) ? "Si" : "No") << endl;
+
+    return 0;
+}`;
+
+        const cppCodeCola = `#include <iostream>
+using namespace std;
+
+const int MAX_COLA = 100;
+
+struct Cola {
+    int datos[MAX_COLA];
+    int cant;
+};
+
+Cola crear() {
+    Cola c;
+    c.cant = 0;
+    return c;
+}
+
+bool vacia(Cola c) {
+    return c.cant == 0;
+}
+
+bool llena(Cola c) {
+    return c.cant == MAX_COLA;
+}
+
+void encolar(Cola &c, int elem) {
+    if (!llena(c)) {
+        c.datos[c.cant] = elem;
+        c.cant++;
+    }
+}
+
+void desencolar(Cola &c) {
+    if (!vacia(c)) {
+        for (int i = 0; i < c.cant - 1; i++) {
+            c.datos[i] = c.datos[i + 1];
+        }
+        c.cant--;
+    }
+}
+
+int frente(Cola c) {
+    int elem = -1;
+    if (!vacia(c)) {
+        elem = c.datos[0];
+    }
+    return elem;
+}
+
+int main() {
+    Cola c = crear();
+
+    cout << "=== DEMO TDA COLA (FIFO) ===" << endl;
+    cout << "Cola vacia?: " << (vacia(c) ? "Si" : "No") << endl << endl;
+
+    cout << "Encolando clientes (ticket ID): 101, 102, 103..." << endl;
+    encolar(c, 101);
+    encolar(c, 102);
+    encolar(c, 103);
+
+    cout << "Cliente al frente para atencion: " << frente(c) << endl;
+
+    cout << endl << "Atendiendo y desencolando al primer cliente..." << endl;
+    desencolar(c);
+    cout << "Nuevo cliente al frente: " << frente(c) << endl;
+
+    cout << endl << "Atendiendo el resto de la cola en orden FIFO:" << endl;
+    while (!vacia(c)) {
+        cout << "Atendiendo cliente: " << frente(c) << endl;
+        desencolar(c);
+    }
+
+    cout << endl << "Cola vacia?: " << (vacia(c) ? "Si" : "No") << endl;
 
     return 0;
 }`;
@@ -1195,15 +1373,13 @@ int main() {
         function checkCompilerSlides(slide) {
             if (!slide) return;
             if (slide.id === 'slide-compiler-1') {
-                sendCodeWithRetries('oc-editor-1', cppCodeContador);
+                sendCodeWithRetries('oc-editor-1', cppCodeFiguras);
             } else if (slide.id === 'slide-compiler-2') {
-                sendCodeWithRetries('oc-editor-2', cppCodeFiguras);
+                sendCodeWithRetries('oc-editor-2', cppCodeHora);
             } else if (slide.id === 'slide-compiler-3') {
-                sendCodeWithRetries('oc-editor-3', cppCodeMenu);
+                sendCodeWithRetries('oc-editor-3', cppCodePila);
             } else if (slide.id === 'slide-compiler-4') {
-                sendCodeWithRetries('oc-editor-4', cppCodeHora);
-            } else if (slide.id === 'slide-compiler-5') {
-                sendCodeWithRetries('oc-editor-5', cppCodeEventos);
+                sendCodeWithRetries('oc-editor-4', cppCodeCola);
             }
         }
 
