@@ -203,19 +203,23 @@ int main() {
                         <span class="inciso-badge">b</span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: MejorChofer</h2>
                     </div>
-                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-3|5-8|10-12|15">
+                    <pre style="font-size: 14px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-7|9-23">
+int sumarEnviosChofer(int envios[][DIAS], int f) {
+    int total = 0;
+    for (int c = 0; c &lt; DIAS; c++) {
+        total += envios[f][c];
+    }
+    return total;
+}
+
 string MejorChofer(int envios[][DIAS], string nombres[]) {
     int maxPaquetes = -1;
     string mejorNombre = "";
 
     for (int f = 0; f &lt; CHOFERES; f++) {
-        int sumaActual = 0;
-        for (int c = 0; c &lt; DIAS; c++) {
-            sumaActual += envios[f][c];
-        }
-
-        if (sumaActual &gt; maxPaquetes) {
-            maxPaquetes = sumaActual;
+        int totalFila = sumarEnviosChofer(envios, f);
+        if (totalFila &gt; maxPaquetes) {
+            maxPaquetes = totalFila;
             mejorNombre = nombres[f];
         }
     }
@@ -270,17 +274,20 @@ string MejorChofer(int envios[][DIAS], string nombres[]) {
                         <span class="inciso-badge">c</span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: DiasBajaProduccion</h2>
                     </div>
-                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-2|4-7|9-11|14">
+                    <pre style="font-size: 14.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-7|9-20">
+int sumarEnviosDia(int envios[][DIAS], int c) {
+    int total = 0;
+    for (int f = 0; f &lt; CHOFERES; f++) {
+        total += envios[f][c];
+    }
+    return total;
+}
+
 int DiasBajaProduccion(int envios[][DIAS]) {
     int diasBajos = 0;
 
     for (int c = 0; c &lt; DIAS; c++) {
-        int sumaDia = 0;
-        for (int f = 0; f &lt; CHOFERES; f++) {
-            sumaDia += envios[f][c];
-        }
-
-        if (sumaDia &lt; 100) {
+        if (sumarEnviosDia(envios, c) &lt; 100) {
             diasBajos++;
         }
     }
@@ -336,30 +343,32 @@ int DiasBajaProduccion(int envios[][DIAS]) {
                         <span class="inciso-badge">d</span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: CalcularLiquidacion</h2>
                     </div>
-                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-2|4-11|13-21|23">
-float CalcularLiquidacion(int envios[][DIAS], string nombres[],
-        float tarifas[], string choferBuscado) {
-    int indiceChofer = -1;
+                    <pre style="font-size: 13.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-13|15-26">
+int BuscarChofer(string nombres[], string choferBuscado) {
+    int indice = -1;
     int i = 0;
     bool encontrado = false;
     while (i &lt; CHOFERES &amp;&amp; !encontrado) {
         if (nombres[i] == choferBuscado) {
-            indiceChofer = i;
+            indice = i;
             encontrado = true;
         }
         i++;
     }
+    return indice;
+}
 
-    int totalPaquetes = 0;
-    if (indiceChofer == -1) {
-        totalPaquetes = -1;
-    } else {
-        for (int c = 0; c &lt; DIAS; c++) {
-            totalPaquetes += envios[indiceChofer][c];
-        }
-        totalPaquetes = totalPaquetes * tarifas[indiceChofer];
+float CalcularLiquidacion(int envios[][DIAS], string nombres[],
+        float tarifas[], string choferBuscado) {
+    int idx = BuscarChofer(nombres, choferBuscado);
+    float liquidacion = -1.0f;
+
+    if (idx != -1) {
+        int totalPaquetes = sumarEnviosChofer(envios, idx);
+        liquidacion = totalPaquetes * tarifas[idx];
     }
-    return totalPaquetes;
+
+    return liquidacion;
 }
                     </code></pre>
                 </section>
@@ -548,17 +557,23 @@ using namespace std;
 const int CHOFERES = 25;
 const int DIAS = 31;
 
+// Funcion auxiliar: suma los envios de un chofer en todo el mes
+int sumarEnviosChofer(int envios[][DIAS], int f) {
+    int total = 0;
+    for (int c = 0; c < DIAS; c++) {
+        total += envios[f][c];
+    }
+    return total;
+}
+
 string MejorChofer(int envios[][DIAS], string nombres[]) {
     int maxPaquetes = -1;
     string mejorNombre = "";
 
     for (int f = 0; f < CHOFERES; f++) {
-        int sumaActual = 0;
-        for (int c = 0; c < DIAS; c++) {
-            sumaActual += envios[f][c];
-        }
-        if (sumaActual > maxPaquetes) {
-            maxPaquetes = sumaActual;
+        int totalFila = sumarEnviosChofer(envios, f);
+        if (totalFila > maxPaquetes) {
+            maxPaquetes = totalFila;
             mejorNombre = nombres[f];
         }
     }
@@ -569,6 +584,9 @@ string MejorChofer(int envios[][DIAS], string nombres[]) {
 int main() {
     int matrizEnvios[CHOFERES][DIAS] {};
     string nombresChoferes[CHOFERES] {"Lopez", "Garcia", "Martinez"};
+
+    matrizEnvios[1][5] = 40;
+    matrizEnvios[1][12] = 50;
 
     cout << "Mejor chofer: " << MejorChofer(matrizEnvios, nombresChoferes) << endl;
     return 0;
@@ -581,15 +599,20 @@ using namespace std;
 const int CHOFERES = 25;
 const int DIAS = 31;
 
+// Funcion auxiliar: suma los envios de todos los choferes en un dia dado
+int sumarEnviosDia(int envios[][DIAS], int c) {
+    int total = 0;
+    for (int f = 0; f < CHOFERES; f++) {
+        total += envios[f][c];
+    }
+    return total;
+}
+
 int DiasBajaProduccion(int envios[][DIAS]) {
     int diasBajos = 0;
 
     for (int c = 0; c < DIAS; c++) {
-        int sumaDia = 0;
-        for (int f = 0; f < CHOFERES; f++) {
-            sumaDia += envios[f][c];
-        }
-        if (sumaDia < 100) {
+        if (sumarEnviosDia(envios, c) < 100) {
             diasBajos++;
         }
     }
@@ -600,7 +623,11 @@ int DiasBajaProduccion(int envios[][DIAS]) {
 int main() {
     int matrizEnvios[CHOFERES][DIAS] {};
 
-    cout << "Dias con baja produccion: " << DiasBajaProduccion(matrizEnvios) << endl;
+    matrizEnvios[0][0] = 60;
+    matrizEnvios[1][0] = 50;
+
+    cout << "Dias con baja produccion (<100 paquetes): " 
+         << DiasBajaProduccion(matrizEnvios) << endl;
     return 0;
 }`;
 
@@ -611,42 +638,54 @@ using namespace std;
 const int CHOFERES = 25;
 const int DIAS = 31;
 
-float CalcularLiquidacion(int envios[][DIAS], string nombres[],
-        float tarifas[], string choferBuscado) {
-    int indiceChofer = -1;
+// Funcion auxiliar: suma los envios de un chofer en todo el mes (reutilizada)
+int sumarEnviosChofer(int envios[][DIAS], int f) {
+    int total = 0;
+    for (int c = 0; c < DIAS; c++) {
+        total += envios[f][c];
+    }
+    return total;
+}
+
+// Funcion auxiliar: busqueda secuencial del chofer por nombre
+int BuscarChofer(string nombres[], string choferBuscado) {
+    int indice = -1;
     int i = 0;
     bool encontrado = false;
     while (i < CHOFERES && !encontrado) {
         if (nombres[i] == choferBuscado) {
-            indiceChofer = i;
+            indice = i;
             encontrado = true;
         }
         i++;
     }
+    return indice;
+}
 
-    int totalPaquetes = 0;
-    if (indiceChofer == -1) {
-        totalPaquetes = -1;
-    } else {
-        for (int c = 0; c < DIAS; c++) {
-            totalPaquetes += envios[indiceChofer][c];
-        }
-        totalPaquetes = totalPaquetes * tarifas[indiceChofer];
+float CalcularLiquidacion(int envios[][DIAS], string nombres[],
+        float tarifas[], string choferBuscado) {
+    int idx = BuscarChofer(nombres, choferBuscado);
+    float liquidacion = -1.0f;
+
+    if (idx != -1) {
+        int totalPaquetes = sumarEnviosChofer(envios, idx);
+        liquidacion = totalPaquetes * tarifas[idx];
     }
-    return totalPaquetes;
+
+    return liquidacion;
 }
 
 int main() {
     int matrizEnvios[CHOFERES][DIAS] {};
     string nombresChoferes[CHOFERES] {"Lopez", "Garcia"};
-    float tarifasChoferes[CHOFERES] {150.5, 200.0};
+    float tarifasChoferes[CHOFERES] {150.5f, 200.0f};
 
-    string nombre;
-    cout << "Ingrese nombre del chofer: ";
-    cin >> nombre;
+    matrizEnvios[1][0] = 10;
+    matrizEnvios[1][1] = 15;
 
+    string nombre = "Garcia";
     float pago = CalcularLiquidacion(matrizEnvios, nombresChoferes, tarifasChoferes, nombre);
-    if (pago == -1) {
+    if (pago == -1.0f) {
         cout << "El chofer no existe en los registros." << endl;
     } else {
         cout << "Monto a cobrar: $" << pago << endl;
@@ -690,58 +729,68 @@ using namespace std;
 const int CHOFERES = 25;
 const int DIAS = 31;
 
+int sumarEnviosChofer(int envios[][DIAS], int f) {
+    int total = 0;
+    for (int c = 0; c < DIAS; c++) {
+        total += envios[f][c];
+    }
+    return total;
+}
+
 string MejorChofer(int envios[][DIAS], string nombres[]) {
     int maxPaquetes = -1;
     string mejorNombre = "";
     for (int f = 0; f < CHOFERES; f++) {
-        int sumaActual = 0;
-        for (int c = 0; c < DIAS; c++) {
-            sumaActual += envios[f][c];
-        }
-        if (sumaActual > maxPaquetes) {
-            maxPaquetes = sumaActual;
+        int totalFila = sumarEnviosChofer(envios, f);
+        if (totalFila > maxPaquetes) {
+            maxPaquetes = totalFila;
             mejorNombre = nombres[f];
         }
     }
     return mejorNombre;
 }
 
+int sumarEnviosDia(int envios[][DIAS], int c) {
+    int total = 0;
+    for (int f = 0; f < CHOFERES; f++) {
+        total += envios[f][c];
+    }
+    return total;
+}
+
 int DiasBajaProduccion(int envios[][DIAS]) {
     int diasBajos = 0;
     for (int c = 0; c < DIAS; c++) {
-        int sumaDia = 0;
-        for (int f = 0; f < CHOFERES; f++) {
-            sumaDia += envios[f][c];
-        }
-        if (sumaDia < 100) {
+        if (sumarEnviosDia(envios, c) < 100) {
             diasBajos++;
         }
     }
     return diasBajos;
 }
 
-float CalcularLiquidacion(int envios[][DIAS], string nombres[],
-        float tarifas[], string choferBuscado) {
-    int indiceChofer = -1;
+int BuscarChofer(string nombres[], string choferBuscado) {
+    int indice = -1;
     int i = 0;
     bool encontrado = false;
     while (i < CHOFERES && !encontrado) {
         if (nombres[i] == choferBuscado) {
-            indiceChofer = i;
+            indice = i;
             encontrado = true;
         }
         i++;
     }
-    int totalPaquetes = 0;
-    if (indiceChofer == -1) {
-        totalPaquetes = -1;
-    } else {
-        for (int c = 0; c < DIAS; c++) {
-            totalPaquetes += envios[indiceChofer][c];
-        }
-        totalPaquetes = totalPaquetes * tarifas[indiceChofer];
+    return indice;
+}
+
+float CalcularLiquidacion(int envios[][DIAS], string nombres[],
+        float tarifas[], string choferBuscado) {
+    int idx = BuscarChofer(nombres, choferBuscado);
+    float liquidacion = -1.0f;
+    if (idx != -1) {
+        int totalPaquetes = sumarEnviosChofer(envios, idx);
+        liquidacion = totalPaquetes * tarifas[idx];
     }
-    return totalPaquetes;
+    return liquidacion;
 }
 
 int ChoferesInactivosDia(int envios[][DIAS], int D, int f) {
@@ -758,16 +807,14 @@ int ChoferesInactivosDia(int envios[][DIAS], int D, int f) {
 int main() {
     int matrizEnvios[CHOFERES][DIAS] {};
     string nombresChoferes[CHOFERES] {"Lopez", "Garcia", "Martinez"};
-    float tarifasChoferes[CHOFERES] {150.5, 200.0, 175.0};
+    float tarifasChoferes[CHOFERES] {150.5f, 200.0f, 175.0f};
 
     cout << "Mejor chofer: " << MejorChofer(matrizEnvios, nombresChoferes) << endl;
     cout << "Dias baja produccion: " << DiasBajaProduccion(matrizEnvios) << endl;
 
-    string nombre;
-    cout << "Ingrese nombre del chofer: ";
-    cin >> nombre;
+    string nombre = "Garcia";
     float pago = CalcularLiquidacion(matrizEnvios, nombresChoferes, tarifasChoferes, nombre);
-    if (pago == -1) {
+    if (pago == -1.0f) {
         cout << "Chofer no encontrado." << endl;
     } else {
         cout << "Monto: $" << pago << endl;
