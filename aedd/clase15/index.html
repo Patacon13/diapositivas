@@ -371,19 +371,63 @@
                     </div>
                 </section>
 
-                <!-- 1.B Solución C++ (Vertical) -->
+                                <!-- 1.B.1 Solución TDAs Figuras - Interfaz -->
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">1</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDAs Figuras</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDAs Figuras - Interfaz (.h)</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 13.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-15|17-31|33-47|49-65">
+                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape>
 const float PI = 3.14159265f;
 
 struct Circulo {
     float radio;
 };
+
+struct Cuadrado {
+    float lado;
+};
+
+struct Rectangulo {
+    float base;
+    float altura;
+};
+
+struct Triangulo {
+    float base;
+    float altura;
+    float l1, l2, l3;
+};
+
+// Prototipos de funciones primitivas
+Circulo crear_circulo(float r);
+float perimetro(Circulo c);
+float area(Circulo c);
+
+Cuadrado crear_cuadrado(float l);
+float perimetro(Cuadrado c);
+float area(Cuadrado c);
+
+Rectangulo crear_rectangulo(float b, float h);
+float perimetro(Rectangulo r);
+float area(Rectangulo r);
+
+Triangulo crear_triangulo(float b, float h, float l1, float l2, float l3);
+float perimetro(Triangulo t);
+float area(Triangulo t);
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 1.B.2 Solución TDAs Figuras - Implementación -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">1</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDAs Figuras - Implementación (.cpp)</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape>
 Circulo crear_circulo(float r) {
     Circulo c;
     c.radio = r;
@@ -396,9 +440,6 @@ float area(Circulo c) {
     return PI * c.radio * c.radio;
 }
 
-struct Cuadrado {
-    float lado;
-};
 Cuadrado crear_cuadrado(float l) {
     Cuadrado c;
     c.lado = l;
@@ -411,10 +452,6 @@ float area(Cuadrado c) {
     return c.lado * c.lado;
 }
 
-struct Rectangulo {
-    float base;
-    float altura;
-};
 Rectangulo crear_rectangulo(float b, float h) {
     Rectangulo r;
     r.base = b;
@@ -428,11 +465,6 @@ float area(Rectangulo r) {
     return r.base * r.altura;
 }
 
-struct Triangulo {
-    float base;
-    float altura;
-    float l1, l2, l3;
-};
 Triangulo crear_triangulo(float b, float h, float l1, float l2, float l3) {
     Triangulo t;
     t.base = b;
@@ -445,6 +477,44 @@ float perimetro(Triangulo t) {
 }
 float area(Triangulo t) {
     return (t.base * t.altura) / 2.0f;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 1.B.3 Solución TDAs Figuras - Programa Cliente -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">1</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDAs Figuras - Programa Cliente (main.cpp)</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 12px !important;"><code class="cpp" data-trim data-noescape>
+#include <iostream>
+using namespace std;
+
+int main() {
+    Circulo circ = crear_circulo(5.0f);
+    cout << "Circulo (radio 5):" << endl;
+    cout << "  Perimetro: " << perimetro(circ) << endl;
+    cout << "  Area:      " << area(circ) << endl << endl;
+
+    Cuadrado cuad = crear_cuadrado(4.0f);
+    cout << "Cuadrado (lado 4):" << endl;
+    cout << "  Perimetro: " << perimetro(cuad) << endl;
+    cout << "  Area:      " << area(cuad) << endl << endl;
+
+    Rectangulo rect = crear_rectangulo(6.0f, 3.0f);
+    cout << "Rectangulo (base 6, altura 3):" << endl;
+    cout << "  Perimetro: " << perimetro(rect) << endl;
+    cout << "  Area:      " << area(rect) << endl << endl;
+
+    Triangulo tri = crear_triangulo(4.0f, 3.0f, 4.0f, 3.0f, 5.0f);
+    cout << "Triangulo (base 4, alt 3, lados 4,3,5):" << endl;
+    cout << "  Perimetro: " << perimetro(tri) << endl;
+    cout << "  Area:      " << area(tri) << endl;
+
+    return 0;
 }
                         </code></pre>
                     </div>
@@ -497,18 +567,36 @@ float area(Triangulo t) {
                     </div>
                 </section>
 
-                <!-- 2.B Solución C++ (Vertical) -->
+                                <!-- 2.B.1 Solución TDA Hora - Interfaz -->
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">2</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Hora</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Hora - Interfaz (.h)</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-3|5-18|20-39|41-52|54-61">
+                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape>
 struct Hora {
     int hora, min, seg;
 };
 
+Hora ponerAHora(int h, int m, int s);
+void mostrar24(Hora h);
+void mostrar12(Hora h);
+void adelantar(Hora &h, int minutos);
+void atrasar(Hora &h, int minutos);
+int diferenciaEnMinutos(Hora h1, Hora h2);
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 2.B.2 Solución TDA Hora - Implementación -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">2</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Hora - Implementación (.cpp)</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape>
 Hora ponerAHora(int h, int m, int s) {
     Hora nueva;
     if (h >= 0 && h < 24) nueva.hora = h;
@@ -523,6 +611,17 @@ Hora ponerAHora(int h, int m, int s) {
     return nueva;
 }
 
+void imprimirDosDigitos(int n) {
+    if (n < 10) cout << "0";
+    cout << n;
+}
+
+void mostrar24(Hora h) {
+    imprimirDosDigitos(h.hora); cout << ":";
+    imprimirDosDigitos(h.min);  cout << ":";
+    imprimirDosDigitos(h.seg);  cout << endl;
+}
+
 void mostrar12(Hora h) {
     int h12 = h.hora;
     string sufijo = " a.m.";
@@ -532,12 +631,9 @@ void mostrar12(Hora h) {
     } else {
         if (h.hora == 0) h12 = 12;
     }
-    if (h12 < 10) cout << "0";
-    cout << h12 << ":";
-    if (h.min < 10) cout << "0";
-    cout << h.min << ":";
-    if (h.seg < 10) cout << "0";
-    cout << h.seg << sufijo << endl;
+    imprimirDosDigitos(h12);   cout << ":";
+    imprimirDosDigitos(h.min); cout << ":";
+    imprimirDosDigitos(h.seg); cout << sufijo << endl;
 }
 
 void adelantar(Hora &h, int minutos) {
@@ -555,6 +651,40 @@ int diferenciaEnMinutos(Hora h1, Hora h2) {
     int diff = (h1.hora * 60 + h1.min) - (h2.hora * 60 + h2.min);
     if (diff < 0) diff = -diff;
     return diff;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 2.B.3 Solución TDA Hora - Programa Cliente -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">2</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Hora - Programa Cliente (main.cpp)</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 12px !important;"><code class="cpp" data-trim data-noescape>
+#include <iostream>
+using namespace std;
+
+int main() {
+    Hora h = ponerAHora(14, 30, 0);
+    cout << "Hora en 24hs: "; mostrar24(h);
+    cout << "Hora en 12hs: "; mostrar12(h);
+
+    cout << endl << "Adelantamos 45 minutos:" << endl;
+    adelantar(h, 45);
+    cout << "Hora en 24hs: "; mostrar24(h);
+    cout << "Hora en 12hs: "; mostrar12(h);
+
+    cout << endl << "Atrasamos 120 minutos:" << endl;
+    atrasar(h, 120);
+    cout << "Hora en 24hs: "; mostrar24(h);
+
+    Hora h2 = ponerAHora(17, 15, 0);
+    cout << endl << "Diferencia con 17:15: " << diferenciaEnMinutos(h, h2) << " minutos." << endl;
+
+    return 0;
 }
                         </code></pre>
                     </div>
@@ -681,14 +811,14 @@ int diferenciaEnMinutos(Hora h1, Hora h2) {
                     </div>
                 </section>
 
-                <!-- 3.C Solución C++ (Vertical) -->
+                                <!-- 3.B.1 Solución TDA Pila - Interfaz -->
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">3</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Pila</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Pila - Interfaz (.h)</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 13.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-13|15-27|29-39|41-48">
+                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape>
 const int MAX_PILA = 100;
 
 struct Pila {
@@ -696,6 +826,24 @@ struct Pila {
     int tope;
 };
 
+Pila crear();
+bool vacia(Pila p);
+bool llena(Pila p);
+void apilar(Pila &p, int elem);
+void desapilar(Pila &p);
+int cima(Pila p);
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 3.B.2 Solución TDA Pila - Implementación -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">3</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Pila - Implementación (.cpp)</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 12px !important;"><code class="cpp" data-trim data-noescape>
 Pila crear() {
     Pila p;
     p.tope = -1;
@@ -729,6 +877,48 @@ int cima(Pila p) {
         elem = p.datos[p.tope];
     }
     return elem;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 3.B.3 Solución TDA Pila - Programa Cliente -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">3</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Pila - Programa Cliente (main.cpp)</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape>
+#include <iostream>
+using namespace std;
+
+int main() {
+    Pila p = crear();
+
+    cout << "=== DEMO TDA PILA (LIFO) ===" << endl;
+    cout << "Pila vacia?: " << (vacia(p) ? "Si" : "No") << endl << endl;
+
+    cout << "Apilando elementos: 10, 20, 30..." << endl;
+    apilar(p, 10);
+    apilar(p, 20);
+    apilar(p, 30);
+
+    cout << "Elemento en cima (TOS): " << cima(p) << endl;
+
+    cout << endl << "Desapilando un elemento..." << endl;
+    desapilar(p);
+    cout << "Nueva cima tras desapilar: " << cima(p) << endl;
+
+    cout << endl << "Vaciando la pila en orden LIFO:" << endl;
+    while (!vacia(p)) {
+        cout << "Sale elemento: " << cima(p) << endl;
+        desapilar(p);
+    }
+
+    cout << endl << "Pila vacia?: " << (vacia(p) ? "Si" : "No") << endl;
+
+    return 0;
 }
                         </code></pre>
                     </div>
@@ -858,14 +1048,14 @@ int cima(Pila p) {
                     </div>
                 </section>
 
-                <!-- 4.C Solución C++ (Vertical) -->
+                                <!-- 4.B.1 Solución TDA Cola - Interfaz -->
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">4</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Cola</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Cola - Interfaz (.h)</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-13|15-27|29-41|43-50">
+                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape>
 const int MAX_COLA = 100;
 
 struct Cola {
@@ -873,6 +1063,24 @@ struct Cola {
     int cant;
 };
 
+Cola crear();
+bool vacia(Cola c);
+bool llena(Cola c);
+void encolar(Cola &c, int elem);
+void desencolar(Cola &c);
+int frente(Cola c);
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 4.B.2 Solución TDA Cola - Implementación -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">4</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Cola - Implementación (.cpp)</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 12px !important;"><code class="cpp" data-trim data-noescape>
 Cola crear() {
     Cola c;
     c.cant = 0;
@@ -909,6 +1117,48 @@ int frente(Cola c) {
         elem = c.datos[0];
     }
     return elem;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 4.B.3 Solución TDA Cola - Programa Cliente -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">4</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Cola - Programa Cliente (main.cpp)</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape>
+#include <iostream>
+using namespace std;
+
+int main() {
+    Cola c = crear();
+
+    cout << "=== DEMO TDA COLA (FIFO) ===" << endl;
+    cout << "Cola vacia?: " << (vacia(c) ? "Si" : "No") << endl << endl;
+
+    cout << "Encolando clientes (ticket ID): 101, 102, 103..." << endl;
+    encolar(c, 101);
+    encolar(c, 102);
+    encolar(c, 103);
+
+    cout << "Cliente al frente para atencion: " << frente(c) << endl;
+
+    cout << endl << "Atendiendo y desencolando al primer cliente..." << endl;
+    desencolar(c);
+    cout << "Nuevo cliente al frente: " << frente(c) << endl;
+
+    cout << endl << "Atendiendo el resto de la cola en orden FIFO:" << endl;
+    while (!vacia(c)) {
+        cout << "Atendiendo cliente: " << frente(c) << endl;
+        desencolar(c);
+    }
+
+    cout << endl << "Cola vacia?: " << (vacia(c) ? "Si" : "No") << endl;
+
+    return 0;
 }
                         </code></pre>
                     </div>
