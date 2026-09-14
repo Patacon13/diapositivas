@@ -371,67 +371,86 @@
                     </div>
                 </section>
 
-                                <!-- 1.B.1 Solución TDAs Figuras - Interfaz -->
+                                <!-- 1.B Arquitectura Modular de los 4 TDAs (Vertical) -->
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">1</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDAs Figuras - Interfaz (.h)</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Arquitectura: 4 TDAs Independientes</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape>
+                        <div class="concept-card" style="margin-bottom: 15px; padding: 14px 20px;">
+                            <h3 style="font-size: 19px;"><i class="fa-solid fa-sitemap" style="color: var(--utn-gold);"></i> Organización de Archivos en C++</h3>
+                            <p style="font-size: 15.5px; margin: 0; line-height: 1.4;">
+                                Cada figura geométrica constituye un <strong>TDA independiente</strong>. Por ende, cada uno define su propio archivo de cabecera (<code>.h</code>) y de implementación (<code>.cpp</code>):
+                            </p>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%;">
+                            <div class="tile" style="padding: 14px; border-top: 5px solid #2563EB;">
+                                <h3 style="font-size: 16px; color: #2563EB; margin-bottom: 6px;"><i class="fa-regular fa-circle"></i> TDA Círculo</h3>
+                                <p style="font-size: 13px; margin: 0; color: #475569; font-family: monospace; line-height: 1.5;">
+                                    <strong>circulo.h</strong><br>
+                                    <strong>circulo.cpp</strong>
+                                </p>
+                            </div>
+                            <div class="tile" style="padding: 14px; border-top: 5px solid #10B981;">
+                                <h3 style="font-size: 16px; color: #10B981; margin-bottom: 6px;"><i class="fa-regular fa-square"></i> TDA Cuadrado</h3>
+                                <p style="font-size: 13px; margin: 0; color: #475569; font-family: monospace; line-height: 1.5;">
+                                    <strong>cuadrado.h</strong><br>
+                                    <strong>cuadrado.cpp</strong>
+                                </p>
+                            </div>
+                            <div class="tile" style="padding: 14px; border-top: 5px solid #F59E0B;">
+                                <h3 style="font-size: 16px; color: #D97706; margin-bottom: 6px;"><i class="fa-solid fa-vector-square"></i> TDA Rectángulo</h3>
+                                <p style="font-size: 13px; margin: 0; color: #475569; font-family: monospace; line-height: 1.5;">
+                                    <strong>rectangulo.h</strong><br>
+                                    <strong>rectangulo.cpp</strong>
+                                </p>
+                            </div>
+                            <div class="tile" style="padding: 14px; border-top: 5px solid #8B5CF6;">
+                                <h3 style="font-size: 16px; color: #7C3AED; margin-bottom: 6px;"><i class="fa-solid fa-play" style="transform: rotate(-90deg);"></i> TDA Triángulo</h3>
+                                <p style="font-size: 13px; margin: 0; color: #475569; font-family: monospace; line-height: 1.5;">
+                                    <strong>triangulo.h</strong><br>
+                                    <strong>triangulo.cpp</strong>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 14px; background: #272822; color: #F8F8F2; padding: 12px 18px; border-radius: 10px; font-family: monospace; font-size: 13px; text-align: left; border-left: 5px solid var(--utn-gold);">
+                            <span style="color: #75715E;">// main.cpp (Programa cliente): incluye solo las interfaces que va a consumir</span><br>
+                            <span style="color: #F92672;">#include</span> <span style="color: #E6DB74;">"circulo.h"</span> &nbsp;
+                            <span style="color: #F92672;">#include</span> <span style="color: #E6DB74;">"cuadrado.h"</span> &nbsp;
+                            <span style="color: #F92672;">#include</span> <span style="color: #E6DB74;">"rectangulo.h"</span> &nbsp;
+                            <span style="color: #F92672;">#include</span> <span style="color: #E6DB74;">"triangulo.h"</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1.C Solución: Círculo y Cuadrado (Vertical) -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">1</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA Círculo &amp; TDA Cuadrado</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 18px; align-items: stretch;">
+                            <!-- TDA CÍRCULO -->
+                            <div style="background: #272822; border-radius: 10px; padding: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border-top: 4px solid #2563EB; text-align: left;">
+                                <div style="color: #38BDF8; font-family: monospace; font-size: 12.5px; font-weight: bold; margin-bottom: 6px;">
+                                    <i class="fa-regular fa-file-code"></i> circulo.h / circulo.cpp
+                                </div>
+                                <pre style="font-size: 11.5px !important; margin: 0; padding: 0; background: transparent; box-shadow: none; border-left: none;"><code class="cpp" data-trim data-noescape>
+// === circulo.h ===
 const float PI = 3.14159265f;
-
-struct Circulo {
-    float radio;
-};
-
-struct Cuadrado {
-    float lado;
-};
-
-struct Rectangulo {
-    float base;
-    float altura;
-};
-
-struct Triangulo {
-    float base;
-    float altura;
-    float l1, l2, l3;
-};
-
-// Prototipos de funciones primitivas
+struct Circulo { float radio; };
 Circulo crear_circulo(float r);
 float perimetro(Circulo c);
 float area(Circulo c);
 
-Cuadrado crear_cuadrado(float l);
-float perimetro(Cuadrado c);
-float area(Cuadrado c);
-
-Rectangulo crear_rectangulo(float b, float h);
-float perimetro(Rectangulo r);
-float area(Rectangulo r);
-
-Triangulo crear_triangulo(float b, float h, float l1, float l2, float l3);
-float perimetro(Triangulo t);
-float area(Triangulo t);
-                        </code></pre>
-                    </div>
-                </section>
-
-                <!-- 1.B.2 Solución TDAs Figuras - Implementación -->
-                <section>
-                    <div class="inciso-header">
-                        <span class="inciso-badge">1</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDAs Figuras - Implementación (.cpp)</h2>
-                    </div>
-                    <div class="content-area">
-                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape>
+// === circulo.cpp ===
+#include "circulo.h"
 Circulo crear_circulo(float r) {
-    Circulo c;
-    c.radio = r;
-    return c;
+    Circulo c; c.radio = r; return c;
 }
 float perimetro(Circulo c) {
     return 2.0f * PI * c.radio;
@@ -439,11 +458,25 @@ float perimetro(Circulo c) {
 float area(Circulo c) {
     return PI * c.radio * c.radio;
 }
+                                </code></pre>
+                            </div>
 
+                            <!-- TDA CUADRADO -->
+                            <div style="background: #272822; border-radius: 10px; padding: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border-top: 4px solid #10B981; text-align: left;">
+                                <div style="color: #4ADE80; font-family: monospace; font-size: 12.5px; font-weight: bold; margin-bottom: 6px;">
+                                    <i class="fa-regular fa-file-code"></i> cuadrado.h / cuadrado.cpp
+                                </div>
+                                <pre style="font-size: 11.5px !important; margin: 0; padding: 0; background: transparent; box-shadow: none; border-left: none;"><code class="cpp" data-trim data-noescape>
+// === cuadrado.h ===
+struct Cuadrado { float lado; };
+Cuadrado crear_cuadrado(float l);
+float perimetro(Cuadrado c);
+float area(Cuadrado c);
+
+// === cuadrado.cpp ===
+#include "cuadrado.h"
 Cuadrado crear_cuadrado(float l) {
-    Cuadrado c;
-    c.lado = l;
-    return c;
+    Cuadrado c; c.lado = l; return c;
 }
 float perimetro(Cuadrado c) {
     return 4.0f * c.lado;
@@ -451,12 +484,36 @@ float perimetro(Cuadrado c) {
 float area(Cuadrado c) {
     return c.lado * c.lado;
 }
+                                </code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
+                <!-- 1.D Solución: Rectángulo y Triángulo (Vertical) -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">1</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA Rectángulo &amp; TDA Triángulo</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 18px; align-items: stretch;">
+                            <!-- TDA RECTÁNGULO -->
+                            <div style="background: #272822; border-radius: 10px; padding: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border-top: 4px solid #F59E0B; text-align: left;">
+                                <div style="color: #FBBF24; font-family: monospace; font-size: 12.5px; font-weight: bold; margin-bottom: 6px;">
+                                    <i class="fa-regular fa-file-code"></i> rectangulo.h / rectangulo.cpp
+                                </div>
+                                <pre style="font-size: 11.5px !important; margin: 0; padding: 0; background: transparent; box-shadow: none; border-left: none;"><code class="cpp" data-trim data-noescape>
+// === rectangulo.h ===
+struct Rectangulo { float base, altura; };
+Rectangulo crear_rectangulo(float b, float h);
+float perimetro(Rectangulo r);
+float area(Rectangulo r);
+
+// === rectangulo.cpp ===
+#include "rectangulo.h"
 Rectangulo crear_rectangulo(float b, float h) {
-    Rectangulo r;
-    r.base = b;
-    r.altura = h;
-    return r;
+    Rectangulo r; r.base = b; r.altura = h; return r;
 }
 float perimetro(Rectangulo r) {
     return 2.0f * (r.base + r.altura);
@@ -464,13 +521,28 @@ float perimetro(Rectangulo r) {
 float area(Rectangulo r) {
     return r.base * r.altura;
 }
+                                </code></pre>
+                            </div>
 
-Triangulo crear_triangulo(float b, float h, float l1, float l2, float l3) {
-    Triangulo t;
-    t.base = b;
-    t.altura = h;
-    t.l1 = l1; t.l2 = l2; t.l3 = l3;
-    return t;
+                            <!-- TDA TRIÁNGULO -->
+                            <div style="background: #272822; border-radius: 10px; padding: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border-top: 4px solid #8B5CF6; text-align: left;">
+                                <div style="color: #A78BFA; font-family: monospace; font-size: 12.5px; font-weight: bold; margin-bottom: 6px;">
+                                    <i class="fa-regular fa-file-code"></i> triangulo.h / triangulo.cpp
+                                </div>
+                                <pre style="font-size: 11.5px !important; margin: 0; padding: 0; background: transparent; box-shadow: none; border-left: none;"><code class="cpp" data-trim data-noescape>
+// === triangulo.h ===
+struct Triangulo { float base, altura, l1, l2, l3; };
+Triangulo crear_triangulo(float b, float h,
+                          float l1, float l2, float l3);
+float perimetro(Triangulo t);
+float area(Triangulo t);
+
+// === triangulo.cpp ===
+#include "triangulo.h"
+Triangulo crear_triangulo(float b, float h,
+                          float l1, float l2, float l3) {
+    Triangulo t; t.base = b; t.altura = h;
+    t.l1 = l1; t.l2 = l2; t.l3 = l3; return t;
 }
 float perimetro(Triangulo t) {
     return t.l1 + t.l2 + t.l3;
@@ -478,64 +550,47 @@ float perimetro(Triangulo t) {
 float area(Triangulo t) {
     return (t.base * t.altura) / 2.0f;
 }
-                        </code></pre>
+                                </code></pre>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
-                <!-- 1.B.3 Solución TDAs Figuras - Programa Cliente -->
+                <!-- 1.E Programa Cliente main.cpp (Vertical) -->
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">1</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDAs Figuras - Programa Cliente (main.cpp)</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Programa Cliente (main.cpp)</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 12px !important;"><code class="cpp" data-trim data-noescape>
-#include <iostream>
+                        <pre style="font-size: 12.5px !important;"><code class="cpp" data-trim data-noescape>
+#include &lt;iostream&gt;
+#include "circulo.h"
+#include "cuadrado.h"
+#include "rectangulo.h"
+#include "triangulo.h"
 using namespace std;
 
 int main() {
-    Circulo circ = crear_circulo(5.0f);
-    cout << "Circulo (radio 5):" << endl;
-    cout << "  Perimetro: " << perimetro(circ) << endl;
-    cout << "  Area:      " << area(circ) << endl << endl;
+    // El cliente solo utiliza las operaciones públicas de cada TDA
+    Circulo c = crear_circulo(5.0f);
+    cout << "Circulo - Perimetro: " << perimetro(c) << " | Area: " << area(c) << endl;
 
-    Cuadrado cuad = crear_cuadrado(4.0f);
-    cout << "Cuadrado (lado 4):" << endl;
-    cout << "  Perimetro: " << perimetro(cuad) << endl;
-    cout << "  Area:      " << area(cuad) << endl << endl;
+    Cuadrado q = crear_cuadrado(4.0f);
+    cout << "Cuadrado - Perimetro: " << perimetro(q) << " | Area: " << area(q) << endl;
 
-    Rectangulo rect = crear_rectangulo(6.0f, 3.0f);
-    cout << "Rectangulo (base 6, altura 3):" << endl;
-    cout << "  Perimetro: " << perimetro(rect) << endl;
-    cout << "  Area:      " << area(rect) << endl << endl;
+    Rectangulo r = crear_rectangulo(6.0f, 3.0f);
+    cout << "Rectangulo - Perimetro: " << perimetro(r) << " | Area: " << area(r) << endl;
 
-    Triangulo tri = crear_triangulo(4.0f, 3.0f, 4.0f, 3.0f, 5.0f);
-    cout << "Triangulo (base 4, alt 3, lados 4,3,5):" << endl;
-    cout << "  Perimetro: " << perimetro(tri) << endl;
-    cout << "  Area:      " << area(tri) << endl;
+    Triangulo t = crear_triangulo(4.0f, 3.0f, 4.0f, 3.0f, 5.0f);
+    cout << "Triangulo - Perimetro: " << perimetro(t) << " | Area: " << area(t) << endl;
 
     return 0;
 }
                         </code></pre>
-                    </div>
-                </section>
-
-                <!-- 1.C Compilador OneCompiler (Vertical) -->
-                <section id="slide-compiler-1">
-                    <h2 class="slide-title">Compilador Online: TDAs Figuras</h2>
-                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
-                    
-                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
-                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
-                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
-                            <div style="display: flex; gap: 15px; align-items: center;">
-                                <button onclick="sendCode('oc-editor-1', cppCodeFiguras)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
-                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
-                                </button>
-                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
-                            </div>
+                        <div class="puesta-en-comun" style="margin-top: 10px; padding: 10px 16px;">
+                            <p style="font-size: 14.5px; margin: 0;"><i class="fa-solid fa-circle-check" style="color: var(--success-green); margin-right: 6px;"></i><strong>Principio de Abstracción:</strong> <code>main.cpp</code> no manipula los campos internos de los structs; toda interacción se realiza mediante las primitivas provistas por los <code>.h</code>.</p>
                         </div>
-                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
                     </div>
                 </section>
             </section>
@@ -664,7 +719,7 @@ int diferenciaEnMinutos(Hora h1, Hora h2) {
                     </div>
                     <div class="content-area">
                         <pre style="font-size: 12px !important;"><code class="cpp" data-trim data-noescape>
-#include <iostream>
+#include &lt;iostream&gt;
 using namespace std;
 
 int main() {
@@ -796,14 +851,14 @@ int main() {
                         <span class="points-badge">Operaciones Primitivas</span>
                     </div>
                     <div class="texto-enunciado">
-                        <p>Implementar el <strong>TDA Pila</strong> con un arreglo estático de enteros y su índice de tope. Debe proveer las siguientes operaciones:</p>
-                        <ul style="font-size: 17px; margin: 12px 0 0 15px; line-height: 1.8;">
-                            <li><code>Pila crear()</code>: inicializa y retorna una pila vacía (tope en <code>-1</code>).</li>
-                            <li><code>bool vacia(Pila p)</code>: devuelve <code>true</code> si la pila no tiene elementos.</li>
-                            <li><code>bool llena(Pila p)</code>: devuelve <code>true</code> si se alcanzó la capacidad máxima.</li>
-                            <li><code>void apilar(Pila &p, int elem)</code>: añade un nuevo elemento en la cima (push).</li>
-                            <li><code>void desapilar(Pila &p)</code>: elimina el elemento de la cima (pop).</li>
-                            <li><code>int cima(Pila p)</code>: devuelve el valor en la cima sin retirarlo (top/peek).</li>
+                        <p>Implementar el <strong>TDA Pila de Enteros</strong> sobre un vector estático de tamaño <code>TF</code> y su índice de tope, según la teoría de cátedra:</p>
+                        <ul style="font-size: 16px; margin: 10px 0 0 15px; line-height: 1.6;">
+                            <li><code>void inicializar(Pila &P)</code>: inicializa la pila con <code>tope = -1</code>.</li>
+                            <li><code>bool agregar(Pila &P, int valor)</code>: inserta en el tope. Retorna <code>false</code> si la pila está llena (overflow).</li>
+                            <li><code>bool sacar(Pila &P, int &valor)</code>: retira del tope asignando el dato a <code>valor</code>. Retorna <code>false</code> si está vacía (underflow).</li>
+                            <li><code>bool vacia(const Pila P)</code>: retorna <code>true</code> si <code>tope == -1</code>.</li>
+                            <li><code>void mostrarPila(const Pila P)</code>: imprime el contenido y el tope actual.</li>
+                            <li><code>void invertirPila(Pila &P)</code>: invierte el orden usando una pila auxiliar (LIFO &rarr; LIFO).</li>
                         </ul>
                     </div>
                     <div class="puesta-en-comun">
@@ -811,7 +866,7 @@ int main() {
                     </div>
                 </section>
 
-                                <!-- 3.B.1 Solución TDA Pila - Interfaz -->
+                <!-- 3.B.1 Solución TDA Pila - Interfaz -->
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">3</span>
@@ -819,19 +874,21 @@ int main() {
                     </div>
                     <div class="content-area">
                         <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape>
-const int MAX_PILA = 100;
+const int TF = 100;
 
+// Estructura de la Pila sobre Vector
 struct Pila {
-    int datos[MAX_PILA];
-    int tope;
+    int info[TF];  // vector para almacenar los valores
+    int tope;      // subíndice del último elemento insertado
 };
 
-Pila crear();
-bool vacia(Pila p);
-bool llena(Pila p);
-void apilar(Pila &p, int elem);
-void desapilar(Pila &p);
-int cima(Pila p);
+// Prototipos de operaciones primitivas
+void inicializar(Pila &P);
+bool agregar(Pila &P, int valor);
+bool sacar(Pila &P, int &valor);
+bool vacia(const Pila P);
+void mostrarPila(const Pila P);
+void invertirPila(Pila &P);
                         </code></pre>
                     </div>
                 </section>
@@ -843,40 +900,41 @@ int cima(Pila p);
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Pila - Implementación (.cpp)</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 12px !important;"><code class="cpp" data-trim data-noescape>
-Pila crear() {
-    Pila p;
-    p.tope = -1;
-    return p;
+                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape>
+#include "pila.h"
+
+void inicializar(Pila &P) { P.tope = -1; }
+
+bool vacia(const Pila P) { return (P.tope == -1); }
+
+bool agregar(Pila &P, int valor) {
+    if (P.tope == TF - 1) return false; // Overflow
+    P.tope++;
+    P.info[P.tope] = valor;
+    return true;
 }
 
-bool vacia(Pila p) {
-    return p.tope == -1;
+bool sacar(Pila &P, int &valor) {
+    if (vacia(P)) return false; // Underflow
+    valor = P.info[P.tope];
+    P.tope--;
+    return true;
 }
 
-bool llena(Pila p) {
-    return p.tope == MAX_PILA - 1;
+void mostrarPila(const Pila P) {
+    cout << "Pila = [ ";
+    for (int i = 0; i <= P.tope; i++)
+        cout << P.info[i] << " ";
+    cout << "] , Tope = " << P.tope << endl;
 }
 
-void apilar(Pila &p, int elem) {
-    if (!llena(p)) {
-        p.tope++;
-        p.datos[p.tope] = elem;
+void invertirPila(Pila &P) {
+    Pila Aux; int val;
+    inicializar(Aux);
+    while (!vacia(P)) {
+        sacar(P, val); agregar(Aux, val);
     }
-}
-
-void desapilar(Pila &p) {
-    if (!vacia(p)) {
-        p.tope--;
-    }
-}
-
-int cima(Pila p) {
-    int elem = -1;
-    if (!vacia(p)) {
-        elem = p.datos[p.tope];
-    }
-    return elem;
+    P = Aux;
 }
                         </code></pre>
                     </div>
@@ -886,37 +944,34 @@ int cima(Pila p) {
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">3</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Pila - Programa Cliente (main.cpp)</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Pila - Cliente (usaTDAPila.cpp)</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape>
-#include <iostream>
+                        <pre style="font-size: 11.5px !important;"><code class="cpp" data-trim data-noescape>
+#include &lt;iostream&gt;
+#include "pila.h"
 using namespace std;
 
 int main() {
-    Pila p = crear();
+    Pila P; int aux;
+    inicializar(P);
+    mostrarPila(P);
 
-    cout << "=== DEMO TDA PILA (LIFO) ===" << endl;
-    cout << "Pila vacia?: " << (vacia(p) ? "Si" : "No") << endl << endl;
+    agregar(P, 3);
+    agregar(P, 8);
+    agregar(P, 5);
+    mostrarPila(P);
 
-    cout << "Apilando elementos: 10, 20, 30..." << endl;
-    apilar(p, 10);
-    apilar(p, 20);
-    apilar(p, 30);
+    cout << endl << "Invertir Pila:" << endl;
+    invertirPila(P);
+    mostrarPila(P);
 
-    cout << "Elemento en cima (TOS): " << cima(p) << endl;
-
-    cout << endl << "Desapilando un elemento..." << endl;
-    desapilar(p);
-    cout << "Nueva cima tras desapilar: " << cima(p) << endl;
-
-    cout << endl << "Vaciando la pila en orden LIFO:" << endl;
-    while (!vacia(p)) {
-        cout << "Sale elemento: " << cima(p) << endl;
-        desapilar(p);
+    cout << endl << "Desapilando elementos en orden LIFO:" << endl;
+    while (sacar(P, aux)) {
+        cout << "Se retiro: " << aux << " | ";
+        mostrarPila(P);
     }
-
-    cout << endl << "Pila vacia?: " << (vacia(p) ? "Si" : "No") << endl;
+    if (!sacar(P, aux)) cout << "Underflow = Pila vacia" << endl;
 
     return 0;
 }
@@ -1025,138 +1080,139 @@ int main() {
                     </div>
                 </section>
 
-                <!-- 4.B Enunciado Operaciones -->
-                <section data-background-color="#F8FAFC">
-                    <div class="inciso-header">
-                        <span class="inciso-badge">4</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA Cola: Especificación</h2>
-                        <span class="points-badge">Operaciones Primitivas</span>
-                    </div>
-                    <div class="texto-enunciado">
-                        <p>Implementar el <strong>TDA Cola</strong> con un arreglo estático de enteros y su contador de elementos. Debe proveer las siguientes operaciones:</p>
-                        <ul style="font-size: 17px; margin: 12px 0 0 15px; line-height: 1.8;">
-                            <li><code>Cola crear()</code>: inicializa y retorna una cola vacía (cantidad en <code>0</code>).</li>
-                            <li><code>bool vacia(Cola c)</code>: devuelve <code>true</code> si no hay elementos en la cola.</li>
-                            <li><code>bool llena(Cola c)</code>: devuelve <code>true</code> si se completó la capacidad máxima.</li>
-                            <li><code>void encolar(Cola &c, int elem)</code>: añade un elemento al final de la cola (push).</li>
-                            <li><code>void desencolar(Cola &c)</code>: retira el elemento frontal de la cola (pop).</li>
-                            <li><code>int frente(Cola c)</code>: devuelve el elemento frontal sin retirarlo (front).</li>
-                        </ul>
-                    </div>
-                    <div class="puesta-en-comun">
-                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la implementación en C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
-                    </div>
-                </section>
-
-                                <!-- 4.B.1 Solución TDA Cola - Interfaz -->
+                <!-- 4.B ¿Por qué Colas Circulares? (Vertical) -->
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">4</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Cola - Interfaz (.h)</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">¿Por qué Colas Circulares?</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 18px; align-items: stretch;">
+                            <!-- Ineficiencia de Cola Lineal -->
+                            <div class="tile" style="border-top: 5px solid #EF4444; padding: 16px;">
+                                <h3 style="color: #EF4444; font-size: 17px; margin-bottom: 8px;">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> Cola Lineal sobre Vector
+                                </h3>
+                                <ul style="font-size: 14px; margin: 0; padding-left: 16px; line-height: 1.5; color: #475569;">
+                                    <li><strong>Opción 1 (Corrimiento):</strong> Cada vez que se desencola, desplazar los $N$ elementos restantes hacia la izquierda. Costo: <span style="color: #EF4444; font-weight: bold;">$O(N)$ por extracción</span>.</li>
+                                    <li><strong>Opción 2 (Solo avanzar frente):</strong> Si solo se incrementa <code>Primero</code>, las posiciones iniciales quedan inutilizadas. La cola se declara llena aun teniendo espacio libre.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Solución Circular -->
+                            <div class="tile" style="border-top: 5px solid #10B981; padding: 16px;">
+                                <h3 style="color: #10B981; font-size: 17px; margin-bottom: 8px;">
+                                    <i class="fa-solid fa-arrows-spin"></i> Cola Circular ($O(1)$)
+                                </h3>
+                                <ul style="font-size: 14px; margin: 0; padding-left: 16px; line-height: 1.5; color: #475569;">
+                                    <li><strong>Aritmética modular:</strong> Los índices avanzan con <code>(pos + 1) % TF</code>. Al llegar a <code>TF-1</code>, pegan la vuelta al índice <code>0</code>.</li>
+                                    <li><strong>Costo $O(1)$ óptimo:</strong> Encolar y desencolar sin realizar ningún corrimiento en memoria.</li>
+                                    <li><strong>Condición de Cola Llena:</strong> <code>(Ultimo + 1) % TF == Primero</code> (se reserva 1 casillero para diferenciar "llena" de "vacía").</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="concept-card" style="margin-top: 14px; padding: 12px 18px; border-left: 6px solid var(--utn-gold);">
+                            <p style="font-size: 14.5px; margin: 0; color: var(--text-main);">
+                                <i class="fa-solid fa-lightbulb" style="color: var(--utn-gold); margin-right: 6px;"></i>
+                                <strong>Convención de Cátedra:</strong> La cola vacía ocurre cuando <code>Primero == Ultimo</code>. Por ello, en un vector de tamaño <code>TF</code>, la capacidad máxima de datos útiles es <strong><code>TF - 1</code></strong>.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4.B.1 Solución TDA Cola Circular - Interfaz -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">4</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Cola Circular - Interfaz (.h)</h2>
                     </div>
                     <div class="content-area">
                         <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape>
-const int MAX_COLA = 100;
+const int TF = 5; // Capacidad útil: TF - 1 = 4
 
+// Definición de la estructura para la cola circular
 struct Cola {
-    int datos[MAX_COLA];
-    int cant;
+    int info[TF];         // vector para almacenar los valores
+    int Primero, Ultimo;  // subíndices de frente y final
 };
 
-Cola crear();
-bool vacia(Cola c);
-bool llena(Cola c);
-void encolar(Cola &c, int elem);
-void desencolar(Cola &c);
-int frente(Cola c);
+// Prototipos de operaciones primitivas
+void inicializar(Cola &C);
+bool encolar(Cola &C, int valor);
+bool sacar(Cola &C, int &valor);
+bool vacia(const Cola C);
+void mostrarCola(const Cola C);
                         </code></pre>
                     </div>
                 </section>
 
-                <!-- 4.B.2 Solución TDA Cola - Implementación -->
+                <!-- 4.B.2 Solución TDA Cola Circular - Implementación -->
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">4</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Cola - Implementación (.cpp)</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Cola Circular - Implementación (.cpp)</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 12px !important;"><code class="cpp" data-trim data-noescape>
-Cola crear() {
-    Cola c;
-    c.cant = 0;
-    return c;
+                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape>
+#include "cola.h"
+
+void inicializar(Cola &C) { C.Primero = C.Ultimo = 0; }
+
+bool vacia(const Cola C) { return (C.Primero == C.Ultimo); }
+
+bool encolar(Cola &C, int valor) {
+    if ((C.Ultimo + 1) % TF == C.Primero)
+        return false; // Overflow: cola llena
+    C.info[C.Ultimo] = valor;
+    C.Ultimo = (C.Ultimo + 1) % TF;
+    return true;
 }
 
-bool vacia(Cola c) {
-    return c.cant == 0;
+bool sacar(Cola &C, int &valor) {
+    if (vacia(C)) return false; // Underflow: cola vacía
+    valor = C.info[C.Primero];
+    C.Primero = (C.Primero + 1) % TF;
+    return true;
 }
 
-bool llena(Cola c) {
-    return c.cant == MAX_COLA;
-}
-
-void encolar(Cola &c, int elem) {
-    if (!llena(c)) {
-        c.datos[c.cant] = elem;
-        c.cant++;
-    }
-}
-
-void desencolar(Cola &c) {
-    if (!vacia(c)) {
-        for (int i = 0; i < c.cant - 1; i++) {
-            c.datos[i] = c.datos[i + 1];
-        }
-        c.cant--;
-    }
-}
-
-int frente(Cola c) {
-    int elem = -1;
-    if (!vacia(c)) {
-        elem = c.datos[0];
-    }
-    return elem;
+void mostrarCola(const Cola C) {
+    cout << "Cola = [ ";
+    for (int i = C.Primero; i != C.Ultimo; i = (i + 1) % TF)
+        cout << C.info[i] << " ";
+    cout << "] , Primero = " << C.Primero << " , Ultimo = " << C.Ultimo << endl;
 }
                         </code></pre>
                     </div>
                 </section>
 
-                <!-- 4.B.3 Solución TDA Cola - Programa Cliente -->
+                <!-- 4.B.3 Solución TDA Cola Circular - Programa Cliente -->
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">4</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA Cola - Programa Cliente (main.cpp)</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Cola Circular - Cliente (usaTDACola.cpp)</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape>
-#include <iostream>
+                        <pre style="font-size: 11.5px !important;"><code class="cpp" data-trim data-noescape>
+#include &lt;iostream&gt;
+#include "cola.h"
 using namespace std;
 
 int main() {
-    Cola c = crear();
+    Cola C; int aux;
+    inicializar(C);
+    mostrarCola(C);
 
-    cout << "=== DEMO TDA COLA (FIFO) ===" << endl;
-    cout << "Cola vacia?: " << (vacia(c) ? "Si" : "No") << endl << endl;
+    encolar(C, 3); encolar(C, 8); encolar(C, 5); encolar(C, 1);
+    mostrarCola(C);
 
-    cout << "Encolando clientes (ticket ID): 101, 102, 103..." << endl;
-    encolar(c, 101);
-    encolar(c, 102);
-    encolar(c, 103);
+    if (!encolar(C, 6)) cout << ">> Overflow: Cola llena (limite 4 elementos)" << endl;
 
-    cout << "Cliente al frente para atencion: " << frente(c) << endl;
+    if (sacar(C, aux)) cout << ">> Se retiro elemento frontal = " << aux << endl;
+    mostrarCola(C);
 
-    cout << endl << "Atendiendo y desencolando al primer cliente..." << endl;
-    desencolar(c);
-    cout << "Nuevo cliente al frente: " << frente(c) << endl;
-
-    cout << endl << "Atendiendo el resto de la cola en orden FIFO:" << endl;
-    while (!vacia(c)) {
-        cout << "Atendiendo cliente: " << frente(c) << endl;
-        desencolar(c);
-    }
-
-    cout << endl << "Cola vacia?: " << (vacia(c) ? "Si" : "No") << endl;
+    if (encolar(C, 99)) cout << ">> Se encolo 99 en posicion circular libre!" << endl;
+    mostrarCola(C);
 
     return 0;
 }
@@ -1262,140 +1318,6 @@ int main() {
         // =========================================================================
         // Códigos C++ para inyectar en OneCompiler (con división modular pedagógica)
         // =========================================================================
-
-        const cppCodeFiguras = `#include <iostream>
-using namespace std;
-
-// =============================================================================
-// ESTO IRIA EN: figuras.h (INTERFAZ DEL TDA)
-// - Definiciones de constantes y structs
-// - Prototipos de las operaciones primitivas
-// =============================================================================
-
-const float PI = 3.14159265f;
-
-struct Circulo {
-    float radio;
-};
-
-struct Cuadrado {
-    float lado;
-};
-
-struct Rectangulo {
-    float base;
-    float altura;
-};
-
-struct Triangulo {
-    float base;
-    float altura;
-    float l1, l2, l3;
-};
-
-// Prototipos de funciones primitivas
-Circulo crear_circulo(float r);
-float perimetro(Circulo c);
-float area(Circulo c);
-
-Cuadrado crear_cuadrado(float l);
-float perimetro(Cuadrado c);
-float area(Cuadrado c);
-
-Rectangulo crear_rectangulo(float b, float h);
-float perimetro(Rectangulo r);
-float area(Rectangulo r);
-
-Triangulo crear_triangulo(float b, float h, float l1, float l2, float l3);
-float perimetro(Triangulo t);
-float area(Triangulo t);
-
-// =============================================================================
-// ESTO IRIA EN: figuras.cpp (IMPLEMENTACION DEL TDA)
-// - Debe incluir: #include "figuras.h"
-// - Desarrollo del algoritmo y cuerpo de cada función primitiva
-// =============================================================================
-
-Circulo crear_circulo(float r) {
-    Circulo c;
-    c.radio = r;
-    return c;
-}
-float perimetro(Circulo c) {
-    return 2.0f * PI * c.radio;
-}
-float area(Circulo c) {
-    return PI * c.radio * c.radio;
-}
-
-Cuadrado crear_cuadrado(float l) {
-    Cuadrado c;
-    c.lado = l;
-    return c;
-}
-float perimetro(Cuadrado c) {
-    return 4.0f * c.lado;
-}
-float area(Cuadrado c) {
-    return c.lado * c.lado;
-}
-
-Rectangulo crear_rectangulo(float b, float h) {
-    Rectangulo r;
-    r.base = b;
-    r.altura = h;
-    return r;
-}
-float perimetro(Rectangulo r) {
-    return 2.0f * (r.base + r.altura);
-}
-float area(Rectangulo r) {
-    return r.base * r.altura;
-}
-
-Triangulo crear_triangulo(float b, float h, float l1, float l2, float l3) {
-    Triangulo t;
-    t.base = b;
-    t.altura = h;
-    t.l1 = l1; t.l2 = l2; t.l3 = l3;
-    return t;
-}
-float perimetro(Triangulo t) {
-    return t.l1 + t.l2 + t.l3;
-}
-float area(Triangulo t) {
-    return (t.base * t.altura) / 2.0f;
-}
-
-// =============================================================================
-// ESTO IRIA EN: main.cpp (PROGRAMA CLIENTE)
-// - Debe incluir: #include "figuras.h"
-// - Utiliza el TDA a través de sus operaciones sin modificar datos internos
-// =============================================================================
-
-int main() {
-    Circulo circ = crear_circulo(5.0f);
-    cout << "Circulo (radio 5):" << endl;
-    cout << "  Perimetro: " << perimetro(circ) << endl;
-    cout << "  Area:      " << area(circ) << endl << endl;
-
-    Cuadrado cuad = crear_cuadrado(4.0f);
-    cout << "Cuadrado (lado 4):" << endl;
-    cout << "  Perimetro: " << perimetro(cuad) << endl;
-    cout << "  Area:      " << area(cuad) << endl << endl;
-
-    Rectangulo rect = crear_rectangulo(6.0f, 3.0f);
-    cout << "Rectangulo (base 6, altura 3):" << endl;
-    cout << "  Perimetro: " << perimetro(rect) << endl;
-    cout << "  Area:      " << area(rect) << endl << endl;
-
-    Triangulo tri = crear_triangulo(4.0f, 3.0f, 4.0f, 3.0f, 5.0f);
-    cout << "Triangulo (base 4, alt 3, lados 4,3,5):" << endl;
-    cout << "  Perimetro: " << perimetro(tri) << endl;
-    cout << "  Area:      " << area(tri) << endl;
-
-    return 0;
-}`;
 
         const cppCodeHora = `#include <iostream>
 #include <string>
@@ -1511,95 +1433,110 @@ using namespace std;
 
 // =============================================================================
 // ESTO IRIA EN: pila.h (INTERFAZ DEL TDA)
-// - Definición de constantes, tipo struct Pila
-// - Prototipos de operaciones primitivas (crear, apilar, desapilar, cima, vacia)
+// - Constantes de dimensión, estructura de datos y prototipos de primitivas
 // =============================================================================
 
-const int MAX_PILA = 100;
+const int TF = 100;
 
+// Definicion de la estructura para la pila
 struct Pila {
-    int datos[MAX_PILA];
-    int tope;
+    int info[TF];  // vector para almacenar los valores
+    int tope;      // subíndice del último elemento insertado
 };
 
-Pila crear();
-bool vacia(Pila p);
-bool llena(Pila p);
-void apilar(Pila &p, int elem);
-void desapilar(Pila &p);
-int cima(Pila p);
+// Prototipos de Funciones
+void inicializar(Pila &P);
+bool agregar(Pila &P, int valor);
+bool sacar(Pila &P, int &valor);
+bool vacia(const Pila P);
+void mostrarPila(const Pila P);
+void invertirPila(Pila &P);
 
 // =============================================================================
 // ESTO IRIA EN: pila.cpp (IMPLEMENTACION DEL TDA)
 // - Debe incluir: #include "pila.h"
-// - Implementación del comportamiento LIFO y control de límites
+// - Implementación del comportamiento LIFO con control de overflow/underflow
 // =============================================================================
 
-Pila crear() {
-    Pila p;
-    p.tope = -1;
-    return p;
+void inicializar(Pila &P) {
+    P.tope = -1;
 }
 
-bool vacia(Pila p) {
-    return p.tope == -1;
+bool vacia(const Pila P) { 
+    return (P.tope == -1); 
 }
 
-bool llena(Pila p) {
-    return p.tope == MAX_PILA - 1;
-}
-
-void apilar(Pila &p, int elem) {
-    if (!llena(p)) {
-        p.tope++;
-        p.datos[p.tope] = elem;
+bool agregar(Pila &P, int valor) {
+    if (P.tope == TF - 1)
+        return false;    // no se puede insertar en una pila llena (overflow)
+    else { 
+        P.tope++;
+        P.info[P.tope] = valor; 
+        return true;
     }
 }
 
-void desapilar(Pila &p) {
-    if (!vacia(p)) {
-        p.tope--;
+bool sacar(Pila &P, int &valor) {
+    if (vacia(P)) 
+        return false;    // no se puede sacar de una pila vacía (underflow)
+    else {
+        valor = P.info[P.tope];
+        P.tope--;
+        return true;
     }
 }
 
-int cima(Pila p) {
-    int elem = -1;
-    if (!vacia(p)) {
-        elem = p.datos[p.tope];
+void mostrarPila(const Pila P) {
+    cout << "Pila = [ ";
+    for (int i = 0; i <= P.tope; i++)
+        cout << P.info[i] << " ";   
+    cout << "] , Tope = " << P.tope << endl;
+}
+
+void invertirPila(Pila &P) {
+    Pila Aux;
+    int valor;
+    inicializar(Aux);
+    while (!vacia(P)) {
+        sacar(P, valor);
+        agregar(Aux, valor);        
     }
-    return elem;
+    P = Aux;    
 }
 
 // =============================================================================
-// ESTO IRIA EN: main.cpp (PROGRAMA CLIENTE)
+// ESTO IRIA EN: usaTDAPila.cpp (PROGRAMA CLIENTE)
 // - Debe incluir: #include "pila.h"
-// - Realiza las operaciones LIFO sin acceder directamente a datos[] ni a tope
+// - Utiliza la pila como caja negra mediante su interfaz
 // =============================================================================
 
 int main() {
-    Pila p = crear();
+    Pila P;
+    int aux;
 
-    cout << "=== DEMO TDA PILA (LIFO) ===" << endl;
-    cout << "Pila vacia?: " << (vacia(p) ? "Si" : "No") << endl << endl;
+    inicializar(P);
+    cout << "--- Pila inicial vacia ---" << endl;
+    mostrarPila(P);
 
-    cout << "Apilando elementos: 10, 20, 30..." << endl;
-    apilar(p, 10);
-    apilar(p, 20);
-    apilar(p, 30);
+    cout << endl << "--- Agregando elementos ---" << endl;
+    if (agregar(P, 3)) cout << "Se inserto 3" << endl;
+    if (agregar(P, 8)) cout << "Se inserto 8" << endl;
+    if (agregar(P, 5)) cout << "Se inserto 5" << endl;
+    mostrarPila(P);
 
-    cout << "Elemento en cima (TOS): " << cima(p) << endl;
+    cout << endl << "--- Invertir Pila ---" << endl;
+    invertirPila(P);
+    mostrarPila(P);    
 
-    cout << endl << "Desapilando un elemento..." << endl;
-    desapilar(p);
-    cout << "Nueva cima tras desapilar: " << cima(p) << endl;
-
-    cout << endl << "Vaciando la pila en orden LIFO:" << endl;
-    while (!vacia(p)) {
-        cout << "Sale elemento: " << cima(p) << endl;
-        desapilar(p);
+    cout << endl << "--- Desapilando elementos en orden LIFO ---" << endl;
+    while (sacar(P, aux)) {
+        cout << "Se retiro elemento = " << aux << endl;
+        mostrarPila(P);
     }
 
-    cout << endl << "Pila vacia?: " << (vacia(p) ? "Si" : "No") << endl;
+    if (!sacar(P, aux)) {
+        cout << "Underflow = Pila vacia correctamente detectada" << endl;
+    }
 
     return 0;
 }`;
@@ -1608,99 +1545,118 @@ int main() {
 using namespace std;
 
 // =============================================================================
-// ESTO IRIA EN: cola.h (INTERFAZ DEL TDA)
-// - Definición de constantes, tipo struct Cola
-// - Prototipos de operaciones primitivas (crear, encolar, desencolar, frente, vacia)
+// ESTO IRIA EN: cola.h (INTERFAZ DEL TDA COLA CIRCULAR)
+// - Interfaz de la cola circular sobre vector
+// - TF = 5 permite probar el desbordamiento (capacidad util: TF - 1 = 4)
 // =============================================================================
 
-const int MAX_COLA = 100;
+const int TF = 5;
 
+// Definicion de la estructura para la cola circular
 struct Cola {
-    int datos[MAX_COLA];
-    int cant;
+    int info[TF];         // vector para almacenar los valores
+    int Primero, Ultimo;  // subíndices de frente y final
 };
 
-Cola crear();
-bool vacia(Cola c);
-bool llena(Cola c);
-void encolar(Cola &c, int elem);
-void desencolar(Cola &c);
-int frente(Cola c);
+// Prototipos de Funciones
+void inicializar(Cola &C);
+bool encolar(Cola &C, int valor);
+bool sacar(Cola &C, int &valor);
+bool vacia(const Cola C);
+void mostrarCola(const Cola C);
 
 // =============================================================================
-// ESTO IRIA EN: cola.cpp (IMPLEMENTACION DEL TDA)
+// ESTO IRIA EN: cola.cpp (IMPLEMENTACION DEL TDA COLA CIRCULAR)
 // - Debe incluir: #include "cola.h"
-// - Implementación del comportamiento FIFO con corrimiento
+// - Aritmética modular (idx + 1) % TF para avance circular en O(1)
 // =============================================================================
 
-Cola crear() {
-    Cola c;
-    c.cant = 0;
-    return c;
+void inicializar(Cola &C) {
+    C.Primero = C.Ultimo = 0;
 }
 
-bool vacia(Cola c) {
-    return c.cant == 0;
+bool vacia(const Cola C) { 
+    return (C.Primero == C.Ultimo);
 }
 
-bool llena(Cola c) {
-    return c.cant == MAX_COLA;
-}
-
-void encolar(Cola &c, int elem) {
-    if (!llena(c)) {
-        c.datos[c.cant] = elem;
-        c.cant++;
+bool encolar(Cola &C, int valor) {
+    // Si la siguiente posicion de Ultimo es Primero, la cola esta llena
+    if ((C.Ultimo + 1) % TF == C.Primero)
+        return false;    // Overflow: cola circular llena
+    else {
+        C.info[C.Ultimo] = valor;
+        C.Ultimo = (C.Ultimo + 1) % TF;
+        return true;
     }
 }
 
-void desencolar(Cola &c) {
-    if (!vacia(c)) {
-        for (int i = 0; i < c.cant - 1; i++) {
-            c.datos[i] = c.datos[i + 1];
-        }
-        c.cant--;
+bool sacar(Cola &C, int &valor) {
+    if (vacia(C)) 
+        return false;    // Underflow: cola vacía
+    else {
+        valor = C.info[C.Primero];
+        C.Primero = (C.Primero + 1) % TF;
+        return true;
     }
 }
 
-int frente(Cola c) {
-    int elem = -1;
-    if (!vacia(c)) {
-        elem = c.datos[0];
-    }
-    return elem;
+void mostrarCola(const Cola C) {
+    cout << "Cola = [ ";
+    // Iteracion circular correcta que soporta wrap-around
+    for (int i = C.Primero; i != C.Ultimo; i = (i + 1) % TF)
+        cout << C.info[i] << " ";   
+    cout << "] , Primero = " << C.Primero << " , Ultimo = " << C.Ultimo << endl;
 }
 
 // =============================================================================
-// ESTO IRIA EN: main.cpp (PROGRAMA CLIENTE)
+// ESTO IRIA EN: usaTDACola.cpp (PROGRAMA CLIENTE)
 // - Debe incluir: #include "cola.h"
-// - Usa la cola respetando la abstracción FIFO sin manipular cant ni datos[]
+// - Demuestra llenado, overflow con TF=5, vaciado y reutilizacion circular
 // =============================================================================
 
 int main() {
-    Cola c = crear();
+    Cola C;
+    int aux;
 
-    cout << "=== DEMO TDA COLA (FIFO) ===" << endl;
-    cout << "Cola vacia?: " << (vacia(c) ? "Si" : "No") << endl << endl;
+    inicializar(C);
+    cout << "--- Cola inicial vacia ---" << endl;
+    mostrarCola(C);
 
-    cout << "Encolando clientes (ticket ID): 101, 102, 103..." << endl;
-    encolar(c, 101);
-    encolar(c, 102);
-    encolar(c, 103);
+    cout << endl << "--- Encolando elementos hasta capacidad util (TF - 1 = 4) ---" << endl;
+    if (encolar(C, 3)) cout << "Se inserto 3" << endl;
+    mostrarCola(C);
 
-    cout << "Cliente al frente para atencion: " << frente(c) << endl;
+    if (encolar(C, 8)) cout << "Se inserto 8" << endl;
+    mostrarCola(C);
 
-    cout << endl << "Atendiendo y desencolando al primer cliente..." << endl;
-    desencolar(c);
-    cout << "Nuevo cliente al frente: " << frente(c) << endl;
+    if (encolar(C, 5)) cout << "Se inserto 5" << endl;
+    mostrarCola(C);
 
-    cout << endl << "Atendiendo el resto de la cola en orden FIFO:" << endl;
-    while (!vacia(c)) {
-        cout << "Atendiendo cliente: " << frente(c) << endl;
-        desencolar(c);
+    if (encolar(C, 1)) cout << "Se inserto 1" << endl;
+    mostrarCola(C);
+
+    cout << endl << "--- Intento de insertar elemento 5to (debe dar Overflow) ---" << endl;
+    if (encolar(C, 6)) cout << "Se inserto 6" << endl;
+    else cout << ">> Overflow: Cola llena (se reserva 1 casillero libre)" << endl;
+    mostrarCola(C);
+
+    cout << endl << "--- Desencolando primer elemento (atencion FIFO) ---" << endl;
+    if (sacar(C, aux)) cout << "Se retiro elemento = " << aux << endl;
+    mostrarCola(C);
+
+    cout << endl << "--- Encolando 99 para demostrar avance circular del vector ---" << endl;
+    if (encolar(C, 99)) cout << "Se inserto 99 (reutilizando posicion liberada)" << endl;
+    mostrarCola(C);
+
+    cout << endl << "--- Vaciando cola completa ---" << endl;
+    while (sacar(C, aux)) {
+        cout << "Atendido: " << aux << " | ";
+        mostrarCola(C);
     }
 
-    cout << endl << "Cola vacia?: " << (vacia(c) ? "Si" : "No") << endl;
+    if (!sacar(C, aux)) {
+        cout << ">> Underflow: Cola vacia correctamente detectada" << endl;
+    }
 
     return 0;
 }`;
@@ -1736,9 +1692,7 @@ int main() {
         // Comprobación de las diapositivas de compilador
         function checkCompilerSlides(slide) {
             if (!slide) return;
-            if (slide.id === 'slide-compiler-1') {
-                sendCodeWithRetries('oc-editor-1', cppCodeFiguras);
-            } else if (slide.id === 'slide-compiler-2') {
+            if (slide.id === 'slide-compiler-2') {
                 sendCodeWithRetries('oc-editor-2', cppCodeHora);
             } else if (slide.id === 'slide-compiler-3') {
                 sendCodeWithRetries('oc-editor-3', cppCodePila);
