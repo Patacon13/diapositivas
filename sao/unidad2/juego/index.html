@@ -1304,10 +1304,10 @@
                 applicant: "Alumno Distraído",
                 role: "Control de Examen",
                 avatar: "fa-user-pen",
-                claim: "Verifiqué si la nota del alumno es igual a diez.",
-                code: "int nota = 8;\nif (nota = 10) {\n    System.out.println(\"Aprobado\");\n}",
+                claim: "Quise guardar en una variable booleana si la nota del alumno es igual a diez.",
+                code: "int nota = 8;\nboolean esExcelente = (nota = 10);",
                 compiles: false,
-                explanation: "¡ERROR CLÁSICO! Se utilizó el operador de asignación '=' en lugar del relacional de igualdad '=='. En Java, 'nota = 10' evalúa a un entero (10), y la instrucción 'if' exige estrictamente un tipo 'boolean'."
+                explanation: "¡ERROR CLÁSICO DE OPERADOR! Se utilizó el operador de asignación '=' en lugar del relacional de igualdad '=='. En Java, la expresión (nota = 10) asigna 10 a la variable y produce un resultado de tipo 'int', el cual no puede asignarse a un 'boolean'. La sintaxis correcta es: boolean esExcelente = (nota == 10);"
             },
             {
                 id: "JVM-10",
@@ -1368,6 +1368,36 @@
                 code: "double fahrenheit = 98.6;\nint centigrados = (int) ((fahrenheit - 32) * 5 / 9);",
                 compiles: true,
                 explanation: "¡COMPILA Y ES VÁLIDO! El casting explícito '(int)' trunca la parte decimal del resultado flotante y permite asignarlo a una variable de tipo entero de forma segura para el compilador."
+            },
+            {
+                id: "JVM-16",
+                applicant: "Programador de Python",
+                role: "Validación de Rangos",
+                avatar: "fa-sliders",
+                claim: "Quise verificar si una edad está entre 18 y 65 años en una sola expresión booleana.",
+                code: "int edad = 25;\nboolean enRango = 18 <= edad <= 65;",
+                compiles: false,
+                explanation: "¡ERROR DE SINTAXIS! Java no permite encadenar operadores relacionales. La subexpresión (18 <= edad) evalúa a 'boolean' (true), y luego Java intenta evaluar 'true <= 65', lo cual genera un error de tipos incompatibles entre boolean e int. La forma correcta con el operador lógico AND es: (edad >= 18) && (edad <= 65);"
+            },
+            {
+                id: "JVM-17",
+                applicant: "Administrador de Red",
+                role: "Control de Permisos",
+                avatar: "fa-id-card",
+                claim: "Evalué si un usuario tiene acceso combinando credenciales con operadores lógicos AND (&&) y OR (||).",
+                code: "boolean esAdmin = false;\nboolean tieneToken = true;\nboolean acceso = esAdmin || tieneToken;",
+                compiles: true,
+                explanation: "¡COMPILA PERFECTAMENTE! En Java, los operadores lógicos ('||', '&&', '!') operan sobre valores booleanos y devuelven un resultado de tipo 'boolean' completamente válido para almacenar o evaluar."
+            },
+            {
+                id: "JVM-18",
+                applicant: "Desarrollador de C",
+                role: "Migración de Firmware",
+                avatar: "fa-microchip",
+                claim: "Comparé una bandera booleana directamente con el número uno.",
+                code: "boolean activo = true;\nboolean esValido = (activo == 1);",
+                compiles: false,
+                explanation: "¡ERROR DE TIPOS! En Java, el tipo 'boolean' es estricto e independiente: solo admite 'true' o 'false'. A diferencia de C/C++, los enteros (0 o 1) NO son booleanos y el operador '==' no puede comparar un boolean con un int."
             }
         ];
 
