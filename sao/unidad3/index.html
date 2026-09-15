@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SAO - Unidad 2: Tipos de Datos | TUTI UTN FRSF</title>
+    <title>SAO - Unidad 3: Estructuras de Control | TUTI UTN FRSF</title>
 
     <!-- Tipografías Oficiales & Iconos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -127,7 +127,7 @@
         .hero-banner p {
             font-size: 14px;
             color: var(--text-light);
-            max-width: 720px;
+            max-width: 760px;
             margin: 0 auto;
             line-height: 1.45;
         }
@@ -165,10 +165,10 @@
             width: 100%;
         }
 
-        .bar-blue { background: linear-gradient(90deg, var(--utn-blue), var(--cyan-light)); }
-        .bar-gold { background: linear-gradient(90deg, var(--utn-gold), #F59E0B); }
-        .bar-red  { background: linear-gradient(90deg, #E11D48, #FB7185); }
-        .bar-dark { background: linear-gradient(90deg, #10B981, #059669); }
+        .bar-blue  { background: linear-gradient(90deg, var(--utn-blue), var(--cyan-light)); }
+        .bar-gold  { background: linear-gradient(90deg, var(--utn-gold), #F59E0B); }
+        .bar-green { background: linear-gradient(90deg, #10B981, #059669); }
+        .bar-gray  { background: linear-gradient(90deg, #94A3B8, #CBD5E1); }
 
         .card-content {
             padding: 18px 18px 12px 18px;
@@ -207,7 +207,7 @@
             margin-bottom: 12px;
         }
 
-        /* Lista de Tópicos con Flexbox Seguro (sin alterar inline text) */
+        /* Lista de Tópicos con Flexbox Seguro */
         .topics-list {
             list-style: none;
             margin-top: auto;
@@ -266,46 +266,23 @@
             transition: all 0.2s ease;
         }
 
-        .btn-primary {
-            background: var(--utn-blue);
+        /* Botones en Gris por requerimiento */
+        .btn-slate {
+            background: #475569;
             color: white;
         }
 
-        .btn-primary:hover {
-            background: #001E3D;
+        .btn-slate:hover {
+            background: #334155;
             transform: scale(1.02);
         }
 
-        .btn-secondary {
-            background: var(--cyan-light);
-            color: #0F172A;
-            font-weight: 700;
-        }
-
-        .btn-secondary:hover {
-            background: #0284C7;
-            color: white;
-            transform: scale(1.02);
-        }
-
-        .btn-guide {
-            background: #E11D48;
-            color: white;
-        }
-
-        .btn-guide:hover {
-            background: #BE123C;
-            transform: scale(1.02);
-        }
-
-        .btn-game {
-            background: #10B981;
-            color: white;
-        }
-
-        .btn-game:hover {
-            background: #059669;
-            transform: scale(1.02);
+        .btn-disabled {
+            background: #E2E8F0;
+            color: #94A3B8;
+            cursor: not-allowed;
+            pointer-events: none;
+            box-shadow: none;
         }
 
         /* Sección Nómina Docente Compacta */
@@ -427,13 +404,13 @@
     <!-- Banner Principal -->
     <main>
         <section class="hero-banner">
-            <h1>UNIDAD #2: <span>TIPOS DE DATOS</span></h1>
+            <h1>UNIDAD #3: <span>ESTRUCTURAS DE CONTROL</span></h1>
             <p>
-                Representación de información en memoria, inferencia de literales, operadores aritméticos y lógicos, y mecanismos de conversión de tipos (casting) en Java.
+                Mecanismos fundamentales para gobernar el flujo de ejecución: bifurcaciones condicionales, bucles repetitivos y algoritmos de tratamiento de secuencias de datos en Java.
             </p>
         </section>
 
-        <!-- Grid de 3 Tarjetas -->
+        <!-- Grid de 4 Tarjetas -->
         <section class="cards-grid">
             
             <!-- TARJETA 1: CLASE 1 -->
@@ -442,24 +419,24 @@
                     <div class="card-accent-bar bar-blue"></div>
                     <div class="card-content">
                         <div class="card-icon" style="color: var(--utn-blue);">
-                            <i class="fa-solid fa-microchip"></i>
+                            <i class="fa-solid fa-code-branch"></i>
                         </div>
                         <h3>Clase 1</h3>
-                        <span class="card-subtitle">Variables, Memoria y Desbordamiento</span>
+                        <span class="card-subtitle">Estructuras Condicionales</span>
                         <p class="card-description">
-                            Flujo computacional de datos, anatomía de memoria RAM, tipos primitivos vs. referencia, caso histórico Y2K, desbordamiento (overflow/underflow) y constantes.
+                            Flujo lineal vs. ramificado, evaluación de condiciones simples y compuestas, <code>if-else</code>, selección anidada y estructura <code>switch</code>.
                         </p>
                         <ul class="topics-list">
-                            <li><i class="fa-solid fa-check"></i> <span>Entrada → Algoritmo → Salida</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Anatomía de variable y celda RAM</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Tabla comparativa y rangos de tipos</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Efecto Y2K y Overflow / Underflow</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Compiladores en vivo con OneCompiler</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Flujo secuencial vs. toma de decisiones</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Selección simple (<code>if</code>) y compuesta</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Bifurcación completa (<code>if-else</code>)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Selección anidada y caso CALIPEL</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Selección múltiple (<code>switch / case</code>)</span></li>
                         </ul>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="clase1/index.html" class="action-btn btn-primary">
+                    <a href="clase1/index.html" class="action-btn btn-slate">
                         <span>Iniciar Clase 1</span> <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
@@ -471,84 +448,84 @@
                     <div class="card-accent-bar bar-gold"></div>
                     <div class="card-content">
                         <div class="card-icon" style="color: #D97706;">
-                            <i class="fa-solid fa-code-compare"></i>
+                            <i class="fa-solid fa-arrows-rotate"></i>
                         </div>
                         <h3>Clase 2</h3>
-                        <span class="card-subtitle">Literales, Operadores y Casting</span>
+                        <span class="card-subtitle">Estructuras Repetitivas</span>
                         <p class="card-description">
-                            Inferencia del compilador, sufijos numéricos (<code>L</code>, <code>f</code>), precedencia aritmética, operadores unarios/binarios, lógica booleana y diagrama de casting.
+                            Concepto de bucle, ciclos indeterminados (<code>while</code>, <code>do-while</code>), prevención de loops infinitos, ciclo exacto (<code>for</code>) y problemas OmegaUp.
                         </p>
                         <ul class="topics-list">
-                            <li><i class="fa-solid fa-check"></i> <span>Sufijos de literales (int vs long, double vs float)</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Precedencia de operadores y paréntesis</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Pre vs. Post incremento (<code>++x</code> vs <code>x++</code>)</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Relacionales y conectores (<code>&amp;&amp;</code>, <code>||</code>, <code>!</code>)</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Jerarquía y conversión de tipos (Casting)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Bucle <code>while</code> (pre-test 0 a N vueltas)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Riesgo y control de bucles infinitos</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Bucle <code>do-while</code> (post-test 1 a N)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Bucle <code>for</code> (inicio, condición, paso)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>CALIPEL interactivo y desafíos OmegaUp</span></li>
                         </ul>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="clase2/index.html" class="action-btn btn-secondary">
+                    <a href="clase2/index.html" class="action-btn btn-slate">
                         <span>Iniciar Clase 2</span> <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
 
-            <!-- TARJETA 3: GUÍA PRÁCTICA -->
+            <!-- TARJETA 3: CLASE 3 -->
             <div class="portal-card">
                 <div>
-                    <div class="card-accent-bar bar-red"></div>
+                    <div class="card-accent-bar bar-green"></div>
                     <div class="card-content">
-                        <div class="card-icon" style="color: #E11D48;">
-                            <i class="fa-solid fa-file-pdf"></i>
+                        <div class="card-icon" style="color: #10B981;">
+                            <i class="fa-solid fa-list-ol"></i>
                         </div>
-                        <h3>Guía Práctica</h3>
-                        <span class="card-subtitle">Ejercitación &amp; Problemas</span>
+                        <h3>Clase 3</h3>
+                        <span class="card-subtitle">Secuencias &amp; Parada</span>
                         <p class="card-description">
-                            Ejercitación práctica en Java: variables, cadenas, lectura de datos por teclado, cálculos aritméticos, casting y ejercicio integrador.
+                            Tratamiento algorítmico de secuencias finitas, primer y siguiente elemento, criterios de parada (longitud, centinela, propiedad) y problemas prácticos.
                         </p>
                         <ul class="topics-list">
-                            <li><i class="fa-solid fa-check"></i> <span>Variables, tipos primitivos y <code>String</code></span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Lectura por consola con <code>Scanner</code></span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Operadores aritméticos, lógicos y relacionales</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Conversión implícita y casting explícito</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Ejercicio integrador: recibo de sueldo</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Definición y anatomía de una secuencia</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Fin por longitud conocida (N fija)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Fin por centinela (valor de escape)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Trazabilidad con tuplas y cálculo mín/máx</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Problemas Leibniz y Duplas en OmegaUp</span></li>
                         </ul>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="https://tuti.sied.utn.edu.ar/pluginfile.php/13307/mod_resource/content/3/SAO%20-%20Unidad%202%20-%20Gu%C3%ADa%20Pr%C3%A1ctica.pdf" target="_blank" rel="noopener noreferrer" class="action-btn btn-guide">
-                        <span>Abrir Guía PDF</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    <a href="clase3/index.html" class="action-btn btn-slate">
+                        <span>Iniciar Clase 3</span> <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
 
-            <!-- TARJETA 4: MINIJUEGO -->
+            <!-- TARJETA 4: GUÍA PRÁCTICA (EN GRIS POR AHORA) -->
             <div class="portal-card">
                 <div>
-                    <div class="card-accent-bar bar-dark"></div>
+                    <div class="card-accent-bar bar-gray"></div>
                     <div class="card-content">
-                        <div class="card-icon" style="color: #10B981;">
-                            <i class="fa-solid fa-gamepad"></i>
+                        <div class="card-icon" style="color: #94A3B8;">
+                            <i class="fa-solid fa-file-lines"></i>
                         </div>
-                        <h3>Minijuego</h3>
-                        <span class="card-subtitle">JVM Inspector (Aduana de Tipos)</span>
+                        <h3>Guía Práctica</h3>
+                        <span class="card-subtitle" style="color: #94A3B8;">En Preparación</span>
                         <p class="card-description">
-                            Asumí el rol de oficial de aduana en la JVM. Inspeccioná sentencias y detectá desbordamientos, tipos incompatibles y castings inválidos antes de compilar.
+                            Ejercitación de aplicación sobre estructuras condicionales, diseño de ciclos y procesamiento de secuencias de datos en Java.
                         </p>
                         <ul class="topics-list">
-                            <li><i class="fa-solid fa-check"></i> <span>Simulador interactivo estilo <em>Papers, Please</em></span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Verificación de pasaportes de tipos en vivo</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Detección de desbordes y casting inválido</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Retroalimentación inmediata del compilador</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span>Sistema de puntuación y reputación</span></li>
+                            <li><i class="fa-solid fa-circle-notch" style="color: #94A3B8;"></i> <span>Ejercicios de selección simple y múltiple</span></li>
+                            <li><i class="fa-solid fa-circle-notch" style="color: #94A3B8;"></i> <span>Problemas con bucles <code>while</code> y <code>for</code></span></li>
+                            <li><i class="fa-solid fa-circle-notch" style="color: #94A3B8;"></i> <span>Validación de menús y entradas por consola</span></li>
+                            <li><i class="fa-solid fa-circle-notch" style="color: #94A3B8;"></i> <span>Procesamiento de listas y centinelas</span></li>
+                            <li><i class="fa-solid fa-circle-notch" style="color: #94A3B8;"></i> <span>Enunciados en revisión por la cátedra</span></li>
                         </ul>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="juego/index.html" class="action-btn btn-game">
-                        <span>Jugar JVM Inspector</span> <i class="fa-solid fa-play"></i>
-                    </a>
+                    <button type="button" class="action-btn btn-disabled" disabled>
+                        <span>Próximamente</span> <i class="fa-solid fa-clock"></i>
+                    </button>
                 </div>
             </div>
 

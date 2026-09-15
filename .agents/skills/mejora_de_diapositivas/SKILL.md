@@ -131,3 +131,87 @@ function getCanvasSize() {
 }
 ```
 Reconfigurado en el evento `resize` con `Reveal.configure(...)`.
+
+---
+
+## 5. Reglas Didácticas y Estilo de Código (Cátedra AEDD - C++)
+- **Modularización y Reutilización**: Descomponer la lógica en funciones auxiliares (`sumarFila`, `sumarColumna`, `buscarElemento`) en lugar de escribir funciones monolíticas con bucles anidados. Reutilizar estas funciones auxiliares en incisos posteriores para evitar duplicación de lógica.
+- **Estructuras de Control Estrictas**:
+  - Prohibido el operador ternario `?:` (usar siempre `if-else` legible).
+  - Prohibido `break` y `continue` dentro de bucles (usar banderas booleanas como `bool encontrado` y condiciones compuestas en `while`).
+  - Principio de Retorno Único (`single return` al final de la función).
+- **Headers y Prototipos**: Comentar claramente prototipos de funciones o modularizaciones de archivos (`// Prototipo: esto iría en el .h`) para que los alumnos entiendan la separación conceptual aun usando consolas interactivas de archivo único.
+
+---
+
+## 6. Protocolo de Verificación Visual y QA (Quality Assurance)
+
+Antes de dar por finalizada la creación o refactorización de presentaciones, diapositivas o portales:
+
+1. **Verificación de Activos Estáticos**:
+   - Comprobar que logos, imágenes y diagramas referenciados existan localmente (evitar URLs externas que puedan retornar 404 o bloquear hotlinks; preferir `dist/utnsantafe.png`).
+2. **Escala y Proporciones del Canvas / Hub**:
+   - Mantener tipografías y contenedores en escala balanceada (en Hubs: títulos ~28-32px, tarjetas con padding ~16-22px, botones compactos).
+   - El viewport debe visualizarse completo a 100% de zoom en pantallas estándar (1080p/720p) sin saturar ni obligar a scrolling excesivo.
+3. **Control Tipográfico y Fórmulas**:
+   - En archivos HTML nativos sin KaTeX/MathJax, **NO** escribir sintaxis LaTeX cruda como `$\rightarrow$`. Utilizar siempre entidades HTML o caracteres Unicode directos (`&rarr;`, `→`, `&larr;`, `←`).
+4. **Layout y Listas Seguras**:
+   - Evitar `display: flex; gap: ...;` directo sobre `<li>` cuando contenga texto mezclado con etiquetas `<code>` o signos de puntuación, ya que los navegadores tratan cada nodo de texto como un ítem flex separado generando espaciados rotos. Estructurar siempre con un contenedor `<span>` para el texto.
+5. **Chequeos de Renderizado Visual**:
+   - Verificar visualmente el renderizado en navegador para confirmar que no haya colisiones de altura con el footer persistente (`.branding-footer`), imágenes caídas o desbordamientos en móvil y escritorio.
+6. **Escape Obligatorio de Entidades en Bloques `<pre><code>`**:
+   - En código Java, C++ o pseudocódigo que contenga operadores relacionales o lógicos (`<`, `>`, `&&`), escapar SIEMPRE como `&lt;`, `&gt;`, `&amp;&amp;`.
+   - Si se escribe `<b` (por ejemplo `a < b`), el motor HTML lo parsea como la etiqueta `<b>` (bold), corrompiendo el cierre de `</section>`. Esto anida las diapositivas siguientes dentro de la actual y provoca que Reveal.js las renderice todas superpuestas ("una encima de la otra").
+7. **Posicionamiento Global de `.branding-footer` (Estilo Unidad 0)**:
+   - Ubicar `<div class="branding-footer">` **fuera de `.slides` y de `.reveal`** directamente en el `<body>`.
+   - Estilar con `position: fixed !important; bottom: 24px; left: 35px; z-index: 9999; pointer-events: none;`.
+   - Así se garantiza presencia institucional constante en todas las diapositivas sin restar altura al canvas ni invadir tarjetas internas.
+8. **Maquetación Robusta de Cuadros Callout (`.callout-box`)**:
+   - Aplicar siempre `align-items: flex-start !important; text-align: left !important;`. El icono debe tener `margin-top: 3px !important; flex-shrink: 0;`.
+   - Estructurar el contenido en bloque: el título con `<strong style="display: block; margin-bottom: 2px;">` y la descripción en `<p style="margin: 0; text-align: left;">`.
+   - Asegurar la regla CSS `.callout-box p strong { display: inline !important; }` para que cualquier texto en negrita dentro del párrafo no se quiebre en un renglón nuevo.
+9. **Prevención de Saltos de Línea en Badges y Tablas (`nowrap`)**:
+   - Asignar `white-space: nowrap; display: inline-block;` a la clase `.code-badge` y declarar anchos porcentuales o mínimos explícitos en las columnas de tablas para evitar que expresiones breves (ej: `boolean b = true;`, `* / %`, `char c = 'A';`) queden partidas en dos renglones.
+10. **Navegación Vertical Orgánica (Cero Mensajes Explícitos)**:
+    - **No incluir** botones, textos ni píldoras como `"Presioná Flecha Abajo"`, ni tampoco `"Probar en vivo"`.
+    - La interfaz nativa de Reveal.js ilumina automáticamente la flecha inferior en los controles de navegación (esquina inferior derecha) cuando existe una diapositiva vertical secundaria (compilador o sandbox), siendo completamente suficiente, limpia y no invasiva.
+11. **Navegación Fluida en Código (Fragmentos)**:
+    - En diapositivas de desafíos o explicaciones completas, evitar dividir `data-line-numbers="line1|line2"` con barras verticales (`|`) salvo que sea estrictamente necesario un paso a paso fragmentado. Los pipes interceptan la flecha derecha (`→`), bloqueando el avance normal hacia la siguiente diapositiva.
+12. **Limpieza Visual en Portada y Cierre**:
+    - No colocar logotipos o badges redundantes (`TUTI / UTN`) por encima del título principal en la portada o en el slide de preguntas cuando ya existe el footer institucional persistente en la esquina inferior izquierda. Preservar la limpieza tipográfica de la Unidad 0.
+13. **Estructura y Balance en Portales Hub**:
+    - En los Hubs de unidad que incorporan múltiples recursos (clases teóricas, guías prácticas en PDF, simuladores/minijuegos), usar cuadrículas simétricas (ej: 4 columnas con `grid-template-columns: repeat(4, 1fr)` en desktop, 2 columnas en pantallas intermedias y 1 en móvil).
+    - Mantener la misma cantidad de ítems de temario (bullet points) y estructura en todas las tarjetas para que sus alturas se mantengan visualmente equilibradas y alineadas horizontalmente.
+    - Los enlaces a documentos externos (ej: PDFs en SIED / Moodle) deben abrirse en nueva pestaña con `target="_blank" rel="noopener noreferrer"` y contar con un botón distintivo con ícono `fa-arrow-up-right-from-square`.
+14. **Consistencia Estricta de Portadas y Cierres en TUTI (`tuti.css`)**:
+    - Vincular siempre `<link rel="stylesheet" href="../../../dist/theme/tuti.css" />` en todas las clases de TUTI (SAO y PBA).
+    - **Portada Canónica**:
+      - Fondo: `<section data-background-color="#F8FAFC">`.
+      - Contenedor: `<div class="hero-container">` con `.hero-image` y `.hero-text`.
+      - Título institucional: `<h1 class="hero-title" style="text-align: left; font-size: 44px !important; margin-bottom: 12px !important;">SISTEMA DE AUTOMATIZACIÓN DE OFICINAS</h1>`.
+      - Subtítulo de unidad y clase: `<h3 style="font-size: 22px; color: var(--cyan-accent); font-weight: 600; margin-bottom: 24px; text-align: left;">Unidad #X - [Nombre Unidad] (Clase Y: [Tema])</h3>`.
+      - Cero badges o etiquetas adicionales por encima del título (evitar `.hero-unit-tag`).
+      - Nómina docente: Usar exclusivamente los bloques estándar `.staff-list` con `<h4>Profesores:</h4>` (subrayado dorado `var(--utn-gold)`) y `<h4>Tutores:</h4>` con viñetas doradas `•`. Prohibido inventar cajas o grillas grises comprimidas (`.staff-grid`).
+    - **Cierre Canónico**:
+      - Fondo: `<section data-background-color="#F8FAFC">`.
+      - Título: `<h1 class="hero-title" style="font-size: 48px !important; text-align: left; margin-bottom: 10px !important;">¿PREGUNTAS?</h1>`.
+      - Subtítulo: `<h3 style="font-size: 20px; color: var(--text-main); font-weight: 600; margin-bottom: 15px; text-align: left;">Espacio de consultas y dudas</h3>`.
+      - Frase: `<p style="font-size: 16px; color: var(--text-light); text-align: left; margin-bottom: 20px;">¡Muchas gracias por su atención!</p>`.
+      - Botones de acción: Fila flex con enlace al portal `Portal Unidad X` (`var(--utn-blue)`) y avance `Ir a Clase Y` (`var(--cyan-accent)`) si aplica.
+      - Nómina docente: Mismos bloques `.staff-list` idénticos a la portada.
+15. **Alineación Segura de Etiquetas y Tarjetas de Definición (Anti-Centrado en Reveal)**:
+    - En Reveal.js, los slides y contenedores intermedios pueden heredar `text-align: center;`.
+    - Toda etiqueta, badge o subtítulo dentro de un contenedor o tarjeta (ej: `<span>Etimología Latina</span>`, `<span>Analogía Cotidiana</span>`) debe llevar explícitamente `display: block; text-align: left;` para evitar que flote centrada como un elemento huérfano mientras el texto inferior se alinea a la izquierda.
+    - Los bloques de definición/etimología deben tener un `max-width` armónico (~960-1000px), márgenes balanceados y resaltar la definición central mediante una cita o caja con acento visual en lugar de franjas vacías y achatadas.
+16. **Checklist de Refinamiento Slide por Slide**:
+    - Inspeccionar cada diapositiva en navegador o capturas headless a resolución estándar (1366x768 / 1920x1080).
+    - Verificar que los encabezados `h4` o `h3` dentro de tarjetas tengan `text-align: left !important;`.
+    - Asegurar que no existan saltos de línea indeseados en badges de código, operadores o asignaciones.
+    - Confirmar que ningún slide contenga mensajes redundantes ("presioná flecha", "probar en vivo").
+17. **Nómina Docente Oficial (Cátedra SAO) y Unificación de Hubs**:
+    - **Róster Oficial SAO (Vigente)**:
+      - **Profesores**: Gastón Micheri, Tomás Assenza.
+      - **Tutores**: Agustín Ramello, Micaela Assenza, Lijandy Jimenez Armas, Macarena Moya.
+      - *Restricción estricta*: Patricia Torresan **NO** forma más parte de la cátedra; no debe incluirse bajo ninguna circunstancia en diapositivas ni portales de SAO.
+    - **Formato en Hubs de Unidad**:
+      - La sección `.staff-section` debe presentarse en **una sola línea horizontal** en vistas de escritorio (`justify-content: space-around;` o `center` con separación clara entre Profesores y Tutores), manteniendo total uniformidad visual entre todas las unidades (ej: Unidad 2 y Unidad 3).
