@@ -215,3 +215,8 @@ Antes de dar por finalizada la creación o refactorización de presentaciones, d
       - *Restricción estricta*: Patricia Torresan **NO** forma más parte de la cátedra; no debe incluirse bajo ninguna circunstancia en diapositivas ni portales de SAO.
     - **Formato en Hubs de Unidad**:
       - La sección `.staff-section` debe presentarse en **una sola línea horizontal** en vistas de escritorio (`justify-content: space-around;` o `center` con separación clara entre Profesores y Tutores), manteniendo total uniformidad visual entre todas las unidades (ej: Unidad 2 y Unidad 3).
+18. **Arquitectura Modular en Hubs de Unidad (Secciones Jerárquicas)**:
+    - Para evitar sobrecargar la grilla principal de clases o romper la simetría de tarjetas interactivas, los portales se estructuran en secciones temáticas con separadores elegantes (`.section-header` con línea divisoria y badge contador):
+      1. **Clases & Práctica Interactiva**: Tarjetas verticales completas para las clases Reveal.js y minijuegos interactivos.
+      2. **Documentación & Material de Estudio**: Tarjetas horizontales compactas (`.docs-grid`) para el apunte de Teoría (`Apunte • PDF`) y la Guía de Práctica (`Guía de Ejercicios • PDF`) con botones de apertura externa.
+      3. **Videos**: Fila de tarjetas interactivas (`.videos-grid`) que albergan píldoras de YouTube y grabaciones de clase en Microsoft SharePoint/Stream, identificadas con tags de plataforma (`YouTube • CÁTEDRA SAO` / `SharePoint • CÁTEDRA SAO`).
