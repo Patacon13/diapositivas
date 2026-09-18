@@ -151,7 +151,7 @@
                     <div class="concept-card" style="margin-bottom: 15px;">
                         <h3><i class="fa-solid fa-hospital" style="color: var(--utn-gold);"></i> Guardia Médica UTN FRSF</h3>
                         <p style="font-size: 16.5px; margin: 0; line-height: 1.5;">
-                            El sistema gestiona la recepción y atención de pacientes en la guardia mediante <strong>colas circulares sobre arreglos estáticos</strong> (sin memoria dinámica), garantizando tiempos acotados de respuesta.
+                            El sistema gestiona la recepción y atención de pacientes mediante <strong>colas circulares sobre arreglos estáticos</strong> siguiendo el modelo de cátedra (subíndices <code>Primero</code> y <code>Ultimo</code>, sin contador de cantidad), garantizando tiempos acotados de respuesta en $O(1)$.
                         </p>
                     </div>
 
@@ -174,7 +174,7 @@
                     </div>
 
                     <div class="puesta-en-comun" style="margin-top: 14px;">
-                        <p style="font-size: 15px;"><i class="fa-solid fa-arrows-spin" style="color: var(--utn-gold); margin-right: 6px;"></i><strong>Capacidades:</strong> Cada cola aloja hasta <strong>40 pacientes</strong> en arreglo circular. El historial <code>AtencionesRealizadas</code> almacena hasta <strong>300 registros</strong>.</p>
+                        <p style="font-size: 15px;"><i class="fa-solid fa-arrows-spin" style="color: var(--utn-gold); margin-right: 6px;"></i><strong>Capacidades:</strong> Arreglo circular de 40 posiciones (<code>MAX_COLA = 40</code>). Al reservar 1 lugar de control, aloja hasta <strong>39 pacientes útiles</strong>. El historial <code>AtencionesRealizadas</code> almacena hasta <strong>300 registros</strong>.</p>
                     </div>
                 </div>
             </section>
@@ -193,10 +193,10 @@
                         <p style="margin-bottom: 12px;">Defina todos los tipos de datos y estructuras necesarias en C++ para representar:</p>
                         <ul style="font-size: 17px; padding-left: 20px; line-height: 1.6; margin-bottom: 14px;">
                             <li><code>Paciente</code>: <code>dni</code> (long long), <code>nombre</code> (string), <code>prioridad</code> (0 a 2), <code>minutoLlegada</code> (0 a 1439).</li>
-                            <li><code>Cola</code>: implementada sobre un <strong>arreglo circular</strong> con índices <code>frente</code>, <code>fin</code> y contador <code>cantidad</code> (máx. 40).</li>
+                            <li><code>Cola</code>: implementada sobre un <strong>arreglo circular</strong> con subíndices <code>Primero</code> y <code>Ultimo</code> según el modelo de teoría (máx. 39 pacientes en vector de 40).</li>
                             <li><code>Atencion</code>: registro del paciente y su <code>minutoAtencion</code> efectivo.</li>
                         </ul>
-                        <p style="margin: 0;">Luego, codifique la función <code>main()</code> declarando el arreglo de las <strong>3 colas</strong> (adecuadamente inicializadas como vacías) y el vector <code>AtencionesRealizadas</code> (máx. 300) con su respectivo tamaño lógico en cero.</p>
+                        <p style="margin: 0;">Luego, codifique la función <code>main()</code> declarando el arreglo de las <strong>3 colas</strong> (adecuadamente inicializadas como vacías con <code>Primero = Ultimo = 0</code>) y el vector <code>AtencionesRealizadas</code> (máx. 300) con su respectivo tamaño lógico en cero.</p>
                     </div>
                     <div class="puesta-en-comun">
                         <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución en C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
@@ -210,7 +210,7 @@
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Tipos y main()</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 12.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-12|14-19|21-24|26-30|32-43">
+                        <pre style="font-size: 12.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-12|14-18|20-23|25-28|30-41">
 #include &lt;iostream&gt;
 #include &lt;string&gt;
 using namespace std;
@@ -227,10 +227,9 @@ struct Paciente {
 };
 
 struct Cola {
-    Paciente elementos[MAX_COLA];
-    int frente;
-    int fin;
-    int cantidad;
+    Paciente info[MAX_COLA];
+    int Primero;
+    int Ultimo;
 };
 
 struct Atencion {
@@ -239,9 +238,8 @@ struct Atencion {
 };
 
 void inicializarCola(Cola &c) {
-    c.frente = 0;
-    c.fin = 0;
-    c.cantidad = 0;
+    c.Primero = 0;
+    c.Ultimo = 0;
 }
 
 int main() {
@@ -290,11 +288,11 @@ int main() {
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Función encolarPaciente()</h2>
                     </div>
                     <div class="texto-enunciado">
-                        <p style="margin-bottom: 12px;">Diseñe y codifique la función <code>encolarPaciente()</code> respetando el principio FIFO sobre arreglos circulares.</p>
+                        <p style="margin-bottom: 12px;">Diseñe y codifique la función <code>encolarPaciente()</code> respetando el principio FIFO y la convención de teoría de cola circular.</p>
                         <ul style="font-size: 17px; padding-left: 20px; line-height: 1.6; margin: 0;">
                             <li>La función debe recibir la <strong>cola correspondiente</strong> y los <strong>datos del paciente</strong> a ingresar.</li>
-                            <li>Si la cola dispone de lugar (<code>cantidad < MAX_COLA</code>), debe insertar al paciente actualizando adecuadamente los índices circulares (<code>fin = (fin + 1) % MAX_COLA</code>) e incrementar el contador, retornando <code>true</code>.</li>
-                            <li>Si la cola se encuentra llena, no debe alterarla y debe retornar <code>false</code>.</li>
+                            <li>Si la cola se encuentra llena (<code>(Ultimo + 1) % MAX_COLA == Primero</code>), no debe alterarla y debe retornar <code>false</code>.</li>
+                            <li>Si dispone de lugar, debe insertar al paciente en la posición <code>Ultimo</code>, avanzar el índice circular (<code>Ultimo = (Ultimo + 1) % MAX_COLA</code>) y retornar <code>true</code>.</li>
                         </ul>
                     </div>
                     <div class="puesta-en-comun">
@@ -312,17 +310,16 @@ int main() {
                         <div class="concept-card" style="margin-bottom: 12px; padding: 12px 18px;">
                             <p style="font-size: 14.5px; margin: 0; color: var(--text-main);">
                                 <i class="fa-solid fa-arrows-spin" style="color: var(--utn-gold); margin-right: 6px;"></i>
-                                <strong>Avance Circular:</strong> Se inserta en la posición <code>c.fin</code> y el índice rota con <code>(c.fin + 1) % MAX_COLA</code>, manteniendo un único retorno con bandera lógica.
+                                <strong>Convención de Teoría:</strong> Control de cola llena con <code>(c.Ultimo + 1) % MAX_COLA == c.Primero</code>. Se inserta en <code>c.info[c.Ultimo]</code> y avanza con aritmética modular.
                             </p>
                         </div>
-                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-3|4-10|11-12">
+                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-3|4-9|10-11">
 bool encolarPaciente(Cola &c, Paciente p) {
     bool pudoEncolar = false;
 
-    if (c.cantidad < MAX_COLA) {
-        c.elementos[c.fin] = p;
-        c.fin = (c.fin + 1) % MAX_COLA;
-        c.cantidad++;
+    if ((c.Ultimo + 1) % MAX_COLA != c.Primero) {
+        c.info[c.Ultimo] = p;
+        c.Ultimo = (c.Ultimo + 1) % MAX_COLA;
         pudoEncolar = true;
     }
 
@@ -366,8 +363,8 @@ bool encolarPaciente(Cola &c, Paciente p) {
                         <p style="margin-bottom: 10px;">Codifique la función <code>atenderSiguiente()</code> que recibe el arreglo de las 3 colas de prioridad, el vector <code>AtencionesRealizadas</code> (con su tamaño lógico) y el <code>minutoActual</code> de atención:</p>
                         <ul style="font-size: 16px; padding-left: 20px; line-height: 1.5; margin-bottom: 10px;">
                             <li>Despacha al siguiente paciente respetando el orden estricto de triage: <strong>Rojo (0)</strong> &rarr; <strong>Amarillo (1)</strong> &rarr; <strong>Verde (2)</strong>.</li>
-                            <li>Si las 3 colas están vacías, informa un aviso y no modifica el historial.</li>
-                            <li>El paciente atendido se retira de su cola y se inserta al final del vector <code>AtencionesRealizadas</code> registrando su <code>minutoAtencion</code> e incrementando su tamaño lógico.</li>
+                            <li>Si las 3 colas están vacías (<code>Primero == Ultimo</code> en todas), informa un aviso y no modifica el historial.</li>
+                            <li>El paciente atendido se retira de su cola avanzando <code>Primero</code> con aritmética modular y se inserta al final de <code>AtencionesRealizadas</code> registrando su <code>minutoAtencion</code> e incrementando su tamaño lógico.</li>
                         </ul>
                     </div>
                     <div class="puesta-en-comun">
@@ -385,15 +382,14 @@ bool encolarPaciente(Cola &c, Paciente p) {
                         <pre style="font-size: 11.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-8|10-18|20-33|35-47">
 // Funciones auxiliares modulares
 bool colaVacia(const Cola &c) {
-    return (c.cantidad == 0);
+    return (c.Primero == c.Ultimo);
 }
 
 bool desencolarPaciente(Cola &c, Paciente &p) {
     bool pudo = false;
-    if (c.cantidad > 0) {
-        p = c.elementos[c.frente];
-        c.frente = (c.frente + 1) % MAX_COLA;
-        c.cantidad--;
+    if (!colaVacia(c)) {
+        p = c.info[c.Primero];
+        c.Primero = (c.Primero + 1) % MAX_COLA;
         pudo = true;
     }
     return pudo;
@@ -628,10 +624,9 @@ struct Paciente {
 };
 
 struct Cola {
-    Paciente elementos[MAX_COLA];
-    int frente;
-    int fin;
-    int cantidad;
+    Paciente info[MAX_COLA];
+    int Primero;
+    int Ultimo;
 };
 
 struct Atencion {
@@ -640,9 +635,8 @@ struct Atencion {
 };
 
 void inicializarCola(Cola &c) {
-    c.frente = 0;
-    c.fin = 0;
-    c.cantidad = 0;
+    c.Primero = 0;
+    c.Ultimo = 0;
 }
 
 int main() {
@@ -657,8 +651,9 @@ int main() {
     cout << "=== INCISO A: ESTRUCTURAS INICIALIZADAS ===" << endl;
     cout << "Colas de prioridad creadas: " << PRIORIDADES << endl;
     for (int i = 0; i < PRIORIDADES; i++) {
-        cout << "  Cola prioridad " << i << " -> cantidad: " 
-             << colasPrioridad[i].cantidad << endl;
+        cout << "  Cola prioridad " << i << " -> Primero: " 
+             << colasPrioridad[i].Primero << " , Ultimo: "
+             << colasPrioridad[i].Ultimo << endl;
     }
     cout << "Vector AtencionesRealizadas listo con cant = " << cantAtenciones << endl;
 
@@ -681,24 +676,21 @@ struct Paciente {
 };
 
 struct Cola {
-    Paciente elementos[MAX_COLA];
-    int frente;
-    int fin;
-    int cantidad;
+    Paciente info[MAX_COLA];
+    int Primero;
+    int Ultimo;
 };
 
 void inicializarCola(Cola &c) {
-    c.frente = 0;
-    c.fin = 0;
-    c.cantidad = 0;
+    c.Primero = 0;
+    c.Ultimo = 0;
 }
 
 bool encolarPaciente(Cola &c, Paciente p) {
     bool pudoEncolar = false;
-    if (c.cantidad < MAX_COLA) {
-        c.elementos[c.fin] = p;
-        c.fin = (c.fin + 1) % MAX_COLA;
-        c.cantidad++;
+    if ((c.Ultimo + 1) % MAX_COLA != c.Primero) {
+        c.info[c.Ultimo] = p;
+        c.Ultimo = (c.Ultimo + 1) % MAX_COLA;
         pudoEncolar = true;
     }
     return pudoEncolar;
@@ -721,8 +713,10 @@ int main() {
         cout << "Encolado OK en prioridad 0: " << p2.nombre << endl;
     }
 
-    cout << "Cantidad en Cola Roja (0): " << colasPrioridad[0].cantidad << endl;
-    cout << "Cantidad en Cola Amarilla (1): " << colasPrioridad[1].cantidad << endl;
+    cout << "Estado Cola Roja (0): Primero=" << colasPrioridad[0].Primero 
+         << " , Ultimo=" << colasPrioridad[0].Ultimo << endl;
+    cout << "Estado Cola Amarilla (1): Primero=" << colasPrioridad[1].Primero 
+         << " , Ultimo=" << colasPrioridad[1].Ultimo << endl;
 
     return 0;
 }`;
@@ -743,10 +737,9 @@ struct Paciente {
 };
 
 struct Cola {
-    Paciente elementos[MAX_COLA];
-    int frente;
-    int fin;
-    int cantidad;
+    Paciente info[MAX_COLA];
+    int Primero;
+    int Ultimo;
 };
 
 struct Atencion {
@@ -755,21 +748,19 @@ struct Atencion {
 };
 
 void inicializarCola(Cola &c) {
-    c.frente = 0;
-    c.fin = 0;
-    c.cantidad = 0;
+    c.Primero = 0;
+    c.Ultimo = 0;
 }
 
 bool colaVacia(const Cola &c) {
-    return (c.cantidad == 0);
+    return (c.Primero == c.Ultimo);
 }
 
 bool encolarPaciente(Cola &c, Paciente p) {
     bool pudo = false;
-    if (c.cantidad < MAX_COLA) {
-        c.elementos[c.fin] = p;
-        c.fin = (c.fin + 1) % MAX_COLA;
-        c.cantidad++;
+    if ((c.Ultimo + 1) % MAX_COLA != c.Primero) {
+        c.info[c.Ultimo] = p;
+        c.Ultimo = (c.Ultimo + 1) % MAX_COLA;
         pudo = true;
     }
     return pudo;
@@ -777,10 +768,9 @@ bool encolarPaciente(Cola &c, Paciente p) {
 
 bool desencolarPaciente(Cola &c, Paciente &p) {
     bool pudo = false;
-    if (c.cantidad > 0) {
-        p = c.elementos[c.frente];
-        c.frente = (c.frente + 1) % MAX_COLA;
-        c.cantidad--;
+    if (!colaVacia(c)) {
+        p = c.info[c.Primero];
+        c.Primero = (c.Primero + 1) % MAX_COLA;
         pudo = true;
     }
     return pudo;
