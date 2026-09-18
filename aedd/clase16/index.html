@@ -288,8 +288,8 @@ int main() {
                         <p style="margin-bottom: 12px;">Diseñe y codifique la función <code>encolarPaciente()</code> respetando el principio FIFO y la convención de teoría de cola circular.</p>
                         <ul style="font-size: 17px; padding-left: 20px; line-height: 1.6; margin: 0;">
                             <li>La función debe recibir la <strong>cola correspondiente</strong> y los <strong>datos del paciente</strong> a ingresar.</li>
-                            <li>Si la cola se encuentra llena (<code>(Ultimo + 1) % MAX_COLA == Primero</code>), no debe alterarla y debe retornar <code>false</code>.</li>
-                            <li>Si dispone de lugar, debe insertar al paciente en la posición <code>Ultimo</code>, avanzar el índice circular (<code>Ultimo = (Ultimo + 1) % MAX_COLA</code>) y retornar <code>true</code>.</li>
+                            <li>Si la cola se encuentra llena, no debe alterarla y debe retornar <code>false</code>.</li>
+                            <li>Si dispone de lugar, debe insertar al paciente en la posición <code>Ultimo</code>, avanzar y retornar <code>true</code>.</li>
                         </ul>
                     </div>
                 </section>
