@@ -14,13 +14,13 @@ Este archivo define las directrices arquitectónicas, de maquetación y de contr
 - **Evitar solapamiento con el Footer**:
   - El footer institucional `.branding-footer` (`TUTI / UTN SANTA FE` o `AEDD / UTN SANTA FE`) se fija a `bottom: 30px`.
   - La altura útil del contenido de cualquier diapositiva no debe superar los **~520px** dentro del canvas estándar (720px) para evitar colisiones visuales.
+- **Evitar mensajes redundantes de navegación**:
+  - No incluir carteles, banners ni bloques `.puesta-en-comun` con instrucciones del tipo *"Presioná Flecha Abajo..."*. Reveal.js ya provee flechas direccionales e indicadores de progreso nativos; estos banners saturan la altura útil y generan colisiones con el pie institucional.
 
 ## 2. Soporte Móvil y Orientación Vertical (Portrait)
 - **Orden de ejecución crítico (Anti-Blank-Slide)**:
   - La eliminación de compiladores interactivos (`[id^="slide-compiler-"]`) y el aplanamiento de diapositivas anidadas (`section > section`) en pantallas móviles (`< 768px`) debe ejecutarse **sincrónicamente ANTES de invocar `Reveal.initialize()`**.
   - Si se ejecuta después, Reveal.js preserva el índice 2D en memoria y genera una diapositiva en blanco al deslizar hacia abajo.
-- **Ocultamiento de ayudas verticales**:
-  - En modo vertical (`@media (max-aspect-ratio: 1/1)` o móvil), ocultar siempre los botones `.down-arrow-hint` ("Presioná Flecha Abajo...") ya que los compiladores anidados están deshabilitados.
 - **Flujos adaptables**:
   - Diagramas o pasos secuenciales horizontales (`flex-direction: row`) deben adaptarse a columna (`flex-direction: column`) y rotar flechas indicadoras a 90 grados (`transform: rotate(90deg)`) en pantallas móviles/verticales.
 

@@ -26,4 +26,4 @@ Este archivo define las restricciones académicas, pedagógicas y de estilo espe
 - **Badges de incisos**: `.inciso-badge` (círculo dorado con letra para problemas de examen/práctica) y `.points-badge`.
 - **Diagramas de arreglos**: Usar flexbox puro `.array-diagram` y `.array-cell` en lugar de capturas PNG.
 - **Ventana de terminal**: `.terminal-window` con salida en Fira Code.
-- **Puesta en común**: `.puesta-en-comun` para indicar revisión colectiva.
+- **Puesta en común**: `.puesta-en-comun` para consignas de debate o revisión colectiva. Prohibido utilizarlo para mensajes redundantes de navegación como "Presioná Flecha Abajo...".

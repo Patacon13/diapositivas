@@ -54,6 +54,9 @@ Esta skill define la arquitectura técnica, estándares de diseño, responsivida
 2. **Footer Institucional (`.branding-footer`)**: Posición fija a `bottom: 30px`.
    - **Regla de altura**: El contenido total de una diapositiva no debe superar los **~520px** de altura efectiva dentro del canvas base de 720px para evitar colisiones con el footer.
 3. **Cero Capturas Rasterizadas para Código**: Diagramas de memoria, celdas RAM o arreglos se maquetan en **HTML y CSS puro** (`.array-diagram`, `.ram-cell`, etc.).
+4. **Evitar Mensajes Redundantes de Navegación ("Presioná Flecha Abajo...")**:
+   - **Regla estricta**: No agregar contenedores `.puesta-en-comun`, banners o textos instructivos del tipo *"Presioná Flecha Abajo para ver la solución..."* ni indicaciones obvias de navegación de Reveal.js.
+   - **Motivo**: Reveal.js provee controles direccionales nativos en pantalla y los docentes/estudiantes conocen la navegación en dos ejes. Estos mensajes consumen espacio vertical valioso (comprometiendo el límite de ~520px), compiten con el contenido y pueden provocar colisiones con el `.branding-footer`. Mantener las diapositivas limpias y centradas en el problema.
 
 ---
 

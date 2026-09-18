@@ -198,9 +198,6 @@
                         </ul>
                         <p style="margin: 0;">Luego, codifique la función <code>main()</code> declarando el arreglo de las <strong>3 colas</strong> (adecuadamente inicializadas como vacías con <code>Primero = Ultimo = 0</code>) y el vector <code>AtencionesRealizadas</code> (máx. 300) con su respectivo tamaño lógico en cero.</p>
                     </div>
-                    <div class="puesta-en-comun">
-                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución en C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
-                    </div>
                 </section>
 
                 <!-- A.2 Solución C++ -->
@@ -295,9 +292,6 @@ int main() {
                             <li>Si dispone de lugar, debe insertar al paciente en la posición <code>Ultimo</code>, avanzar el índice circular (<code>Ultimo = (Ultimo + 1) % MAX_COLA</code>) y retornar <code>true</code>.</li>
                         </ul>
                     </div>
-                    <div class="puesta-en-comun">
-                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución en C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
-                    </div>
                 </section>
 
                 <!-- B.2 Solución C++ -->
@@ -366,9 +360,6 @@ bool encolarPaciente(Cola &c, Paciente p) {
                             <li>Si las 3 colas están vacías (<code>Primero == Ultimo</code> en todas), informa un aviso y no modifica el historial.</li>
                             <li>El paciente atendido se retira de su cola avanzando <code>Primero</code> con aritmética modular y se inserta al final de <code>AtencionesRealizadas</code> registrando su <code>minutoAtencion</code> e incrementando su tamaño lógico.</li>
                         </ul>
-                    </div>
-                    <div class="puesta-en-comun">
-                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución modular en C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
                     </div>
                 </section>
 
@@ -469,9 +460,6 @@ void atenderSiguiente(Cola colas[], Atencion atenciones[],
                             <li>Debe retornar la <strong>cantidad de pacientes</strong> del historial cuyo tiempo de espera haya superado el <code>limiteMinutos</code> estipulado.</li>
                             <li><strong>Restricción:</strong> Implementación estrictamente recursiva sin bucles <code>for</code> ni <code>while</code>.</li>
                         </ul>
-                    </div>
-                    <div class="puesta-en-comun">
-                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución recursiva en C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
                     </div>
                 </section>
 
