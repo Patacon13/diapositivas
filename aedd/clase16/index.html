@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AEDD - Clase 16: Simulacro de Parcial</title>
+
+    <link rel="stylesheet" href="../../dist/reset.css" />
+    <link rel="stylesheet" href="../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../dist/plugin/highlight/monokai.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --danger-red: #EF4444;
+            --warning-amber: #F59E0B;
+            --success-green: #10B981;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 22px; color: var(--text-main); line-height: 1.5; text-align: left; }
+        
+        .slide-title {
+            font-size: 44px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 25px !important; border-left: 12px solid var(--utn-gold);
+            padding-left: 22px; text-transform: uppercase !important; letter-spacing: -1.5px;
+            text-align: left; width: 100%;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 100%; align-items: center; }
+
+        .tiled-content { display: flex; gap: 20px; width: 100%; justify-content: center; }
+        .tile { 
+            flex: 1; background: var(--bg-neutral); padding: 25px; border-radius: 18px;
+            border-bottom: 6px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+        }
+        .tile:hover { transform: translateY(-6px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 15px 35px rgba(0,0,0,0.06); }
+        .tile h3 { font-size: 20px; color: var(--utn-blue); margin-bottom: 10px; }
+
+        .reveal pre {
+            background: #272822; padding: 18px; border-radius: 12px;
+            font-family: 'Fira Code', monospace; font-size: 14px; margin: 0;
+            border-left: 6px solid var(--utn-gold); box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            width: 100%;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+        .reveal code { 
+            font-family: 'Fira Code', monospace; 
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .section-title-layout { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .section-title-layout h2 { font-size: 80px !important; color: var(--utn-gold) !important; font-weight: 700 !important; letter-spacing: -2px; }
+        .section-title-layout p { color: rgba(255,255,255,0.7) !important; font-size: 26px !important; font-weight: 300 !important; letter-spacing: 4px; text-align: center; }
+
+        .branding-footer { position: absolute; bottom: 30px; left: 40px; color: #94A3B8; font-weight: 600; font-size: 14px; letter-spacing: 1px; z-index: 1000; }
+        .branding-footer span { color: var(--utn-gold); }
+
+        .inciso-badge {
+            display: inline-block; background: var(--utn-gold); color: var(--utn-blue);
+            font-weight: 700; font-size: 28px; width: 50px; height: 50px; line-height: 50px;
+            text-align: center; border-radius: 50%; margin-right: 15px; flex-shrink: 0;
+        }
+
+        .inciso-header {
+            display: flex; align-items: center; margin-bottom: 18px;
+        }
+
+        .texto-enunciado {
+            background: white; padding: 22px 28px; border-radius: 16px; border: 1px solid #E2E8F0; text-align: left;
+        }
+
+        .puesta-en-comun {
+            background: white; padding: 14px 22px; border-radius: 12px; border-left: 6px solid var(--utn-gold); margin-top: 18px; text-align: left;
+        }
+        .puesta-en-comun p {
+            font-size: 17px; color: var(--text-light); margin: 0;
+        }
+
+        .concept-card {
+            background: white; padding: 18px 22px; border-radius: 16px; border: 1px solid #E2E8F0;
+            border-left: 8px solid var(--utn-gold); box-shadow: 0 8px 24px rgba(0,0,0,0.04); text-align: left;
+        }
+        .concept-card h3 {
+            color: var(--utn-blue); font-size: 20px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px;
+        }
+
+        /* Badges de Prioridad Triage */
+        .badge-rojo {
+            background: #FEE2E2; color: #991B1B; border: 1px solid #F87171;
+            padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;
+        }
+        .badge-amarillo {
+            background: #FEF3C7; color: #92400E; border: 1px solid #FBBF24;
+            padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;
+        }
+        .badge-verde {
+            background: #D1FAE5; color: #065F46; border: 1px solid #34D399;
+            padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;
+        }
+
+        /* --- Estilos Especiales para Celulares Verticales --- */
+        @media (max-aspect-ratio: 1/1) {
+            .two-column { grid-template-columns: 1fr; gap: 18px; }
+            .tiled-content { flex-direction: column; gap: 12px; }
+            .slide-title { font-size: 36px !important; margin-bottom: 18px !important; }
+            .reveal p, .reveal li { font-size: 20px; }
+            .reveal pre { font-size: 15px; padding: 15px; overflow-x: auto; width: 100%; box-sizing: border-box; }
+            .section-title-layout h2 { font-size: 60px !important; }
+            .section-title-layout p { font-size: 20px !important; }
+            .tile { padding: 18px; }
+            .branding-footer { bottom: 15px; left: 20px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ================================================================== -->
+            <!-- PORTADA INSTITUCIONAL -->
+            <!-- ================================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <h1 style="color: white; font-size: 68px; line-height: 1.05; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 50px;">Clase 16: Simulacro de Parcial</span></h1>
+                <p style="color: rgba(255,255,255,0.7); margin-top: 35px; text-align: center; font-size: 22px;">Docentes de práctica: Tomás Assenza, Facundo Sanchez</p>
+                <p style="color: rgba(255,255,255,0.35); margin-top: 10px; text-align: center; font-size: 16px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe</p>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- CONTEXTO GENERAL: SERVICIO MÉDICO Y TRIAGE -->
+            <!-- ================================================================== -->
+            <section>
+                <h2 class="slide-title">Sistema de Guardia Médica y Triage</h2>
+                <div class="content-area">
+                    <div class="concept-card" style="margin-bottom: 15px;">
+                        <h3><i class="fa-solid fa-hospital" style="color: var(--utn-gold);"></i> Guardia Médica UTN FRSF</h3>
+                        <p style="font-size: 16.5px; margin: 0; line-height: 1.5;">
+                            El sistema gestiona la recepción y atención de pacientes en la guardia mediante <strong>colas circulares sobre arreglos estáticos</strong> (sin memoria dinámica), garantizando tiempos acotados de respuesta.
+                        </p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 100%;">
+                        <div class="tile" style="padding: 16px; border-top: 5px solid #EF4444;">
+                            <span class="badge-rojo" style="margin-bottom: 8px;"><i class="fa-solid fa-circle-exclamation"></i> Código Rojo (0)</span>
+                            <h4 style="font-size: 16px; color: var(--utn-blue); margin: 6px 0 4px 0;">Emergencia Crítica</h4>
+                            <p style="font-size: 13.5px; color: var(--text-light); margin: 0;">Cola de prioridad máxima. Atención inmediata ante cualquier arribo.</p>
+                        </div>
+                        <div class="tile" style="padding: 16px; border-top: 5px solid #F59E0B;">
+                            <span class="badge-amarillo" style="margin-bottom: 8px;"><i class="fa-solid fa-triangle-exclamation"></i> Código Amarillo (1)</span>
+                            <h4 style="font-size: 16px; color: var(--utn-blue); margin: 6px 0 4px 0;">Urgencia Moderada</h4>
+                            <p style="font-size: 13.5px; color: var(--text-light); margin: 0;">Se atiende cuando la cola de Código Rojo se encuentra vacía.</p>
+                        </div>
+                        <div class="tile" style="padding: 16px; border-top: 5px solid #10B981;">
+                            <span class="badge-verde" style="margin-bottom: 8px;"><i class="fa-solid fa-user-check"></i> Código Verde (2)</span>
+                            <h4 style="font-size: 16px; color: var(--utn-blue); margin: 6px 0 4px 0;">Consulta Ambulatoria</h4>
+                            <p style="font-size: 13.5px; color: var(--text-light); margin: 0;">Atención cuando ambas colas anteriores se encuentren vacías.</p>
+                        </div>
+                    </div>
+
+                    <div class="puesta-en-comun" style="margin-top: 14px;">
+                        <p style="font-size: 15px;"><i class="fa-solid fa-arrows-spin" style="color: var(--utn-gold); margin-right: 6px;"></i><strong>Capacidades:</strong> Cada cola aloja hasta <strong>40 pacientes</strong> en arreglo circular. El historial <code>AtencionesRealizadas</code> almacena hasta <strong>300 registros</strong>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- INCISO A: TIPOS DE DATOS Y FUNCIÓN MAIN -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- A.1 Enunciado -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">a</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Tipos y función main()</h2>
+                    </div>
+                    <div class="texto-enunciado">
+                        <p style="margin-bottom: 12px;">Defina todos los tipos de datos y estructuras necesarias en C++ para representar:</p>
+                        <ul style="font-size: 17px; padding-left: 20px; line-height: 1.6; margin-bottom: 14px;">
+                            <li><code>Paciente</code>: <code>dni</code> (long long), <code>nombre</code> (string), <code>prioridad</code> (0 a 2), <code>minutoLlegada</code> (0 a 1439).</li>
+                            <li><code>Cola</code>: implementada sobre un <strong>arreglo circular</strong> con índices <code>frente</code>, <code>fin</code> y contador <code>cantidad</code> (máx. 40).</li>
+                            <li><code>Atencion</code>: registro del paciente y su <code>minutoAtencion</code> efectivo.</li>
+                        </ul>
+                        <p style="margin: 0;">Luego, codifique la función <code>main()</code> declarando el arreglo de las <strong>3 colas</strong> (adecuadamente inicializadas como vacías) y el vector <code>AtencionesRealizadas</code> (máx. 300) con su respectivo tamaño lógico en cero.</p>
+                    </div>
+                    <div class="puesta-en-comun">
+                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución en C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                    </div>
+                </section>
+
+                <!-- A.2 Solución C++ -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">a</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Tipos y main()</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 12.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-12|14-19|21-24|26-30|32-43">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+const int PRIORIDADES = 3;
+const int MAX_COLA = 40;
+const int MAX_ATENCIONES = 300;
+
+struct Paciente {
+    long long dni;
+    string nombre;
+    int prioridad;      // 0: Rojo, 1: Amarillo, 2: Verde
+    int minutoLlegada;  // 0 a 1439
+};
+
+struct Cola {
+    Paciente elementos[MAX_COLA];
+    int frente;
+    int fin;
+    int cantidad;
+};
+
+struct Atencion {
+    Paciente paciente;
+    int minutoAtencion;
+};
+
+void inicializarCola(Cola &c) {
+    c.frente = 0;
+    c.fin = 0;
+    c.cantidad = 0;
+}
+
+int main() {
+    Cola colasPrioridad[PRIORIDADES];
+    for (int i = 0; i < PRIORIDADES; i++) {
+        inicializarCola(colasPrioridad[i]);
+    }
+
+    Atencion atencionesRealizadas[MAX_ATENCIONES];
+    int cantAtenciones = 0;
+
+    return 0;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- A.3 Compilador Online OneCompiler -->
+                <section id="slide-compiler-a">
+                    <h2 class="slide-title">Compilador Online: Inciso A</h2>
+                    <p style="font-size: 17px; color: var(--text-light); margin-bottom: 8px;">Podés interactuar con el código y presionar <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 6px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-a', cppCodeIncisoA)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-a" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- INCISO B: ENCOLAR PACIENTE -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- B.1 Enunciado -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">b</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Función encolarPaciente()</h2>
+                    </div>
+                    <div class="texto-enunciado">
+                        <p style="margin-bottom: 12px;">Diseñe y codifique la función <code>encolarPaciente()</code> respetando el principio FIFO sobre arreglos circulares.</p>
+                        <ul style="font-size: 17px; padding-left: 20px; line-height: 1.6; margin: 0;">
+                            <li>La función debe recibir la <strong>cola correspondiente</strong> y los <strong>datos del paciente</strong> a ingresar.</li>
+                            <li>Si la cola dispone de lugar (<code>cantidad < MAX_COLA</code>), debe insertar al paciente actualizando adecuadamente los índices circulares (<code>fin = (fin + 1) % MAX_COLA</code>) e incrementar el contador, retornando <code>true</code>.</li>
+                            <li>Si la cola se encuentra llena, no debe alterarla y debe retornar <code>false</code>.</li>
+                        </ul>
+                    </div>
+                    <div class="puesta-en-comun">
+                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución en C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                    </div>
+                </section>
+
+                <!-- B.2 Solución C++ -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">b</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: encolarPaciente()</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="concept-card" style="margin-bottom: 12px; padding: 12px 18px;">
+                            <p style="font-size: 14.5px; margin: 0; color: var(--text-main);">
+                                <i class="fa-solid fa-arrows-spin" style="color: var(--utn-gold); margin-right: 6px;"></i>
+                                <strong>Avance Circular:</strong> Se inserta en la posición <code>c.fin</code> y el índice rota con <code>(c.fin + 1) % MAX_COLA</code>, manteniendo un único retorno con bandera lógica.
+                            </p>
+                        </div>
+                        <pre style="font-size: 13px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-3|4-10|11-12">
+bool encolarPaciente(Cola &c, Paciente p) {
+    bool pudoEncolar = false;
+
+    if (c.cantidad < MAX_COLA) {
+        c.elementos[c.fin] = p;
+        c.fin = (c.fin + 1) % MAX_COLA;
+        c.cantidad++;
+        pudoEncolar = true;
+    }
+
+    return pudoEncolar;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- B.3 Compilador Online OneCompiler -->
+                <section id="slide-compiler-b">
+                    <h2 class="slide-title">Compilador Online: Inciso B</h2>
+                    <p style="font-size: 17px; color: var(--text-light); margin-bottom: 8px;">Podés interactuar con el código y presionar <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 6px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-b', cppCodeIncisoB)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-b" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- INCISO C: ATENCIÓN POR PRIORIDADES (TRIAGE) -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- C.1 Enunciado -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">c</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Función atenderSiguiente()</h2>
+                    </div>
+                    <div class="texto-enunciado">
+                        <p style="margin-bottom: 10px;">Codifique la función <code>atenderSiguiente()</code> que recibe el arreglo de las 3 colas de prioridad, el vector <code>AtencionesRealizadas</code> (con su tamaño lógico) y el <code>minutoActual</code> de atención:</p>
+                        <ul style="font-size: 16px; padding-left: 20px; line-height: 1.5; margin-bottom: 10px;">
+                            <li>Despacha al siguiente paciente respetando el orden estricto de triage: <strong>Rojo (0)</strong> &rarr; <strong>Amarillo (1)</strong> &rarr; <strong>Verde (2)</strong>.</li>
+                            <li>Si las 3 colas están vacías, informa un aviso y no modifica el historial.</li>
+                            <li>El paciente atendido se retira de su cola y se inserta al final del vector <code>AtencionesRealizadas</code> registrando su <code>minutoAtencion</code> e incrementando su tamaño lógico.</li>
+                        </ul>
+                    </div>
+                    <div class="puesta-en-comun">
+                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución modular en C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                    </div>
+                </section>
+
+                <!-- C.2 Solución C++ con Funciones Auxiliares -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">c</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: atenderSiguiente()</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 11.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-8|10-18|20-33|35-47">
+// Funciones auxiliares modulares
+bool colaVacia(const Cola &c) {
+    return (c.cantidad == 0);
+}
+
+bool desencolarPaciente(Cola &c, Paciente &p) {
+    bool pudo = false;
+    if (c.cantidad > 0) {
+        p = c.elementos[c.frente];
+        c.frente = (c.frente + 1) % MAX_COLA;
+        c.cantidad--;
+        pudo = true;
+    }
+    return pudo;
+}
+
+void atenderSiguiente(Cola colas[], Atencion atenciones[],
+                      int &cantAtenciones, int minutoActual) {
+    int prioridadElegida = -1;
+    int i = 0;
+    bool encontrado = false;
+
+    // Seleccionar la cola de mayor urgencia que no este vacia
+    while (i < PRIORIDADES && !encontrado) {
+        if (!colaVacia(colas[i])) {
+            prioridadElegida = i;
+            encontrado = true;
+        }
+        i++;
+    }
+
+    if (prioridadElegida == -1) {
+        cout << "Aviso: No hay pacientes en espera en ninguna cola." << endl;
+    } else {
+        if (cantAtenciones < MAX_ATENCIONES) {
+            Paciente p;
+            desencolarPaciente(colas[prioridadElegida], p);
+
+            atenciones[cantAtenciones].paciente = p;
+            atenciones[cantAtenciones].minutoAtencion = minutoActual;
+            cantAtenciones++;
+        } else {
+            cout << "Aviso: Registro historico de atenciones lleno." << endl;
+        }
+    }
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- C.3 Compilador Online OneCompiler -->
+                <section id="slide-compiler-c">
+                    <h2 class="slide-title">Compilador Online: Inciso C</h2>
+                    <p style="font-size: 17px; color: var(--text-light); margin-bottom: 8px;">Podés interactuar con el código y presionar <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 6px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-c', cppCodeIncisoC)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-c" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- INCISO D: ESPERA CRÍTICA (RECURSIVA) -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- D.1 Enunciado -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">d</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Espera Crítica (Recursiva)</h2>
+                    </div>
+                    <div class="texto-enunciado">
+                        <p style="margin-bottom: 10px;">Con el objetivo de analizar la demora en la guardia, el tiempo de espera de un paciente atendido se calcula como:</p>
+                        <p style="font-size: 19px; font-weight: 600; color: var(--utn-blue); text-align: center; margin: 12px 0;">
+                            <code>espera = minutoAtencion - minutoLlegada</code>
+                        </p>
+                        <p style="margin-bottom: 10px;">Codifique una función <strong>recursiva</strong> <code>pacientesConEsperaCritica()</code> que reciba el vector de <code>AtencionesRealizadas</code>, su tamaño lógico y un entero <code>limiteMinutos</code>.</p>
+                        <ul style="font-size: 16.5px; padding-left: 20px; line-height: 1.5; margin: 0;">
+                            <li>Debe retornar la <strong>cantidad de pacientes</strong> del historial cuyo tiempo de espera haya superado el <code>limiteMinutos</code> estipulado.</li>
+                            <li><strong>Restricción:</strong> Implementación estrictamente recursiva sin bucles <code>for</code> ni <code>while</code>.</li>
+                        </ul>
+                    </div>
+                    <div class="puesta-en-comun">
+                        <p><i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-right: 8px;"></i>Presioná Flecha Abajo para ver la solución recursiva en C++ <i class="fa-solid fa-arrow-down" style="color: var(--utn-gold); margin-left: 8px;"></i></p>
+                    </div>
+                </section>
+
+                <!-- D.2 Solución C++ Recursiva -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">d</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: pacientesConEsperaCritica()</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="concept-card" style="margin-bottom: 12px; padding: 12px 18px;">
+                            <p style="font-size: 14.5px; margin: 0; color: var(--text-main);">
+                                <i class="fa-solid fa-code-branch" style="color: var(--utn-gold); margin-right: 6px;"></i>
+                                <strong>Caso Base:</strong> <code>n == 0</code> retorna <code>0</code>. <br>
+                                <strong>Paso Recursivo:</strong> Evalúa la última posición (<code>n - 1</code>) y acumula el conteo llamando a la función con tamaño <code>n - 1</code>.
+                            </p>
+                        </div>
+                        <pre style="font-size: 12.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-2|3-4|5-11|12-14">
+int pacientesConEsperaCritica(const Atencion atenciones[], int n, int limiteMinutos) {
+    int total = 0;
+
+    if (n > 0) {
+        int espera = atenciones[n - 1].minutoAtencion 
+                   - atenciones[n - 1].paciente.minutoLlegada;
+        int sumaActual = 0;
+        if (espera > limiteMinutos) {
+            sumaActual = 1;
+        }
+        total = sumaActual + pacientesConEsperaCritica(atenciones, n - 1, limiteMinutos);
+    }
+
+    return total;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- D.3 Compilador Online OneCompiler -->
+                <section id="slide-compiler-d">
+                    <h2 class="slide-title">Compilador Online: Inciso D</h2>
+                    <p style="font-size: 17px; color: var(--text-light); margin-bottom: 8px;">Podés interactuar con el código y presionar <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 6px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-d', cppCodeIncisoD)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-d" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- DIAPOSITIVA FINAL -->
+            <!-- ================================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2>¿DUDAS O CONSULTAS?</h2>
+                    <p style="color: white !important;">Espacio para puesta en común y preguntas</p>
+                    <div style="margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 25px;">
+                        <p style="font-size: 18px !important; color: rgba(255,255,255,0.5) !important; letter-spacing: 2px;">AEDD - UTN SANTA FE - INGENIERÍA EN SISTEMAS</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+
+    <!-- Scripts de Reveal.js y Plugins -->
+    <script src="../../dist/reveal.js"></script>
+    <script src="../../dist/plugin/notes.js"></script>
+    <script src="../../dist/plugin/highlight.js"></script>
+
+    <script>
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        // Detectar si es un dispositivo móvil chico (celular) para simplificar el flujo sincrónicamente
+        const isMobileOrTablet = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
+        if (isMobileOrTablet) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            controls: true,
+            progress: true,
+            center: true,
+            
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({
+                width: newSize.width,
+                height: newSize.height
+            });
+        });
+
+        // =========================================================================
+        // Códigos C++ para inyectar en OneCompiler (por inciso)
+        // =========================================================================
+
+        const cppCodeIncisoA = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int PRIORIDADES = 3;
+const int MAX_COLA = 40;
+const int MAX_ATENCIONES = 300;
+
+struct Paciente {
+    long long dni;
+    string nombre;
+    int prioridad;      // 0: Rojo, 1: Amarillo, 2: Verde
+    int minutoLlegada;  // 0 a 1439
+};
+
+struct Cola {
+    Paciente elementos[MAX_COLA];
+    int frente;
+    int fin;
+    int cantidad;
+};
+
+struct Atencion {
+    Paciente paciente;
+    int minutoAtencion;
+};
+
+void inicializarCola(Cola &c) {
+    c.frente = 0;
+    c.fin = 0;
+    c.cantidad = 0;
+}
+
+int main() {
+    Cola colasPrioridad[PRIORIDADES];
+    for (int i = 0; i < PRIORIDADES; i++) {
+        inicializarCola(colasPrioridad[i]);
+    }
+
+    Atencion atencionesRealizadas[MAX_ATENCIONES];
+    int cantAtenciones = 0;
+
+    cout << "=== INCISO A: ESTRUCTURAS INICIALIZADAS ===" << endl;
+    cout << "Colas de prioridad creadas: " << PRIORIDADES << endl;
+    for (int i = 0; i < PRIORIDADES; i++) {
+        cout << "  Cola prioridad " << i << " -> cantidad: " 
+             << colasPrioridad[i].cantidad << endl;
+    }
+    cout << "Vector AtencionesRealizadas listo con cant = " << cantAtenciones << endl;
+
+    return 0;
+}`;
+
+        const cppCodeIncisoB = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int PRIORIDADES = 3;
+const int MAX_COLA = 40;
+const int MAX_ATENCIONES = 300;
+
+struct Paciente {
+    long long dni;
+    string nombre;
+    int prioridad;
+    int minutoLlegada;
+};
+
+struct Cola {
+    Paciente elementos[MAX_COLA];
+    int frente;
+    int fin;
+    int cantidad;
+};
+
+void inicializarCola(Cola &c) {
+    c.frente = 0;
+    c.fin = 0;
+    c.cantidad = 0;
+}
+
+bool encolarPaciente(Cola &c, Paciente p) {
+    bool pudoEncolar = false;
+    if (c.cantidad < MAX_COLA) {
+        c.elementos[c.fin] = p;
+        c.fin = (c.fin + 1) % MAX_COLA;
+        c.cantidad++;
+        pudoEncolar = true;
+    }
+    return pudoEncolar;
+}
+
+int main() {
+    Cola colasPrioridad[PRIORIDADES];
+    for (int i = 0; i < PRIORIDADES; i++) {
+        inicializarCola(colasPrioridad[i]);
+    }
+
+    Paciente p1 { 40111222, "Perez Juan", 1, 480 };
+    Paciente p2 { 41222333, "Gomez Maria", 0, 490 };
+
+    cout << "=== INCISO B: ENCOLANDO PACIENTES ===" << endl;
+    if (encolarPaciente(colasPrioridad[p1.prioridad], p1)) {
+        cout << "Encolado OK en prioridad 1: " << p1.nombre << endl;
+    }
+    if (encolarPaciente(colasPrioridad[p2.prioridad], p2)) {
+        cout << "Encolado OK en prioridad 0: " << p2.nombre << endl;
+    }
+
+    cout << "Cantidad en Cola Roja (0): " << colasPrioridad[0].cantidad << endl;
+    cout << "Cantidad en Cola Amarilla (1): " << colasPrioridad[1].cantidad << endl;
+
+    return 0;
+}`;
+
+        const cppCodeIncisoC = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int PRIORIDADES = 3;
+const int MAX_COLA = 40;
+const int MAX_ATENCIONES = 300;
+
+struct Paciente {
+    long long dni;
+    string nombre;
+    int prioridad;
+    int minutoLlegada;
+};
+
+struct Cola {
+    Paciente elementos[MAX_COLA];
+    int frente;
+    int fin;
+    int cantidad;
+};
+
+struct Atencion {
+    Paciente paciente;
+    int minutoAtencion;
+};
+
+void inicializarCola(Cola &c) {
+    c.frente = 0;
+    c.fin = 0;
+    c.cantidad = 0;
+}
+
+bool colaVacia(const Cola &c) {
+    return (c.cantidad == 0);
+}
+
+bool encolarPaciente(Cola &c, Paciente p) {
+    bool pudo = false;
+    if (c.cantidad < MAX_COLA) {
+        c.elementos[c.fin] = p;
+        c.fin = (c.fin + 1) % MAX_COLA;
+        c.cantidad++;
+        pudo = true;
+    }
+    return pudo;
+}
+
+bool desencolarPaciente(Cola &c, Paciente &p) {
+    bool pudo = false;
+    if (c.cantidad > 0) {
+        p = c.elementos[c.frente];
+        c.frente = (c.frente + 1) % MAX_COLA;
+        c.cantidad--;
+        pudo = true;
+    }
+    return pudo;
+}
+
+void atenderSiguiente(Cola colas[], Atencion atenciones[],
+                      int &cantAtenciones, int minutoActual) {
+    int prioridadElegida = -1;
+    int i = 0;
+    bool encontrado = false;
+
+    while (i < PRIORIDADES && !encontrado) {
+        if (!colaVacia(colas[i])) {
+            prioridadElegida = i;
+            encontrado = true;
+        }
+        i++;
+    }
+
+    if (prioridadElegida == -1) {
+        cout << "Aviso: No hay pacientes en espera en ninguna cola." << endl;
+    } else {
+        if (cantAtenciones < MAX_ATENCIONES) {
+            Paciente p;
+            desencolarPaciente(colas[prioridadElegida], p);
+
+            atenciones[cantAtenciones].paciente = p;
+            atenciones[cantAtenciones].minutoAtencion = minutoActual;
+            cantAtenciones++;
+        } else {
+            cout << "Aviso: Registro historico de atenciones lleno." << endl;
+        }
+    }
+}
+
+int main() {
+    Cola colasPrioridad[PRIORIDADES];
+    for (int i = 0; i < PRIORIDADES; i++) {
+        inicializarCola(colasPrioridad[i]);
+    }
+
+    Atencion atencionesRealizadas[MAX_ATENCIONES];
+    int cantAtenciones = 0;
+
+    // Carga de pacientes: uno amarillo y dos rojos
+    encolarPaciente(colasPrioridad[1], { 40111222, "Perez Juan", 1, 480 });
+    encolarPaciente(colasPrioridad[0], { 41222333, "Gomez Maria", 0, 490 });
+    encolarPaciente(colasPrioridad[0], { 42333444, "Lopez Carlos", 0, 500 });
+
+    cout << "=== INCISO C: ATENCION POR TRIAGE ===" << endl;
+    // Primera atencion: debe salir Gomez Maria (Rojo)
+    atenderSiguiente(colasPrioridad, atencionesRealizadas, cantAtenciones, 510);
+    cout << "Atencion 1: " << atencionesRealizadas[0].paciente.nombre 
+         << " (Prioridad " << atencionesRealizadas[0].paciente.prioridad << ")" << endl;
+
+    // Segunda atencion: debe salir Lopez Carlos (Rojo)
+    atenderSiguiente(colasPrioridad, atencionesRealizadas, cantAtenciones, 525);
+    cout << "Atencion 2: " << atencionesRealizadas[1].paciente.nombre 
+         << " (Prioridad " << atencionesRealizadas[1].paciente.prioridad << ")" << endl;
+
+    // Tercera atencion: agotados los rojos, debe salir Perez Juan (Amarillo)
+    atenderSiguiente(colasPrioridad, atencionesRealizadas, cantAtenciones, 550);
+    cout << "Atencion 3: " << atencionesRealizadas[2].paciente.nombre 
+         << " (Prioridad " << atencionesRealizadas[2].paciente.prioridad << ")" << endl;
+
+    // Cuarta atencion: colas vacias
+    atenderSiguiente(colasPrioridad, atencionesRealizadas, cantAtenciones, 560);
+
+    return 0;
+}`;
+
+        const cppCodeIncisoD = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int PRIORIDADES = 3;
+const int MAX_COLA = 40;
+const int MAX_ATENCIONES = 300;
+
+struct Paciente {
+    long long dni;
+    string nombre;
+    int prioridad;
+    int minutoLlegada;
+};
+
+struct Atencion {
+    Paciente paciente;
+    int minutoAtencion;
+};
+
+int pacientesConEsperaCritica(const Atencion atenciones[], int n, int limiteMinutos) {
+    int total = 0;
+    if (n > 0) {
+        int espera = atenciones[n - 1].minutoAtencion 
+                   - atenciones[n - 1].paciente.minutoLlegada;
+        int sumaActual = 0;
+        if (espera > limiteMinutos) {
+            sumaActual = 1;
+        }
+        total = sumaActual + pacientesConEsperaCritica(atenciones, n - 1, limiteMinutos);
+    }
+    return total;
+}
+
+int main() {
+    Atencion atencionesRealizadas[MAX_ATENCIONES] {
+        { { 40111222, "Perez Juan", 1, 480 }, 560 },    // Espera: 80 min (> 40)
+        { { 41222333, "Gomez Maria", 0, 490 }, 510 },   // Espera: 20 min (<= 40)
+        { { 42333444, "Lopez Carlos", 0, 500 }, 525 },  // Espera: 25 min (<= 40)
+        { { 43444555, "Diaz Ana", 2, 450 }, 590 }       // Espera: 140 min (> 40)
+    };
+    int cantAtenciones = 4;
+
+    int limite = 40;
+    int criticos = pacientesConEsperaCritica(atencionesRealizadas, cantAtenciones, limite);
+
+    cout << "=== INCISO D: RECUENTO RECURSIVO ===" << endl;
+    cout << "Total de atenciones evaluadas: " << cantAtenciones << endl;
+    cout << "Pacientes con espera mayor a " << limite << " minutos: " 
+         << criticos << " (Perez Juan y Diaz Ana)" << endl;
+
+    return 0;
+}`;
+
+        // Función para enviar el código a un iframe de OneCompiler específico
+        function sendCode(iframeId, code) {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: 'cpp',
+                    files: [
+                        {
+                            name: 'main.cpp',
+                            content: code
+                        }
+                    ]
+                }, '*');
+            }
+        }
+
+        // Se envía el código en varios momentos clave para contrarrestar problemas de carga asíncrona
+        function sendCodeWithRetries(iframeId, code) {
+            const send = () => sendCode(iframeId, code);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        // Comprobación de las diapositivas de compilador
+        function checkCompilerSlides(slide) {
+            if (!slide) return;
+            if (slide.id === 'slide-compiler-a') {
+                sendCodeWithRetries('oc-editor-a', cppCodeIncisoA);
+            } else if (slide.id === 'slide-compiler-b') {
+                sendCodeWithRetries('oc-editor-b', cppCodeIncisoB);
+            } else if (slide.id === 'slide-compiler-c') {
+                sendCodeWithRetries('oc-editor-c', cppCodeIncisoC);
+            } else if (slide.id === 'slide-compiler-d') {
+                sendCodeWithRetries('oc-editor-d', cppCodeIncisoD);
+            }
+        }
+
+        // Escuchar cuando el usuario cambia de diapositiva
+        Reveal.on('slidechanged', event => {
+            checkCompilerSlides(event.currentSlide);
+        });
+
+        // Escuchar cuando Reveal se ha inicializado
+        Reveal.on('ready', event => {
+            checkCompilerSlides(Reveal.getCurrentSlide());
+        });
+    </script>
+</body>
+</html>
