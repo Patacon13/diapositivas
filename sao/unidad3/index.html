@@ -297,6 +297,16 @@
             transform: scale(1.02);
         }
 
+        .btn-debug {
+            background: #7C3AED;
+            color: white;
+        }
+
+        .btn-debug:hover {
+            background: #6D28D9;
+            transform: scale(1.02);
+        }
+
         .btn-disabled {
             background: #E2E8F0;
             color: #94A3B8;
@@ -353,13 +363,13 @@
             gap: 18px;
         }
 
-        /* Barra de Documentación (3 tarjetas) */
+        /* Barra de Documentación (4 tarjetas en grilla 2x2) */
         .docs-grid {
             max-width: 1240px;
             margin: 0 auto 24px auto;
             padding: 0 20px;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 18px;
         }
 
@@ -367,9 +377,9 @@
             background: white;
             border-radius: 14px;
             border: 1px solid #E2E8F0;
-            padding: 18px 20px;
+            padding: 16px 20px;
             display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: space-between;
             gap: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.03);
@@ -384,7 +394,7 @@
 
         .doc-info {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 14px;
             flex-grow: 1;
         }
@@ -405,6 +415,11 @@
             color: #0284C7;
         }
 
+        .doc-badge-debug {
+            background: #F5F3FF;
+            color: #7C3AED;
+        }
+
         .doc-badge-guide {
             background: #FFE4E6;
             color: #E11D48;
@@ -419,14 +434,14 @@
             font-size: 15px;
             font-weight: 700;
             color: var(--utn-blue);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             line-height: 1.3;
         }
 
         .doc-details p {
-            font-size: 12.5px;
+            font-size: 12px;
             color: var(--text-light);
-            line-height: 1.4;
+            line-height: 1.35;
             margin-bottom: 0;
         }
 
@@ -436,7 +451,7 @@
             color: var(--cyan-accent);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             display: block;
         }
 
@@ -444,7 +459,7 @@
             padding: 9px 18px;
             font-size: 12.5px;
             white-space: nowrap;
-            width: 100%;
+            width: auto;
             justify-content: center;
             flex-shrink: 0;
         }
@@ -626,9 +641,6 @@
             .docs-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-            .docs-grid .doc-card:first-child {
-                grid-column: span 2;
-            }
         }
 
         @media (max-width: 768px) {
@@ -636,9 +648,6 @@
             .docs-grid,
             .videos-grid {
                 grid-template-columns: 1fr;
-            }
-            .docs-grid .doc-card:first-child {
-                grid-column: auto;
             }
             .doc-card {
                 flex-direction: column;
@@ -800,7 +809,7 @@
         <div class="section-header" style="margin-top: 20px;">
             <h2><i class="fa-solid fa-book-bookmark" style="color: #E11D48;"></i> Documentación &amp; Material de Estudio</h2>
             <div class="section-line"></div>
-            <span class="badge-count">3 Documentos</span>
+            <span class="badge-count">4 Documentos</span>
         </div>
 
         <section class="docs-grid">
@@ -822,7 +831,24 @@
                 </a>
             </div>
 
-            <!-- DOC 2: GUÍA PRÁCTICA (PARTE 1) -->
+            <!-- DOC 2: ANEXO TEÓRICO (DEBUGGING) -->
+            <div class="doc-card">
+                <div class="doc-info">
+                    <div class="doc-icon-badge doc-badge-debug">
+                        <i class="fa-solid fa-bug-slash"></i>
+                    </div>
+                    <div class="doc-details">
+                        <span class="doc-meta">Anexo Teórico • Recurso</span>
+                        <h4>Anexo — Debugging &amp; Depuración</h4>
+                        <p>Guía de depuración en Java: breakpoints, inspección de variables en memoria y trazas en el IDE.</p>
+                    </div>
+                </div>
+                <a href="https://tuti.sied.utn.edu.ar/mod/resource/view.php?id=6755" target="_blank" rel="noopener noreferrer" class="action-btn doc-btn btn-debug">
+                    <span>Abrir Anexo</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+
+            <!-- DOC 3: GUÍA PRÁCTICA (PARTE 1) -->
             <div class="doc-card">
                 <div class="doc-info">
                     <div class="doc-icon-badge doc-badge-guide">
@@ -839,7 +865,7 @@
                 </a>
             </div>
 
-            <!-- DOC 3: GUÍA PRÁCTICA (PARTE 2) -->
+            <!-- DOC 4: GUÍA PRÁCTICA (PARTE 2) -->
             <div class="doc-card">
                 <div class="doc-info">
                     <div class="doc-icon-badge doc-badge-guide">
