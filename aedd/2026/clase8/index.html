@@ -1,0 +1,803 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AEDD - Arreglos Unidimensionales</title>
+
+    <link rel="stylesheet" href="../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../dist/plugin/highlight/monokai.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 22px; color: var(--text-main); line-height: 1.5; text-align: left; }
+        
+        .slide-title {
+            font-size: 48px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 40px !important; border-left: 12px solid var(--utn-gold);
+            padding-left: 24px; text-transform: uppercase !important; letter-spacing: -1.5px;
+            text-align: left; width: 100%;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; width: 100%; align-items: center; }
+
+        .tiled-content { display: flex; gap: 30px; width: 100%; justify-content: center; }
+        .tile { 
+            flex: 1; background: var(--bg-neutral); padding: 40px; border-radius: 24px;
+            border-bottom: 6px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+        }
+        .tile:hover { transform: translateY(-10px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+        .tile h3 { font-size: 24px; color: var(--utn-blue); margin-bottom: 15px; }
+
+        .reveal pre {
+            background: #272822; padding: 20px; border-radius: 12px;
+            font-family: 'Fira Code', monospace; font-size: 18px; margin: 0;
+            border-left: 6px solid var(--utn-gold); box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            width: 100%;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+        .reveal code { 
+            font-family: 'Fira Code', monospace; 
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .section-title-layout { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .section-title-layout h2 { font-size: 100px !important; color: var(--utn-gold) !important; font-weight: 700 !important; letter-spacing: -2px; }
+        .section-title-layout p { color: rgba(255,255,255,0.7) !important; font-size: 32px !important; font-weight: 300 !important; letter-spacing: 5px; text-align: center; }
+
+        .branding-footer { position: absolute; bottom: 30px; left: 40px; color: #94A3B8; font-weight: 600; font-size: 14px; letter-spacing: 1px; z-index: 1000; }
+        .branding-footer span { color: var(--utn-gold); }
+
+        /* Terminal Interactiva a medida */
+        .interactive-terminal {
+            background-color: #1e1e1e; border-radius: 10px; padding: 20px; font-family: 'Fira Code', monospace;
+            color: #00ff00; text-align: left; font-size: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid #333; width: 100%; max-height: 400px; overflow-y: auto; cursor: text;
+        }
+        .interactive-terminal .header { border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; color: #888; font-size: 16px; display: flex; justify-content: space-between;}
+        .interactive-terminal .term-input {
+            background: transparent; border: none; color: #fff; font-family: 'Fira Code', monospace; font-size: 20px;
+            outline: none; width: 80%; margin-left: 10px;
+        }
+        .interactive-terminal .term-output { color: #cccccc; margin-top: 5px; }
+
+        /* Gráficos Vectoriales de Arreglos */
+        .array-diagram { display: inline-flex; border: 2px solid var(--text-main); border-radius: 4px; overflow: visible; margin-top: 20px; margin-bottom: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .array-cell { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-right: 2px solid var(--text-main); font-family: 'Fira Code', monospace; font-size: 24px; font-weight: bold; position: relative; background: white; }
+        .array-cell:last-child { border-right: none; }
+        .array-cell.empty { background: #E2E8F0; color: transparent; }
+        .array-cell.filled { background: var(--utn-gold); color: var(--utn-blue); }
+        .array-index { position: absolute; bottom: -30px; font-size: 16px; color: var(--text-light); }
+
+        .matrix-diagram { display: inline-flex; flex-direction: column; border: 2px solid var(--text-main); border-radius: 4px; overflow: hidden; margin-top: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .matrix-row { display: flex; border-bottom: 2px solid var(--text-main); }
+        .matrix-row:last-child { border-bottom: none; }
+        .matrix-cell { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-right: 2px solid var(--text-main); font-family: 'Fira Code', monospace; font-size: 16px; font-weight: bold; background: white; }
+        .matrix-cell:last-child { border-right: none; }
+        
+        /* Cubo 3D falso para el multidimensional */
+        .cube-wrapper { position: relative; width: 100px; height: 100px; margin: 30px auto 0; transform-style: preserve-3d; transform: rotateX(-20deg) rotateY(30deg); }
+        .cube-face { position: absolute; width: 100%; height: 100%; border: 2px solid var(--utn-blue); background: rgba(0, 43, 91, 0.1); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+        .cube-face div { border: 1px solid var(--utn-blue); }
+        .cube-front  { transform: translateZ(50px); }
+        .cube-back   { transform: rotateY(180deg) translateZ(50px); }
+        .cube-right  { transform: rotateY(90deg) translateZ(50px); }
+        .cube-left   { transform: rotateY(-90deg) translateZ(50px); }
+        .cube-top    { transform: rotateX(90deg) translateZ(50px); }
+        .cube-bottom { transform: rotateX(-90deg) translateZ(50px); }
+
+        /* --- Estilos Especiales para Celulares Verticales --- */
+        @media (max-aspect-ratio: 1/1) {
+            .two-column { grid-template-columns: 1fr; gap: 30px; }
+            .tiled-content { flex-direction: column; gap: 20px; }
+            .slide-title { font-size: 60px !important; margin-bottom: 25px !important; }
+            .reveal p, .reveal li { font-size: 28px; }
+            .reveal pre { font-size: 20px; padding: 25px; overflow-x: auto; width: 100%; box-sizing: border-box; }
+            .section-title-layout h2 { font-size: 100px !important; }
+            .section-title-layout p { font-size: 28px !important; }
+            .tile { padding: 25px; }
+            .tile .icon { font-size: 40px; margin-bottom: 15px; }
+            .tile h3 { font-size: 24px; }
+            .branding-footer { bottom: 20px; left: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- Portada -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <h1 style="color: white; font-size: 80px; line-height: 0.9; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 60px;">Clase 8: Arreglos Unidimensionales</span></h1>
+                <p style="color: rgba(255,255,255,0.6); margin-top: 50px; text-align: center; font-size: 24px;">Docentes de práctica: Tomás Assenza, Exequiel Benavidez, Facundo Sanchez, Nicolás Huber</p>
+                <p style="color: rgba(255,255,255,0.3); margin-top: 10px; text-align: center; font-size: 18px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe</p>
+            </section>
+
+            <!-- Diapositiva 2 -->
+            <section>
+                <h2 class="slide-title">¿Qué es un arreglo?</h2>
+                <div style="padding: 60px; background: var(--bg-neutral); border-radius: 20px; border-left: 12px solid var(--utn-blue); margin-top: 50px;">
+                    <p style="font-size: 38px; color: var(--utn-blue); font-style: italic; line-height: 1.4; text-align: center;">"Un arreglo es un grupo de posiciones de memorias contiguas que tienen el mismo nombre y tipo"</p>
+                </div>
+            </section>
+
+            <!-- Diapositiva 3 -->
+            <section>
+                <h2 class="slide-title">Tipos de Arreglos</h2>
+                <div class="tiled-content" style="align-items: stretch;">
+                    <div class="tile">
+                        <h3>Unidimensionales</h3>
+                        <p style="font-size: 18px;">Arreglos de una dimensión, llamados vectores o listas.</p>
+                        <div class="array-diagram">
+                            <div class="array-cell">5</div><div class="array-cell">2</div><div class="array-cell">9</div><div class="array-cell">1</div>
+                        </div>
+                    </div>
+                    <div class="tile">
+                        <h3>Bidimensionales</h3>
+                        <p style="font-size: 18px;">Arreglos de dos dimensiones, conocidos como matrices.</p>
+                        <div class="matrix-diagram">
+                            <div class="matrix-row"><div class="matrix-cell">1</div><div class="matrix-cell">2</div><div class="matrix-cell">3</div></div>
+                            <div class="matrix-row"><div class="matrix-cell">4</div><div class="matrix-cell">5</div><div class="matrix-cell">6</div></div>
+                            <div class="matrix-row"><div class="matrix-cell">7</div><div class="matrix-cell">8</div><div class="matrix-cell">9</div></div>
+                        </div>
+                    </div>
+                    <div class="tile">
+                        <h3>Multidimensionales</h3>
+                        <p style="font-size: 18px;">Arreglos de múltiples dimensiones (ej. cubo de datos).</p>
+                        <div class="cube-wrapper">
+                            <div class="cube-face cube-front"><div></div><div></div><div></div><div></div></div>
+                            <div class="cube-face cube-back"><div></div><div></div><div></div><div></div></div>
+                            <div class="cube-face cube-right"><div></div><div></div><div></div><div></div></div>
+                            <div class="cube-face cube-left"><div></div><div></div><div></div><div></div></div>
+                            <div class="cube-face cube-top"><div></div><div></div><div></div><div></div></div>
+                            <div class="cube-face cube-bottom"><div></div><div></div><div></div><div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diapositiva 4 -->
+            <section>
+                <h2 class="slide-title">Tipos de Tamaño</h2>
+                <div class="two-column">
+                    <div>
+                        <h3 style="color: var(--utn-blue); margin-bottom: 10px;">Tamaño Físico</h3>
+                        <p>Es el tamaño máximo de elementos que el arreglo puede almacenar en memoria.</p>
+                        <div class="array-diagram">
+                            <div class="array-cell empty"><div class="array-index">0</div></div>
+                            <div class="array-cell empty"><div class="array-index">1</div></div>
+                            <div class="array-cell empty"><div class="array-index">2</div></div>
+                            <div class="array-cell empty"><div class="array-index">3</div></div>
+                            <div class="array-cell empty"><div class="array-index">4</div></div>
+                        </div>
+                        <p style="font-size: 16px; color: var(--text-light);"><i class="fa-solid fa-arrow-up"></i> Capacidad total: 5 posiciones reservadas.</p>
+                    </div>
+                    <div class="fragment">
+                        <h3 style="color: var(--utn-blue); margin-bottom: 10px;">Tamaño Lógico</h3>
+                        <p>Es la cantidad <strong>real</strong> de elementos que tiene almacenado o en uso el arreglo.</p>
+                        <div class="array-diagram">
+                            <div class="array-cell filled">8<div class="array-index">0</div></div>
+                            <div class="array-cell filled">3<div class="array-index">1</div></div>
+                            <div class="array-cell filled">5<div class="array-index">2</div></div>
+                            <div class="array-cell empty"><div class="array-index">3</div></div>
+                            <div class="array-cell empty"><div class="array-index">4</div></div>
+                        </div>
+                        <p style="font-size: 16px; color: var(--text-light);"><i class="fa-solid fa-arrow-up"></i> Tamaño lógico: 3 elementos cargados.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diapositiva 5 -->
+            <section>
+                <h2 class="slide-title">Declaración y Acceso</h2>
+                <div class="two-column">
+                    <div>
+                        <h3 style="color: var(--utn-blue); margin-bottom: 20px;">Declaración</h3>
+                        <pre><code class="cpp" data-trim>
+// Tipo de dato, nombre y tamaño entre corchetes
+int notas[5];
+float promedios[10];
+char letras[26];
+                        </code></pre>
+                        <ul style="margin-top: 20px; font-size: 18px;">
+                            <li>El primer elemento está en la posición 0: <code style="color: #005B96;">a[0] = 13;</code></li>
+                            <li>El segundo en la posición 1: <code style="color: #005B96;">a[1] = 45;</code></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--utn-blue); margin-bottom: 20px;">Acceso en Memoria</h3>
+                        <pre><code class="cpp" data-trim data-line-numbers="1|3|4|5">
+int a[5];
+
+a[0] = 13; // Acceso escritura
+a[1] = 45; 
+cout << a[0]; // Acceso lectura
+                        </code></pre>
+                        <div class="array-diagram" style="margin-top: 10px;">
+                            <div class="array-cell filled">13<div class="array-index">0</div></div>
+                            <div class="array-cell filled">45<div class="array-index">1</div></div>
+                            <div class="array-cell empty"><div class="array-index">2</div></div>
+                            <div class="array-cell empty"><div class="array-index">3</div></div>
+                            <div class="array-cell empty"><div class="array-index">4</div></div>
+                        </div>
+                        <p style="font-size: 16px; margin-top: 5px; background: var(--bg-neutral); padding: 15px; border-radius: 10px; border-left: 4px solid var(--utn-gold);">Para referirse a un elemento especificamos el <strong>nombre</strong> del arreglo y el <strong>número</strong> de posición entre corchetes.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diapositiva 6: Ejercicio omegaUp 24882 -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title" style="border-left-color: #2563EB;">omegaUp 24882: El doble del anterior</h2>
+                <p>Escribe un programa que lea un número entero <code>V</code> y lo coloque en la primera posición de un arreglo <code>N[10]</code> (es decir, en <code>N[0]</code>). Para cada una de las siguientes posiciones del arreglo (desde la posición 1 hasta la 9), debes colocar el <strong>doble</strong> del valor almacenado en la posición anterior.</p>
+                <div class="two-column" style="margin-top: 30px; gap: 30px;">
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0;">
+                        <h4 style="color: #64748B; font-size: 16px; margin-bottom: 10px;">ENTRADA</h4>
+                        <p style="font-family: monospace; font-size: 24px; font-weight: bold; margin: 0;">1</p>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0;">
+                        <h4 style="color: #64748B; font-size: 16px; margin-bottom: 10px;">SALIDA ESPERADA</h4>
+                        <p style="font-family: monospace; font-size: 18px; margin: 0;">N[0] = 1<br>N[1] = 2<br>N[2] = 4<br>...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Grupo de Diapositivas 7: Solución omegaUp 24882 + Compilador Vertical -->
+            <section>
+                <!-- Diapositiva 7: Solución omegaUp 24882 Animada -->
+                <section>
+                    <h2 class="slide-title">Solución: El doble del anterior</h2>
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-3|5-6|8-13|15-19|21-24">
+#include &lt;iostream&gt;
+#define TAM 10
+using namespace std;
+
+void inicializar_teclado(int [], int);
+void imprimir_vector(int [], int);
+
+int main() {
+    int vector[TAM];
+    inicializar_teclado(vector, TAM);
+    imprimir_vector(vector, TAM);
+    return 0;
+}
+
+void inicializar_teclado(int V[], int tam){
+    cin &gt;&gt; V[0];
+    for(int i=1; i&lt;tam; i++)
+        V[i] = 2 * V[i-1];
+}
+    
+void imprimir_vector(int V[], int tam){
+    for(int i=0; i&lt;tam; i++)
+        cout &lt;&lt; "N[" &lt;&lt; i &lt;&lt; "] = " &lt;&lt; V[i] &lt;&lt; endl;
+}
+                    </code></pre>
+                </section>
+
+                <!-- Diapositiva 8: Compilador Interactivo (Abajo de Solución El doble del anterior) -->
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title">Ejecución Interactiva: El doble del anterior</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN y hacer clic en <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-1', cppCodeArrayFill)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="color: #888; font-size: 14px;">&#9679; &#9679; &#9679;</span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- Diapositiva 9: Ejercicio omegaUp 11232 -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title" style="border-left-color: #2563EB;">omegaUp 11232: Frecuencia de una Letra</h2>
+                <p>Leer una palabra <code>p</code> y una letra <code>l</code>. Informar cuántas veces aparece la letra en la palabra.</p>
+                <div class="two-column" style="margin-top: 20px; gap: 30px; margin-bottom: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0; text-align: left;">
+                        <h4 style="color: #64748B; font-size: 16px; margin-bottom: 10px;">ENTRADA</h4>
+                        <p style="font-family: monospace; font-size: 20px; font-weight: bold; margin: 0;">panama a</p>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0; text-align: left;">
+                        <h4 style="color: #64748B; font-size: 16px; margin-bottom: 10px;">SALIDA ESPERADA</h4>
+                        <p style="font-family: monospace; font-size: 20px; font-weight: bold; margin: 0; color: var(--utn-blue);">3</p>
+                    </div>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 12px; border-left: 6px solid var(--utn-gold);">
+                    <h3 style="color: var(--utn-blue); font-size: 20px; margin-bottom: 5px;">Estrategia Clave</h3>
+                    <p style="font-size: 18px; margin: 0;">Usamos un <strong>arreglo de frecuencias</strong> (de tamaño 256) donde el <i>índice</i> representa el valor ASCII del carácter, y el <i>valor</i> es su cantidad de apariciones.</p>
+                </div>
+            </section>
+
+            <!-- Grupo de Diapositivas 10: Solución 11232 + Compilador Vertical -->
+            <section>
+                <!-- Diapositiva 10: Solución 11232 -->
+                <section>
+                    <h2 class="slide-title">Solución: Frecuencia de una Letra</h2>
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-6|8-17|19-24|26-28">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+void contarFrecuencias(string, int []);
+int obtenerFrecuencia(int [], char);
+
+int main() {
+    int frecuencias[256] {}; // Inicializa todo en 0
+    string p;
+    char l;
+    
+    cin &gt;&gt; p &gt;&gt; l;
+    contarFrecuencias(p, frecuencias);
+    cout &lt;&lt; obtenerFrecuencia(frecuencias, l) &lt;&lt; endl;
+    return 0;
+}
+
+void contarFrecuencias(string palabra, int frecuencias[]) {
+    for (int i = 0; i &lt; palabra.length(); i++) {
+        char caracter = palabra[i];
+        frecuencias[caracter]++; // Magia: Acumulamos directamente en el índice ASCII!
+    }
+}
+
+int obtenerFrecuencia(int frecuencias[], char letra) {
+    return frecuencias[letra];
+}
+                    </code></pre>
+                </section>
+
+                <!-- Diapositiva Vertical: Compilador para Frecuencia de una Letra -->
+                <section id="slide-compiler-2">
+                    <h2 class="slide-title">Ejecución Interactiva: Frecuencia de una Letra</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN (ej: <code>panama a</code>) y hacer clic en <strong>Run</strong>.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-2', cppCodeFrecuencias)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="color: #888; font-size: 14px;">&#9679; &#9679; &#9679;</span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- Diapositiva 11: Inicialización -->
+            <section>
+                <h2 class="slide-title">Variantes de Inicialización</h2>
+                <p>Declarar un arreglo de <strong>N</strong> componentes. Existen varias formas de cargarlo inicialmente:</p>
+                <div class="tiled-content" style="margin-top: 40px;">
+                    <div class="tile fragment fade-up">
+                        <h3 style="color: #E65100;">Por Extensión</h3>
+                        <pre><code class="cpp" data-trim>
+int v[4] {12, 13, 14, 15};
+                        </code></pre>
+                        <p style="font-size: 16px; margin-top: 15px;">¿Qué pasa con los elementos faltantes si definimos tamaño 1000? Se completan con 0.</p>
+                    </div>
+                    <div class="tile fragment fade-up">
+                        <h3 style="color: #1565C0;">Por Teclado</h3>
+                        <pre><code class="cpp" data-trim>
+for(int i=0; i&lt;tam; i++) {
+    cin &gt;&gt; v[i];
+}
+                        </code></pre>
+                    </div>
+                    <div class="tile fragment fade-up">
+                        <h3 style="color: #2E7D32;">Aleatorio</h3>
+                        <pre><code class="cpp" data-trim>
+srand(time(NULL));
+for(int i=0; i&lt;tam; i++) {
+    v[i] = rand() % 100;
+}
+                        </code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diapositiva 12: Ejercicio 10 Enunciado -->
+            <section>
+                <h2 class="slide-title">Ejercicio Avanzado</h2>
+                <p style="font-size: 26px;">Se leen 10 valores enteros menores que 30. Luego se leen valores hasta que la <strong>suma de los dígitos</strong> de uno leído, sea igual a alguno de los 10 valores inicialmente leídos. Informar el número.</p>
+                <div class="fragment" style="background: var(--bg-neutral); padding: 25px; border-radius: 12px; margin-top: 30px;">
+                    <p style="font-family: monospace; font-weight: bold; margin: 0 0 10px 0;">Ejemplo:</p>
+                    <ul style="font-size: 20px;">
+                        <li>Arreglo Inicial: <code>1 6 25 18 23 2 6 19 14 13</code></li>
+                        <li>Se lee <code>9245</code> -> Suma = 20 (No está)</li>
+                        <li>Se lee <code>340</code> -> Suma = 7 (No está)</li>
+                        <li>Se lee <code>694</code> -> Suma = 19 (¡Sí está en el arreglo!). Termina e imprime 694.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Grupo de Diapositivas 13: Resolución Modularizada + Compilador Vertical -->
+            <section>
+                <!-- Diapositiva 13: Ejercicio 10 Codigo -->
+                <section>
+                    <h2 class="slide-title">Resolución Modularizada</h2>
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-12|15-23|25-28">
+int main() {
+    int iniciales[10], ingreso;
+    inicializaArreglo(iniciales, 10);
+    
+    do {
+        cout &lt;&lt; "Ingrese un numero:" &lt;&lt; endl;
+        cin &gt;&gt; ingreso;
+    } while(!existeNumero(iniciales, 10, sumaDigitos(ingreso)));
+    
+    cout &lt;&lt; "Cumple condicion: " &lt;&lt; ingreso &lt;&lt; endl;
+    return 0;
+}
+
+// Búsqueda secuencial estándar
+bool existeNumero(int V[], int tam, int buscado) {
+    bool encontrado = false;
+    int i = 0;
+    while (i &lt; tam && !encontrado) {
+        if (V[i] == buscado) encontrado = true;
+        i++;
+    }
+    return encontrado;
+}
+
+int sumaDigitos(int numero) {
+    if (numero &lt; 10) return numero;
+    return numero % 10 + sumaDigitos(numero/10); // Recursividad elegante
+}
+                    </code></pre>
+                </section>
+
+                <!-- Diapositiva Vertical: Solución Alternativa (Presencia / Frecuencias) -->
+                <section>
+                    <h2 class="slide-title">Solución Alternativa: Registro de Presencia</h2>
+                    <p style="font-size: 20px; margin-bottom: 25px;">Como los números iniciales son menores a 30, podemos usar un arreglo de presencia (booleano) de tamaño 30. Guardamos <code>true</code> en los índices correspondientes a los números leídos para lograr búsquedas directas en tiempo constante $O(1)$.</p>
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-20|22-30|32-35">
+#include &lt;iostream&gt;
+using namespace std;
+
+void cargarPresencia(bool [], int, int);
+int sumaDigitos(int);
+
+int main() {
+    bool presencia[30] {false}; // Registra presencia
+    cargarPresencia(presencia, 30, 10);
+    
+    int ingreso, suma;
+    do {
+        cout &lt;&lt; "Ingrese un numero:" &lt;&lt; endl;
+        cin &gt;&gt; ingreso;
+        suma = sumaDigitos(ingreso);
+    } while(suma &gt;= 30 || !presencia[suma]); // Búsqueda directa O(1)
+    
+    cout &lt;&lt; "Cumple condicion: " &lt;&lt; ingreso &lt;&lt; endl;
+    return 0;
+}
+
+void cargarPresencia(bool P[], int tam, int cant) {
+    int valor;
+    for (int i = 0; i &lt; cant; i++) {
+        cin &gt;&gt; valor;
+        if (valor &gt;= 0 && valor &lt; tam) {
+            P[valor] = true; // Marcamos que este valor apareció
+        }
+    }
+}
+
+int sumaDigitos(int numero) {
+    if (numero &lt; 10) return numero;
+    return numero % 10 + sumaDigitos(numero/10); // Recursividad
+}
+                    </code></pre>
+                </section>
+
+                <!-- Diapositiva Vertical: Compilador para Ejercicio Avanzado -->
+                <section id="slide-compiler-3">
+                    <h2 class="slide-title">Ejecución Interactiva: Ejercicio Avanzado</h2>
+                    <p style="font-size: 18px; color: var(--text-light); margin-bottom: 10px;">Podés modificar el código, ingresar valores en STDIN (ej: <code>9245 340 694</code>) y hacer clic en <strong>Run</strong>.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 10px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-3', cppCodeAvanzado)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="color: #888; font-size: 14px;">&#9679; &#9679; &#9679;</span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-3" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- Diapositiva final -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2 style="font-size: 80px !important; margin-bottom: 20px;">Equipo de Algoritmos y Estructuras de Datos</h2>
+                    <p style="color: white !important;">Comisión A</p>
+                    <div style="margin-top: 70px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px;">
+                        <p style="font-size: 18px !important; color: rgba(255,255,255,0.5) !important; letter-spacing: 2px;">UTN SANTA FE - INGENIERÍA EN SISTEMAS</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+
+    <script src="../../../dist/reveal.js"></script>
+    <script src="../../../dist/plugin/notes.js"></script>
+    <script src="../../../dist/plugin/highlight.js"></script>
+    
+    <script>
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        // Detectar si es un dispositivo móvil chico (celular) para simplificar el flujo
+        const isMobileOrTablet = window.innerWidth < 768;
+        if (isMobileOrTablet) {
+            // Eliminar los compiladores verticales para evitar problemas de gestos y teclado en celulares
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            
+            // Aplanar las diapositivas para que no queden secciones anidadas vacías o de un solo hijo
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            controls: true,
+            progress: true,
+            center: true,
+            
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({
+                width: newSize.width,
+                height: newSize.height
+            });
+        });
+
+        // Código C++ a pre-cargar en OneCompiler para Array Fill I
+        const cppCodeArrayFill = `#include <iostream>
+#define TAM 10
+using namespace std;
+
+void inicializar_teclado(int [], int);
+void imprimir_vector(int [], int);
+
+int main() {
+    int vector[TAM];
+    inicializar_teclado(vector, TAM);
+    imprimir_vector(vector, TAM);
+    return 0;
+}
+
+void inicializar_teclado(int V[], int tam){
+    cin >> V[0];
+    for(int i=1; i<tam; i++)
+        V[i] = 2 * V[i-1];
+}
+    
+void imprimir_vector(int V[], int tam){
+    for(int i=0; i<tam; i++)
+        cout << "N[" << i << "] = " << V[i] << endl;
+}`;
+
+        // Código C++ a pre-cargar en OneCompiler para Frecuencia de una Letra
+        const cppCodeFrecuencias = `#include <iostream>
+#include <string>
+using namespace std;
+
+void contarFrecuencias(string, int []);
+int obtenerFrecuencia(int [], char);
+
+int main() {
+    int frecuencias[256] {}; // Inicializa todo en 0
+    string p;
+    char l;
+    
+    cin >> p >> l;
+    contarFrecuencias(p, frecuencias);
+    cout << obtenerFrecuencia(frecuencias, l) << endl;
+    return 0;
+}
+
+void contarFrecuencias(string palabra, int frecuencias[]) {
+    for (int i = 0; i < palabra.length(); i++) {
+        char caracter = palabra[i];
+        frecuencias[caracter]++; // Magia: Acumulamos directamente en el índice ASCII!
+    }
+}
+
+int obtenerFrecuencia(int frecuencias[], char letra) {
+    return frecuencias[letra];
+}`;
+
+        // Código C++ a pre-cargar en OneCompiler para Ejercicio Avanzado
+        const cppCodeAvanzado = `#include <iostream>
+using namespace std;
+
+void inicializaArreglo(int V[], int tam) {
+    for (int i = 0; i < tam; i++) {
+        cin >> V[i];
+    }
+}
+
+bool existeNumero(int V[], int tam, int buscado);
+int sumaDigitos(int numero);
+
+int main() {
+    int iniciales[10], ingreso;
+    inicializaArreglo(iniciales, 10);
+    
+    do {
+        cout << "Ingrese un numero:" << endl;
+        cin >> ingreso;
+    } while(!existeNumero(iniciales, 10, sumaDigitos(ingreso)));
+    
+    cout << "Cumple condicion: " << ingreso << endl;
+    return 0;
+}
+
+bool existeNumero(int V[], int tam, int buscado) {
+    bool encontrado = false;
+    int i = 0;
+    while (i < tam && !encontrado) {
+        if (V[i] == buscado) encontrado = true;
+        i++;
+    }
+    return encontrado;
+}
+
+int sumaDigitos(int numero) {
+    if (numero < 10) return numero;
+    return numero % 10 + sumaDigitos(numero/10); // Recursividad elegante
+}
+
+/*
+// ==========================================
+// SOLUCIÓN ALTERNATIVA (Registro de Presencia)
+// ==========================================
+
+#include <iostream>
+using namespace std;
+
+void cargarPresencia(bool P[], int tam, int cant) {
+    int valor;
+    for (int i = 0; i < cant; i++) {
+        cin >> valor;
+        if (valor >= 0 && valor < tam) {
+            P[valor] = true;
+        }
+    }
+}
+
+int sumaDigitos(int numero) {
+    if (numero < 10) return numero;
+    return numero % 10 + sumaDigitos(numero/10);
+}
+
+int main() {
+    bool presencia[30] {false};
+    cargarPresencia(presencia, 30, 10);
+    
+    int ingreso, suma;
+    do {
+        cout << "Ingrese un numero:" << endl;
+        cin >> ingreso;
+        suma = sumaDigitos(ingreso);
+    } while(suma >= 30 || !presencia[suma]); // O(1)
+    
+    cout << "Cumple condicion: " << ingreso << endl;
+    return 0;
+}
+*/`;
+
+        // Función para enviar el código a un iframe de OneCompiler específico
+        function sendCode(iframeId, code) {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: 'cpp',
+                    files: [
+                        {
+                            name: 'main.cpp',
+                            content: code
+                        }
+                    ]
+                }, '*');
+            }
+        }
+
+        // Se envía el código en varios momentos clave para contrarrestar problemas de carga asíncrona
+        function sendCodeWithRetries(iframeId, code) {
+            const send = () => sendCode(iframeId, code);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        // Comprobación de las diapositivas de compilador
+        function checkCompilerSlides(slide) {
+            if (!slide) return;
+            if (slide.id === 'slide-compiler-1') {
+                sendCodeWithRetries('oc-editor-1', cppCodeArrayFill);
+            } else if (slide.id === 'slide-compiler-2') {
+                sendCodeWithRetries('oc-editor-2', cppCodeFrecuencias);
+            } else if (slide.id === 'slide-compiler-3') {
+                sendCodeWithRetries('oc-editor-3', cppCodeAvanzado);
+            }
+        }
+
+        // Escuchar cuando el usuario cambia de diapositiva
+        Reveal.on('slidechanged', event => {
+            checkCompilerSlides(event.currentSlide);
+        });
+
+        // Escuchar cuando Reveal se ha inicializado
+        Reveal.on('ready', event => {
+            checkCompilerSlides(Reveal.getCurrentSlide());
+        });
+    </script>
+</body>
+</html>

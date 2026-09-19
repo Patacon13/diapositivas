@@ -223,3 +223,10 @@ Antes de dar por finalizada la creación o refactorización de presentaciones, d
       1. **Clases & Práctica Interactiva**: Tarjetas verticales completas para las clases Reveal.js y minijuegos interactivos.
       2. **Documentación & Material de Estudio**: Tarjetas horizontales compactas (`.docs-grid`) para el apunte de Teoría (`Apunte • PDF`) y la Guía de Práctica (`Guía de Ejercicios • PDF`) con botones de apertura externa.
       3. **Videos**: Fila de tarjetas interactivas (`.videos-grid`) que albergan píldoras de YouTube y grabaciones de clase en Microsoft SharePoint/Stream, identificadas con tags de plataforma (`YouTube • CÁTEDRA SAO` / `SharePoint • CÁTEDRA SAO`).
+19. **Versionado y Organización por Ciclo Lectivo (Multi-Año)**:
+    - Toda presentación, hub o simulador debe alojarse dentro de su ciclo lectivo: `deploy/<materia>/<año>/...` (ej: `sao/2026/unidad2/`, `aedd/2026/clase8/`, `pba/2026/pilas_colas/`).
+    - **Inmutabilidad de cursadas**: No modificar retrospectivamente material de años anteriores; para un nuevo ciclo se crea la carpeta correspondiente manteniendo vivas las URLs históricas.
+    - **Canalización desde SIED**: No crear landings intermedias en la raíz de la cátedra; la navegación se inicia directamente desde los enlaces de SIED / campus a los hubs de unidad o clases específicas.
+    - **Profundidad de assets compartidos (`dist/`)**:
+      - Clases dentro de unidades (`sao/2026/unidad2/clase1/`): `../../../../dist/`
+      - Clases directas o hubs de unidad (`aedd/2026/clase8/`, `sao/2026/unidad2/index.html`): `../../../dist/`

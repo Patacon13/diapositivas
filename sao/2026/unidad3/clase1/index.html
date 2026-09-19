@@ -1,0 +1,1074 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>SAO - Unidad 3 | Clase 1: Estructuras Condicionales</title>
+
+    <!-- Reveal.js & Plugins CSS -->
+    <link rel="stylesheet" href="../../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../../dist/plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/tuti.css" />
+
+    <!-- Tipografías Oficiales & Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Títulos de Diapositiva */
+        .slide-title {
+            font-size: 38px !important;
+            font-weight: 800 !important;
+            color: var(--utn-blue) !important;
+            margin-bottom: 24px !important;
+            border-left: 8px solid var(--utn-gold);
+            padding-left: 18px;
+            text-transform: uppercase !important;
+            letter-spacing: -0.5px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .slide-subtitle {
+            color: var(--cyan-accent);
+            font-weight: 700;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* Footer Institucional Fijo Global (Estilo Unidad 0) */
+        .branding-footer {
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 35px !important;
+            color: #94A3B8 !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            letter-spacing: 1px !important;
+            z-index: 9999 !important;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
+        .branding-footer span {
+            color: var(--utn-gold) !important;
+        }
+
+        @media (max-aspect-ratio: 1/1), (max-width: 768px) {
+            .hero-container { flex-direction: column !important; padding: 15px !important; }
+            .hero-image { height: 180px !important; min-height: 180px !important; width: 100% !important; margin-bottom: 12px !important; }
+            .hero-text { padding-left: 0 !important; text-align: center !important; }
+            .hero-title { font-size: 32px !important; text-align: center !important; margin-bottom: 10px !important; }
+            .staff-list { margin-bottom: 10px !important; }
+            .staff-list h4 { text-align: center !important; font-size: 17px !important; margin-bottom: 4px !important; }
+            .staff-list ul { display: inline-block !important; text-align: left !important; }
+            .staff-list li { font-size: 15px !important; margin-bottom: 3px !important; }
+
+            .slide-title { font-size: 26px !important; margin-bottom: 14px !important; border-left-width: 6px !important; padding-left: 12px !important; }
+            .reveal p, .reveal li { font-size: 16px !important; }
+            .branding-footer { bottom: 10px !important; left: 15px !important; font-size: 11px !important; }
+        }
+
+        /* Tarjetas Conceptuales */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+
+        .concept-card {
+            background: #FFFFFF;
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+            padding: 22px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 14px;
+        }
+
+        .concept-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            margin-bottom: 6px;
+        }
+
+        .concept-card p {
+            font-size: 14.5px;
+            color: var(--text-light);
+            line-height: 1.45;
+            margin-bottom: 0;
+        }
+
+        /* Cuadros Callout Estandarizados */
+        .callout-box {
+            display: flex;
+            align-items: flex-start !important;
+            text-align: left !important;
+            gap: 14px;
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            border-left: 5px solid var(--cyan-accent);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 16px;
+        }
+
+        .callout-box i {
+            color: var(--cyan-accent);
+            font-size: 20px;
+            margin-top: 3px !important;
+            flex-shrink: 0;
+        }
+
+        .callout-box strong {
+            display: block;
+            margin-bottom: 2px;
+            color: var(--utn-blue);
+            font-size: 15px;
+        }
+
+        .callout-box p strong {
+            display: inline !important;
+            color: inherit !important;
+            font-size: inherit !important;
+        }
+
+        .callout-box p {
+            margin: 0 !important;
+            text-align: left !important;
+            font-size: 14px !important;
+            line-height: 1.4 !important;
+            color: var(--text-main);
+        }
+
+        /* Badges de Código */
+        .code-badge {
+            font-family: 'Fira Code', monospace;
+            background: #F1F5F9;
+            color: #0284C7;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            white-space: nowrap !important;
+            display: inline-block;
+        }
+
+        /* Ventana del Compilador OneCompiler */
+        .compiler-window {
+            width: 100%;
+            height: 520px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid #334155;
+            background: #1E293B;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .compiler-window .header {
+            background: #0F172A;
+            padding: 10px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .compiler-window .header span {
+            color: #94A3B8;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .compiler-window .header button {
+            background: #334155;
+            color: #F8FAFC;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .compiler-window .header button:hover {
+            background: #475569;
+        }
+
+        .compiler-window iframe {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Diagrama de Flujo en HTML */
+        .flow-diagram-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 15px 0;
+        }
+
+        .flow-node {
+            background: #F8FAFC;
+            border: 2px solid #CBD5E1;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--utn-blue);
+            text-align: center;
+        }
+
+        .flow-diamond {
+            background: #FEF3C7;
+            border: 2px solid #F59E0B;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-weight: 700;
+            font-size: 14px;
+            color: #B45309;
+            text-align: center;
+        }
+
+        .flow-arrow {
+            font-size: 18px;
+            color: #94A3B8;
+        }
+
+        /* Tablas */
+        .reveal table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 16px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #E2E8F0;
+        }
+
+        .reveal th {
+            background: var(--utn-blue);
+            color: white;
+            padding: 10px 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .reveal td {
+            padding: 9px 14px;
+            border-bottom: 1px solid #E2E8F0;
+            color: var(--text-main);
+        }
+
+        .reveal tr:nth-child(even) {
+            background: var(--bg-neutral);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- =========================================================================
+                 SLIDE 1: PORTADA INSTITUCIONAL TUTI (Hero Split)
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title" style="text-align: left; font-size: 44px !important; margin-bottom: 12px !important;">SISTEMA DE AUTOMATIZACIÓN DE OFICINAS</h1>
+                        <h3 style="font-size: 22px; color: var(--cyan-accent); font-weight: 600; margin-bottom: 24px; text-align: left;">Unidad #3 - Estructuras de Control (Clase 1: Condicionales y Bifurcaciones)</h3>
+                        
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 2: ¿QUÉ SON LAS ESTRUCTURAS DE CONTROL?
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">FLUJO DE EJECUCIÓN: <span class="slide-subtitle">Control de Instrucciones</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 19px; margin-bottom: 16px;">
+                        Las estructuras de control permiten definir el orden y la forma en que se ejecutan las sentencias de un programa:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                <i class="fa-solid fa-arrow-down-long" style="color: #64748B; font-size: 24px;"></i>
+                                <h3 style="font-size: 19px; color: var(--utn-blue);">Flujo Lineal (Secuencial)</h3>
+                            </div>
+                            <p style="font-size: 15px; color: #475569; line-height: 1.45;">
+                                Las instrucciones se ejecutan estrictamente una tras otra, desde la primera línea hasta la última, sin posibilidad de evaluar desvíos ni repetir tareas.
+                            </p>
+                            <div style="background: white; border: 1px dashed #CBD5E1; border-radius: 8px; padding: 10px; margin-top: 12px; font-family: 'Fira Code', monospace; font-size: 13px; color: #64748B;">
+                                paso1(); &rarr; paso2(); &rarr; paso3();
+                            </div>
+                        </div>
+
+                        <div style="background: #F0F9FF; border: 1px solid #BAE6FD; border-radius: 12px; padding: 20px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                <i class="fa-solid fa-code-fork" style="color: var(--cyan-accent); font-size: 24px;"></i>
+                                <h3 style="font-size: 19px; color: var(--utn-blue);">Flujo Ramificado (Flexible)</h3>
+                            </div>
+                            <p style="font-size: 15px; color: #475569; line-height: 1.45;">
+                                El programa evalúa <strong>expresiones booleanas</strong> para decidir qué bloque de código ejecutar, omitir otros y responder de forma adaptativa a los datos.
+                            </p>
+                            <div style="background: white; border: 1px solid #7DD3FC; border-radius: 8px; padding: 10px; margin-top: 12px; font-family: 'Fira Code', monospace; font-size: 13px; color: #0369A1;">
+                                if (condición) { opciónA(); } else { opciónB(); }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <div>
+                            <strong>El corazón del software moderno</strong>
+                            <p>Sin estructuras de control, un programa sería una simple calculadora de una sola pasada. La toma de decisiones permite validar entradas, reaccionar a eventos y modelar reglas de negocio.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 3: CLASIFICACIÓN GENERAL DE ESTRUCTURAS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">MAPA CONCEPTUAL: <span class="slide-subtitle">Estructuras Algorítmicas</span></h2>
+                <div class="content-area">
+                    <div class="cards-container">
+                        <div class="concept-card" style="border-top: 5px solid var(--utn-blue);">
+                            <div class="card-icon-box" style="background: #EFF6FF; color: var(--utn-blue);">
+                                <i class="fa-solid fa-arrow-down"></i>
+                            </div>
+                            <h3>Secuenciales</h3>
+                            <p>
+                                Acciones ejecutadas en serie sin bifurcaciones:
+                            </p>
+                            <ul style="list-style: none; padding: 0; margin-top: 12px; font-size: 14px; color: #475569;">
+                                <li style="margin-bottom: 6px;"><i class="fa-solid fa-circle-check" style="color: var(--cyan-accent);"></i> Entrada de datos (<code>Scanner</code>)</li>
+                                <li style="margin-bottom: 6px;"><i class="fa-solid fa-circle-check" style="color: var(--cyan-accent);"></i> Asignación y cálculos</li>
+                                <li><i class="fa-solid fa-circle-check" style="color: var(--cyan-accent);"></i> Salida por pantalla (<code>println</code>)</li>
+                            </ul>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 5px solid var(--cyan-accent); background: #F0F9FF;">
+                            <div class="card-icon-box" style="background: #E0F2FE; color: var(--cyan-accent);">
+                                <i class="fa-solid fa-code-branch"></i>
+                            </div>
+                            <h3>Condicionales (Selectivas)</h3>
+                            <p>
+                                El flujo se divide según una condición booleana:
+                            </p>
+                            <ul style="list-style: none; padding: 0; margin-top: 12px; font-size: 14px; color: #0369A1;">
+                                <li style="margin-bottom: 6px;"><i class="fa-solid fa-circle-check"></i> Selección simple (<code>if</code>)</li>
+                                <li style="margin-bottom: 6px;"><i class="fa-solid fa-circle-check"></i> Selección completa (<code>if-else</code>)</li>
+                                <li style="margin-bottom: 6px;"><i class="fa-solid fa-circle-check"></i> Selección anidada (en cascada)</li>
+                                <li><i class="fa-solid fa-circle-check"></i> Selección múltiple (<code>switch</code>)</li>
+                            </ul>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 5px solid #10B981;">
+                            <div class="card-icon-box" style="background: #ECFDF5; color: #10B981;">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                            </div>
+                            <h3>Cíclicas (Repetitivas)</h3>
+                            <p>
+                                Reiteran un bloque de instrucciones:
+                            </p>
+                            <ul style="list-style: none; padding: 0; margin-top: 12px; font-size: 14px; color: #475569;">
+                                <li style="margin-bottom: 6px;"><i class="fa-solid fa-circle-check" style="color: #10B981;"></i> <code>while</code> (repetir mientras)</li>
+                                <li style="margin-bottom: 6px;"><i class="fa-solid fa-circle-check" style="color: #10B981;"></i> <code>do-while</code> (repetir hasta)</li>
+                                <li><i class="fa-solid fa-circle-check" style="color: #10B981;"></i> <code>for</code> (repetir para un rango exacto)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 4: CONDICIONALES SELECTIVAS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">ESTRUCTURAS SELECTIVAS: <span class="slide-subtitle">Toma de Decisiones</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 19px; margin-bottom: 18px;">
+                        Permiten evaluar una o más <strong>condiciones booleanas</strong> y ejecutar distintas acciones según el resultado (<code>true</code> o <code>false</code>):
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; text-align: center;">
+                            <h4 style="font-size: 17px; color: var(--utn-blue); margin-bottom: 12px;">Selección Simple (1 Camino)</h4>
+                            <div style="font-family: 'Fira Code', monospace; font-size: 14px; background: white; padding: 14px; border-radius: 8px; border: 1px solid #CBD5E1; text-align: left;">
+                                <span style="color: #0284C7; font-weight: 700;">if</span> (condicion) {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;ejecutarAccion();<br>
+                                }<br>
+                                <span style="color: #64748B;">// Si es false, continúa de largo</span>
+                            </div>
+                            <p style="font-size: 13.5px; color: #64748B; margin-top: 10px;">Sólo se actúa si se cumple la premisa.</p>
+                        </div>
+
+                        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; text-align: center;">
+                            <h4 style="font-size: 17px; color: var(--utn-blue); margin-bottom: 12px;">Selección Completa (2 Caminos)</h4>
+                            <div style="font-family: 'Fira Code', monospace; font-size: 14px; background: white; padding: 14px; border-radius: 8px; border: 1px solid #CBD5E1; text-align: left;">
+                                <span style="color: #0284C7; font-weight: 700;">if</span> (condicion) {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;accionVerdadera();<br>
+                                } <span style="color: #0284C7; font-weight: 700;">else</span> {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;accionFalsa();<br>
+                                }
+                            </div>
+                            <p style="font-size: 13.5px; color: #64748B; margin-top: 10px;">Bifurcación obligatoria: o ocurre A, o ocurre B.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 5: SELECCIÓN SIMPLE - ANALOGÍA COTIDIANA
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">SELECCIÓN SIMPLE: <span class="slide-subtitle">Condición Única</span></h2>
+                <div class="content-area">
+                    <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center;">
+                        <div>
+                            <div style="background: #FFFBEB; border-left: 5px solid #F59E0B; padding: 16px 20px; border-radius: 8px; margin-bottom: 16px; text-align: left;">
+                                <span style="display: block; text-align: left; font-size: 13px; font-weight: 700; color: #B45309; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Analogía Cotidiana 1</span>
+                                <p style="font-size: 20px; font-weight: 600; color: #78350F; margin: 0; text-align: left;">
+                                    "Si hay sol, vamos a la plaza."
+                                </p>
+                            </div>
+
+                            <pre style="margin: 0; font-size: 15px;"><code class="java" data-trim data-noescape>
+// Condición booleana simple:
+boolean haySol = true;
+
+if (haySol) {
+    System.out.println("Vamos a la plaza");
+}
+                            </code></pre>
+                        </div>
+
+                        <div>
+                            <div style="background: #F0FDF4; border-left: 5px solid #10B981; padding: 16px 20px; border-radius: 8px; margin-bottom: 16px; text-align: left;">
+                                <span style="display: block; text-align: left; font-size: 13px; font-weight: 700; color: #047857; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Analogía Cotidiana 2</span>
+                                <p style="font-size: 18px; font-weight: 600; color: #064E3B; margin: 0; text-align: left;">
+                                    "Si hay sol Y es sábado, vamos a la plaza y alimentamos palomas."
+                                </p>
+                            </div>
+
+                            <pre style="margin: 0; font-size: 15px;"><code class="java" data-trim data-noescape>
+// Condición booleana compuesta con conector &&:
+boolean haySol = true;
+boolean esSabado = true;
+
+if (haySol &amp;&amp; esSabado) {
+    System.out.println("Vamos a la plaza");
+    System.out.println("Alimentamos palomas");
+}
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 6: SELECCIÓN SIMPLE (if) EN JAVA
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">SINTAXIS JAVA: <span class="slide-subtitle">Instrucción if</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 18px; margin-bottom: 14px;">
+                        La palabra reservada <code class="code-badge">if</code> evalúa una expresión booleana que obligatoriamente va entre paréntesis:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div>
+                            <h4 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 8px; text-align: left;">1. Estructura con bloque (Recomendada)</h4>
+                            <pre style="margin: 0; font-size: 15px;"><code class="java" data-trim data-noescape>
+if (condicion) {
+    // Bloque delimitado por llaves { }
+    // Permite una o múltiples instrucciones
+    instruccion1();
+    instruccion2();
+}
+                            </code></pre>
+                        </div>
+
+                        <div>
+                            <h4 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 8px; text-align: left;">2. Instrucción única en una línea</h4>
+                            <pre style="margin: 0; font-size: 15px;"><code class="java" data-trim data-noescape>
+if (condicion) instruccionUnica();
+
+// Aunque Java lo permite sin llaves para una sola
+// sentencia, la buena práctica exige usar llaves {}
+// para evitar errores lógicos al agregar líneas.
+                            </code></pre>
+                        </div>
+                    </div>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <div>
+                            <strong>¡Cuidado con el punto y coma accidental!</strong>
+                            <p>Escribir <code class="code-badge">if (condicion);</code> con un punto y coma al final crea una sentencia vacía: el bloque posterior se ejecutará siempre, anulando el efecto del condicional.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 7: SELECCIÓN COMPLETA - ANALOGÍA COTIDIANA
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">SELECCIÓN COMPLETA: <span class="slide-subtitle">Bifurcación if - else</span></h2>
+                <div class="content-area">
+                    <div style="background: #F8FAFC; border-left: 6px solid var(--utn-blue); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; text-align: left;">
+                        <span style="display: block; text-align: left; font-size: 13px; font-weight: 700; color: var(--cyan-accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Escenario Excluyente</span>
+                        <p style="font-size: 24px; font-weight: 700; color: var(--utn-blue); margin: 6px 0 0 0; text-align: left;">
+                            "Si hay sol vamos a la plaza, <span style="color: #E11D48;">sino</span> vamos al cine."
+                        </p>
+                    </div>
+
+                    <pre style="margin: 0 auto; max-width: 880px; font-size: 16px;"><code class="java" data-trim data-noescape>
+boolean haySol = true;
+
+if (haySol) {
+    // Rama VERDADERA (true)
+    System.out.println("Vamos a la plaza");
+} else {
+    // Rama FALSA (false)
+    System.out.println("Vamos al cine");
+}
+                    </code></pre>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <div>
+                            <strong>Exclusión mutua</strong>
+                            <p>La cláusula <code class="code-badge">else</code> jamás se ejecuta por su cuenta: representa la negación estricta de la condición del <code class="code-badge">if</code>. El flujo entrará exactamente a una de las dos ramas.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 8: SELECCIÓN ANIDADA (if - else if - else)
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">SELECCIÓN ANIDADA: <span class="slide-subtitle">Decisiones en Cascada</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 18px; margin-bottom: 12px;">
+                        Cuando existen más de dos alternativas excluyentes, encadenamos <code class="code-badge">else if</code>:
+                    </p>
+
+                    <pre style="margin: 0 auto; max-width: 920px; font-size: 15px;"><code class="java" data-trim data-noescape>
+boolean haySol = false;
+int saldo = 1500;
+boolean pagoNetflix = true;
+
+if (haySol) {
+    System.out.println("Vamos a la plaza");
+} else if (saldo &gt; 20000) {
+    System.out.println("Vamos al cine");
+} else if (pagoNetflix) {
+    System.out.println("Miramos una película en casa");
+} else {
+    System.out.println("Escuchamos música en la radio");
+}
+                    </code></pre>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-stairs"></i>
+                        <div>
+                            <strong>Evaluación cortocircuitada en cascada</strong>
+                            <p>En cuanto una condición resulta <code class="code-badge">true</code>, Java ejecuta su bloque correspondiente y salta automáticamente al final de toda la estructura, ignorando las condiciones restantes.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 9: CASO DE ESTUDIO - CALIPEL
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">CASO DE ESTUDIO: <span class="slide-subtitle">CALIPEL (Valoración de Pelis)</span></h2>
+                <div class="content-area">
+                    <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 22px;">
+                        <h3 style="font-size: 20px; color: var(--utn-blue); margin-bottom: 10px;">Enunciado del Problema</h3>
+                        <p style="font-size: 16px; color: #475569; margin-bottom: 14px;">
+                            Desarrollar una aplicación en Java que solicite al usuario ingresar una calificación numérica del 0 al 4 para la película que acaba de ver:
+                        </p>
+                        <table style="margin-bottom: 14px;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Valor Ingresado</th>
+                                    <th style="width: 35%;">Calificación</th>
+                                    <th style="width: 40%;">Mensaje Mostrado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><code class="code-badge">0</code></td><td>Muy Mala</td><td>Lo lamentamos mucho.</td></tr>
+                                <tr><td><code class="code-badge">1</code></td><td>Mala</td><td>Lo lamentamos.</td></tr>
+                                <tr><td><code class="code-badge">2</code></td><td>Mediocre</td><td>Trabajaremos para mejorar.</td></tr>
+                                <tr><td><code class="code-badge">3</code></td><td>Buena</td><td>Trabajaremos para mejorar.</td></tr>
+                                <tr><td><code class="code-badge">4</code></td><td>Muy Buena</td><td>Nos alegramos mucho.</td></tr>
+                                <tr><td><code class="code-badge">Cualquier otro</code></td><td><em>Inválido</em></td><td><strong>"Ingresaste un valor no válido"</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 10: CALIPEL EN JAVA CON IF-ELSE + COMPILADOR VERTICAL
+                 ========================================================================= -->
+            <section>
+                <!-- 10.A Horizontal: Código de Calipel con if-else -->
+                <section>
+                    <h2 class="slide-title">CALIPEL: <span class="slide-subtitle">Solución con if - else if</span></h2>
+                    <div class="content-area">
+                        <pre style="margin: 0 auto; max-width: 960px; font-size: 15px;"><code class="java" data-trim data-noescape>
+import java.util.Scanner;
+
+public class CalipelIf {
+    public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
+        System.out.print("Ingrese la valoración de la película (0-4): ");
+        int puntajePeli = entrada.nextInt();
+
+        if (puntajePeli == 0) {
+            System.out.println("Calificaste como MUY MALA. Lo lamentamos mucho.");
+        } else if (puntajePeli == 1) {
+            System.out.println("Calificaste como MALA. Lo lamentamos.");
+        } else if (puntajePeli == 2) {
+            System.out.println("Calificaste como MEDIOCRE. Trabajaremos para mejorar.");
+        } else if (puntajePeli == 3) {
+            System.out.println("Calificaste como BUENA. Trabajaremos para mejorar.");
+        } else if (puntajePeli == 4) {
+            System.out.println("Calificaste como MUY BUENA. Nos alegramos mucho.");
+        } else {
+            System.out.println("Ingresaste un valor no válido.");
+        }
+    }
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 10.B Vertical: Compilador OneCompiler Calipel If -->
+                <section id="slide-compiler-calipel-if">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">
+                        PRUEBA EN VIVO: <span class="slide-subtitle">CALIPEL con if - else</span>
+                    </h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler Java - CalipelIf</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-calipel-if', codeCalipelIf, 'java', 'Main.java')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-calipel-if" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 11: ESTRUCTURA SELECCIÓN MÚLTIPLE (switch)
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">SELECCIÓN MÚLTIPLE: <span class="slide-subtitle">Estructura switch</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 19px; margin-bottom: 16px;">
+                        El <code class="code-badge">switch</code> propone una sintaxis mucho más limpia y legible cuando comparamos <strong>una misma variable contra múltiples constantes discretas</strong>:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center;">
+                        <div>
+                            <pre style="margin: 0; font-size: 14.5px;"><code class="java" data-trim data-noescape>
+switch (expresion) {
+    case valor1:
+        // sentencias si expresion == valor1
+        break;
+    case valor2:
+        // sentencias si expresion == valor2
+        break;
+    case valor3:
+        // sentencias si expresion == valor3
+        break;
+    default:
+        // sentencias si ningún caso coincidió
+        break;
+}
+                            </code></pre>
+                        </div>
+
+                        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 18px;">
+                            <h4 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 8px;">¿Qué tipos soporta switch?</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 14px; color: #475569;">
+                                <li style="margin-bottom: 6px;"><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i> Tipos enteros: <code class="code-badge">byte</code>, <code class="code-badge">short</code>, <code class="code-badge">int</code></li>
+                                <li style="margin-bottom: 6px;"><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i> Caracteres: <code class="code-badge">char</code></li>
+                                <li style="margin-bottom: 6px;"><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i> Cadenas de texto: <code class="code-badge">String</code> (desde Java 7)</li>
+                                <li><i class="fa-solid fa-xmark" style="color: #EF4444;"></i> <em>No soporta boolean ni punto flotante (float, double)</em></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 12: ANATOMÍA DEL SWITCH (case, break, default)
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">ANATOMÍA DEL SWITCH: <span class="slide-subtitle">case, break y default</span></h2>
+                <div class="content-area">
+                    <div class="cards-container">
+                        <div class="concept-card" style="border-top: 5px solid var(--cyan-accent);">
+                            <h3>case valor:</h3>
+                            <p>
+                                Define los puntos de entrada para cada valor constante. Los valores deben ser <strong>únicos</strong> y computables en tiempo de compilación.
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 5px solid #EF4444;">
+                            <h3 style="color: #DC2626;">break;</h3>
+                            <p>
+                                ¡Crucial! Detiene la ejecución y sale del bloque <code class="code-badge">switch</code>. Si se omite, ocurre <em>fall-through</em>: la ejecución "cae" al siguiente caso sin evaluar.
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 5px solid var(--utn-gold);">
+                            <h3>default:</h3>
+                            <p>
+                                Rama opcional de escape equivalente al <code class="code-badge">else</code> final. Se ejecuta si ninguna etiqueta <code class="code-badge">case</code> coincidió con la expresión.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <div>
+                            <strong>El fenómeno del Fall-Through (Caída de Casos)</strong>
+                            <p>A diferencia de lenguajes más modernos, en Java clásico cada <code class="code-badge">case</code> requiere explícitamente su instrucción <code class="code-badge">break;</code>. Omitirlo es un error frecuente de novatos.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 13: CALIPEL CON SWITCH + COMPILADOR VERTICAL
+                 ========================================================================= -->
+            <section>
+                <!-- 13.A Horizontal: Código de Calipel con switch -->
+                <section>
+                    <h2 class="slide-title">CALIPEL REFACTORIZADO: <span class="slide-subtitle">Solución con switch</span></h2>
+                    <div class="content-area">
+                        <pre style="margin: 0 auto; max-width: 960px; font-size: 14.5px;"><code class="java" data-trim data-noescape>
+import java.util.Scanner;
+
+public class CalipelSwitch {
+    public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
+        System.out.print("Ingrese la valoración de la película (0-4): ");
+        int puntajePeli = entrada.nextInt();
+
+        switch (puntajePeli) {
+            case 0:
+                System.out.println("Calificaste como MUY MALA. Lo lamentamos mucho.");
+                break;
+            case 1:
+                System.out.println("Calificaste como MALA. Lo lamentamos.");
+                break;
+            case 2:
+            case 3: // Casos agrupados: comparten el mismo bloque de código
+                System.out.println("Calificaste como MEDIOCRE o BUENA. Trabajaremos para mejorar.");
+                break;
+            case 4:
+                System.out.println("Calificaste como MUY BUENA. Nos alegramos mucho.");
+                break;
+            default:
+                System.out.println("Ingresaste un valor inválido.");
+                break;
+        }
+        System.out.println("¡Gracias por visitar CALIPEL!");
+    }
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 13.B Vertical: Compilador OneCompiler Calipel Switch -->
+                <section id="slide-compiler-calipel-switch">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">
+                        PRUEBA EN VIVO: <span class="slide-subtitle">CALIPEL con switch</span>
+                    </h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler Java - CalipelSwitch</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-calipel-switch', codeCalipelSwitch, 'java', 'Main.java')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-calipel-switch" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 14: CIERRE INSTITUCIONAL
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title" style="font-size: 48px !important; text-align: left; margin-bottom: 10px !important;">¿PREGUNTAS?</h1>
+                        <h3 style="font-size: 20px; color: var(--text-main); font-weight: 600; margin-bottom: 15px; text-align: left;">Espacio de consultas y dudas</h3>
+                        <p style="font-size: 16px; color: var(--text-light); text-align: left; margin-bottom: 20px;">¡Muchas gracias por su atención!</p>
+                        
+                        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                            <a href="../index.html" style="display: inline-flex; align-items: center; gap: 8px; background: var(--utn-blue); color: white; padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 15px; text-decoration: none; box-shadow: 0 4px 12px rgba(0,43,91,0.2);">
+                                <i class="fa-solid fa-layer-group"></i> Portal Unidad 3
+                            </a>
+                            <a href="../clase2/index.html" style="display: inline-flex; align-items: center; gap: 8px; background: var(--cyan-accent); color: #0F172A; padding: 10px 18px; border-radius: 10px; font-weight: 700; font-size: 15px; text-decoration: none; box-shadow: 0 4px 12px rgba(56,189,248,0.25);">
+                                Ir a Clase 2 <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">TUTI / UTN <span>SANTA FE</span></div>
+
+    <!-- Scripts de Reveal.js y Plugins -->
+    <script src="../../../../dist/reveal.js"></script>
+    <script src="../../../../dist/plugin/highlight.js"></script>
+    <script src="../../../../dist/plugin/notes.js"></script>
+
+    <script>
+        // =========================================================================
+        // Script Anti-Blank-Slide para Móviles y Verticales
+        // =========================================================================
+        const isMobileOrVertical = window.innerWidth < 768 || window.innerHeight > window.innerWidth;
+        if (isMobileOrVertical) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            const slidesContainer = document.querySelector('.slides');
+            document.querySelectorAll('.slides > section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                slidesContainer.insertBefore(sec, parent);
+            });
+            document.querySelectorAll('.slides > section').forEach(sec => {
+                if (sec.children.length === 0) {
+                    sec.remove();
+                }
+            });
+        }
+
+        // =========================================================================
+        // Canvas Adaptativo
+        // =========================================================================
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let size = getCanvasSize();
+            Reveal.configure({
+                width: size.width,
+                height: size.height
+            });
+        });
+
+        // =========================================================================
+        // Códigos para OneCompiler
+        // =========================================================================
+        const codeCalipelIf = `import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
+        System.out.println("=== SISTEMA CALIPEL (if-else) ===");
+        System.out.print("Ingrese la valoración de la película (0 a 4): ");
+        
+        // Simulación: leemos un entero
+        int puntajePeli = 3; // Podés cambiar este valor para probar otras ramas
+        if (entrada.hasNextInt()) {
+            puntajePeli = entrada.nextInt();
+        }
+        System.out.println("Valor ingresado: " + puntajePeli);
+
+        if (puntajePeli == 0) {
+            System.out.println("Calificaste la película como MUY MALA. Lo lamentamos mucho.");
+        } else if (puntajePeli == 1) {
+            System.out.println("Calificaste la película como MALA. Lo lamentamos.");
+        } else if (puntajePeli == 2) {
+            System.out.println("Calificaste la película como MEDIOCRE. Trabajaremos para mejorar.");
+        } else if (puntajePeli == 3) {
+            System.out.println("Calificaste la película como BUENA. Trabajaremos para mejorar.");
+        } else if (puntajePeli == 4) {
+            System.out.println("Calificaste la película como MUY BUENA. ¡Nos alegramos mucho!");
+        } else {
+            System.out.println("Ingresaste un valor no válido.");
+        }
+    }
+}`;
+
+        const codeCalipelSwitch = `import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
+        System.out.println("=== SISTEMA CALIPEL (switch) ===");
+        System.out.print("Ingrese la valoración de la película (0 a 4): ");
+        
+        int puntajePeli = 4; // Podés cambiar este valor para probar
+        if (entrada.hasNextInt()) {
+            puntajePeli = entrada.nextInt();
+        }
+        System.out.println("Valor ingresado: " + puntajePeli);
+
+        switch (puntajePeli) {
+            case 0:
+                System.out.println("Calificaste como MUY MALA. Lo lamentamos mucho.");
+                break;
+            case 1:
+                System.out.println("Calificaste como MALA. Lo lamentamos.");
+                break;
+            case 2:
+            case 3: // Casos agrupados
+                System.out.println("Calificaste como MEDIOCRE o BUENA. Trabajaremos para mejorar.");
+                break;
+            case 4:
+                System.out.println("Calificaste como MUY BUENA. ¡Nos alegramos mucho!");
+                break;
+            default:
+                System.out.println("Ingresaste un valor inválido.");
+                break;
+        }
+
+        System.out.println("¡Gracias por utilizar CALIPEL!");
+    }
+}`;
+
+        function sendCode(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        Reveal.on('slidechanged', event => {
+            const slideId = event.currentSlide ? event.currentSlide.id : '';
+            if (slideId === 'slide-compiler-calipel-if') {
+                sendCodeWithRetries('oc-editor-calipel-if', codeCalipelIf, 'java', 'Main.java');
+            } else if (slideId === 'slide-compiler-calipel-switch') {
+                sendCodeWithRetries('oc-editor-calipel-switch', codeCalipelSwitch, 'java', 'Main.java');
+            }
+        });
+    </script>
+</body>
+</html>

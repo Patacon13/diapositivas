@@ -3,7 +3,8 @@
 Este archivo define las restricciones académicas, de contenido y de estilo específicas para las diapositivas de **PBA** (Tecnicatura Universitaria en Tecnologías de la Información - UTN Santa Fe).
 
 ## 1. Tema y Plantilla
-- **Tema CSS oficial**: `<link rel="stylesheet" href="../../dist/theme/tuti.css" />` (extiende `utn-core.css`).
+- **Estructura oficial**: `deploy/pba/<año>/<tema>/` (ej: `deploy/pba/2026/pilas_colas/`).
+- **Tema CSS oficial**: `<link rel="stylesheet" href="../../../dist/theme/tuti.css" />` (extiende `utn-core.css`).
 - **Plantilla base**: `deploy/templates/template-tuti.html`.
 - **Footer Institucional**: `TUTI / UTN <span>SANTA FE</span>`.
 

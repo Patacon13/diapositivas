@@ -1,0 +1,997 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SAO - Unidad 3: Estructuras de Control | TUTI UTN FRSF</title>
+
+    <!-- Tipografías Oficiales & Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --cyan-accent: #0284C7;
+            --cyan-light: #38BDF8;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --bg-page: #F8FAFC;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Encabezado Institucional Compacto */
+        header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 12px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .header-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge img {
+            height: 28px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .brand-titles {
+            border-left: 2px solid #E2E8F0;
+            padding-left: 12px;
+        }
+
+        .brand-titles h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            line-height: 1.2;
+        }
+
+        .brand-titles span {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--cyan-accent);
+            letter-spacing: 0.5px;
+        }
+
+        .unit-pill {
+            background: #EFF6FF;
+            color: var(--utn-blue);
+            padding: 5px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid #BFDBFE;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Hero Banner Proporcionado */
+        .hero-banner {
+            max-width: 1000px;
+            margin: 22px auto 14px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .hero-banner h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--utn-blue);
+            line-height: 1.2;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-banner h1 span {
+            color: var(--cyan-light);
+        }
+
+        .hero-banner p {
+            font-size: 14px;
+            color: var(--text-light);
+            max-width: 760px;
+            margin: 0 auto;
+            line-height: 1.45;
+        }
+
+        /* Grid de 4 Tarjetas */
+        .cards-grid {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 16px 20px 24px 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .portal-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+            border-color: var(--cyan-light);
+        }
+
+        .card-accent-bar {
+            height: 5px;
+            width: 100%;
+        }
+
+        .bar-blue  { background: linear-gradient(90deg, var(--utn-blue), var(--cyan-light)); }
+        .bar-gold  { background: linear-gradient(90deg, var(--utn-gold), #F59E0B); }
+        .bar-green { background: linear-gradient(90deg, #10B981, #059669); }
+        .bar-gray  { background: linear-gradient(90deg, #94A3B8, #CBD5E1); }
+
+        .card-content {
+            padding: 18px 18px 12px 18px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .portal-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            margin-bottom: 2px;
+        }
+
+        .card-subtitle {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--cyan-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .card-description {
+            font-size: 12.5px;
+            color: var(--text-light);
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        /* Lista de Tópicos con Flexbox Seguro */
+        .topics-list {
+            list-style: none;
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px dashed #E2E8F0;
+        }
+
+        .topics-list li {
+            font-size: 12px;
+            color: var(--text-main);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.35;
+        }
+
+        .topics-list li i {
+            color: var(--cyan-accent);
+            font-size: 10.5px;
+            margin-top: 2px;
+            margin-right: 7px;
+            flex-shrink: 0;
+        }
+
+        .topics-list li span {
+            flex-grow: 1;
+        }
+
+        .topics-list code {
+            font-family: 'Fira Code', monospace;
+            background: #F1F5F9;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #0284C7;
+        }
+
+        .card-footer {
+            padding: 12px 18px 16px 18px;
+            background: #F8FAFC;
+            border-top: 1px solid #F1F5F9;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            width: 100%;
+            padding: 8px 14px;
+            border-radius: 9px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        /* Botones de Acción */
+        .btn-slate {
+            background: #475569;
+            color: white;
+        }
+
+        .btn-slate:hover {
+            background: #334155;
+            transform: scale(1.02);
+        }
+
+        .btn-theory {
+            background: #0284C7;
+            color: white;
+        }
+
+        .btn-theory:hover {
+            background: #0369A1;
+            transform: scale(1.02);
+        }
+
+        .btn-guide {
+            background: #E11D48;
+            color: white;
+        }
+
+        .btn-guide:hover {
+            background: #BE123C;
+            transform: scale(1.02);
+        }
+
+        .btn-debug {
+            background: #7C3AED;
+            color: white;
+        }
+
+        .btn-debug:hover {
+            background: #6D28D9;
+            transform: scale(1.02);
+        }
+
+        .btn-disabled {
+            background: #E2E8F0;
+            color: #94A3B8;
+            cursor: not-allowed;
+            pointer-events: none;
+            box-shadow: none;
+        }
+
+        /* Títulos de Sección */
+        .section-header {
+            max-width: 1240px;
+            margin: 10px auto 14px auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-header .section-line {
+            flex-grow: 1;
+            height: 1px;
+            background: #E2E8F0;
+        }
+
+        .section-header .badge-count {
+            background: #EFF6FF;
+            color: var(--cyan-accent);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid #BFDBFE;
+        }
+
+        /* Grilla de Clases (3 columnas) */
+        .classes-grid {
+            max-width: 1240px;
+            margin: 0 auto 10px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        /* Barra de Documentación (4 tarjetas en grilla 2x2) */
+        .docs-grid {
+            max-width: 1240px;
+            margin: 0 auto 24px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .doc-card {
+            background: white;
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+        }
+
+        .doc-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+            border-color: var(--cyan-light);
+        }
+
+        .doc-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-grow: 1;
+        }
+
+        .doc-icon-badge {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .doc-badge-theory {
+            background: #E0F2FE;
+            color: #0284C7;
+        }
+
+        .doc-badge-debug {
+            background: #F5F3FF;
+            color: #7C3AED;
+        }
+
+        .doc-badge-guide {
+            background: #FFE4E6;
+            color: #E11D48;
+        }
+
+        .doc-details {
+            flex: 1;
+        }
+
+        .doc-details h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            margin-bottom: 2px;
+            line-height: 1.3;
+        }
+
+        .doc-details p {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.35;
+            margin-bottom: 0;
+        }
+
+        .doc-details .doc-meta {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--cyan-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .doc-btn {
+            padding: 9px 18px;
+            font-size: 12.5px;
+            white-space: nowrap;
+            width: auto;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Grilla de Videos (2x2) */
+        .videos-grid {
+            max-width: 1240px;
+            margin: 0 auto 24px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            text-decoration: none;
+            transition: all 0.22s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border-color: var(--cyan-light);
+        }
+
+        .video-header-strip {
+            padding: 14px 16px 10px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .video-play-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .video-card:hover .video-play-icon {
+            transform: scale(1.08);
+        }
+
+        .icon-youtube {
+            background: #FEE2E2;
+            color: #EF4444;
+        }
+
+        .video-texts {
+            flex-grow: 1;
+        }
+
+        .video-platform-tag {
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #DC2626;
+        }
+
+        .video-texts h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            line-height: 1.3;
+            margin-bottom: 4px;
+        }
+
+        .video-texts p {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        .video-footer-bar {
+            background: #F8FAFC;
+            border-top: 1px solid #F1F5F9;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--cyan-accent);
+        }
+
+        .video-card:hover .video-footer-bar {
+            color: var(--utn-blue);
+            background: #F0F9FF;
+        }
+
+        /* Sección Nómina Docente Compacta */
+        .staff-section {
+            max-width: 1240px;
+            margin: 0 auto 20px auto;
+            padding: 14px 24px;
+            background: white;
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .staff-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .staff-group h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            color: var(--utn-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--utn-gold);
+            padding-bottom: 2px;
+        }
+
+        .staff-group ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .staff-group li {
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .staff-group li:not(:last-child)::after {
+            content: "•";
+            margin-left: 10px;
+            color: #CBD5E1;
+        }
+
+        /* Footer Institucional */
+        footer {
+            background: var(--utn-blue);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        footer span {
+            color: var(--utn-gold);
+            font-weight: 700;
+        }
+
+        @media (max-width: 1100px) {
+            .classes-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .docs-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .classes-grid,
+            .docs-grid,
+            .videos-grid {
+                grid-template-columns: 1fr;
+            }
+            .doc-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .doc-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .hero-banner h1 {
+                font-size: 24px;
+            }
+            .staff-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .staff-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .brand-titles {
+                border-left: none;
+                padding-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Encabezado -->
+    <header>
+        <div class="header-container">
+            <div class="brand-badge">
+                <img src="../../../dist/utnsantafe.png" alt="UTN Santa Fe">
+                <div class="brand-titles">
+                    <h2>UNIVERSIDAD TECNOLÓGICA NACIONAL</h2>
+                    <span>FACULTAD REGIONAL SANTA FE — TUTI</span>
+                </div>
+            </div>
+            <div class="unit-pill">
+                <i class="fa-solid fa-graduation-cap"></i> Sistema de Automatización de Oficinas
+            </div>
+        </div>
+    </header>
+
+    <!-- Banner Principal -->
+    <main>
+        <section class="hero-banner">
+            <h1>UNIDAD #3: <span>ESTRUCTURAS DE CONTROL</span></h1>
+            <p>
+                Mecanismos fundamentales para gobernar el flujo de ejecución: bifurcaciones condicionales, bucles repetitivos y algoritmos de tratamiento de secuencias de datos en Java.
+            </p>
+        </section>
+
+        <!-- SECCIÓN 1: CLASES INTERACTIVAS -->
+        <div class="section-header">
+            <h2><i class="fa-solid fa-chalkboard-user" style="color: var(--cyan-accent);"></i> Clases Interactivas</h2>
+            <div class="section-line"></div>
+            <span class="badge-count">3 Clases</span>
+        </div>
+
+        <section class="classes-grid">
+            
+            <!-- TARJETA 1: CLASE 1 -->
+            <div class="portal-card">
+                <div>
+                    <div class="card-accent-bar bar-blue"></div>
+                    <div class="card-content">
+                        <div class="card-icon" style="color: var(--utn-blue);">
+                            <i class="fa-solid fa-code-branch"></i>
+                        </div>
+                        <h3>Clase 1</h3>
+                        <span class="card-subtitle">Estructuras Condicionales</span>
+                        <p class="card-description">
+                            Flujo lineal vs. ramificado, evaluación de condiciones simples y compuestas, <code>if-else</code>, selección anidada y estructura <code>switch</code>.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span>Flujo secuencial vs. toma de decisiones</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Selección simple (<code>if</code>) y compuesta</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Bifurcación completa (<code>if-else</code>)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Selección anidada y caso CALIPEL</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Selección múltiple (<code>switch / case</code>)</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="clase1/index.html" class="action-btn btn-slate">
+                        <span>Iniciar Clase 1</span> <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- TARJETA 2: CLASE 2 -->
+            <div class="portal-card">
+                <div>
+                    <div class="card-accent-bar bar-gold"></div>
+                    <div class="card-content">
+                        <div class="card-icon" style="color: #D97706;">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                        </div>
+                        <h3>Clase 2</h3>
+                        <span class="card-subtitle">Estructuras Repetitivas</span>
+                        <p class="card-description">
+                            Concepto de bucle, ciclos indeterminados (<code>while</code>, <code>do-while</code>), prevención de loops infinitos, ciclo exacto (<code>for</code>) y problemas OmegaUp.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span>Bucle <code>while</code> (pre-test 0 a N vueltas)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Riesgo y control de bucles infinitos</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Bucle <code>do-while</code> (post-test 1 a N)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Bucle <code>for</code> (inicio, condición, paso)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>CALIPEL interactivo y desafíos OmegaUp</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="clase2/index.html" class="action-btn btn-slate">
+                        <span>Iniciar Clase 2</span> <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- TARJETA 3: CLASE 3 -->
+            <div class="portal-card">
+                <div>
+                    <div class="card-accent-bar bar-green"></div>
+                    <div class="card-content">
+                        <div class="card-icon" style="color: #10B981;">
+                            <i class="fa-solid fa-list-ol"></i>
+                        </div>
+                        <h3>Clase 3</h3>
+                        <span class="card-subtitle">Secuencias &amp; Parada</span>
+                        <p class="card-description">
+                            Tratamiento algorítmico de secuencias finitas, primer y siguiente elemento, criterios de parada (longitud, centinela, propiedad) y problemas prácticos.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span>Definición y anatomía de una secuencia</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Fin por longitud conocida (N fija)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Fin por centinela (valor de escape)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Trazabilidad con tuplas y cálculo mín/máx</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Problemas Leibniz y Duplas en OmegaUp</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="clase3/index.html" class="action-btn btn-slate">
+                        <span>Iniciar Clase 3</span> <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SECCIÓN 2: DOCUMENTACIÓN & MATERIAL DE ESTUDIO -->
+        <div class="section-header" style="margin-top: 20px;">
+            <h2><i class="fa-solid fa-book-bookmark" style="color: #E11D48;"></i> Documentación &amp; Material de Estudio</h2>
+            <div class="section-line"></div>
+            <span class="badge-count">4 Documentos</span>
+        </div>
+
+        <section class="docs-grid">
+            
+            <!-- DOC 1: TEORÍA -->
+            <div class="doc-card">
+                <div class="doc-info">
+                    <div class="doc-icon-badge doc-badge-theory">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div class="doc-details">
+                        <span class="doc-meta">Apunte • PDF</span>
+                        <h4>Teoría — Estructuras de Control</h4>
+                        <p>Bifurcaciones condicionales, bucles repetitivos y algoritmia para el tratamiento formal de secuencias.</p>
+                    </div>
+                </div>
+                <a href="https://tuti.sied.utn.edu.ar/pluginfile.php/13319/mod_resource/content/1/SAO-%20unidad%203%20-%20teor%C3%ADa.pdf" target="_blank" rel="noopener noreferrer" class="action-btn doc-btn btn-theory">
+                    <span>Abrir Teoría</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+
+            <!-- DOC 2: ANEXO TEÓRICO (DEBUGGING) -->
+            <div class="doc-card">
+                <div class="doc-info">
+                    <div class="doc-icon-badge doc-badge-debug">
+                        <i class="fa-solid fa-bug-slash"></i>
+                    </div>
+                    <div class="doc-details">
+                        <span class="doc-meta">Anexo Teórico • Recurso</span>
+                        <h4>Anexo — Debugging &amp; Depuración</h4>
+                        <p>Guía de depuración en Java: breakpoints, inspección de variables en memoria y trazas en el IDE.</p>
+                    </div>
+                </div>
+                <a href="https://tuti.sied.utn.edu.ar/mod/resource/view.php?id=6755" target="_blank" rel="noopener noreferrer" class="action-btn doc-btn btn-debug">
+                    <span>Abrir Anexo</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+
+            <!-- DOC 3: GUÍA PRÁCTICA (PARTE 1) -->
+            <div class="doc-card">
+                <div class="doc-info">
+                    <div class="doc-icon-badge doc-badge-guide">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <div class="doc-details">
+                        <span class="doc-meta">Guía de Ejercicios • PDF</span>
+                        <h4>Guía Práctica — Parte 1</h4>
+                        <p>Bifurcaciones condicionales y toma de decisiones: ejercitación práctica con if, switch y operadores lógicos en Java.</p>
+                    </div>
+                </div>
+                <a href="https://tuti.sied.utn.edu.ar/pluginfile.php/13325/mod_resource/content/3/SAO_Guia_Unidad_3_Parte_1.pdf" target="_blank" rel="noopener noreferrer" class="action-btn doc-btn btn-guide">
+                    <span>Abrir Parte 1</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+
+            <!-- DOC 4: GUÍA PRÁCTICA (PARTE 2) -->
+            <div class="doc-card">
+                <div class="doc-info">
+                    <div class="doc-icon-badge doc-badge-guide">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <div class="doc-details">
+                        <span class="doc-meta">Guía de Ejercicios • PDF</span>
+                        <h4>Guía Práctica — Parte 2</h4>
+                        <p>Estructuras repetitivas y secuencias: ejercitación práctica con while, for, cálculo de extremos y esquemas de parada en Java.</p>
+                    </div>
+                </div>
+                <a href="https://tuti.sied.utn.edu.ar/pluginfile.php/13330/mod_resource/content/3/SAO_Guia_Unidad_3_Parte_2.pdf" target="_blank" rel="noopener noreferrer" class="action-btn doc-btn btn-guide">
+                    <span>Abrir Parte 2</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+
+        </section>
+
+        <!-- SECCIÓN 3: RECURSOS EN VIDEO -->
+        <div class="section-header" style="margin-top: 6px;">
+            <h2><i class="fa-solid fa-video" style="color: #EF4444;"></i> Videos</h2>
+            <div class="section-line"></div>
+            <span class="badge-count">4 Videos</span>
+        </div>
+
+        <section class="videos-grid">
+            
+            <!-- VIDEO 1: CONDICIONALES / SELECCIÓN -->
+            <a href="https://www.youtube.com/watch?v=evi5dvrdygs" target="_blank" rel="noopener noreferrer" class="video-card">
+                <div class="video-header-strip">
+                    <div class="video-play-icon icon-youtube">
+                        <i class="fa-brands fa-youtube"></i>
+                    </div>
+                    <div class="video-texts">
+                        <span class="video-platform-tag">YouTube • CÁTEDRA SAO</span>
+                        <h4>Estructuras de Control: Selección</h4>
+                        <p>Explicación teórica de bifurcaciones, condiciones lógicas y toma de decisiones.</p>
+                    </div>
+                </div>
+                <div class="video-footer-bar">
+                    <span>Ver en YouTube</span>
+                    <i class="fa-solid fa-play"></i>
+                </div>
+            </a>
+
+            <!-- VIDEO 2: PRÁCTICA HORÓSCOPO -->
+            <a href="https://www.youtube.com/watch?v=zC_8Q7bAutg" target="_blank" rel="noopener noreferrer" class="video-card">
+                <div class="video-header-strip">
+                    <div class="video-play-icon icon-youtube">
+                        <i class="fa-brands fa-youtube"></i>
+                    </div>
+                    <div class="video-texts">
+                        <span class="video-platform-tag">YouTube • CÁTEDRA SAO</span>
+                        <h4>Práctica — Ejercicio Horóscopo</h4>
+                        <p>Resolución paso a paso en Java aplicando bifurcaciones condicionales y rangos.</p>
+                    </div>
+                </div>
+                <div class="video-footer-bar">
+                    <span>Ver en YouTube</span>
+                    <i class="fa-solid fa-play"></i>
+                </div>
+            </a>
+
+            <!-- VIDEO 3: ESTRUCTURAS REPETITIVAS -->
+            <a href="https://www.youtube.com/watch?v=h-r7rTyPDZw" target="_blank" rel="noopener noreferrer" class="video-card">
+                <div class="video-header-strip">
+                    <div class="video-play-icon icon-youtube">
+                        <i class="fa-brands fa-youtube"></i>
+                    </div>
+                    <div class="video-texts">
+                        <span class="video-platform-tag">YouTube • CÁTEDRA SAO</span>
+                        <h4>Estructuras de Control: Repetitivas</h4>
+                        <p>Fundamentos y comparación práctica entre bucles while, do-while y for en Java.</p>
+                    </div>
+                </div>
+                <div class="video-footer-bar">
+                    <span>Ver en YouTube</span>
+                    <i class="fa-solid fa-play"></i>
+                </div>
+            </a>
+
+            <!-- VIDEO 4: PRÁCTICA CIFRAS PARES E IMPARES -->
+            <a href="https://www.youtube.com/watch?v=a6zPTcOcXag" target="_blank" rel="noopener noreferrer" class="video-card">
+                <div class="video-header-strip">
+                    <div class="video-play-icon icon-youtube">
+                        <i class="fa-brands fa-youtube"></i>
+                    </div>
+                    <div class="video-texts">
+                        <span class="video-platform-tag">YouTube • CÁTEDRA SAO</span>
+                        <h4>Práctica — Cifras Pares e Impares</h4>
+                        <p>Solución algorítmica para descomponer números y procesar dígitos con bucles.</p>
+                    </div>
+                </div>
+                <div class="video-footer-bar">
+                    <span>Ver en YouTube</span>
+                    <i class="fa-solid fa-play"></i>
+                </div>
+            </a>
+
+        </section>
+
+        <!-- Nómina Docente Compacta -->
+        <section class="staff-section">
+            <div class="staff-group">
+                <h4>Profesores</h4>
+                <ul>
+                    <li>Gastón Micheri</li>
+                    <li>Tomás Assenza</li>
+                </ul>
+            </div>
+            <div class="staff-group">
+                <h4>Tutores</h4>
+                <ul>
+                    <li>Agustín Ramello</li>
+                    <li>Micaela Assenza</li>
+                    <li>Lijandy Jimenez Armas</li>
+                    <li>Macarena Moya</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Institucional -->
+    <footer>
+        TUTI / UTN <span>SANTA FE</span> — Cátedra de Sistema de Automatización de Oficinas (SAO)
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,846 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>SAO - Unidad 3 | Clase 3: Secuencias y Criterios de Parada</title>
+
+    <!-- Reveal.js & Plugins CSS -->
+    <link rel="stylesheet" href="../../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../../dist/plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/tuti.css" />
+
+    <!-- Tipografías Oficiales & Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Títulos de Diapositiva */
+        .slide-title {
+            font-size: 38px !important;
+            font-weight: 800 !important;
+            color: var(--utn-blue) !important;
+            margin-bottom: 24px !important;
+            border-left: 8px solid var(--utn-gold);
+            padding-left: 18px;
+            text-transform: uppercase !important;
+            letter-spacing: -0.5px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .slide-subtitle {
+            color: var(--cyan-accent);
+            font-weight: 700;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* Footer Institucional Fijo Global (Estilo Unidad 0) */
+        .branding-footer {
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 35px !important;
+            color: #94A3B8 !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            letter-spacing: 1px !important;
+            z-index: 9999 !important;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
+        .branding-footer span {
+            color: var(--utn-gold) !important;
+        }
+
+        @media (max-aspect-ratio: 1/1), (max-width: 768px) {
+            .hero-container { flex-direction: column !important; padding: 15px !important; }
+            .hero-image { height: 180px !important; min-height: 180px !important; width: 100% !important; margin-bottom: 12px !important; }
+            .hero-text { padding-left: 0 !important; text-align: center !important; }
+            .hero-title { font-size: 32px !important; text-align: center !important; margin-bottom: 10px !important; }
+            .staff-list { margin-bottom: 10px !important; }
+            .staff-list h4 { text-align: center !important; font-size: 17px !important; margin-bottom: 4px !important; }
+            .staff-list ul { display: inline-block !important; text-align: left !important; }
+            .staff-list li { font-size: 15px !important; margin-bottom: 3px !important; }
+
+            .slide-title { font-size: 26px !important; margin-bottom: 14px !important; border-left-width: 6px !important; padding-left: 12px !important; }
+            .reveal p, .reveal li { font-size: 16px !important; }
+            .branding-footer { bottom: 10px !important; left: 15px !important; font-size: 11px !important; }
+        }
+
+        /* Tarjetas Conceptuales */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+
+        .concept-card {
+            background: #FFFFFF;
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+            padding: 20px 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-icon-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            margin-bottom: 12px;
+        }
+
+        .concept-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            margin-bottom: 4px;
+        }
+
+        .concept-card .tag {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--cyan-accent);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .concept-card p {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.4;
+            margin-bottom: 0;
+        }
+
+        /* Cuadros Callout */
+        .callout-box {
+            display: flex;
+            align-items: flex-start !important;
+            text-align: left !important;
+            gap: 14px;
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            border-left: 5px solid var(--cyan-accent);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 14px;
+        }
+
+        .callout-box i {
+            color: var(--cyan-accent);
+            font-size: 20px;
+            margin-top: 3px !important;
+            flex-shrink: 0;
+        }
+
+        .callout-box strong {
+            display: block;
+            margin-bottom: 2px;
+            color: var(--utn-blue);
+            font-size: 15px;
+        }
+
+        .callout-box p strong {
+            display: inline !important;
+            color: inherit !important;
+            font-size: inherit !important;
+        }
+
+        .callout-box p {
+            margin: 0 !important;
+            text-align: left !important;
+            font-size: 14px !important;
+            line-height: 1.4 !important;
+            color: var(--text-main);
+        }
+
+        /* Badges de Código */
+        .code-badge {
+            font-family: 'Fira Code', monospace;
+            background: #F1F5F9;
+            color: #0284C7;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            white-space: nowrap !important;
+            display: inline-block;
+        }
+
+        /* Ventana del Compilador OneCompiler */
+        .compiler-window {
+            width: 100%;
+            height: 520px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid #334155;
+            background: #1E293B;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .compiler-window .header {
+            background: #0F172A;
+            padding: 10px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .compiler-window .header span {
+            color: #94A3B8;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .compiler-window .header button {
+            background: #334155;
+            color: #F8FAFC;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .compiler-window .header button:hover {
+            background: #475569;
+        }
+
+        .compiler-window iframe {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Visualizador de Secuencia de Datos */
+        .sequence-tape {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 12px;
+            background: #F1F5F9;
+            border-radius: 10px;
+            border: 1px solid #CBD5E1;
+            margin: 12px 0;
+        }
+
+        .sequence-cell {
+            background: white;
+            border: 1px solid #94A3B8;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--utn-blue);
+            white-space: nowrap;
+        }
+
+        .sequence-cell.sentinel {
+            background: #FEE2E2;
+            border-color: #EF4444;
+            color: #B91C1C;
+        }
+
+        /* Tablas */
+        .reveal table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 16px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #E2E8F0;
+        }
+
+        .reveal th {
+            background: var(--utn-blue);
+            color: white;
+            padding: 10px 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .reveal td {
+            padding: 9px 14px;
+            border-bottom: 1px solid #E2E8F0;
+            color: var(--text-main);
+        }
+
+        .reveal tr:nth-child(even) {
+            background: var(--bg-neutral);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- =========================================================================
+                 SLIDE 1: PORTADA INSTITUCIONAL TUTI (Hero Split)
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title" style="text-align: left; font-size: 44px !important; margin-bottom: 12px !important;">SISTEMA DE AUTOMATIZACIÓN DE OFICINAS</h1>
+                        <h3 style="font-size: 22px; color: var(--cyan-accent); font-weight: 600; margin-bottom: 24px; text-align: left;">Unidad #3 - Estructuras de Control (Clase 3: Secuencias de Datos)</h3>
+                        
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 2: ¿QUÉ ES UNA SECUENCIA?
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">CONCEPTO: <span class="slide-subtitle">¿Qué es una Secuencia?</span></h2>
+                <div class="content-area">
+                    <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-left: 6px solid var(--utn-blue); border-radius: 14px; padding: 22px 28px; margin-bottom: 22px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                            <i class="fa-solid fa-book-bookmark" style="color: var(--cyan-accent); font-size: 13px;"></i>
+                            <span style="display: block; text-align: left; font-size: 12px; font-weight: 700; color: var(--cyan-accent); text-transform: uppercase; letter-spacing: 1px;">Etimología Latina</span>
+                        </div>
+                        <p style="font-size: 16px; color: #64748B; margin: 0 0 10px 0; text-align: left; line-height: 1.4;">
+                            El término deriva del latín <em>sequentia</em>, que puede traducirse como <strong>"continuación"</strong>:
+                        </p>
+                        <div style="background: white; border: 1px solid #CBD5E1; border-left: 4px solid var(--cyan-accent); border-radius: 8px; padding: 12px 18px;">
+                            <p style="font-size: 20px; font-weight: 700; color: var(--utn-blue); margin: 0; text-align: left;">
+                                "Serie de elementos que se suceden unos a otros y guardan relación entre sí."
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 18px 20px; text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <div style="width: 32px; height: 32px; border-radius: 8px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; font-size: 15px;"><i class="fa-solid fa-earth-americas"></i></div>
+                                <h4 style="font-size: 17px; color: var(--utn-blue); margin: 0; font-weight: 700; text-align: left;">En la Vida Real</h4>
+                            </div>
+                            <p style="font-size: 14.5px; color: #475569; line-height: 1.45; margin: 0; text-align: left;">
+                                Una fila de personas en el banco, las temperaturas registradas hora a hora en una estación meteorológica o los mensajes recibidos en un chat.
+                            </p>
+                        </div>
+
+                        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 18px 20px; text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <div style="width: 32px; height: 32px; border-radius: 8px; background: #E0F2FE; color: #0284C7; display: flex; align-items: center; justify-content: center; font-size: 15px;"><i class="fa-solid fa-microchip"></i></div>
+                                <h4 style="font-size: 17px; color: var(--utn-blue); margin: 0; font-weight: 700; text-align: left;">En Programación</h4>
+                            </div>
+                            <p style="font-size: 14.5px; color: #475569; line-height: 1.45; margin: 0; text-align: left;">
+                                Un flujo finito de datos que se procesan uno por uno en la memoria, manteniendo variables de estado (contadores, acumuladores, máximos y mínimos).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 3: ANATOMÍA DE UNA SECUENCIA
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">ANATOMÍA: <span class="slide-subtitle">Propiedades Fundamentales</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 18px; margin-bottom: 14px;">
+                        Es un conjunto finito de elementos organizados donde siempre podemos definir 3 operaciones esenciales:
+                    </p>
+
+                    <div class="cards-container">
+                        <div class="concept-card" style="border-top: 5px solid var(--utn-blue);">
+                            <div class="card-icon-box" style="background: #EFF6FF; color: var(--utn-blue);">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                            <h3>1. Primer Elemento</h3>
+                            <p>
+                                Mecanismo para obtener el valor inicial del flujo (lectura anticipada antes de entrar al bucle).
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 5px solid var(--cyan-accent);">
+                            <div class="card-icon-box" style="background: #E0F2FE; color: var(--cyan-accent);">
+                                <i class="fa-solid fa-forward-step"></i>
+                            </div>
+                            <h3>2. Siguiente Elemento</h3>
+                            <p>
+                                Capacidad de avanzar secuencialmente hacia el próximo dato a partir de los anteriores.
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 5px solid #EF4444;">
+                            <div class="card-icon-box" style="background: #FEE2E2; color: #DC2626;">
+                                <i class="fa-solid fa-stop"></i>
+                            </div>
+                            <h3>3. Último Elemento</h3>
+                            <p>
+                                Regla o condición estricta que dictamina cuándo la secuencia ha llegado a su final.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 4: CRITERIOS DE PARADA
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">CRITERIOS DE FIN: <span class="slide-subtitle">¿Cómo Cortar una Secuencia?</span></h2>
+                <div class="content-area">
+                    <div class="cards-container">
+                        <div class="concept-card" style="border-top: 5px solid var(--utn-blue);">
+                            <h3>1. Longitud Conocida (N)</h3>
+                            <span class="tag">Ciclo Determinado (for)</span>
+                            <p>
+                                Sabemos de antemano exactamente cuántos elementos tiene la secuencia (ej: 24 horas del día, 10 notas). El ciclo ejecuta N repeticiones exactas.
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 5px solid #F59E0B;">
+                            <h3>2. Por Centinela</h3>
+                            <span class="tag">Valor Marca de Escape</span>
+                            <p>
+                                Se procesa indefinidamente hasta encontrar un valor especial que <strong>no pertenece al dominio válido</strong> (ej: temperatura <code class="code-badge">-999</code> o número <code class="code-badge">-1</code>).
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 5px solid #10B981;">
+                            <h3>3. Por Propiedad</h3>
+                            <span class="tag">Condición Intrínseca</span>
+                            <p>
+                                La secuencia concluye cuando un dato satisface un predicado lógico específico (ej: encontrar el primer número par o cuando el saldo descienda a cero).
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-filter"></i>
+                        <div>
+                            <strong>La regla de oro del centinela</strong>
+                            <p>El valor centinela sirve <strong>únicamente como marca de fin</strong>: jamás debe contabilizarse en los cálculos de promedios, máximos o sumatorias.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 5: EJEMPLO 1 - TEMPERATURAS HORARIAS (LONGITUD)
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">CASO 1: <span class="slide-subtitle">Temperaturas Horarias (N=24)</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 18px; margin-bottom: 8px;">
+                        Secuencia de 24 lecturas de temperatura horaria (grados enteros). Objetivo: determinar <strong>mínima</strong> y <strong>máxima</strong>:
+                    </p>
+
+                    <div class="sequence-tape">
+                        <div class="sequence-cell">6°</div><div class="sequence-cell">5°</div><div class="sequence-cell">5°</div>
+                        <div class="sequence-cell">4°</div><div class="sequence-cell" style="border-color: #0284C7; background: #E0F2FE;">3° (Mín)</div>
+                        <div class="sequence-cell">3°</div><div class="sequence-cell">4°</div><div class="sequence-cell">5°</div>
+                        <div class="sequence-cell">6°</div><div class="sequence-cell">7°</div><div class="sequence-cell">8°</div>
+                        <div class="sequence-cell">9°</div><div class="sequence-cell">10°</div><div class="sequence-cell">11°</div>
+                        <div class="sequence-cell" style="border-color: #EF4444; background: #FEE2E2;">12° (Máx)</div>
+                        <div class="sequence-cell">12°</div><div class="sequence-cell">11°</div><div class="sequence-cell">11°</div>
+                        <div class="sequence-cell">10°</div><div class="sequence-cell">10°</div><div class="sequence-cell">9°</div>
+                        <div class="sequence-cell">9°</div><div class="sequence-cell">9°</div><div class="sequence-cell">8°</div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px;">
+                        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px;">
+                            <strong style="color: var(--utn-blue);">Criterio de Parada:</strong> Longitud fija (N = 24).<br>
+                            <span style="font-size: 14.5px; color: #475569;">Alcanza con un bucle <code>for (int h = 0; h &lt; 24; h++)</code>.</span>
+                        </div>
+                        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px;">
+                            <strong style="color: var(--utn-blue);">Resultados:</strong><br>
+                            <span style="font-size: 14.5px; color: #475569;">Mínima: <code class="code-badge">3°C</code> &bull; Máxima: <code class="code-badge">12°C</code></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 6: TEMPERATURAS EN JAVA + COMPILADOR VERTICAL
+                 ========================================================================= -->
+            <section>
+                <!-- 6.A Horizontal: Algoritmo Mín / Máx en Java -->
+                <section>
+                    <h2 class="slide-title">ALGORITMO: <span class="slide-subtitle">Cálculo de Extremos</span></h2>
+                    <div class="content-area">
+                        <pre style="margin: 0 auto; max-width: 960px; font-size: 14px;"><code class="java" data-trim data-noescape>
+public class TemperaturasDia {
+    public static void main(String[] args) {
+        int[] temps = {6, 5, 5, 4, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 11, 11, 10, 10, 9, 9, 9, 8};
+        
+        // Inicialización con el primer elemento
+        int min = temps[0];
+        int max = temps[0];
+
+        // Recorrido de los elementos siguientes
+        for (int i = 1; i &lt; temps.length; i++) {
+            if (temps[i] &lt; min) min = temps[i];
+            if (temps[i] &gt; max) max = temps[i];
+        }
+
+        System.out.println("Temperatura Mínima: " + min + "°C");
+        System.out.println("Temperatura Máxima: " + max + "°C");
+    }
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 6.B Vertical: Compilador OneCompiler Temperaturas -->
+                <section id="slide-compiler-temps">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">
+                        PRUEBA EN VIVO: <span class="slide-subtitle">Procesamiento de Temperaturas</span>
+                    </h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler Java - TemperaturasDia</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-temps', codeTemps, 'java', 'Main.java')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-temps" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 7: EJEMPLO 2 - DUPLAS DE GOLEADORES
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">CASO 2: <span class="slide-subtitle">Duplas (Edad - Goles)</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 18px; margin-bottom: 8px;">
+                        Secuencia de duplas de datos: <code class="code-badge">(edad, goles)</code>. Objetivo: determinar la <strong>edad del goleador</strong>:
+                    </p>
+
+                    <div style="background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 10px; padding: 14px; font-family: 'Fira Code', monospace; font-size: 14px; line-height: 1.6; margin-bottom: 14px;">
+                        (18, 0) - (20, 10) - (21, 7) - (21, 1) - <span style="background: #FEF08A; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #854D0E;">(19, 15)</span> - (18, 5) - (23, 8) - (24, 9) - (28, 3) - (18, 2) - (22, 5)
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="concept-card">
+                            <h3>Lógica de Búsqueda</h3>
+                            <p>
+                                Mantenemos dos variables sincronizadas: <code class="code-badge">maxGoles = 0</code> y <code class="code-badge">edadGoleador = 0</code>. Al superar el récord, se actualizan ambas.
+                            </p>
+                        </div>
+                        <div class="concept-card" style="border-top: 5px solid var(--utn-gold);">
+                            <h3>Resultado</h3>
+                            <p>
+                                Máximo de goles = <strong>15 goles</strong>.<br>
+                                Edad del goleador = <strong>19 años</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 8: EJEMPLO 3 Y 4 - NOTAS Y ALUMNOS APROBADOS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">CASO 3 Y 4: <span class="slide-subtitle">Tratamiento de Notas</span></h2>
+                <div class="content-area">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 18px;">
+                            <h4 style="font-size: 17px; color: var(--utn-blue); margin-bottom: 8px;">
+                                <i class="fa-solid fa-chart-pie" style="color: var(--cyan-accent);"></i> Caso 3: Estadísticas del TP
+                            </h4>
+                            <p style="font-size: 14px; color: #475569; margin-bottom: 8px;">
+                                Secuencia de 10 notas: <code class="code-badge">[5, 9, 9, 7, 4, 5, 7, 7, 8, 4]</code>
+                            </p>
+                            <ul style="list-style: none; padding: 0; font-size: 13.5px; color: #475569;">
+                                <li style="margin-bottom: 6px;">&bull; <strong>Acumulador:</strong> Suma total = 65 pts.</li>
+                                <li style="margin-bottom: 6px;">&bull; <strong>Nota Promedio:</strong> 65 / 10 = <strong>6.5</strong> pts.</li>
+                                <li>&bull; <strong>Aprobados (&ge; 6):</strong> 6 alumnos &rarr; <strong>60%</strong></li>
+                            </ul>
+                        </div>
+
+                        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 18px;">
+                            <h4 style="font-size: 17px; color: var(--utn-blue); margin-bottom: 8px;">
+                                <i class="fa-solid fa-id-badge" style="color: #10B981;"></i> Caso 4: Filtrado de Tuplas
+                            </h4>
+                            <p style="font-size: 14px; color: #475569; margin-bottom: 8px;">
+                                Tuplas <code class="code-badge">(legajo, nota)</code> filtrando los que aprobaron:
+                            </p>
+                            <div style="background: white; border: 1px dashed #CBD5E1; border-radius: 6px; padding: 8px; font-family: 'Fira Code', monospace; font-size: 12px; color: #0284C7;">
+                                41589 &bull; 41235 &bull; 40325 &bull; 43215 &bull; 411335 &bull; 41325
+                            </div>
+                            <p style="font-size: 13px; color: #64748B; margin-top: 8px;">
+                                Se descartan en tiempo real aquellos con nota menor a 6.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 9: PROBLEMA OMEGAUP - J. APROXIMACIÓN DE PI (LEIBNIZ)
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">OMEGAUP: <span class="slide-subtitle">J. Aproximación PI de Leibniz</span></h2>
+                <div class="content-area">
+                    <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;">
+                        <h3 style="font-size: 19px; color: var(--utn-blue); margin-bottom: 8px;">Fórmula de la Sumatoria Alternada</h3>
+                        <p style="font-size: 16px; color: #475569; margin-bottom: 12px;">
+                            Se lee un valor entero N por teclado (1 &le; N &le; 250000) que indica la cantidad de términos de la serie:
+                        </p>
+                        <div style="background: white; border: 1px solid #CBD5E1; border-radius: 8px; padding: 12px; text-align: center; font-family: 'Fira Code', monospace; font-size: 18px; color: var(--utn-blue); margin-bottom: 14px;">
+                            &pi; / 4 = 1 - (1/3) + (1/5) - (1/7) + (1/9) - ...
+                        </div>
+
+                        <div class="callout-box">
+                            <i class="fa-solid fa-flag-checkered"></i>
+                            <div>
+                                <strong>¿Cuál es el criterio de parada en Leibniz?</strong>
+                                <p><strong>Longitud conocida (N):</strong> El bucle ejecuta exactamente N términos usando un ciclo <code class="code-badge">for</code>, alternando el signo (+ y -) y denominadores impares <code class="code-badge">2*i + 1</code>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 10: PROBLEMA OMEGAUP - N. DUPLAS 1 (CENTINELA)
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">OMEGAUP: <span class="slide-subtitle">N. Duplas 1 (Parada por Centinela)</span></h2>
+                <div class="content-area">
+                    <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;">
+                        <h3 style="font-size: 19px; color: var(--utn-blue); margin-bottom: 8px;">Enunciado y Criterio</h3>
+                        <p style="font-size: 15px; color: #475569; margin-bottom: 12px;">
+                            Se lee una secuencia de duplas (X, Y) que finaliza cuando se ingresa el valor <code class="code-badge">-1</code>:
+                        </p>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div style="background: white; border: 1px dashed #CBD5E1; border-radius: 8px; padding: 12px;">
+                                <strong style="color: var(--utn-blue);">Entrada de Ejemplo:</strong><br>
+                                <code style="font-size: 13px; color: #475569;">1 4 &nbsp; 2 2 &nbsp; 5 8 &nbsp; <span style="color: #EF4444; font-weight: bold;">-1</span></code>
+                            </div>
+                            <div style="background: white; border: 1px dashed #CBD5E1; border-radius: 8px; padding: 12px;">
+                                <strong style="color: var(--utn-blue);">Salida Esperada:</strong><br>
+                                <code style="font-size: 13px; color: #10B981;">1 (dupla con ambos pares: 2, 2)<br>0 (menor diferencia: |2 - 2| = 0)</code>
+                            </div>
+                        </div>
+
+                        <div class="callout-box" style="margin-top: 14px;">
+                            <i class="fa-solid fa-flag"></i>
+                            <div>
+                                <strong>¿Cuál es el criterio de parada en Duplas 1?</strong>
+                                <p><strong>Parada por Centinela:</strong> El bucle <code class="code-badge">while (x != -1)</code> evalúa la entrada y se detiene en el momento exacto en que detecta el valor de escape.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 11: CIERRE INSTITUCIONAL
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title" style="font-size: 48px !important; text-align: left; margin-bottom: 10px !important;">¿PREGUNTAS?</h1>
+                        <h3 style="font-size: 20px; color: var(--text-main); font-weight: 600; margin-bottom: 15px; text-align: left;">Espacio de consultas y dudas</h3>
+                        <p style="font-size: 16px; color: var(--text-light); text-align: left; margin-bottom: 20px;">¡Muchas gracias por su atención!</p>
+                        
+                        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                            <a href="../index.html" style="display: inline-flex; align-items: center; gap: 8px; background: var(--utn-blue); color: white; padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 15px; text-decoration: none; box-shadow: 0 4px 12px rgba(0,43,91,0.2);">
+                                <i class="fa-solid fa-layer-group"></i> Portal Unidad 3
+                            </a>
+                        </div>
+
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">TUTI / UTN <span>SANTA FE</span></div>
+
+    <!-- Scripts de Reveal.js y Plugins -->
+    <script src="../../../../dist/reveal.js"></script>
+    <script src="../../../../dist/plugin/highlight.js"></script>
+    <script src="../../../../dist/plugin/notes.js"></script>
+
+    <script>
+        // =========================================================================
+        // Script Anti-Blank-Slide para Móviles y Verticales
+        // =========================================================================
+        const isMobileOrVertical = window.innerWidth < 768 || window.innerHeight > window.innerWidth;
+        if (isMobileOrVertical) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            const slidesContainer = document.querySelector('.slides');
+            document.querySelectorAll('.slides > section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                slidesContainer.insertBefore(sec, parent);
+            });
+            document.querySelectorAll('.slides > section').forEach(sec => {
+                if (sec.children.length === 0) {
+                    sec.remove();
+                }
+            });
+        }
+
+        // =========================================================================
+        // Canvas Adaptativo
+        // =========================================================================
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let size = getCanvasSize();
+            Reveal.configure({
+                width: size.width,
+                height: size.height
+            });
+        });
+
+        // =========================================================================
+        // Códigos para OneCompiler
+        // =========================================================================
+        const codeTemps = `public class Main {
+    public static void main(String[] args) {
+        // Secuencia de 24 temperaturas horarias
+        int[] temps = {6, 5, 5, 4, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 11, 11, 10, 10, 9, 9, 9, 8};
+        
+        System.out.println("=== PROCESAMIENTO DE SECUENCIA (24 HORAS) ===");
+        
+        int min = temps[0];
+        int max = temps[0];
+        int suma = temps[0];
+
+        for (int i = 1; i < temps.length; i++) {
+            if (temps[i] < min) min = temps[i];
+            if (temps[i] > max) max = temps[i];
+            suma += temps[i];
+        }
+
+        double promedio = (double) suma / temps.length;
+
+        System.out.println("Temperatura Mínima: " + min + " °C");
+        System.out.println("Temperatura Máxima: " + max + " °C");
+        System.out.printf("Temperatura Promedio: %.2f °C\\n", promedio);
+    }
+}`;
+
+        function sendCode(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        Reveal.on('slidechanged', event => {
+            const slideId = event.currentSlide ? event.currentSlide.id : '';
+            if (slideId === 'slide-compiler-temps') {
+                sendCodeWithRetries('oc-editor-temps', codeTemps, 'java', 'Main.java');
+            }
+        });
+    </script>
+</body>
+</html>

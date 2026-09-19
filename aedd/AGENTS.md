@@ -3,7 +3,8 @@
 Este archivo define las restricciones académicas, pedagógicas y de estilo específicas para las diapositivas de **AEDD** (Ingeniería en Sistemas de Información - UTN Santa Fe).
 
 ## 1. Tema y Plantilla
-- **Tema CSS oficial**: `<link rel="stylesheet" href="../../dist/theme/aedd.css" />` (extiende `utn-core.css`).
+- **Estructura oficial**: `deploy/aedd/<año>/clase<N>/` (ej: `deploy/aedd/2026/clase8/`).
+- **Tema CSS oficial**: `<link rel="stylesheet" href="../../../dist/theme/aedd.css" />` (extiende `utn-core.css`).
 - **Plantilla base**: `deploy/templates/template-aedd.html`.
 - **Footer Institucional**: `AEDD / UTN <span>SANTA FE</span>`.
 

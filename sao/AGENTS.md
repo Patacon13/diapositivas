@@ -3,7 +3,8 @@
 Este archivo define las restricciones académicas, de contenido y de identidad visual específicas para las diapositivas de **SAO** (Tecnicatura Universitaria en Tecnologías de la Información - UTN Santa Fe).
 
 ## 1. Tema y Plantilla
-- **Tema CSS oficial**: `<link rel="stylesheet" href="../../dist/theme/tuti.css" />` (extiende `utn-core.css`).
+- **Estructura oficial**: `deploy/sao/<año>/unidad<N>/` (ej: `deploy/sao/2026/unidad2/`).
+- **Tema CSS oficial**: `<link rel="stylesheet" href="../../../../dist/theme/tuti.css" />` (o `../../../` si está a 3 niveles; extiende `utn-core.css`).
 - **Plantilla base**: `deploy/templates/template-tuti.html`.
 - **Footer Institucional**: Fijo en `.branding-footer` con texto exacto: `TUTI / UTN <span>SANTA FE</span>`.
 

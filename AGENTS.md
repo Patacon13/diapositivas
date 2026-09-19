@@ -24,7 +24,15 @@ Este archivo define las directrices arquitectónicas, de maquetación y de contr
 - **Flujos adaptables**:
   - Diagramas o pasos secuenciales horizontales (`flex-direction: row`) deben adaptarse a columna (`flex-direction: column`) y rotar flechas indicadoras a 90 grados (`transform: rotate(90deg)`) en pantallas móviles/verticales.
 
-## 3. Convención de Commits Semánticos
+## 3. Estructura y Versionado por Ciclo Lectivo (Multi-Año)
+- **Patrón oficial**: `<materia>/<año>/<unidad|clase>/` (ej: `sao/2026/unidad2/`, `aedd/2026/clase8/`, `pba/2026/pilas_colas/`).
+- **Inmutabilidad académica**: Cada ciclo lectivo permanece inalterado para preservar la trazabilidad de los enlaces de SIED / Moodle y las consultas de alumnos en mesas de examen.
+- **Sin portales raíz intermedios**: No se crean hubs en `sao/index.html` ni `aedd/index.html`. La navegación y métricas se canalizan directamente desde el aula virtual oficial (SIED/Moodle) hacia el Hub de Unidad o clase específica.
+- **Profundidad de rutas relativas a `dist/`**:
+  - Clases anidadas dentro de unidades (ej. `sao/2026/unidad2/clase1/index.html`): 4 niveles `../../../../dist/`.
+  - Hubs de unidad o clases directas (ej. `sao/2026/unidad2/index.html`, `aedd/2026/clase8/index.html`, `pba/2026/pilas_colas/index.html`): 3 niveles `../../../dist/`.
+
+## 4. Convención de Commits Semánticos
 Para mantener un historial limpio en el monorepo, los commits deben seguir el formato:
 - `feat(sao):` Nueva unidad o diapositiva de SAO.
 - `feat(aedd):` Nueva clase o diapositiva de AEDD.
