@@ -454,7 +454,7 @@
                             <h4 style="font-size: 17px; color: var(--utn-blue); margin-bottom: 12px;">Selección Simple (1 Camino)</h4>
                             <div style="font-family: 'Fira Code', monospace; font-size: 14px; background: white; padding: 14px; border-radius: 8px; border: 1px solid #CBD5E1; text-align: left;">
                                 <span style="color: #0284C7; font-weight: 700;">if</span> (condicion) {<br>
-                                &nbsp;&nbsp;&nbsp;&nbsp;ejecutarAccion();<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;ejecutarAccion;<br>
                                 }<br>
                                 <span style="color: #64748B;">// Si es false, continúa de largo</span>
                             </div>
@@ -465,9 +465,9 @@
                             <h4 style="font-size: 17px; color: var(--utn-blue); margin-bottom: 12px;">Selección Completa (2 Caminos)</h4>
                             <div style="font-family: 'Fira Code', monospace; font-size: 14px; background: white; padding: 14px; border-radius: 8px; border: 1px solid #CBD5E1; text-align: left;">
                                 <span style="color: #0284C7; font-weight: 700;">if</span> (condicion) {<br>
-                                &nbsp;&nbsp;&nbsp;&nbsp;accionVerdadera();<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;accionVerdadera;<br>
                                 } <span style="color: #0284C7; font-weight: 700;">else</span> {<br>
-                                &nbsp;&nbsp;&nbsp;&nbsp;accionFalsa();<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;accionFalsa;<br>
                                 }
                             </div>
                             <p style="font-size: 13.5px; color: #64748B; margin-top: 10px;">Bifurcación obligatoria: o ocurre A, o ocurre B.</p>
@@ -541,8 +541,8 @@ if (haySol &amp;&amp; esSabado) {
 if (condicion) {
     // Bloque delimitado por llaves { }
     // Permite una o múltiples instrucciones
-    instruccion1();
-    instruccion2();
+    instruccion1;
+    instruccion2;
 }
                             </code></pre>
                         </div>
