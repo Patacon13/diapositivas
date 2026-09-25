@@ -352,7 +352,7 @@ ListaAlumnos ReconstruyeInfo(const char matriz[MAX_ALUMNOS][ANCHO_FILA]) {
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
                         <span class="inciso-badge">c</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA PilaAlumnos y Complejidad O(1)</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA PilaAlumnos y Análisis Big-O</h2>
                     </div>
                     <div class="texto-enunciado">
                         <p style="margin-bottom: 10px;">Para operaciones bajo política LIFO sobre arreglos estáticos:</p>
@@ -363,13 +363,6 @@ ListaAlumnos ReconstruyeInfo(const char matriz[MAX_ALUMNOS][ANCHO_FILA]) {
                             </li>
                             <li><strong>c.2)</strong> Indique y justifique formalmente la <strong>complejidad temporal algorítmica Big-O</strong> de <code>apilar()</code> y <code>desapilar()</code>.</li>
                         </ul>
-                        <div class="concept-card" style="padding: 10px 16px; margin: 0;">
-                            <p style="font-size: 14px; margin: 0; color: var(--text-main);">
-                                <i class="fa-solid fa-bolt" style="color: var(--utn-gold); margin-right: 6px;"></i>
-                                <span class="complexity-badge">Complejidad O(1)</span>
-                                Ambas primitivas operan en tiempo constante: acceden directamente por índice (<code>elementos[tope]</code>) e incrementan/decrementan el tope sin realizar desplazamientos en memoria.
-                            </p>
-                        </div>
                     </div>
                 </section>
 
@@ -527,22 +520,15 @@ bool desapilar(PilaAlumnos &amp;p, Alumno &amp;alu) {
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
                         <span class="inciso-badge">d</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">auditarAlumnos() y Complejidad Total</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">auditarAlumnos() y Análisis Big-O</h2>
                     </div>
                     <div class="texto-enunciado">
                         <p style="margin-bottom: 10px;">Codifique <code>auditarAlumnos()</code> recibiendo <code>ListaAlumnos</code> y dos pilas (<code>pilaHistoricos</code> y <code>pilaRecientes</code>):</p>
                         <ul style="font-size: 16px; padding-left: 20px; line-height: 1.5; margin-bottom: 10px;">
                             <li><strong>Uso exclusivo de primitivas:</strong> apilar en <code>pilaHistoricos</code> si <code>anioIngreso &le; 2010</code>, o en <code>pilaRecientes</code> si es posterior.</li>
                             <li>Desapilar sucesivamente todos los elementos de <code>pilaHistoricos</code> contabilizando y mostrando los alumnos cuyo apellido tenga <strong>más de 8 caracteres</strong>.</li>
-                            <li>Determinar y justificar formalmente la <strong>complejidad temporal total</strong> en función de $N$.</li>
+                            <li>Determinar y justificar formalmente la <strong>complejidad temporal total</strong> en función de la cantidad <em>N</em> de alumnos procesados.</li>
                         </ul>
-                        <div class="concept-card" style="padding: 10px 16px; margin: 0;">
-                            <p style="font-size: 13.5px; margin: 0; color: var(--text-main);">
-                                <i class="fa-solid fa-chart-line" style="color: var(--utn-gold); margin-right: 6px;"></i>
-                                <span class="complexity-badge">Complejidad Total O(N)</span>
-                                Recorrido de la lista: N &times; O(1) = O(N). Desapilado de históricos (K &le; N): K &times; O(1) &le; O(N). Total: O(N) + O(N) = O(N) (lineal).
-                            </p>
-                        </div>
                     </div>
                 </section>
 
@@ -593,6 +579,33 @@ void auditarAlumnos(const ListaAlumnos &amp;listaAlumnos,
                             <p style="font-size: 12.5px; margin: 0; color: var(--text-main);">
                                 <i class="fa-solid fa-shield-halved" style="color: var(--utn-blue); margin-right: 6px;"></i>
                                 <strong>Encapsulamiento Respetado:</strong> La función cliente no accede a <code>pila.tope</code> ni a <code>pila.elementos</code>; opera 100% mediante <code>apilar()</code> y <code>desapilar()</code>.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- D.3 Justificación de Complejidad Total O(N) -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">d</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Justificación de Complejidad O(N)</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="concept-card" style="padding: 16px 20px; margin-bottom: 14px;">
+                            <h4 style="margin: 0 0 10px 0; color: var(--utn-blue); font-size: 17px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-calculator" style="color: var(--utn-gold);"></i>
+                                Desglose Paso a Paso (Sea <em>N</em> = <code>listaAlumnos.tl</code>)
+                            </h4>
+                            <ul style="font-size: 14.5px; color: var(--text-main); line-height: 1.6; margin: 0; padding-left: 20px;">
+                                <li><strong>1. Inicialización de pilas:</strong> <code>inicializarPila()</code> en tiempo constante &rarr; <strong>O(1)</strong>.</li>
+                                <li><strong>2. Bucle de clasificación (apilado):</strong> Itera <em>N</em> veces; cada llamada a <code>apilar()</code> es O(1) &rarr; <em>N</em> &times; O(1) = <strong>O(N)</strong>.</li>
+                                <li><strong>3. Bucle de auditoría (desapilado):</strong> Itera <em>K</em> veces (donde <em>K</em> &le; <em>N</em> es la cantidad de históricos). En cada paso <code>desapilar()</code> es O(1) &rarr; <em>K</em> &times; O(1) &le; <strong>O(N)</strong>.</li>
+                            </ul>
+                        </div>
+                        <div class="concept-card" style="padding: 10px 18px; background: rgba(0, 43, 91, 0.05); border-left: 4px solid var(--utn-blue); margin: 0;">
+                            <p style="font-size: 14px; margin: 0; color: var(--utn-blue); font-weight: 600;">
+                                <i class="fa-solid fa-chart-line" style="color: var(--utn-gold); margin-right: 8px;"></i>
+                                Complejidad Temporal Final: O(N) + O(N) = O(N) (Complejidad Lineal).
                             </p>
                         </div>
                     </div>
@@ -930,6 +943,19 @@ bool desapilar(PilaAlumnos &p, Alumno &alu) {
     return pudo;
 }
 
+/*
+ * =============================================================================
+ * JUSTIFICACIÓN DE COMPLEJIDAD TEMPORAL (Inciso c.2):
+ * -----------------------------------------------------------------------------
+ * Tanto apilar() como desapilar() tienen una complejidad temporal O(1) (constante).
+ * Razón: Al operar sobre un arreglo estático con subíndice directo 'tope',
+ * la inserción se realiza en elementos[++tope] y la extracción en elementos[tope--].
+ * Ambas primitivas involucran únicamente operaciones aritméticas básicas
+ * de incremento/decremento y acceso directo indexado en memoria, sin requerir
+ * bucles, desplazamientos ni realocaciones de los demás elementos.
+ * =============================================================================
+ */
+
 // =============================================================================
 // ARCHIVO: usaTDAPila.cpp / main.cpp (PROGRAMA CLIENTE)
 // #include "PilaAlumnos.h"
@@ -1074,6 +1100,21 @@ void auditarAlumnos(const ListaAlumnos &listaAlumnos,
 
     cout << "Total de historicos con apellido largo: " << cantApellidoLargo << endl;
 }
+
+/*
+ * =============================================================================
+ * JUSTIFICACIÓN DE COMPLEJIDAD TEMPORAL TOTAL (Inciso d.3):
+ * -----------------------------------------------------------------------------
+ * Sea N = listaAlumnos.tl la cantidad total de alumnos procesados:
+ * 1. Inicialización de pilas: O(1) + O(1) = O(1).
+ * 2. Recorrido y clasificación: Itera N veces. En cada paso realiza
+ *    comparaciones y una llamada a apilar() en O(1) -> N * O(1) = O(N).
+ * 3. Auditoría de históricos: Itera K veces (donde K <= N es la cantidad de
+ *    alumnos históricos). En cada paso ejecuta desapilar() en O(1) y verifica
+ *    la longitud en O(1) -> K * O(1) <= O(N).
+ * Complejidad Total: O(N) + O(N) = O(N) (Complejidad Lineal).
+ * =============================================================================
+ */
 
 int main() {
     ListaAlumnos la;
