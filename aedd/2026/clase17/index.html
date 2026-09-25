@@ -566,7 +566,7 @@ void auditarAlumnos(const ListaAlumnos &amp;listaAlumnos,
     while (desapilar(pilaHistoricos, aluActual)) {
         if (aluActual.apellido.length() &gt; 8) {
             cantApellidoLargo++;
-            cout &lt;&lt; "• " &lt;&lt; aluActual.apellido &lt;&lt; ", " &lt;&lt; aluActual.nombre 
+            cout &lt;&lt; aluActual.apellido &lt;&lt; ", " &lt;&lt; aluActual.nombre 
                  &lt;&lt; " (Ingreso: " &lt;&lt; aluActual.anioIngreso &lt;&lt; ")" &lt;&lt; endl;
         }
     }
@@ -1093,7 +1093,7 @@ void auditarAlumnos(const ListaAlumnos &listaAlumnos,
     while (desapilar(pilaHistoricos, aluActual)) {
         if (aluActual.apellido.length() > 8) {
             cantApellidoLargo++;
-            cout << "• " << aluActual.apellido << ", " << aluActual.nombre 
+            cout << aluActual.apellido << ", " << aluActual.nombre 
                  << " (Ingreso: " << aluActual.anioIngreso << ")" << endl;
         }
     }
@@ -1132,7 +1132,7 @@ int main() {
     cout << "\nAlumnos Recientes (post-2010) apilados en pilaRecientes:" << endl;
     Alumno rec;
     while (desapilar(recientes, rec)) {
-        cout << "• " << rec.apellido << ", " << rec.nombre 
+        cout << rec.apellido << ", " << rec.nombre 
              << " (" << rec.anioIngreso << ")" << endl;
     }
 
