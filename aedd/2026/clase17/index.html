@@ -207,14 +207,14 @@ struct Alumno {
     int anioIngreso;
 };
 
-Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
+Alumno ReconstruyeLinea(string fila) {
     Alumno alu;
     alu.nombre = ""; alu.apellido = ""; alu.anioIngreso = 0;
     char digitos[4];
     int cantDigitos = 0;
     bool pasoSeparador = false;
 
-    for (int j = 0; j &lt; ANCHO_FILA; j++) {
+    for (int j = 0; j &lt; fila.length(); j++) {
         char c = fila[j];
         if (c == '$') {
             pasoSeparador = true;
@@ -223,7 +223,7 @@ Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
                 digitos[cantDigitos] = c;
                 cantDigitos++;
             }
-        } else if (c != ' ' &amp;&amp; c != '\0') {
+        } else if (c != ' ') {
             if (!pasoSeparador) {
                 alu.nombre += c;
             } else {
@@ -296,29 +296,15 @@ Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: ReconstruyeInfo()</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-23|25-36">
+                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-9|11-23">
 struct ListaAlumnos {
     Alumno lista[MAX_ALUMNOS];
     int tl;
 };
 
-bool contieneDanger(const char fila[ANCHO_FILA]) {
-    const string patron = "DANGER";
-    bool encontrado = false;
-    int i = 0;
-    while (i &lt;= ANCHO_FILA - 6 &amp;&amp; !encontrado) {
-        bool coincide = true;
-        int k = 0;
-        while (k &lt; 6 &amp;&amp; coincide) {
-            if (fila[i + k] != patron[k]) {
-                coincide = false;
-            }
-            k++;
-        }
-        if (coincide) { encontrado = true; }
-        i++;
-    }
-    return encontrado;
+// Búsqueda simple de subcadena con .find() de std::string
+bool contieneDanger(string fila) {
+    return (fila.find("DANGER") != string::npos);
 }
 
 ListaAlumnos ReconstruyeInfo(const char matriz[MAX_ALUMNOS][ANCHO_FILA]) {
@@ -326,8 +312,9 @@ ListaAlumnos ReconstruyeInfo(const char matriz[MAX_ALUMNOS][ANCHO_FILA]) {
     resultado.tl = 0;
 
     for (int i = 0; i &lt; MAX_ALUMNOS; i++) {
-        if (!contieneDanger(matriz[i])) {
-            resultado.lista[resultado.tl] = ReconstruyeLinea(matriz[i]);
+        string fila(matriz[i], ANCHO_FILA);
+        if (!contieneDanger(fila)) {
+            resultado.lista[resultado.tl] = ReconstruyeLinea(fila);
             resultado.tl++;
         }
     }
@@ -714,15 +701,13 @@ void auditarAlumnos(const ListaAlumnos &amp;listaAlumnos,
 #include <string>
 using namespace std;
 
-const int ANCHO_FILA = 30;
-
 struct Alumno {
     string nombre;
     string apellido;
     int anioIngreso;
 };
 
-Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
+Alumno ReconstruyeLinea(string fila) {
     Alumno alu;
     alu.nombre = "";
     alu.apellido = "";
@@ -732,7 +717,7 @@ Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
     int cantDigitos = 0;
     bool pasoSeparador = false;
 
-    for (int j = 0; j < ANCHO_FILA; j++) {
+    for (size_t j = 0; j < fila.length(); j++) {
         char c = fila[j];
         if (c == '$') {
             pasoSeparador = true;
@@ -741,7 +726,7 @@ Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
                 digitos[cantDigitos] = c;
                 cantDigitos++;
             }
-        } else if (c != ' ' && c != '\\0') {
+        } else if (c != ' ') {
             if (!pasoSeparador) {
                 alu.nombre += c;
             } else {
@@ -760,19 +745,18 @@ Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
 }
 
 int main() {
-    // Casos de prueba tomados de la consigna oficial
-    const char f1[31] = "E 5v a0r is0 2t o$ P o rt el a";
-    const char f2[31] = "4 0 0 E ls 2a $ Za m b r an o ";
-    const char f3[31] = "J u l i 3 00 2 ana $ Fl ores  ";
+    string f0 = "E 5v a0r is0 2t o$ P o rt el a";
+    string f1 = "4 0 0 E ls 2a $ Za m b r an o";
+    string f2 = "J u l i 3 00 2 ana $ Fl ores";
 
+    Alumno a0 = ReconstruyeLinea(f0);
     Alumno a1 = ReconstruyeLinea(f1);
     Alumno a2 = ReconstruyeLinea(f2);
-    Alumno a3 = ReconstruyeLinea(f3);
 
     cout << "=== INCISO A: RECONSTRUCCION DE LINEAS ===" << endl;
-    cout << "Fila 1: " << a1.apellido << " " << a1.nombre << " " << a1.anioIngreso << endl;
-    cout << "Fila 2: " << a2.apellido << " " << a2.nombre << " " << a2.anioIngreso << endl;
-    cout << "Fila 3: " << a3.apellido << " " << a3.nombre << " " << a3.anioIngreso << endl;
+    cout << "1. " << a0.apellido << ", " << a0.nombre << " (Ingreso: " << a0.anioIngreso << ")" << endl;
+    cout << "2. " << a1.apellido << ", " << a1.nombre << " (Ingreso: " << a1.anioIngreso << ")" << endl;
+    cout << "3. " << a2.apellido << ", " << a2.nombre << " (Ingreso: " << a2.anioIngreso << ")" << endl;
 
     return 0;
 }`;
@@ -795,7 +779,7 @@ struct ListaAlumnos {
     int tl;
 };
 
-Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
+Alumno ReconstruyeLinea(string fila) {
     Alumno alu;
     alu.nombre = "";
     alu.apellido = "";
@@ -805,7 +789,7 @@ Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
     int cantDigitos = 0;
     bool pasoSeparador = false;
 
-    for (int j = 0; j < ANCHO_FILA; j++) {
+    for (size_t j = 0; j < fila.length(); j++) {
         char c = fila[j];
         if (c == '$') {
             pasoSeparador = true;
@@ -814,7 +798,7 @@ Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
                 digitos[cantDigitos] = c;
                 cantDigitos++;
             }
-        } else if (c != ' ' && c != '\\0') {
+        } else if (c != ' ') {
             if (!pasoSeparador) {
                 alu.nombre += c;
             } else {
@@ -832,27 +816,8 @@ Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
     return alu;
 }
 
-bool contieneDanger(const char fila[ANCHO_FILA]) {
-    const string patron = "DANGER";
-    bool encontrado = false;
-    int i = 0;
-
-    while (i <= ANCHO_FILA - 6 && !encontrado) {
-        bool coincide = true;
-        int k = 0;
-        while (k < 6 && coincide) {
-            if (fila[i + k] != patron[k]) {
-                coincide = false;
-            }
-            k++;
-        }
-        if (coincide) {
-            encontrado = true;
-        }
-        i++;
-    }
-
-    return encontrado;
+bool contieneDanger(string fila) {
+    return (fila.find("DANGER") != string::npos);
 }
 
 ListaAlumnos ReconstruyeInfo(const char matriz[MAX_ALUMNOS][ANCHO_FILA]) {
@@ -860,8 +825,9 @@ ListaAlumnos ReconstruyeInfo(const char matriz[MAX_ALUMNOS][ANCHO_FILA]) {
     resultado.tl = 0;
 
     for (int i = 0; i < MAX_ALUMNOS; i++) {
-        if (!contieneDanger(matriz[i])) {
-            resultado.lista[resultado.tl] = ReconstruyeLinea(matriz[i]);
+        string fila(matriz[i], ANCHO_FILA);
+        if (!contieneDanger(fila)) {
+            resultado.lista[resultado.tl] = ReconstruyeLinea(fila);
             resultado.tl++;
         }
     }
