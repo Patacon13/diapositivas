@@ -7,12 +7,20 @@ description: Guía y metodología para diseñar, maquetar, estructurar y optimiz
 
 Esta skill define la arquitectura técnica, estándares de diseño, responsividad e interactividad para las presentaciones web de la **UTN Regional Santa Fe**.
 
+> [!IMPORTANT]
+> **Estructura de Directorios Multi-Año Obligatoria**:
+> Todas las diapositivas, hubs y presentaciones deben ubicarse OBLIGATORIAMENTE dentro de la carpeta del ciclo lectivo correspondiente:
+> `deploy/<materia>/<año>/<unidad|clase>/index.html` (por ejemplo: `deploy/aedd/2026/clase17/index.html`, `deploy/sao/2026/unidad2/index.html`).
+> **PROHIBIDO** crear clases o unidades directamente en la raíz de la materia como `deploy/<materia>/<clase>/`.
+> La profundidad relativa hacia `dist/` es de 3 niveles (`../../../dist/`) para clases directas o hubs de unidad, y de 4 niveles (`../../../../dist/`) para clases anidadas dentro de unidades.
+
 > [!NOTE]
 > Para las restricciones académicas específicas de cada materia (lenguaje, restricciones de código C++/Java, nómina de profesores y tutores), consultar los archivos de reglas de cátedra en cada subdirectorio:
 > - Reglas globales: `deploy/AGENTS.md`
 > - Cátedra AEDD (C++ / ISI): `deploy/aedd/AGENTS.md` $\rightarrow$ Tema: `aedd.css` | Plantilla: `template-aedd.html`
 > - Cátedra SAO (Java / TUTI): `deploy/sao/AGENTS.md` $\rightarrow$ Tema: `tuti.css` | Plantilla: `template-tuti.html`
 > - Cátedra PBA (Java / TUTI): `deploy/pba/AGENTS.md` $\rightarrow$ Tema: `tuti.css` | Plantilla: `template-tuti.html`
+
 
 ---
 
