@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AEDD - Clase 17: Simulacro de Parcial</title>
+
+    <link rel="stylesheet" href="../../dist/reset.css" />
+    <link rel="stylesheet" href="../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../dist/plugin/highlight/monokai.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --danger-red: #EF4444;
+            --warning-amber: #F59E0B;
+            --success-green: #10B981;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 22px; color: var(--text-main); line-height: 1.5; text-align: left; }
+        
+        .slide-title {
+            font-size: 42px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 22px !important; border-left: 12px solid var(--utn-gold);
+            padding-left: 20px; text-transform: uppercase !important; letter-spacing: -1.5px;
+            text-align: left; width: 100%;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; width: 100%; align-items: center; }
+
+        .tile { 
+            background: var(--bg-neutral); padding: 20px; border-radius: 16px;
+            border-bottom: 5px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+        }
+        .tile:hover { transform: translateY(-4px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
+        .tile h3 { font-size: 19px; color: var(--utn-blue); margin-bottom: 8px; }
+
+        .reveal pre {
+            background: #272822; padding: 16px; border-radius: 12px;
+            font-family: 'Fira Code', monospace; font-size: 13.5px; margin: 0;
+            border-left: 6px solid var(--utn-gold); box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            width: 100%;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+        .reveal code { 
+            font-family: 'Fira Code', monospace; 
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .section-title-layout { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .section-title-layout h2 { font-size: 80px !important; color: var(--utn-gold) !important; font-weight: 700 !important; letter-spacing: -2px; }
+        .section-title-layout p { color: rgba(255,255,255,0.7) !important; font-size: 26px !important; font-weight: 300 !important; letter-spacing: 4px; text-align: center; }
+
+        .branding-footer { position: absolute; bottom: 30px; left: 40px; color: #94A3B8; font-weight: 600; font-size: 14px; letter-spacing: 1px; z-index: 1000; }
+        .branding-footer span { color: var(--utn-gold); }
+
+        .inciso-badge {
+            display: inline-block; background: var(--utn-gold); color: var(--utn-blue);
+            font-weight: 700; font-size: 26px; width: 48px; height: 48px; line-height: 48px;
+            text-align: center; border-radius: 50%; margin-right: 15px; flex-shrink: 0;
+        }
+
+        .inciso-header {
+            display: flex; align-items: center; margin-bottom: 16px;
+        }
+
+        .texto-enunciado {
+            background: white; padding: 20px 26px; border-radius: 16px; border: 1px solid #E2E8F0; text-align: left;
+        }
+
+        .concept-card {
+            background: white; padding: 16px 20px; border-radius: 16px; border: 1px solid #E2E8F0;
+            border-left: 8px solid var(--utn-gold); box-shadow: 0 8px 24px rgba(0,0,0,0.04); text-align: left;
+        }
+        .concept-card h3 {
+            color: var(--utn-blue); font-size: 19px; margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
+        }
+
+        .complexity-badge {
+            background: #EDE9FE; color: #6D28D9; border: 1px solid #C4B5FD;
+            padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;
+        }
+
+        .tag-danger {
+            background: #FEE2E2; color: #991B1B; border: 1px solid #F87171;
+            padding: 2px 8px; border-radius: 8px; font-weight: 700; font-size: 12.5px;
+        }
+
+        /* --- Estilos Especiales para Celulares Verticales --- */
+        @media (max-aspect-ratio: 1/1) {
+            .two-column { grid-template-columns: 1fr; gap: 16px; }
+            .slide-title { font-size: 34px !important; margin-bottom: 16px !important; }
+            .reveal p, .reveal li { font-size: 19px; }
+            .reveal pre { font-size: 14px; padding: 14px; overflow-x: auto; width: 100%; box-sizing: border-box; }
+            .section-title-layout h2 { font-size: 55px !important; }
+            .section-title-layout p { font-size: 19px !important; }
+            .tile { padding: 16px; }
+            .branding-footer { bottom: 15px; left: 20px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ================================================================== -->
+            <!-- PORTADA INSTITUCIONAL -->
+            <!-- ================================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <h1 style="color: white; font-size: 64px; line-height: 1.05; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 46px;">Clase 17: Simulacro de Parcial</span></h1>
+                <p style="color: rgba(255,255,255,0.7); margin-top: 35px; text-align: center; font-size: 22px;">Docentes de práctica: Tomás Assenza, Facundo Sanchez</p>
+                <p style="color: rgba(255,255,255,0.35); margin-top: 10px; text-align: center; font-size: 16px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe</p>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- CONTEXTO GENERAL: EL HACKER NO BENIGNO -->
+            <!-- ================================================================== -->
+            <section>
+                <h2 class="slide-title">Caso: El Hacker no Benigno</h2>
+                <div class="content-area">
+                    <div class="concept-card" style="margin-bottom: 14px;">
+                        <h3><i class="fa-solid fa-user-secret" style="color: var(--utn-gold);"></i> Archivo de Alumnado Comprometido</h3>
+                        <p style="font-size: 15.5px; margin: 0; line-height: 1.5;">
+                            Un hacker corrompió los registros estudiantiles dejando una matriz de <strong>1450 &times; 30 caracteres</strong> (<code>MatrizRota</code>). Cada fila contiene Nombre, Apellido y Año de ingreso de un alumno bajo tres alteraciones clave:
+                        </p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 100%;">
+                        <div class="tile" style="padding: 15px; border-top: 5px solid #38BDF8;">
+                            <h4 style="font-size: 15.5px; color: var(--utn-blue); margin: 0 0 6px 0;"><i class="fa-solid fa-arrows-left-right-to-line"></i> Espacios Aleatorios</h4>
+                            <p style="font-size: 13.5px; color: var(--text-light); margin: 0;">Se insertaron espacios en blanco aleatorios entre los caracteres que deben descartarse.</p>
+                        </div>
+                        <div class="tile" style="padding: 15px; border-top: 5px solid var(--utn-gold);">
+                            <h4 style="font-size: 15.5px; color: var(--utn-blue); margin: 0 0 6px 0;"><i class="fa-solid fa-dollar-sign"></i> Separador '$'</h4>
+                            <p style="font-size: 13.5px; color: var(--text-light); margin: 0;">Los caracteres previos al <code>$</code> forman el <strong>Nombre</strong> y los posteriores el <strong>Apellido</strong>.</p>
+                        </div>
+                        <div class="tile" style="padding: 15px; border-top: 5px solid #EF4444;">
+                            <h4 style="font-size: 15.5px; color: var(--utn-blue); margin: 0 0 6px 0;"><i class="fa-solid fa-rotate-left"></i> 4 Dígitos Invertidos</h4>
+                            <p style="font-size: 13.5px; color: var(--text-light); margin: 0;">Los 4 dígitos del año de ingreso vienen <strong>invertidos</strong> en su orden de aparición.</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 14px; background: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 16px; text-align: left;">
+                        <span style="font-size: 13.5px; color: var(--text-light); font-weight: 600;">EJEMPLO DE RECONSTRUCCIÓN:</span>
+                        <div style="font-family: 'Fira Code', monospace; font-size: 13px; color: var(--text-main); margin-top: 4px;">
+                            Fila[0]: <code style="color: #0284C7;">E  5v  a0r  is0  2t  o$  P  o  rt  el  a</code> &rarr; Reconstruido: <strong style="color: #10B981;">Portela Evaristo 2005</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- INCISO A: STRUCT ALUMNO Y RECONSTRUYELINEA -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- A.1 Enunciado -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">a</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Alumno y ReconstruyeLinea()</h2>
+                    </div>
+                    <div class="texto-enunciado">
+                        <p style="margin-bottom: 10px;">Defina las estructuras de datos necesarias y codifique la función <code>ReconstruyeLinea()</code>:</p>
+                        <ul style="font-size: 16.5px; padding-left: 20px; line-height: 1.55; margin-bottom: 12px;">
+                            <li><code>struct Alumno</code>: campos <code>nombre</code> (string), <code>apellido</code> (string) y <code>anioIngreso</code> (int).</li>
+                            <li>La función recibe una fila de la matriz (30 caracteres) y retorna un <code>Alumno</code> con su información original.</li>
+                            <li>Elimina espacios en blanco redundantes y separa nombre y apellido según el delimitador <code>$</code>.</li>
+                            <li>Invierte los 4 dígitos dispersos para recomponer el año real. <strong style="color: #B91C1C;">(NO modificar MatrizRota)</strong>.</li>
+                        </ul>
+                        <div class="concept-card" style="padding: 10px 16px; margin: 0;">
+                            <p style="font-size: 14px; margin: 0; color: var(--text-main);">
+                                <i class="fa-solid fa-lightbulb" style="color: var(--utn-gold); margin-right: 6px;"></i>
+                                <strong>Lógica de Inversión:</strong> Si los dígitos leídos son <code>'5','0','0','2'</code>, se operan de atrás hacia adelante: <code>anio = anio * 10 + (c - '0')</code> obteniendo <code>2005</code>.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- A.2 Solución C++ -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">a</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: ReconstruyeLinea()</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 11.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-12|14-29|31-37">
+struct Alumno {
+    string nombre;
+    string apellido;
+    int anioIngreso;
+};
+
+Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
+    Alumno alu;
+    alu.nombre = ""; alu.apellido = ""; alu.anioIngreso = 0;
+    char digitos[4];
+    int cantDigitos = 0;
+    bool pasoSeparador = false;
+
+    for (int j = 0; j &lt; ANCHO_FILA; j++) {
+        char c = fila[j];
+        if (c == '$') {
+            pasoSeparador = true;
+        } else if (c &gt;= '0' &amp;&amp; c &lt;= '9') {
+            if (cantDigitos &lt; 4) {
+                digitos[cantDigitos] = c;
+                cantDigitos++;
+            }
+        } else if (c != ' ' &amp;&amp; c != '\0') {
+            if (!pasoSeparador) {
+                alu.nombre += c;
+            } else {
+                alu.apellido += c;
+            }
+        }
+    }
+
+    int anio = 0;
+    for (int k = cantDigitos - 1; k &gt;= 0; k--) {
+        anio = anio * 10 + (digitos[k] - '0');
+    }
+    alu.anioIngreso = anio;
+    return alu;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- A.3 Compilador Online OneCompiler -->
+                <section id="slide-compiler-a">
+                    <h2 class="slide-title">Compilador Online: Inciso A</h2>
+                    <p style="font-size: 16px; color: var(--text-light); margin-bottom: 8px;">Interactuá con el código y presioná <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 6px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-a', cppCodeIncisoA)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-a" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- INCISO B: LISTAALUMNOS Y RECONSTRUYEINFO -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- B.1 Enunciado -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">b</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">ListaAlumnos y ReconstruyeInfo()</h2>
+                    </div>
+                    <div class="texto-enunciado">
+                        <p style="margin-bottom: 10px;">Defina el struct <code>ListaAlumnos</code> y codifique la función <code>ReconstruyeInfo()</code>:</p>
+                        <ul style="font-size: 16.5px; padding-left: 20px; line-height: 1.55; margin-bottom: 12px;">
+                            <li><code>struct ListaAlumnos</code>: arreglo <code>lista[1450]</code> y tamaño lógico <code>tl</code>.</li>
+                            <li>La función recibe la <code>MatrizRota</code> y retorna la información original procesada en un dato de tipo <code>ListaAlumnos</code>.</li>
+                            <li><strong style="color: #B91C1C;">Filtro de Seguridad:</strong> Las filas corruptas que contienen la subcadena <span class="tag-danger">DANGER</span> son irrecuperables y <strong>no deben incluirse</strong> en el vector reconstruido.</li>
+                        </ul>
+                        <div class="concept-card" style="padding: 10px 16px; margin: 0;">
+                            <p style="font-size: 14px; margin: 0; color: var(--text-main);">
+                                <i class="fa-solid fa-filter" style="color: var(--utn-gold); margin-right: 6px;"></i>
+                                <strong>Modularización AEDD:</strong> Extraemos la verificación de la subcadena a una función auxiliar <code>contieneDanger()</code> con bandera lógica, garantizando retorno único sin sentencias <code>break</code>.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- B.2 Solución C++ -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">b</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: ReconstruyeInfo()</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-23|25-36">
+struct ListaAlumnos {
+    Alumno lista[MAX_ALUMNOS];
+    int tl;
+};
+
+bool contieneDanger(const char fila[ANCHO_FILA]) {
+    const string patron = "DANGER";
+    bool encontrado = false;
+    int i = 0;
+    while (i &lt;= ANCHO_FILA - 6 &amp;&amp; !encontrado) {
+        bool coincide = true;
+        int k = 0;
+        while (k &lt; 6 &amp;&amp; coincide) {
+            if (fila[i + k] != patron[k]) {
+                coincide = false;
+            }
+            k++;
+        }
+        if (coincide) { encontrado = true; }
+        i++;
+    }
+    return encontrado;
+}
+
+ListaAlumnos ReconstruyeInfo(const char matriz[MAX_ALUMNOS][ANCHO_FILA]) {
+    ListaAlumnos resultado;
+    resultado.tl = 0;
+
+    for (int i = 0; i &lt; MAX_ALUMNOS; i++) {
+        if (!contieneDanger(matriz[i])) {
+            resultado.lista[resultado.tl] = ReconstruyeLinea(matriz[i]);
+            resultado.tl++;
+        }
+    }
+    return resultado;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- B.3 Compilador Online OneCompiler -->
+                <section id="slide-compiler-b">
+                    <h2 class="slide-title">Compilador Online: Inciso B</h2>
+                    <p style="font-size: 16px; color: var(--text-light); margin-bottom: 8px;">Interactuá con el código y presioná <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 6px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-b', cppCodeIncisoB)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-b" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- INCISO C: TDA PILAALUMNOS Y COMPLEJIDAD O(1) -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- C.1 Enunciado -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">c</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA PilaAlumnos y Complejidad O(1)</h2>
+                    </div>
+                    <div class="texto-enunciado">
+                        <p style="margin-bottom: 10px;">Para operaciones bajo política LIFO sobre arreglos estáticos:</p>
+                        <ul style="font-size: 16.5px; padding-left: 20px; line-height: 1.55; margin-bottom: 12px;">
+                            <li>Defina <code>PilaAlumnos</code> con vector de capacidad 1450 y subíndice <code>tope</code>.</li>
+                            <li><strong>c.1)</strong> Codifique las 5 primitivas fundamentales:
+                                <code>inicializarPila</code>, <code>pilaVacia</code>, <code>pilaLlena</code>, <code>apilar</code> (control overflow) y <code>desapilar</code> (control underflow).
+                            </li>
+                            <li><strong>c.2)</strong> Indique y justifique formalmente la <strong>complejidad temporal algorítmica Big-O</strong> de <code>apilar()</code> y <code>desapilar()</code>.</li>
+                        </ul>
+                        <div class="concept-card" style="padding: 10px 16px; margin: 0;">
+                            <p style="font-size: 14px; margin: 0; color: var(--text-main);">
+                                <i class="fa-solid fa-bolt" style="color: var(--utn-gold); margin-right: 6px;"></i>
+                                <span class="complexity-badge">Complejidad O(1)</span>
+                                Ambas primitivas operan en tiempo constante: acceden directamente por índice (<code>elementos[tope]</code>) e incrementan/decrementan el tope sin realizar desplazamientos en memoria.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- C.2 Solución C++ y Análisis Big-O -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">c</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA PilaAlumnos</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-8|10-18|20-28">
+struct PilaAlumnos {
+    Alumno elementos[MAX_PILA];
+    int tope; // -1 indica pila vacía
+};
+
+void inicializarPila(PilaAlumnos &p) { p.tope = -1; }
+bool pilaVacia(const PilaAlumnos &p) { return (p.tope == -1); }
+bool pilaLlena(const PilaAlumnos &p) { return (p.tope == MAX_PILA - 1); }
+
+bool apilar(PilaAlumnos &p, Alumno alu) {
+    bool pudo = false;
+    if (!pilaLlena(p)) {
+        p.tope++;
+        p.elementos[p.tope] = alu;
+        pudo = true;
+    }
+    return pudo;
+}
+
+bool desapilar(PilaAlumnos &p, Alumno &alu) {
+    bool pudo = false;
+    if (!pilaVacia(p)) {
+        alu = p.elementos[p.tope];
+        p.tope--;
+        pudo = true;
+    }
+    return pudo;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- C.3 Compilador Online OneCompiler -->
+                <section id="slide-compiler-c">
+                    <h2 class="slide-title">Compilador Online: Inciso C</h2>
+                    <p style="font-size: 16px; color: var(--text-light); margin-bottom: 8px;">Interactuá con el código y presioná <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 6px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-c', cppCodeIncisoC)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-c" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- INCISO D: AUDITAR ALUMNOS Y COMPLEJIDAD TOTAL O(N) -->
+            <!-- ================================================================== -->
+            <section>
+                <!-- D.1 Enunciado -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">d</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">auditarAlumnos() y Complejidad Total</h2>
+                    </div>
+                    <div class="texto-enunciado">
+                        <p style="margin-bottom: 10px;">Codifique <code>auditarAlumnos()</code> recibiendo <code>ListaAlumnos</code> y dos pilas (<code>pilaHistoricos</code> y <code>pilaRecientes</code>):</p>
+                        <ul style="font-size: 16px; padding-left: 20px; line-height: 1.5; margin-bottom: 10px;">
+                            <li><strong>Uso exclusivo de primitivas:</strong> apilar en <code>pilaHistoricos</code> si <code>anioIngreso &le; 2010</code>, o en <code>pilaRecientes</code> si es posterior.</li>
+                            <li>Desapilar sucesivamente todos los elementos de <code>pilaHistoricos</code> contabilizando y mostrando los alumnos cuyo apellido tenga <strong>más de 8 caracteres</strong>.</li>
+                            <li>Determinar y justificar formalmente la <strong>complejidad temporal total</strong> en función de $N$.</li>
+                        </ul>
+                        <div class="concept-card" style="padding: 10px 16px; margin: 0;">
+                            <p style="font-size: 13.5px; margin: 0; color: var(--text-main);">
+                                <i class="fa-solid fa-chart-line" style="color: var(--utn-gold); margin-right: 6px;"></i>
+                                <span class="complexity-badge">Complejidad Total O(N)</span>
+                                Recorrido de la lista: N &times; O(1) = O(N). Desapilado de históricos (K &le; N): K &times; O(1) &le; O(N). Total: O(N) + O(N) = O(N) (lineal).
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- D.2 Solución C++ -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">d</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: auditarAlumnos()</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-14|16-27">
+void auditarAlumnos(const ListaAlumnos &amp;listaAlumnos, 
+                    PilaAlumnos &amp;pilaHistoricos, 
+                    PilaAlumnos &amp;pilaRecientes) {
+    inicializarPila(pilaHistoricos);
+    inicializarPila(pilaRecientes);
+
+    for (int i = 0; i &lt; listaAlumnos.tl; i++) {
+        if (listaAlumnos.lista[i].anioIngreso &lt;= 2010) {
+            apilar(pilaHistoricos, listaAlumnos.lista[i]);
+        } else {
+            apilar(pilaRecientes, listaAlumnos.lista[i]);
+        }
+    }
+
+    int cantApellidoLargo = 0;
+    Alumno aluActual;
+
+    while (desapilar(pilaHistoricos, aluActual)) {
+        if (aluActual.apellido.length() &gt; 8) {
+            cantApellidoLargo++;
+            cout &lt;&lt; "• " &lt;&lt; aluActual.apellido &lt;&lt; ", " &lt;&lt; aluActual.nombre 
+                 &lt;&lt; " (Ingreso: " &lt;&lt; aluActual.anioIngreso &lt;&lt; ")" &lt;&lt; endl;
+        }
+    }
+    cout &lt;&lt; "Total de historicos con apellido largo: " 
+         &lt;&lt; cantApellidoLargo &lt;&lt; endl;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- D.3 Compilador Online OneCompiler -->
+                <section id="slide-compiler-d">
+                    <h2 class="slide-title">Compilador Online: Inciso D</h2>
+                    <p style="font-size: 16px; color: var(--text-light); margin-bottom: 8px;">Interactuá con el código y presioná <strong>Run</strong> para compilar.</p>
+                    
+                    <div class="compiler-window" style="background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 100%; border: 1px solid #333; margin-top: 6px; text-align: left;">
+                        <div class="header" style="background: #252526; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c3c3c; line-height: 1;">
+                            <span style="color: #cccccc; font-family: monospace; font-size: 14px; display: flex; align-items: center;"><i class="fa-solid fa-code" style="color: var(--utn-gold); margin-right: 8px;"></i> Compilador Online (OneCompiler)</span>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <button onclick="sendCode('oc-editor-d', cppCodeIncisoD)" style="background: var(--utn-gold); border: none; padding: 6px 12px; border-radius: 4px; color: var(--utn-blue); font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restaurar Código
+                                </button>
+                                <span style="display: flex; gap: 6px;"><i class="fa-solid fa-circle" style="color: #FF5F56; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #FFBD2E; font-size: 12px;"></i><i class="fa-solid fa-circle" style="color: #27C93F; font-size: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <iframe id="oc-editor-d" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================================================================== -->
+            <!-- DIAPOSITIVA FINAL -->
+            <!-- ================================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2>¿DUDAS O CONSULTAS?</h2>
+                    <p style="color: white !important;">Espacio para puesta en común y preguntas</p>
+                    <div style="margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 25px;">
+                        <p style="font-size: 18px !important; color: rgba(255,255,255,0.5) !important; letter-spacing: 2px;">AEDD - UTN SANTA FE - INGENIERÍA EN SISTEMAS</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+
+    <!-- Scripts de Reveal.js y Plugins -->
+    <script src="../../dist/reveal.js"></script>
+    <script src="../../dist/plugin/notes.js"></script>
+    <script src="../../dist/plugin/highlight.js"></script>
+
+    <script>
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        // Detectar si es un dispositivo móvil chico (celular) para simplificar el flujo sincrónicamente
+        const isMobileOrTablet = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
+        if (isMobileOrTablet) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            controls: true,
+            progress: true,
+            center: true,
+            
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({
+                width: newSize.width,
+                height: newSize.height
+            });
+        });
+
+        // =========================================================================
+        // Códigos C++ para inyectar en OneCompiler (por inciso)
+        // =========================================================================
+
+        const cppCodeIncisoA = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int ANCHO_FILA = 30;
+
+struct Alumno {
+    string nombre;
+    string apellido;
+    int anioIngreso;
+};
+
+Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
+    Alumno alu;
+    alu.nombre = "";
+    alu.apellido = "";
+    alu.anioIngreso = 0;
+
+    char digitos[4];
+    int cantDigitos = 0;
+    bool pasoSeparador = false;
+
+    for (int j = 0; j < ANCHO_FILA; j++) {
+        char c = fila[j];
+        if (c == '$') {
+            pasoSeparador = true;
+        } else if (c >= '0' && c <= '9') {
+            if (cantDigitos < 4) {
+                digitos[cantDigitos] = c;
+                cantDigitos++;
+            }
+        } else if (c != ' ' && c != '\\0') {
+            if (!pasoSeparador) {
+                alu.nombre += c;
+            } else {
+                alu.apellido += c;
+            }
+        }
+    }
+
+    int anio = 0;
+    for (int k = cantDigitos - 1; k >= 0; k--) {
+        anio = anio * 10 + (digitos[k] - '0');
+    }
+    alu.anioIngreso = anio;
+
+    return alu;
+}
+
+int main() {
+    // Casos de prueba tomados de la consigna oficial
+    const char f1[31] = "E 5v a0r is0 2t o$ P o rt el a";
+    const char f2[31] = "4 0 0 E ls 2a $ Za m b r an o ";
+    const char f3[31] = "J u l i 3 00 2 ana $ Fl ores  ";
+
+    Alumno a1 = ReconstruyeLinea(f1);
+    Alumno a2 = ReconstruyeLinea(f2);
+    Alumno a3 = ReconstruyeLinea(f3);
+
+    cout << "=== INCISO A: RECONSTRUCCION DE LINEAS ===" << endl;
+    cout << "Fila 1: " << a1.apellido << " " << a1.nombre << " " << a1.anioIngreso << endl;
+    cout << "Fila 2: " << a2.apellido << " " << a2.nombre << " " << a2.anioIngreso << endl;
+    cout << "Fila 3: " << a3.apellido << " " << a3.nombre << " " << a3.anioIngreso << endl;
+
+    return 0;
+}`;
+
+        const cppCodeIncisoB = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int MAX_ALUMNOS = 1450;
+const int ANCHO_FILA = 30;
+
+struct Alumno {
+    string nombre;
+    string apellido;
+    int anioIngreso;
+};
+
+struct ListaAlumnos {
+    Alumno lista[MAX_ALUMNOS];
+    int tl;
+};
+
+Alumno ReconstruyeLinea(const char fila[ANCHO_FILA]) {
+    Alumno alu;
+    alu.nombre = "";
+    alu.apellido = "";
+    alu.anioIngreso = 0;
+
+    char digitos[4];
+    int cantDigitos = 0;
+    bool pasoSeparador = false;
+
+    for (int j = 0; j < ANCHO_FILA; j++) {
+        char c = fila[j];
+        if (c == '$') {
+            pasoSeparador = true;
+        } else if (c >= '0' && c <= '9') {
+            if (cantDigitos < 4) {
+                digitos[cantDigitos] = c;
+                cantDigitos++;
+            }
+        } else if (c != ' ' && c != '\\0') {
+            if (!pasoSeparador) {
+                alu.nombre += c;
+            } else {
+                alu.apellido += c;
+            }
+        }
+    }
+
+    int anio = 0;
+    for (int k = cantDigitos - 1; k >= 0; k--) {
+        anio = anio * 10 + (digitos[k] - '0');
+    }
+    alu.anioIngreso = anio;
+
+    return alu;
+}
+
+bool contieneDanger(const char fila[ANCHO_FILA]) {
+    const string patron = "DANGER";
+    bool encontrado = false;
+    int i = 0;
+
+    while (i <= ANCHO_FILA - 6 && !encontrado) {
+        bool coincide = true;
+        int k = 0;
+        while (k < 6 && coincide) {
+            if (fila[i + k] != patron[k]) {
+                coincide = false;
+            }
+            k++;
+        }
+        if (coincide) {
+            encontrado = true;
+        }
+        i++;
+    }
+
+    return encontrado;
+}
+
+ListaAlumnos ReconstruyeInfo(const char matriz[MAX_ALUMNOS][ANCHO_FILA]) {
+    ListaAlumnos resultado;
+    resultado.tl = 0;
+
+    for (int i = 0; i < MAX_ALUMNOS; i++) {
+        if (!contieneDanger(matriz[i])) {
+            resultado.lista[resultado.tl] = ReconstruyeLinea(matriz[i]);
+            resultado.tl++;
+        }
+    }
+
+    return resultado;
+}
+
+int main() {
+    static char matrizPrueba[MAX_ALUMNOS][ANCHO_FILA] = {};
+    const char f0[31] = "E 5v a0r is0 2t o$ P o rt el a";
+    const char f1[31] = "XXXXXXDANGERXXXXXXXXXXXXXXXXX ";
+    const char f2[31] = "4 0 0 E ls 2a $ Za m b r an o ";
+    const char f3[31] = "J u l i 3 00 2 ana $ Fl ores  ";
+
+    for (int j = 0; j < ANCHO_FILA; j++) {
+        matrizPrueba[0][j] = f0[j];
+        matrizPrueba[1][j] = f1[j];
+        matrizPrueba[2][j] = f2[j];
+        matrizPrueba[3][j] = f3[j];
+    }
+    for (int i = 4; i < MAX_ALUMNOS; i++) {
+        matrizPrueba[i][0] = 'D'; matrizPrueba[i][1] = 'A'; matrizPrueba[i][2] = 'N';
+        matrizPrueba[i][3] = 'G'; matrizPrueba[i][4] = 'E'; matrizPrueba[i][5] = 'R';
+    }
+
+    ListaAlumnos la = ReconstruyeInfo(matrizPrueba);
+
+    cout << "=== INCISO B: RECUPERACION Y FILTRADO DANGER ===" << endl;
+    cout << "Total de alumnos recuperados: " << la.tl << " (deben ser 3)" << endl;
+    for (int i = 0; i < la.tl; i++) {
+        cout << i + 1 << ". " << la.lista[i].apellido << ", " 
+             << la.lista[i].nombre << " (" << la.lista[i].anioIngreso << ")" << endl;
+    }
+
+    return 0;
+}`;
+
+        const cppCodeIncisoC = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int MAX_PILA = 1450;
+
+struct Alumno {
+    string nombre;
+    string apellido;
+    int anioIngreso;
+};
+
+struct PilaAlumnos {
+    Alumno elementos[MAX_PILA];
+    int tope;
+};
+
+void inicializarPila(PilaAlumnos &p) {
+    p.tope = -1;
+}
+
+bool pilaVacia(const PilaAlumnos &p) {
+    return (p.tope == -1);
+}
+
+bool pilaLlena(const PilaAlumnos &p) {
+    return (p.tope == MAX_PILA - 1);
+}
+
+bool apilar(PilaAlumnos &p, Alumno alu) {
+    bool pudo = false;
+    if (!pilaLlena(p)) {
+        p.tope++;
+        p.elementos[p.tope] = alu;
+        pudo = true;
+    }
+    return pudo;
+}
+
+bool desapilar(PilaAlumnos &p, Alumno &alu) {
+    bool pudo = false;
+    if (!pilaVacia(p)) {
+        alu = p.elementos[p.tope];
+        p.tope--;
+        pudo = true;
+    }
+    return pudo;
+}
+
+int main() {
+    PilaAlumnos pila;
+    inicializarPila(pila);
+
+    Alumno a1 { "Evaristo", "Portela", 2005 };
+    Alumno a2 { "Elsa", "Zambrano", 2004 };
+    Alumno a3 { "Juliana", "Flores", 2003 };
+
+    cout << "=== INCISO C: PRUEBA DE TDA PILA ===" << endl;
+    if (pilaVacia(pila)) {
+        cout << "Pila vacia inicial: SI" << endl;
+    } else {
+        cout << "Pila vacia inicial: NO" << endl;
+    }
+
+    apilar(pila, a1);
+    apilar(pila, a2);
+    apilar(pila, a3);
+    cout << "Se apilaron 3 alumnos. Tope actual = " << pila.tope << endl;
+
+    cout << "\\nDesapilando en orden LIFO:" << endl;
+    Alumno extraido;
+    while (desapilar(pila, extraido)) {
+        cout << "Extraccion -> " << extraido.apellido << ", " 
+             << extraido.nombre << " (" << extraido.anioIngreso << ")" << endl;
+    }
+
+    if (pilaVacia(pila)) {
+        cout << "Pila vacia al finalizar: SI" << endl;
+    } else {
+        cout << "Pila vacia al finalizar: NO" << endl;
+    }
+
+    return 0;
+}`;
+
+        const cppCodeIncisoD = `#include <iostream>
+#include <string>
+using namespace std;
+
+const int MAX_ALUMNOS = 1450;
+const int MAX_PILA = MAX_ALUMNOS;
+
+struct Alumno {
+    string nombre;
+    string apellido;
+    int anioIngreso;
+};
+
+struct ListaAlumnos {
+    Alumno lista[MAX_ALUMNOS];
+    int tl;
+};
+
+struct PilaAlumnos {
+    Alumno elementos[MAX_PILA];
+    int tope;
+};
+
+void inicializarPila(PilaAlumnos &p) {
+    p.tope = -1;
+}
+
+bool pilaVacia(const PilaAlumnos &p) {
+    return (p.tope == -1);
+}
+
+bool pilaLlena(const PilaAlumnos &p) {
+    return (p.tope == MAX_PILA - 1);
+}
+
+bool apilar(PilaAlumnos &p, Alumno alu) {
+    bool pudo = false;
+    if (!pilaLlena(p)) {
+        p.tope++;
+        p.elementos[p.tope] = alu;
+        pudo = true;
+    }
+    return pudo;
+}
+
+bool desapilar(PilaAlumnos &p, Alumno &alu) {
+    bool pudo = false;
+    if (!pilaVacia(p)) {
+        alu = p.elementos[p.tope];
+        p.tope--;
+        pudo = true;
+    }
+    return pudo;
+}
+
+void auditarAlumnos(const ListaAlumnos &listaAlumnos, 
+                    PilaAlumnos &pilaHistoricos, 
+                    PilaAlumnos &pilaRecientes) {
+    inicializarPila(pilaHistoricos);
+    inicializarPila(pilaRecientes);
+
+    for (int i = 0; i < listaAlumnos.tl; i++) {
+        if (listaAlumnos.lista[i].anioIngreso <= 2010) {
+            apilar(pilaHistoricos, listaAlumnos.lista[i]);
+        } else {
+            apilar(pilaRecientes, listaAlumnos.lista[i]);
+        }
+    }
+
+    cout << "=== Alumnos Historicos con Apellido Largo (> 8 letras) ===" << endl;
+    int cantApellidoLargo = 0;
+    Alumno aluActual;
+
+    while (desapilar(pilaHistoricos, aluActual)) {
+        if (aluActual.apellido.length() > 8) {
+            cantApellidoLargo++;
+            cout << "• " << aluActual.apellido << ", " << aluActual.nombre 
+                 << " (Ingreso: " << aluActual.anioIngreso << ")" << endl;
+        }
+    }
+
+    cout << "Total de historicos con apellido largo: " << cantApellidoLargo << endl;
+}
+
+int main() {
+    ListaAlumnos la;
+    la.tl = 4;
+    la.lista[0] = { "Evaristo", "Portela", 2005 };     // Historico, apellido 7 letras
+    la.lista[1] = { "Elsa", "Zambrano", 2004 };       // Historico, apellido 8 letras
+    la.lista[2] = { "Martin", "Rodriguez", 1994 };    // Historico, apellido 9 letras (> 8)
+    la.lista[3] = { "Agustin", "Fernandez", 2021 };   // Reciente (ingreso 2021 > 2010)
+
+    PilaAlumnos historicos, recientes;
+
+    cout << "=== INCISO D: AUDITORIA DE ALUMNOS ===" << endl;
+    auditarAlumnos(la, historicos, recientes);
+
+    cout << "\\nAlumnos Recientes (post-2010) apilados en pilaRecientes:" << endl;
+    Alumno rec;
+    while (desapilar(recientes, rec)) {
+        cout << "• " << rec.apellido << ", " << rec.nombre 
+             << " (" << rec.anioIngreso << ")" << endl;
+    }
+
+    return 0;
+}`;
+
+        // Función para enviar el código a un iframe de OneCompiler específico
+        function sendCode(iframeId, code) {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: 'cpp',
+                    files: [
+                        {
+                            name: 'main.cpp',
+                            content: code
+                        }
+                    ]
+                }, '*');
+            }
+        }
+
+        // Se envía el código en varios momentos clave para contrarrestar problemas de carga asíncrona
+        function sendCodeWithRetries(iframeId, code) {
+            const send = () => sendCode(iframeId, code);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        // Comprobación de las diapositivas de compilador
+        function checkCompilerSlides(slide) {
+            if (!slide) return;
+            if (slide.id === 'slide-compiler-a') {
+                sendCodeWithRetries('oc-editor-a', cppCodeIncisoA);
+            } else if (slide.id === 'slide-compiler-b') {
+                sendCodeWithRetries('oc-editor-b', cppCodeIncisoB);
+            } else if (slide.id === 'slide-compiler-c') {
+                sendCodeWithRetries('oc-editor-c', cppCodeIncisoC);
+            } else if (slide.id === 'slide-compiler-d') {
+                sendCodeWithRetries('oc-editor-d', cppCodeIncisoD);
+            }
+        }
+
+        // Escuchar cuando el usuario cambia de diapositiva
+        Reveal.on('slidechanged', event => {
+            checkCompilerSlides(event.currentSlide);
+        });
+
+        // Escuchar cuando Reveal se ha inicializado
+        Reveal.on('ready', event => {
+            checkCompilerSlides(Reveal.getCurrentSlide());
+        });
+    </script>
+</body>
+</html>
