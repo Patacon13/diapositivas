@@ -386,24 +386,62 @@ ListaAlumnos ReconstruyeInfo(const char matriz[MAX_ALUMNOS][ANCHO_FILA]) {
                     </div>
                 </section>
 
-                <!-- C.2 Solución C++ y Análisis Big-O -->
+                <!-- C.2 TDA PilaAlumnos - Interfaz (.h) -->
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">c</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: TDA PilaAlumnos</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA PilaAlumnos: Interfaz (.h)</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-8|10-18|20-28">
+                        <div style="background: #272822; border-radius: 10px; padding: 14px 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border-top: 4px solid var(--utn-blue); text-align: left; margin-bottom: 12px;">
+                            <div style="color: #38BDF8; font-family: 'Fira Code', monospace; font-size: 13px; font-weight: bold; margin-bottom: 6px;">
+                                <i class="fa-regular fa-file-code"></i> PilaAlumnos.h (Especificación / Caja Negra)
+                            </div>
+                            <pre style="font-size: 12px !important; margin: 0; padding: 0; background: transparent; box-shadow: none; border-left: none;"><code class="cpp" data-trim data-noescape>
+const int MAX_PILA = 1450;
+
+// Definición de la estructura de datos
 struct PilaAlumnos {
     Alumno elementos[MAX_PILA];
-    int tope; // -1 indica pila vacía
+    int tope; // Subíndice del último elemento apilado (-1 = vacía)
 };
 
-void inicializarPila(PilaAlumnos &p) { p.tope = -1; }
-bool pilaVacia(const PilaAlumnos &p) { return (p.tope == -1); }
-bool pilaLlena(const PilaAlumnos &p) { return (p.tope == MAX_PILA - 1); }
+// Prototipos de Operaciones Primitivas
+void inicializarPila(PilaAlumnos &amp;p);
+bool pilaVacia(const PilaAlumnos &amp;p);
+bool pilaLlena(const PilaAlumnos &amp;p);
+bool apilar(PilaAlumnos &amp;p, Alumno alu);
+bool desapilar(PilaAlumnos &amp;p, Alumno &amp;alu);
+                            </code></pre>
+                        </div>
+                        <div class="concept-card" style="padding: 8px 14px; margin: 0;">
+                            <p style="font-size: 13px; margin: 0; color: var(--text-main);">
+                                <i class="fa-solid fa-circle-check" style="color: var(--success-green); margin-right: 6px;"></i>
+                                <strong>Principio de Abstracción:</strong> El archivo <code>.h</code> expone únicamente el contrato público. El cliente interactúa sin conocer la implementación interna.
+                            </p>
+                        </div>
+                    </div>
+                </section>
 
-bool apilar(PilaAlumnos &p, Alumno alu) {
+                <!-- C.3 TDA PilaAlumnos - Implementación (.cpp) -->
+                <section>
+                    <div class="inciso-header">
+                        <span class="inciso-badge">c</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">TDA PilaAlumnos: Implementación (.cpp)</h2>
+                    </div>
+                    <div class="content-area">
+                        <div style="background: #272822; border-radius: 10px; padding: 10px 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border-top: 4px solid var(--utn-gold); text-align: left;">
+                            <div style="color: #FCD34D; font-family: 'Fira Code', monospace; font-size: 12px; font-weight: bold; margin-bottom: 4px;">
+                                <i class="fa-regular fa-file-code"></i> PilaAlumnos.cpp (Desarrollo de Primitivas LIFO)
+                            </div>
+                            <pre style="font-size: 10.5px !important; margin: 0; padding: 0; background: transparent; box-shadow: none; border-left: none;"><code class="cpp" data-trim data-noescape>
+#include "PilaAlumnos.h"
+
+void inicializarPila(PilaAlumnos &amp;p) { p.tope = -1; }
+bool pilaVacia(const PilaAlumnos &amp;p) { return (p.tope == -1); }
+bool pilaLlena(const PilaAlumnos &amp;p) { return (p.tope == MAX_PILA - 1); }
+
+bool apilar(PilaAlumnos &amp;p, Alumno alu) {
     bool pudo = false;
     if (!pilaLlena(p)) {
         p.tope++;
@@ -413,7 +451,7 @@ bool apilar(PilaAlumnos &p, Alumno alu) {
     return pudo;
 }
 
-bool desapilar(PilaAlumnos &p, Alumno &alu) {
+bool desapilar(PilaAlumnos &amp;p, Alumno &amp;alu) {
     bool pudo = false;
     if (!pilaVacia(p)) {
         alu = p.elementos[p.tope];
@@ -422,7 +460,55 @@ bool desapilar(PilaAlumnos &p, Alumno &alu) {
     }
     return pudo;
 }
-                        </code></pre>
+                            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- C.4 Justificación de Complejidad Temporal O(1) -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">c</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Justificación de Complejidad O(1)</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 16px; align-items: stretch; margin-top: 6px;">
+                            <div class="concept-card" style="padding: 14px 18px; margin: 0; display: flex; flex-direction: column; justify-content: space-between;">
+                                <div>
+                                    <h4 style="margin: 0 0 10px 0; color: var(--utn-blue); font-size: 17px; display: flex; align-items: center; gap: 8px;">
+                                        <i class="fa-solid fa-arrow-down" style="color: var(--success-green);"></i>
+                                        Primitiva apilar() &rarr; O(1)
+                                    </h4>
+                                    <p style="font-size: 14px; color: var(--text-main); line-height: 1.55; margin: 0 0 10px 0;">
+                                        1. Verificación de desbordamiento mediante comparación simple (<code>pilaLlena</code>) en tiempo constante.
+                                    </p>
+                                    <p style="font-size: 14px; color: var(--text-main); line-height: 1.55; margin: 0;">
+                                        2. Incremento aritmético de <code>tope</code> y asignación indexada directa <code>elementos[tope] = alu</code> sin desplazamientos.
+                                    </p>
+                                </div>
+                                <div style="margin-top: 10px; background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--success-green); padding: 6px 12px; border-radius: 4px;">
+                                    <span style="font-size: 13.5px; font-weight: bold; color: #065F46;">Tiempo constante O(1)</span>
+                                </div>
+                            </div>
+
+                            <div class="concept-card" style="padding: 14px 18px; margin: 0; display: flex; flex-direction: column; justify-content: space-between;">
+                                <div>
+                                    <h4 style="margin: 0 0 10px 0; color: var(--utn-blue); font-size: 17px; display: flex; align-items: center; gap: 8px;">
+                                        <i class="fa-solid fa-arrow-up" style="color: #EF4444;"></i>
+                                        Primitiva desapilar() &rarr; O(1)
+                                    </h4>
+                                    <p style="font-size: 14px; color: var(--text-main); line-height: 1.55; margin: 0 0 10px 0;">
+                                        1. Verificación de pila vacía (<code>pilaVacia</code>) mediante comparación lógica inmediata (<code>tope == -1</code>).
+                                    </p>
+                                    <p style="font-size: 14px; color: var(--text-main); line-height: 1.55; margin: 0;">
+                                        2. Lectura directa por índice <code>elementos[tope]</code> y decremento unitario del tope sin desplazamiento de memoria.
+                                    </p>
+                                </div>
+                                <div style="margin-top: 10px; background: rgba(239, 68, 68, 0.1); border-left: 4px solid #EF4444; padding: 6px 12px; border-radius: 4px;">
+                                    <span style="font-size: 13.5px; font-weight: bold; color: #991B1B;">Tiempo constante O(1)</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -473,14 +559,20 @@ bool desapilar(PilaAlumnos &p, Alumno &alu) {
                     </div>
                 </section>
 
-                <!-- D.2 Solución C++ -->
+                <!-- D.2 Solución: auditarAlumnos() (Cliente) -->
                 <section>
                     <div class="inciso-header">
                         <span class="inciso-badge">d</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: auditarAlumnos()</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: auditarAlumnos() (Cliente)</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-14|16-27">
+                        <div style="background: #272822; border-radius: 10px; padding: 10px 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border-top: 4px solid var(--utn-gold); text-align: left; margin-bottom: 10px;">
+                            <div style="color: #FCD34D; font-family: 'Fira Code', monospace; font-size: 12px; font-weight: bold; margin-bottom: 4px;">
+                                <i class="fa-regular fa-file-code"></i> Auditoria.cpp (Consumo exclusivo de primitivas)
+                            </div>
+                            <pre style="font-size: 10.5px !important; margin: 0; padding: 0; background: transparent; box-shadow: none; border-left: none;"><code class="cpp" data-trim data-noescape data-line-numbers="1|3-14|16-27">
+#include "PilaAlumnos.h"
+
 void auditarAlumnos(const ListaAlumnos &amp;listaAlumnos, 
                     PilaAlumnos &amp;pilaHistoricos, 
                     PilaAlumnos &amp;pilaRecientes) {
@@ -508,7 +600,14 @@ void auditarAlumnos(const ListaAlumnos &amp;listaAlumnos,
     cout &lt;&lt; "Total de historicos con apellido largo: " 
          &lt;&lt; cantApellidoLargo &lt;&lt; endl;
 }
-                        </code></pre>
+                            </code></pre>
+                        </div>
+                        <div class="concept-card" style="padding: 6px 14px; margin: 0;">
+                            <p style="font-size: 12.5px; margin: 0; color: var(--text-main);">
+                                <i class="fa-solid fa-shield-halved" style="color: var(--utn-blue); margin-right: 6px;"></i>
+                                <strong>Encapsulamiento Respetado:</strong> La función cliente no accede a <code>pila.tope</code> ni a <code>pila.elementos</code>; opera 100% mediante <code>apilar()</code> y <code>desapilar()</code>.
+                            </p>
+                        </div>
                     </div>
                 </section>
 
@@ -804,6 +903,10 @@ int main() {
 #include <string>
 using namespace std;
 
+// =============================================================================
+// ARCHIVO: PilaAlumnos.h (INTERFAZ / ESPECIFICACIÓN DEL TDA)
+// =============================================================================
+
 const int MAX_PILA = 1450;
 
 struct Alumno {
@@ -816,6 +919,18 @@ struct PilaAlumnos {
     Alumno elementos[MAX_PILA];
     int tope;
 };
+
+// Prototipos de operaciones primitivas
+void inicializarPila(PilaAlumnos &p);
+bool pilaVacia(const PilaAlumnos &p);
+bool pilaLlena(const PilaAlumnos &p);
+bool apilar(PilaAlumnos &p, Alumno alu);
+bool desapilar(PilaAlumnos &p, Alumno &alu);
+
+// =============================================================================
+// ARCHIVO: PilaAlumnos.cpp (IMPLEMENTACIÓN DEL TDA)
+// #include "PilaAlumnos.h"
+// =============================================================================
 
 void inicializarPila(PilaAlumnos &p) {
     p.tope = -1;
@@ -848,6 +963,11 @@ bool desapilar(PilaAlumnos &p, Alumno &alu) {
     }
     return pudo;
 }
+
+// =============================================================================
+// ARCHIVO: usaTDAPila.cpp / main.cpp (PROGRAMA CLIENTE)
+// #include "PilaAlumnos.h"
+// =============================================================================
 
 int main() {
     PilaAlumnos pila;
@@ -869,7 +989,7 @@ int main() {
     apilar(pila, a3);
     cout << "Se apilaron 3 alumnos. Tope actual = " << pila.tope << endl;
 
-    cout << "\\nDesapilando en orden LIFO:" << endl;
+    cout << "\nDesapilando en orden LIFO:" << endl;
     Alumno extraido;
     while (desapilar(pila, extraido)) {
         cout << "Extraccion -> " << extraido.apellido << ", " 
@@ -889,6 +1009,10 @@ int main() {
 #include <string>
 using namespace std;
 
+// =============================================================================
+// ARCHIVO: PilaAlumnos.h (INTERFAZ / ESPECIFICACIÓN DEL TDA)
+// =============================================================================
+
 const int MAX_ALUMNOS = 1450;
 const int MAX_PILA = MAX_ALUMNOS;
 
@@ -907,6 +1031,17 @@ struct PilaAlumnos {
     Alumno elementos[MAX_PILA];
     int tope;
 };
+
+void inicializarPila(PilaAlumnos &p);
+bool pilaVacia(const PilaAlumnos &p);
+bool pilaLlena(const PilaAlumnos &p);
+bool apilar(PilaAlumnos &p, Alumno alu);
+bool desapilar(PilaAlumnos &p, Alumno &alu);
+
+// =============================================================================
+// ARCHIVO: PilaAlumnos.cpp (IMPLEMENTACIÓN DEL TDA)
+// #include "PilaAlumnos.h"
+// =============================================================================
 
 void inicializarPila(PilaAlumnos &p) {
     p.tope = -1;
@@ -939,6 +1074,11 @@ bool desapilar(PilaAlumnos &p, Alumno &alu) {
     }
     return pudo;
 }
+
+// =============================================================================
+// ARCHIVO: Auditoria.cpp / main.cpp (PROGRAMA CLIENTE)
+// #include "PilaAlumnos.h"
+// =============================================================================
 
 void auditarAlumnos(const ListaAlumnos &listaAlumnos, 
                     PilaAlumnos &pilaHistoricos, 
@@ -982,7 +1122,7 @@ int main() {
     cout << "=== INCISO D: AUDITORIA DE ALUMNOS ===" << endl;
     auditarAlumnos(la, historicos, recientes);
 
-    cout << "\\nAlumnos Recientes (post-2010) apilados en pilaRecientes:" << endl;
+    cout << "\nAlumnos Recientes (post-2010) apilados en pilaRecientes:" << endl;
     Alumno rec;
     while (desapilar(recientes, rec)) {
         cout << "• " << rec.apellido << ", " << rec.nombre 

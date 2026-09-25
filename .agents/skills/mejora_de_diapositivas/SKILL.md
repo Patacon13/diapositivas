@@ -151,7 +151,17 @@ Reconfigurado en el evento `resize` con `Reveal.configure(...)`.
   - Prohibido el operador ternario `?:` (usar siempre `if-else` legible).
   - Prohibido `break` y `continue` dentro de bucles (usar banderas booleanas como `bool encontrado` y condiciones compuestas en `while`).
   - Principio de Retorno Único (`single return` al final de la función).
-- **Headers y Prototipos**: Comentar claramente prototipos de funciones o modularizaciones de archivos (`// Prototipo: esto iría en el .h`) para que los alumnos entiendan la separación conceptual aun usando consolas interactivas de archivo único.
+- **Separación Estricta de TDAs en `.h` y `.cpp`**:
+  - Todo Tipo de Dato Abstracto (TDA) debe estructurarse dividiendo rigurosamente su **interfaz / especificación** de su **implementación**:
+    1. **Interfaz (`<TDA>.h`)**: contiene constantes (`TF`, `MAX_...`), la definición del `struct` y los prototipos de las operaciones primitivas.
+    2. **Implementación (`<TDA>.cpp`)**: incluye `#include "<TDA>.h"` y codifica cada primitiva con control de desbordamiento (overflow) y pila/cola vacía (underflow).
+    3. **Programa Cliente (`usa<TDA>.cpp` / `main.cpp`)**: incluye `#include "<TDA>.h"` e interactúa con la estructura exclusivamente a través de las primitivas, respetando la caja negra (sin acceder a campos internos como `.tope` o `.elementos`).
+  - **Presentación en Diapositivas**: **PROHIBIDO** amalgamar la estructura y los cuerpos de las funciones en una sola diapositiva comprimida. Se deben utilizar diapositivas separadas:
+    - Slide para la Interfaz (`<TDA>.h`).
+    - Slide para la Implementación (`<TDA>.cpp`).
+    - Slide para la Justificación de Complejidad Temporal Big-O ($O(1)$ en accesos directos por índice).
+  - **Consolas Online (OneCompiler)**: Encabezar cada sección del código con comentarios delimitadores canónicos: `// === <TDA>.h ===`, `// === <TDA>.cpp ===` y `// === main.cpp ===`.
+
 
 ---
 
