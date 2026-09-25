@@ -296,7 +296,7 @@ Alumno ReconstruyeLinea(string fila) {
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: ReconstruyeInfo()</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-9|11-23">
+<pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-9|11-26">
 struct ListaAlumnos {
     Alumno lista[MAX_ALUMNOS];
     int tl;
@@ -312,7 +312,10 @@ ListaAlumnos ReconstruyeInfo(const char matriz[MAX_ALUMNOS][ANCHO_FILA]) {
     resultado.tl = 0;
 
     for (int i = 0; i &lt; MAX_ALUMNOS; i++) {
-        string fila(matriz[i], ANCHO_FILA);
+        string fila = "";
+        for (int j = 0; j &lt; ANCHO_FILA; j++) {
+            fila += matriz[i][j];
+        }
         if (!contieneDanger(fila)) {
             resultado.lista[resultado.tl] = ReconstruyeLinea(fila);
             resultado.tl++;
@@ -838,7 +841,10 @@ ListaAlumnos ReconstruyeInfo(const char matriz[MAX_ALUMNOS][ANCHO_FILA]) {
     resultado.tl = 0;
 
     for (int i = 0; i < MAX_ALUMNOS; i++) {
-        string fila(matriz[i], ANCHO_FILA);
+        string fila = "";
+        for (int j = 0; j < ANCHO_FILA; j++) {
+            fila += matriz[i][j];
+        }
         if (!contieneDanger(fila)) {
             resultado.lista[resultado.tl] = ReconstruyeLinea(fila);
             resultado.tl++;
