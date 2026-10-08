@@ -321,3 +321,27 @@ Registro del proceso iterativo de diseño, dirección de arte y programación gr
      - Verifica que tras reducir la vida del boss a 0, la puerta se desbloquee y permita la transición de sala hacia el corredor exterior.
 - **Por qué funciona estéticamente**:
   Transforma las arenas de combate en verdaderos escenarios de tensión y clímax cinematográfico: el jugador sabe que está atrapado en un duelo a muerte sin escape hasta vencer a la máquina de guerra enemiga, reforzando la atmósfera de película interactiva de la era PS1.
+
+---
+
+## CICLO 20: Arquitectura Modular Pedagógica — Banco Centralizado de Preguntas (`preguntas.js`)
+- **Fecha/Ciclo**: Ciclo 20
+- **Módulos**: `preguntas.js`, `index.html`, `test_game.js`, `EVOLUCION_CREATIVA.md`
+- **Inspiración y Propósito Docente**: Desacoplar el contenido pedagógico de la cátedra de los detalles técnicos y motores de renderizado. Permitir que cualquier docente o tutor de la cátedra pueda abrir un archivo limpio, comprensible y editable para revisar, corregir o agregar preguntas teóricas, fragmentos de código Java, opciones y explicaciones didácticas sin riesgo de alterar la lógica del juego.
+- **Qué se inventó y modularizó**:
+  1. **Creación del Módulo Independiente `preguntas.js`**:
+     - Se extrajeron las 26 preguntas interactivas del juego (14 terminales de sala táctica + 12 balizas de combate de boss) a un archivo dedicado, organizado por misiones:
+       - `nivel1` (Operación 01 // Unidades 1 y 2): Compilación javac vs JVM, bytecode, tipos primitivos, casting explícito, identificadores válidos y operadores en cortocircuito.
+       - `nivel2` (Operación 02 // Unidades 3 y 4): Sentencia switch con fall-through, bucles while y do-while, lecturas con centinela, diseño modular Top-Down y pasaje por valor en Call Stack.
+       - `nivel3` (Operación 03 // Unidad 5): Vectores, strings e inmutabilidad, matrices 2D, búsqueda binaria, bubble sort, puntero tope, swap con temporal, inserción y eliminación con corrimiento.
+     - **Formato amigable para edición**: Cada bloque de código Java utiliza template literals multilínea (`` `...` ``) para que los profesores editen código con sangría natural tal como en un IDE, sin escapar `\n` ni `\"`.
+     - **Instrucciones claras de edición**: Encabezado explicativo con guía paso a paso sobre qué modificar (`question`, `code`, `options`, `explanation`) y qué resguardar (`id`, `roomId`).
+  2. **Compatibilidad Dual (Browser y Node.js)**:
+     - Funciona de forma 100% nativa y offline en cualquier navegador (`window.PREGUNTAS_GAME`) sin depender de `fetch()` ni tropezar con bloqueos de CORS en entornos `file://`.
+     - Exportable para Node.js (`module.exports = PREGUNTAS_GAME`) para integración con suites de testing y validación continua.
+  3. **Simplificación de `index.html`**:
+     - Se eliminaron más de 350 líneas de código embebido de preguntas dentro de `campaignLevels`, vinculando directamente a `PREGUNTAS_GAME.nivel1`, `PREGUNTAS_GAME.nivel2` y `PREGUNTAS_GAME.nivel3`.
+  4. **Suite de Validación Automatizada (`[TEST 11]` en `test_game.js`)**:
+     - Inspecciona cada una de las 26 preguntas verificando que tengan `id`, `name`, `question`, `code`, `explanation` válidos y exactamente 1 opción con `correct: true`. Si un docente comete un error de sintaxis o deja una pregunta sin respuesta correcta, el test lo detecta y lo señala al instante.
+- **Por qué funciona pedagógica y estéticamente**:
+  Empodera al equipo docente para colaborar asincrónicamente y perfeccionar las consignas didácticas de forma ágil, manteniendo el motor del juego desacoplado, limpio y a 60 FPS clavados.

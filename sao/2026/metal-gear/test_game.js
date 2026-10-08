@@ -179,6 +179,10 @@ sandbox.self = sandbox;
 const context = vm.createContext(sandbox);
 
 try {
+    console.log('0. Executing preguntas.js...');
+    vm.runInContext(fs.readFileSync(path.join(__dirname, 'preguntas.js'), 'utf-8'), context);
+    console.log('   -> OK.');
+
     console.log('1. Executing index.html inline script...');
     vm.runInContext(inlineScript, context);
     console.log('   -> OK.');
@@ -706,6 +710,55 @@ try {
             throw new Error('FALLA: Las puertas no se desbloquearon tras neutralizar al boss, sala: ' + gameState.currentRoomId);
         }
         console.log('   [TEST 10c PASSED] Protocolo de Aislamiento de Boss verificado (Sellado activo y Desbloqueo post-victoria)');
+
+        // Test 11: Integridad del Banco Centralizado de Preguntas (preguntas.js)
+        if (!window.PREGUNTAS_GAME) {
+            throw new Error('FALLA: Objeto global PREGUNTAS_GAME no encontrado');
+        }
+        const bankLevels = ['nivel1', 'nivel2', 'nivel3'];
+        let totalTerminals = 0;
+        let totalBeacons = 0;
+
+        bankLevels.forEach((lvlKey, idx) => {
+            const lvlObj = window.PREGUNTAS_GAME[lvlKey];
+            if (!lvlObj) throw new Error('FALLA: ' + lvlKey + ' ausente en PREGUNTAS_GAME');
+            if (!Array.isArray(lvlObj.terminals) || lvlObj.terminals.length === 0) {
+                throw new Error('FALLA: terminales vacías en ' + lvlKey);
+            }
+            if (!Array.isArray(lvlObj.bossBeacons) || lvlObj.bossBeacons.length === 0) {
+                throw new Error('FALLA: balizas vacías en ' + lvlKey);
+            }
+
+            totalTerminals += lvlObj.terminals.length;
+            totalBeacons += lvlObj.bossBeacons.length;
+
+            // Verificar todas las preguntas del nivel
+            const allLvlQuestions = [...lvlObj.terminals, ...lvlObj.bossBeacons];
+            allLvlQuestions.forEach(q => {
+                if (!q.id || typeof q.id !== 'string') throw new Error('FALLA: id inválido en pregunta: ' + JSON.stringify(q));
+                if (!q.name || typeof q.name !== 'string') throw new Error('FALLA: name inválido en ' + q.id);
+                if (!q.question || typeof q.question !== 'string') throw new Error('FALLA: question inválida en ' + q.id);
+                if (!q.code || typeof q.code !== 'string') throw new Error('FALLA: code inválido en ' + q.id);
+                if (!q.explanation || typeof q.explanation !== 'string') throw new Error('FALLA: explanation inválida en ' + q.id);
+                if (!Array.isArray(q.options) || q.options.length < 3) {
+                    throw new Error('FALLA: options debe tener al menos 3 alternativas en ' + q.id);
+                }
+                const correctCount = q.options.filter(o => o.correct === true).length;
+                if (correctCount !== 1) {
+                    throw new Error('FALLA: ' + q.id + ' debe tener exactamente 1 respuesta correcta (tiene: ' + correctCount + ')');
+                }
+            });
+
+            // Verificar enlace directo con campaignLevels
+            if (campaignLevels[idx].terminals.length !== lvlObj.terminals.length) {
+                throw new Error('FALLA: desajuste de terminales en campaignLevels[' + idx + ']');
+            }
+            if (campaignLevels[idx].bossBeacons.length !== lvlObj.bossBeacons.length) {
+                throw new Error('FALLA: desajuste de bossBeacons en campaignLevels[' + idx + ']');
+            }
+        });
+
+        console.log('   [TEST 11 PASSED] Banco de preguntas centralizado validado (' + totalTerminals + ' terminales + ' + totalBeacons + ' balizas = ' + (totalTerminals + totalBeacons) + ' preguntas verificadas)');
 
         // Level 1 y Level 2 (Boss Encounter)
         loadLevel(1, true);
