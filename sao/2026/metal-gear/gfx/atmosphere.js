@@ -32,12 +32,31 @@
     let lastFootprintY = -999;
     const guardBreathTimers = new WeakMap();
 
-    // Charcos interactivos por coordenadas de sala
-    const PUDDLES = [
-        { x: 210, y: 140, rx: 34, ry: 19 },
-        { x: 540, y: 310, rx: 44, ry: 24 },
-        { x: 380, y: 225, rx: 30, ry: 16 }
-    ];
+    // Charcos interactivos mapeados por sala temática
+    const puddlesByRoom = {
+        dock: [
+            { x: 210, y: 140, rx: 34, ry: 19 },
+            { x: 540, y: 310, rx: 44, ry: 24 },
+            { x: 380, y: 225, rx: 30, ry: 16 }
+        ],
+        filtration_u1: [
+            { x: 250, y: 320, rx: 36, ry: 18 },
+            { x: 520, y: 300, rx: 40, ry: 22 }
+        ],
+        arena_olympo: [
+            { x: 200, y: 350, rx: 38, ry: 20 },
+            { x: 580, y: 150, rx: 42, ry: 22 }
+        ],
+        transit_conduit: [
+            { x: 380, y: 150, rx: 35, ry: 18 },
+            { x: 380, y: 300, rx: 35, ry: 18 }
+        ]
+    };
+
+    function getRoomPuddles(roomId) {
+        const id = roomId || (typeof gameState !== 'undefined' ? gameState.currentRoomId : 'dock');
+        return (id && puddlesByRoom[id]) ? puddlesByRoom[id] : [];
+    }
 
     function isInsideEllipse(px, py, cx, cy, rx, ry) {
         const dx = px - cx;
@@ -127,7 +146,8 @@
 
         // B. Interacción con charcos (Solid Byte)
         let inPuddle = false;
-        PUDDLES.forEach(puddle => {
+        const curRoomPuddles = getRoomPuddles();
+        curRoomPuddles.forEach(puddle => {
             if (isInsideEllipse(p.x, p.y, puddle.x, puddle.y, puddle.rx, puddle.ry)) {
                 inPuddle = true;
                 if (isMoving && Math.random() < 0.28) {
@@ -151,6 +171,7 @@
                     dir: p.dir,
                     life: 5.0,
                     maxLife: 5.0,
+                    roomId: gameState.currentRoomId,
                     id: 'wfp_' + Math.random().toString(36).substr(2, 9)
                 });
                 if (wetFootprints.length > 50) wetFootprints.shift();
@@ -172,7 +193,7 @@
                 guardBreathTimers.set(g, gTimer);
 
                 // Pisadas de centinelas en charcos
-                PUDDLES.forEach(puddle => {
+                curRoomPuddles.forEach(puddle => {
                     if (isInsideEllipse(g.x, g.y, puddle.x, puddle.y, puddle.rx, puddle.ry)) {
                         if (Math.random() < 0.18) {
                             triggerRipple(g.x, g.y, 16);
@@ -228,8 +249,9 @@
         ctx.save();
         const now = performance.now() * 0.001;
 
-        // 0. Render de TODOS los charcos de refrigerante activos
-        PUDDLES.forEach(p => {
+        // 0. Render de los charcos de refrigerante activos en la sala actual
+        const curRoomPuddles = getRoomPuddles();
+        curRoomPuddles.forEach(p => {
             ctx.save();
             ctx.translate(p.x, p.y);
 
@@ -254,8 +276,10 @@
             ctx.restore();
         });
 
-        // 1. Huellas húmedas con brillo reflectivo
+        // 1. Huellas húmedas con brillo reflectivo (solo sala actual)
+        const curRoomId = typeof gameState !== 'undefined' ? gameState.currentRoomId : null;
         wetFootprints.forEach(fp => {
+            if (fp.roomId !== curRoomId) return;
             const alpha = Math.max(0, fp.life / fp.maxLife);
             ctx.save();
             ctx.translate(fp.x, fp.y);
@@ -332,10 +356,11 @@
         return wetFootprints;
     };
 
-    window.spawnWetFootprint = function(x, y, dir = 0, life = 5.0) {
+    window.spawnWetFootprint = function(x, y, dir = 0, life = 5.0, roomId = null) {
         const fp = {
             x, y, dir,
             life, maxLife: life,
+            roomId: roomId || (typeof gameState !== 'undefined' ? gameState.currentRoomId : 'dock'),
             id: 'wfp_' + Math.random().toString(36).substr(2, 9)
         };
         wetFootprints.push(fp);
@@ -344,6 +369,8 @@
 
     window.ATMOSPHERE = window.ATMOSPHERE || {};
     window.ATMOSPHERE.wetFootprints = wetFootprints;
+    window.ATMOSPHERE.puddlesByRoom = puddlesByRoom;
+    window.ATMOSPHERE.getRoomPuddles = getRoomPuddles;
 
     // Auto-hook en el pipeline de renderizado y actualización
     const _origUpdate = window.updateGFXParticles;

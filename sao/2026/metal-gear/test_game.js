@@ -303,6 +303,33 @@ try {
         if (typeof window.toggleCardboardBox === 'function') window.toggleCardboardBox();
         if (typeof window.performWallKnock === 'function') window.performWallKnock();
 
+        // Test 6b: Renderizado Procedural de Centinela Dormido CQC (PS1 Sleeper Sprite)
+        if (typeof window.renderCustomSleepingGuard !== 'function') {
+            throw new Error('FALLA: window.renderCustomSleepingGuard no está definido');
+        }
+        const testSleeper = { x: 300, y: 200, angle: 0, radius: 14, sleep: 20 };
+        let sleeperRenderCalled = false;
+        const origSleeperRender = window.renderCustomSleepingGuard;
+        window.renderCustomSleepingGuard = function(sg, ctx) {
+            sleeperRenderCalled = true;
+            return origSleeperRender(sg, ctx);
+        };
+        const sleeperResult = window.renderCustomSleepingGuard(testSleeper, testCtx);
+        if (!sleeperResult) {
+            throw new Error('FALLA: renderCustomSleepingGuard no devolvió true');
+        }
+        // Integración con draw() y currentRoom.sleepers
+        const curRoomSleeper = facilityRooms[gameState.currentRoomId];
+        curRoomSleeper.sleepers = [testSleeper];
+        sleeperRenderCalled = false;
+        window.draw();
+        if (!sleeperRenderCalled) {
+            throw new Error('FALLA: draw() no invocó renderCustomSleepingGuard para currentRoom.sleepers');
+        }
+        window.renderCustomSleepingGuard = origSleeperRender;
+        curRoomSleeper.sleepers = [];
+        console.log('   [TEST 6b PASSED] Renderizado Procedural de centinela dormido CQC validado con cámara y gráficos PS1');
+
         // Test 7: Sombras y Oclusión - Reducción drástica de visión de linternas en zonas oscuras
         loadLevel(0, true);
         const room0 = facilityRooms[gameState.currentRoomId];
@@ -359,6 +386,54 @@ try {
             throw new Error('FALLA: Al terminar el rastro, el centinela debió orientarse en la dirección de la última huella (fp.dir)');
         }
         console.log('   [TEST 8b PASSED] Fin del rastro orienta al centinela según dirección de huella');
+
+        // Test 8c: Aislamiento estricto de charcos y huellas entre salas
+        if (!window.ATMOSPHERE || !window.ATMOSPHERE.puddlesByRoom) {
+            throw new Error('FALLA: window.ATMOSPHERE.puddlesByRoom no está definido');
+        }
+        const expectedRooms = ['dock', 'filtration_u1', 'arena_olympo', 'transit_conduit'];
+        for (let rId of expectedRooms) {
+            if (!window.ATMOSPHERE.puddlesByRoom[rId] || window.ATMOSPHERE.puddlesByRoom[rId].length === 0) {
+                throw new Error('FALLA: Sala temática ' + rId + ' no tiene charcos asignados');
+            }
+        }
+        if (window.ATMOSPHERE.getRoomPuddles('corridor_u1').length !== 0) {
+            throw new Error('FALLA: corridor_u1 no debería tener charcos asignados');
+        }
+
+        // Probar aislamiento de IA: huella en dock no alerta a guardia en corridor_u1
+        loadLevel(0, true);
+        const fpDock = window.spawnWetFootprint(300, 200, 0, 5.0, 'dock');
+        if (fpDock.roomId !== 'dock') {
+            throw new Error('FALLA: spawnWetFootprint no asignó roomId: dock');
+        }
+        // Cambiar a corridor_u1
+        switchRoom('corridor_u1', 50, 225);
+        if (gameState.currentRoomId !== 'corridor_u1') {
+            throw new Error('FALLA: switchRoom no cambió a corridor_u1');
+        }
+        const roomCorridor = facilityRooms['corridor_u1'];
+        const gCorridor = roomCorridor.guards[0];
+        gCorridor.x = 250; gCorridor.y = 200; gCorridor.angle = 0; // Mirando hacia (300, 200)
+        gCorridor.investigateTimer = 0;
+        gCorridor._trackingFootprints = false;
+        gCorridor._bubble = null;
+        updateGame(0.016);
+        if (gCorridor._trackingFootprints || gCorridor.investigateTimer > 0 || (gCorridor._bubble && gCorridor._bubble.ch === '?')) {
+            throw new Error('FALLA: Centinela en corridor_u1 investigó huella perteneciente a dock');
+        }
+
+        // Probar renderizado: huellas de otra sala no se dibujan en corridor_u1
+        let rectCount = 0;
+        const origFillRect = testCtx.fillRect;
+        testCtx.fillRect = function() { rectCount++; if (origFillRect) origFillRect.apply(this, arguments); };
+        renderAtmosphereFloor(testCtx);
+        testCtx.fillRect = origFillRect;
+        // En corridor_u1 no hay charcos ni huellas pertenecientes a corridor_u1
+        if (rectCount > 0) {
+            throw new Error('FALLA: renderAtmosphereFloor dibujó huellas de otra sala en corridor_u1');
+        }
+        console.log('   [TEST 8c PASSED] Aislamiento estricto de charcos e IA de huellas entre salas validado');
 
         // Test 9: IA Reactiva - Caja de Cartón (Quietud = Inspección, Movimiento = Alerta)
         loadLevel(0, true);

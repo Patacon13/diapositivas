@@ -78,7 +78,8 @@
                         y: p.y,
                         dir: p.dir,
                         life: 4.5,
-                        maxLife: 4.5
+                        maxLife: 4.5,
+                        roomId: typeof gameState !== 'undefined' ? gameState.currentRoomId : 'dock'
                     });
                 }
 
@@ -118,7 +119,7 @@
     };
 
     // -------------------------------------------------------------------------
-    // RENDER: SUELO TÁCTICO, CIRCUITOS Y CHARCOS ESPECULARES
+    // RENDER: SUELO TÁCTICO, CIRCUITOS Y HUELLAS
     // -------------------------------------------------------------------------
     window.renderDecorFloor = function(ctx) {
         const currentRoom = facilityRooms[gameState.currentRoomId];
@@ -127,8 +128,10 @@
         const now = performance.now() * 0.001;
         ctx.save();
 
-        // 1. Huellas tácticas de botas en el suelo
+        // 1. Huellas tácticas de botas en el suelo (solo sala actual)
+        const curRoomId = typeof gameState !== 'undefined' ? gameState.currentRoomId : null;
         footprints.forEach(fp => {
+            if (fp.roomId !== curRoomId) return;
             const alpha = Math.max(0, fp.life / fp.maxLife) * 0.35;
             ctx.save();
             ctx.translate(fp.x, fp.y);
@@ -139,38 +142,7 @@
             ctx.restore();
         });
 
-        // 2. Charcos de Refrigerante Líquido con Brillo Especular
-        const puddles = [
-            { x: 210, y: 140, rx: 32, ry: 18, rot: 0.3 },
-            { x: 540, y: 310, rx: 42, ry: 22, rot: -0.2 }
-        ];
-
-        puddles.forEach(puddle => {
-            ctx.save();
-            ctx.translate(puddle.x, puddle.y);
-            ctx.rotate(puddle.rot);
-
-            // Capa base del fluido
-            ctx.fillStyle = 'rgba(6, 78, 59, 0.25)';
-            ctx.beginPath();
-            ctx.ellipse(0, 0, puddle.rx, puddle.ry, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Borde tenue reflectivo
-            ctx.strokeStyle = 'rgba(45, 212, 191, 0.2)';
-            ctx.lineWidth = 1.2;
-            ctx.stroke();
-
-            // Destello especular de luz cenital
-            const shimmer = Math.sin(now * 2 + puddle.x) * 4;
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-            ctx.beginPath();
-            ctx.ellipse(-puddle.rx * 0.3 + shimmer, -puddle.ry * 0.2, puddle.rx * 0.35, puddle.ry * 0.2, 0.4, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        });
-
-        // 3. Trazas de Circuitos de Datos en el Suelo (Neon Conduit Lines)
+        // 2. Trazas de Circuitos de Datos en el Suelo (Neon Conduit Lines)
         ctx.save();
         ctx.strokeStyle = 'rgba(0, 255, 102, 0.14)';
         ctx.lineWidth = 1.5;

@@ -4411,14 +4411,20 @@
             gameState.player.y = spawnY;
             gameState.roomGraceTimer = 0.8;
 
-            if (nextRoom.guards) {
-                nextRoom.guards.forEach(g => {
-                    g._inspectingBox = false;
-                    g._boxInspectTimer = 0;
-                    g._trackingFootprints = false;
-                    g.investigateTimer = 0;
-                    g.investigateTarget = null;
-                });
+            // Limpiar e aislar estado de rastreo de huellas para todos los guardias al cambiar de sala
+            for (let rKey in facilityRooms) {
+                const r = facilityRooms[rKey];
+                if (r && r.guards) {
+                    r.guards.forEach(g => {
+                        g._inspectingBox = false;
+                        g._boxInspectTimer = 0;
+                        g._trackingFootprints = false;
+                        g.investigateTimer = 0;
+                        g.investigateTarget = null;
+                        if (g._investigatedFps) g._investigatedFps.clear();
+                        g._bubble = null;
+                    });
+                }
             }
 
             if (gameState.alertState === 'alert') {
@@ -5234,6 +5240,7 @@
                                         let nextFp = null;
                                         let minTrailDist = 55;
                                         for (let fp of wetFps) {
+                                            if (fp.roomId !== gameState.currentRoomId) continue;
                                             if (g._investigatedFps.has(fp.id)) continue;
                                             const dfp = Math.hypot(fp.x - g.x, fp.y - g.y);
                                             if (dfp < minTrailDist && !isRayBlockedByWalls(g.x, g.y, fp.x, fp.y, currentRoom.walls)) {
@@ -5260,6 +5267,7 @@
                                     let spottedFp = null;
                                     let minSpottedDist = 999;
                                     for (let fp of wetFps) {
+                                        if (fp.roomId !== gameState.currentRoomId) continue;
                                         if (g._investigatedFps.has(fp.id)) continue;
                                         const dfp = Math.hypot(fp.x - g.x, fp.y - g.y);
                                         const fpSightDist = (typeof window.getGuardEffectiveViewDist === 'function')
@@ -6192,6 +6200,20 @@
                         ctx.textAlign = 'center';
                         ctx.fillText("?", g.x, g.y - 20);
                     }
+                });
+            }
+
+            // Centinelas dormidos (CQC)
+            if (currentRoom.sleepers) {
+                currentRoom.sleepers.forEach(sg => {
+                    if (window.renderCustomSleepingGuard && window.renderCustomSleepingGuard(sg, ctx)) return;
+                    ctx.save();
+                    ctx.translate(sg.x, sg.y);
+                    ctx.fillStyle = '#475569';
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, (sg.radius || 13) * 1.2, (sg.radius || 13) * 0.6, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
                 });
             }
 

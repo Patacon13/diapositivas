@@ -237,3 +237,32 @@ Registro del proceso iterativo de diseño, dirección de arte y programación gr
   7. **Índice de Camuflaje Dinámico y Adaptabilidad Móvil**: El HUD refleja instantáneamente `100% [CAJA QUIETA]` frente a `15% [CAJA EN MOVIMIENTO]`, incorpora la bonificación táctica `[MURO]` al pegarse a coberturas, y cuenta con maquetación optimizada para pantallas táctiles y formato vertical.
 - **Por qué funciona estéticamente**:
   El juego alcanza una solidez arcade profesional: la física de oclusión, el comportamiento de los centinelas y la percusión militar interactúan de forma fluida y predecible, manteniendo una tasa de cuadros impecable (<0.6 ms/frame) sin comprometer la atmósfera retro.
+
+---
+
+## CICLO 17: Fidelidad CQC de Centinelas Caídos y Aislamiento Espacial de Charcos y Huellas
+- **Fecha/Ciclo**: Ciclo 17
+- **Módulos**: `gfx/sprites.js`, `expansion.js`, `gfx/atmosphere.js`, `gfx/decor.js`, `index.html`, `test_game.js`, `EVOLUCION_CREATIVA.md`
+- **Inspiración Retro PS1**: La legendaria animación de soldados derribados por CQC en *Metal Gear Solid* (1998): el centinela tumbado de costado, desarmado, con casco torcido y Zzz flotantes sobre la cabeza, sumado a la coherencia espacial táctica donde las huellas y charcos de agua/refrigerante pertenecen estrictamente a su propio sector físico.
+- **Qué se inventó y corrigió**:
+  1. **Sprite Procedural Militar de Centinela Dormido (`renderCustomSleepingGuard`)**:
+     - Se eliminaron los óvalos grises primitivos y planos `#475569` de `expansion.js`, que se dibujaban fuera de la matriz de cámara (`-camX, -camY`) provocando desfases y glitches visuales.
+     - Se implementó `window.renderCustomSleepingGuard(sg, ctx)` en `gfx/sprites.js` con el pipeline procedural completo de PS1:
+       - Sombra suave difusa proyectada en el suelo debajo del cuerpo.
+       - Centinela tendido de lado en pose CQC: uniforme táctico, chaleco antibalas con oscilación senoidal de respiración (`breathe`), mochila/radio apoyada en el piso con antena torcida, brazo flácido con guante militar.
+       - Casco militar táctico ladeado/inclinado por el impacto del derribo, con visor NVG apagado (sin energía).
+       - Rifle de combate arrojado y desprendido en el piso cercano, con cañón, cargador curvo, bocacha y linterna apagada.
+       - Letras "Zzz" animadas con oscilación y resplandor cian retro, junto a una barra de aturdimiento (`CQC Stun Gauge`).
+     - Se integró el renderizado dentro del canvas transformado en `draw()` de `index.html`, garantizando sincronía milimétrica con el desplazamiento de cámara.
+  2. **Aislamiento Estricto de Charcos y Huellas Tácticas entre Salas (`puddlesByRoom` & `fp.roomId`)**:
+     - Se reemplazó el array estático global de charcos por `puddlesByRoom` en `gfx/atmosphere.js`, mapeando los fluidos exclusivamente a salas con sentido temático e industrial (`dock`, `filtration_u1`, `arena_olympo`, `transit_conduit`).
+     - Se eliminó el array duplicado de charcos en `gfx/decor.js` que provocaba sobre-dibujado inútil en todas las salas.
+     - Se vinculó `roomId: gameState.currentRoomId` a cada huella húmeda generada tanto en `atmosphere.js` como en `decor.js`.
+     - En la IA reactiva de los centinelas (`index.html`), se blindó la rutina de inspección y rastreo para ignorar rigurosamente huellas donde `fp.roomId !== gameState.currentRoomId`.
+     - En `renderAtmosphereFloor` y `renderDecorFloor`, se filtraron las huellas para proyectar únicamente las correspondientes a la sala activa.
+     - En `switchRoom`, se introdujo un barrido que resetea el estado de investigación y rastreo de todos los guardias (`_trackingFootprints = false`, `investigateTimer = 0`, limpieza de `_investigatedFps`, burbujas anuladas), erradicando el bug en el que pisar un charco alertaba a centinelas en salas contiguas.
+  3. **Verificación Automatizada Completa**:
+     - Se agregaron las pruebas de unidad e integración `[TEST 6b]` (render de sleepers CQC con llamada a `draw()`) y `[TEST 8c]` (aislamiento de charcos por sala e inmunidad de IA entre salas) en `test_game.js`, alcanzando 100% de éxito en la suite.
+- **Por qué funciona estéticamente**:
+  El combate cuerpo a cuerpo y la interacción ambiental alcanzan la pureza estética de 1998: los enemigos noqueados yacen con una pose militar procedural verosímil y la lógica táctica de rastreo de huellas húmedas se mantiene hermética entre sectores, elevando el realismo y la inmersión del sigilo.
+

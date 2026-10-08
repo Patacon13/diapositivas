@@ -455,5 +455,139 @@
         return true;
     };
 
+    // -------------------------------------------------------------------------
+    // 3. SPRITE PROCEDURAL: CENTINELA DERRIBADO POR CQC (SLEEPING GUARD)
+    // -------------------------------------------------------------------------
+    window.renderCustomSleepingGuard = function(sg, ctx) {
+        if (!sg) return false;
+
+        const now = performance.now() * 0.001;
+        const breathe = Math.sin(now * 2.2 + (sg.x || 0) * 0.1) * 0.75;
+        const sleepRatio = Math.max(0, Math.min(1, (sg.sleep || 0) / 25));
+
+        // 1. Sombra suave y difusa proyectada en el suelo
+        ctx.save();
+        ctx.translate(sg.x, sg.y + 4);
+        ctx.scale(1.4, 0.65);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.42)';
+        ctx.beginPath();
+        ctx.arc(0, 0, (sg.radius || 13) * 1.25, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // 2. Rifle táctico caído y desprendido en el suelo
+        ctx.save();
+        ctx.translate(sg.x + 13, sg.y + 7);
+        ctx.rotate(0.35);
+        // Sombra del arma caída
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.fillRect(-2, 1, 16, 3);
+        // Cañón y cajón de mecanismos
+        ctx.fillStyle = '#1E293B';
+        ctx.fillRect(0, 0, 14, 3);
+        // Cargador táctico
+        ctx.fillStyle = '#0F172A';
+        ctx.fillRect(5, 2, 4, 3.5);
+        // Bocacha apagallamas
+        ctx.fillStyle = '#CBD5E1';
+        ctx.fillRect(14, 0, 2, 3);
+        // Linterna montada apagada / sin emisión
+        ctx.fillStyle = '#475569';
+        ctx.fillRect(12, -1, 2.5, 1.5);
+        ctx.restore();
+
+        // 3. Centinela tendido de lado (CQC Knockdown / Sleeper pose)
+        ctx.save();
+        ctx.translate(sg.x, sg.y);
+        ctx.rotate((sg.angle || 0) + Math.PI / 2);
+
+        // Botas militares relajadas en el piso
+        ctx.fillStyle = '#0F172A';
+        ctx.fillRect(-14, -2, 6, 4);
+        ctx.fillRect(-11, 2, 6, 4);
+
+        // Piernas con uniforme táctico
+        ctx.fillStyle = '#1E293B';
+        ctx.fillRect(-9, -1.5, 7, 3);
+        ctx.fillRect(-6, 2, 6, 3);
+
+        // Torso y chaleco táctico antibalas con oscilación de respiración
+        const armorGrad = ctx.createLinearGradient(-8, -6, 8, 6);
+        armorGrad.addColorStop(0, '#1E293B');
+        armorGrad.addColorStop(1, '#0F172A');
+        ctx.fillStyle = armorGrad;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 10 + breathe * 0.4, 7.5, 0.05, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        // Mochila táctica / radio en la espalda sobre el piso
+        ctx.fillStyle = '#0F172A';
+        ctx.fillRect(-6, -7, 4.5, 6);
+        // Antena de radio torcida sobre el piso
+        ctx.strokeStyle = '#94A3B8';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(-5, -7);
+        ctx.lineTo(-10, -11);
+        ctx.stroke();
+
+        // Brazo caído y guante táctico
+        ctx.fillStyle = '#1E293B';
+        ctx.fillRect(1, 2, 6, 3);
+        ctx.fillStyle = '#0F172A';
+        ctx.fillRect(7, 2.5, 2.5, 2.5);
+
+        // Casco militar táctico inclinado / ladeado (tilted helmet)
+        ctx.save();
+        ctx.translate(7, -0.5);
+        ctx.rotate(0.28 + breathe * 0.04);
+        ctx.fillStyle = '#334155';
+        ctx.beginPath();
+        ctx.arc(0, 0, 6.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#1E293B';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        // Visor táctico NVG apagado (sin energía)
+        ctx.fillStyle = '#475569';
+        ctx.fillRect(2.5, -2, 2.2, 4);
+        ctx.restore();
+
+        ctx.restore();
+
+        // 4. Efecto Zzz retro PS1 animado con oscilación
+        ctx.save();
+        const zIndex = Math.floor((now * 2.5) % 3) + 1;
+        const zBob = Math.sin(now * 3) * 2;
+        ctx.font = 'bold 11px "Share Tech Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#38BDF8';
+        ctx.shadowColor = '#0284C7';
+        ctx.shadowBlur = 8;
+        ctx.fillText('Z'.repeat(zIndex), sg.x + 12, sg.y - 12 + zBob);
+        ctx.restore();
+
+        // 5. Barra táctica de duración de sueño (CQC Stun Gauge)
+        ctx.save();
+        const barW = 26;
+        const barH = 3;
+        const barX = sg.x - barW / 2;
+        const barY = sg.y + 16;
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+        ctx.fillRect(barX, barY, barW, barH);
+        ctx.fillStyle = '#38BDF8';
+        ctx.fillRect(barX, barY, barW * sleepRatio, barH);
+        ctx.strokeStyle = '#1E293B';
+        ctx.lineWidth = 0.8;
+        ctx.strokeRect(barX, barY, barW, barH);
+        ctx.restore();
+
+        return true;
+    };
+
     console.log('%c[GFX] Módulo de Sprites Procedurales cargado.', 'color:#38bdf8');
 })();

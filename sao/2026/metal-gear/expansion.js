@@ -829,25 +829,6 @@
             ctx.restore();
         }
 
-        // Guardias dormidos
-        (room.sleepers || []).forEach(g => {
-            ctx.save();
-            ctx.translate(g.x, g.y);
-            ctx.rotate(Math.PI / 2);
-            ctx.fillStyle = '#475569';
-            ctx.beginPath(); ctx.ellipse(0, 0, g.radius * 1.2, g.radius * 0.6, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#94a3b8';
-            ctx.beginPath(); ctx.arc(g.radius * 1.1, 0, g.radius * 0.45, 0, Math.PI * 2); ctx.fill();
-            ctx.restore();
-            ctx.fillStyle = '#93c5fd';
-            ctx.font = 'bold 12px Share Tech Mono';
-            const z = Math.floor(t * 2) % 3;
-            ctx.fillText('z'.repeat(z + 1).toUpperCase(), g.x + 10, g.y - 14 - z * 3);
-            // Barra de sueño
-            ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(g.x - 14, g.y + 16, 28, 3);
-            ctx.fillStyle = '#93c5fd'; ctx.fillRect(g.x - 14, g.y + 16, 28 * Math.max(0, g.sleep / 25), 3);
-        });
-
         // Burbujas ! y ?
         (room.guards || []).forEach(g => {
             if (!g._bubble) return;
