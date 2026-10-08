@@ -82,61 +82,116 @@
             position: relative;
         }
 
-        /* HUD Superior */
+        /* HUD Superior (Matriz Táctica 2 Filas: 100% Visible, Cero Scroll) */
         .hud-bar {
+            display: flex;
+            flex-direction: column;
+            padding: 5px 10px;
+            background: rgba(0, 24, 10, 0.96);
+            border-bottom: 2px solid var(--mgs-border);
+            gap: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden; /* Cero desborde ni barra de scroll horizontal */
+        }
+
+        .hud-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 16px;
-            background: rgba(0, 43, 17, 0.85);
-            border-bottom: 2px solid var(--mgs-border);
-            gap: 12px;
+            width: 100%;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .hud-row-status {
+            padding-bottom: 3px;
+            border-bottom: 1px solid rgba(0, 255, 102, 0.15);
+            flex-wrap: nowrap;
         }
 
         .hud-left {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 8px;
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
+        .hud-status-tools {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        /* Matriz de acciones tácticas: 6 columnas de ancho idéntico en desktop */
+        .hud-row-actions {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .hud-action-pill, .hud-row-actions .hud-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 3px 4px;
+            font-size: 10px;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .hud-brand {
             display: flex;
             flex-direction: column;
+            line-height: 1.1;
         }
 
         .hud-title {
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--mgs-green);
-            letter-spacing: 2px;
-            text-shadow: 0 0 8px var(--mgs-green);
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 6px var(--mgs-green);
+            white-space: nowrap;
         }
 
         .hud-sub {
-            font-size: 10px;
+            font-size: 8.5px;
             color: var(--mgs-green-dim);
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
         /* Barra de Vida (LIFE) */
         .life-meter {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .meter-label {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--mgs-green);
             font-weight: 700;
         }
 
         .meter-track {
-            width: 110px;
-            height: 12px;
+            width: 85px;
+            height: 10px;
             background: #001A08;
             border: 1px solid var(--mgs-green-dim);
-            border-radius: 3px;
+            border-radius: 2px;
             overflow: hidden;
             padding: 1px;
         }
@@ -324,40 +379,36 @@
             font-weight: 700;
         }
 
-        .hud-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
         .hud-btn {
             background: rgba(0, 255, 102, 0.08);
             border: 1px solid var(--mgs-green-dim);
             color: var(--mgs-green);
-            padding: 6px 12px;
-            border-radius: 6px;
+            padding: 4px 7px;
+            border-radius: 4px;
             font-family: 'Share Tech Mono', monospace;
-            font-size: 12px;
+            font-size: 10.5px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
+            transition: all 0.15s;
+            display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .hud-btn:hover {
             background: rgba(0, 255, 102, 0.25);
             border-color: var(--mgs-green);
-            box-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
-            transform: scale(1.04);
+            box-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
+            transform: scale(1.03);
         }
 
         .hud-btn.active {
             background: var(--mgs-green);
             color: var(--mgs-bg);
             border-color: var(--mgs-green);
-            box-shadow: 0 0 12px var(--mgs-green);
+            box-shadow: 0 0 10px var(--mgs-green);
         }
 
         /* Lienzo Principal del Juego (Canvas & Overlays) */
@@ -1046,17 +1097,27 @@
             }
 
             .hud-bar {
-                padding: 6px 10px;
-                gap: 6px;
+                padding: 4px 6px;
+                gap: 4px;
+            }
+
+            .hud-row-actions {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 3px;
+            }
+
+            .hud-action-pill, .hud-row-actions .hud-btn {
+                font-size: 9px;
+                padding: 2px 2px;
             }
 
             .hud-left {
-                gap: 8px;
+                gap: 6px;
             }
 
             .hud-title {
-                font-size: 13px;
-                letter-spacing: 1px;
+                font-size: 11.5px;
+                letter-spacing: 0.5px;
             }
 
             .hud-sub {
@@ -1126,7 +1187,7 @@
                 font-size: 8px;
             }
 
-            .hud-right {
+            .hud-status-tools {
                 gap: 4px;
             }
 
@@ -1301,47 +1362,66 @@
     <!-- Marco de Consola Táctica -->
     <div class="mgs-console">
 
-        <!-- Barra Superior HUD -->
+        <!-- Barra Superior HUD: Dos filas tácticas compactas (Sin scroll, 100% visible) -->
         <div class="hud-bar">
-            <div class="hud-left">
-                <div class="hud-brand">
-                    <span class="hud-title">METAL GEAR JAVA</span>
-                    <span class="hud-sub">TACTICAL BYTECODE ACTION // UTN FRSF</span>
-                </div>
-                
-                <div class="life-meter">
-                    <span class="meter-label">LIFE</span>
-                    <div class="meter-track">
-                        <div class="meter-fill" id="life-bar"></div>
+            <!-- Fila 1: Estado de Misión y Signos Vitales -->
+            <div class="hud-row hud-row-status">
+                <div class="hud-left">
+                    <div class="hud-brand">
+                        <span class="hud-title">METAL GEAR JAVA</span>
+                        <span class="hud-sub">TACTICAL BYTECODE // UTN FRSF</span>
+                    </div>
+                    
+                    <div class="life-meter">
+                        <span class="meter-label">LIFE</span>
+                        <div class="meter-track">
+                            <div class="meter-fill" id="life-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="keycard-badge" id="hud-keycard" title="Nivel de Tarjeta de Seguridad (Keycard)">
+                        <i class="fa-solid fa-id-card"></i>
+                        <span id="keycard-text">LV. 0</span>
+                    </div>
+
+                    <div class="alert-gauge" id="alert-box">
+                        <span class="alert-tag" id="alert-tag">! ALERTA</span>
+                        <span class="alert-num" id="alert-timer">99.99</span>
                     </div>
                 </div>
 
-                <div class="keycard-badge" id="hud-keycard" title="Nivel de Tarjeta de Seguridad (Keycard)">
-                    <i class="fa-solid fa-id-card"></i>
-                    <span id="keycard-text">LV. 0</span>
-                </div>
-
-                <div class="alert-gauge" id="alert-box">
-                    <span class="alert-tag" id="alert-tag">! ALERTA</span>
-                    <span class="alert-num" id="alert-timer">99.99</span>
+                <div class="hud-status-tools">
+                    <button class="hud-btn" id="btn-level-select" onclick="openLevelSelectDialog()" title="Seleccionar Misión / Nivel [M]">
+                        <i class="fa-solid fa-list-check"></i> <span id="hud-level-label">MISIÓN 1</span>
+                    </button>
+                    <button class="hud-btn" id="btn-codec-call" onclick="openCodecDialog('call')" title="Abrir Radio CODEC [C]">
+                        <i class="fa-solid fa-walkie-talkie"></i> <span id="hud-freq-label">140.85</span>
+                    </button>
+                    <button class="hud-btn" id="btn-sound-toggle" onclick="toggleAudio()" title="Activar/Silenciar Audio">
+                        <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+                    </button>
                 </div>
             </div>
 
-            <div class="hud-right">
-                <button class="hud-btn" id="btn-level-select" onclick="openLevelSelectDialog()" title="Seleccionar Misión / Nivel [M]">
-                    <i class="fa-solid fa-list-check"></i> <span id="hud-level-label">MISIÓN 1</span>
+            <!-- Fila 2: Matriz Táctica de Acciones y Minijuegos (6 Columnas Tácticas) -->
+            <div class="hud-row hud-row-actions">
+                <button class="hud-btn hud-action-pill" id="btn-vault-mg" onclick="window.startBubbleSortMinigame()" title="Minijuego: Array Vault (Bubble Sort) [V]" style="border-color:#38BDF8; color:#38BDF8;">
+                    <i class="fa-solid fa-arrow-down-1-9"></i> VAULT [V]
                 </button>
-                <button class="hud-btn" id="btn-knock" onclick="performWallKnock()" title="Golpear Pared para Distraer [F]">
+                <button class="hud-btn hud-action-pill" id="btn-matrix-mg" onclick="window.startMatrixDiagonalMinigame()" title="Minijuego: Matrix Grid (Diagonal 2D) [X]" style="border-color:#A78BFA; color:#A78BFA;">
+                    <i class="fa-solid fa-table-cells"></i> MATRIX [X]
+                </button>
+                <button class="hud-btn hud-action-pill" id="btn-cqc" onclick="window.tryCQCAction()" title="CQC Sigiloso: Dormir centinela por la espalda [Q]" style="border-color:#34D399; color:#34D399;">
+                    <i class="fa-solid fa-user-ninja"></i> CQC [Q]
+                </button>
+                <button class="hud-btn hud-action-pill" id="btn-knock" onclick="performWallKnock()" title="Golpear Pared para Distraer [F]">
                     <i class="fa-solid fa-hand-fist"></i> GOLPE [F]
                 </button>
-                <button class="hud-btn" id="btn-box-toggle" onclick="toggleCardboardBox()" title="Ponerse/Sacarse Caja de Cartón [B]">
-                    <i class="fa-solid fa-box"></i> <span id="box-label">CAJA: OFF</span>
+                <button class="hud-btn hud-action-pill xp-gadget" id="btn-chaff" onclick="window.useChaffAction()" title="Granada NULL: Anular visión de centinelas y láseres [G]" style="border-color:#38BDF8; color:#38BDF8;">
+                    <i class="fa-solid fa-burst"></i> <span id="chaff-label">NULL x1 [G]</span>
                 </button>
-                <button class="hud-btn" id="btn-codec-call" onclick="openCodecDialog('call')" title="Abrir Radio CODEC [C]">
-                    <i class="fa-solid fa-walkie-talkie"></i> <span id="hud-freq-label">140.85</span>
-                </button>
-                <button class="hud-btn" id="btn-sound-toggle" onclick="toggleAudio()" title="Activar/Silenciar Audio">
-                    <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+                <button class="hud-btn hud-action-pill" id="btn-box-toggle" onclick="toggleCardboardBox()" title="Ponerse/Sacarse Caja de Cartón [B]">
+                    <i class="fa-solid fa-box"></i> <span id="box-label">CAJA [B]</span>
                 </button>
             </div>
         </div>
@@ -1581,9 +1661,8 @@
 
         function playTone(freq, duration, type = 'square', vol = 0.1) {
             const ctx = getAudioContext();
-            if (!ctx || freq <= 0 || !soundEnabled) return;
+            if (!ctx || freq <= 0 || !soundEnabled || ctx.state === 'suspended') return;
             try {
-                if (ctx.state === 'suspended') ctx.resume();
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 const now = ctx.currentTime;
@@ -1596,14 +1675,14 @@
                 osc.start(now);
                 osc.stop(now + duration);
             } catch (e) {
-                console.warn(e);
+                // Silently ignore audio glitch
             }
         }
 
         // Efectos de Sonido Icónicos de Metal Gear
         function playSFX(name) {
             const ctx = getAudioContext();
-            if (!ctx || !soundEnabled) return;
+            if (!ctx || !soundEnabled || ctx.state === 'suspended') return;
             const now = ctx.currentTime;
 
             try {
@@ -4347,6 +4426,10 @@
                 openCodecDialog('call');
             } else if (key === 'f' || key === 'k') {
                 performWallKnock();
+            } else if (key === 'v') {
+                if (window.startBubbleSortMinigame) window.startBubbleSortMinigame();
+            } else if (key === 'x') {
+                if (window.startMatrixDiagonalMinigame) window.startMatrixDiagonalMinigame();
             } else if (key === 'e' || key === ' ') {
                 checkTerminalInteraction();
             }
@@ -4621,7 +4704,10 @@
             const codecOpen = document.getElementById('codec-screen').style.display === 'flex';
             const hackOpen = document.getElementById('hack-screen').style.display === 'flex';
             const levelOpen = document.getElementById('level-select-screen') && document.getElementById('level-select-screen').style.display === 'flex';
-            if (codecOpen || hackOpen || levelOpen || gameState.missionCompleted) return;
+            const minigameOpen = document.getElementById('minigame-screen') && document.getElementById('minigame-screen').style.display === 'flex';
+            if (codecOpen || hackOpen || levelOpen || minigameOpen || gameState.missionCompleted) return;
+
+            if (window.updateGFXParticles) window.updateGFXParticles(dt);
 
             // 1. Movimiento de Solid Byte
             let dx = 0;
@@ -5327,6 +5413,8 @@
                 ctx.stroke();
             }
 
+            if (window.renderDecorFloor) window.renderDecorFloor(ctx);
+
             // Ondas acústicas
             gameState.soundWaves.forEach(wave => {
                 ctx.save();
@@ -5538,6 +5626,7 @@
             // Centinelas
             if (currentRoom.guards) {
                 currentRoom.guards.forEach(g => {
+                    if (window.renderCustomGuard && window.renderCustomGuard(g, ctx)) return;
                     ctx.save();
                     if (gameState.alertState === 'alert') {
                         ctx.fillStyle = 'rgba(255, 42, 42, 0.28)';
@@ -5600,7 +5689,9 @@
 
             // Jugador (Solid Byte)
             const p = gameState.player;
-            if (p.inBox) {
+            if (window.renderCustomPlayer && window.renderCustomPlayer(p, ctx)) {
+                // Renderizado procedimental de Solid Byte completado
+            } else if (p.inBox) {
                 ctx.save();
                 ctx.translate(p.x, p.y);
                 ctx.fillStyle = '#B45309';
@@ -5638,6 +5729,12 @@
                 ctx.stroke();
                 ctx.restore();
             }
+
+            // Partículas de vapor, chispas y pisadas
+            if (window.renderGFXParticles) window.renderGFXParticles(ctx);
+
+            // Capa de Iluminación Dinámica & Raycasting en tiempo real
+            if (window.renderLightingPass) window.renderLightingPass(ctx);
 
             // Radar Soliton Miniatura
             drawMiniRadar();
@@ -6122,5 +6219,15 @@
         });
 
     </script>
+    <!-- Módulos Gráficos: Sprites Procedurales, Iluminación Dinámica y Escenografía -->
+    <script src="gfx/sprites.js" charset="utf-8"></script>
+    <script src="gfx/decor.js" charset="utf-8"></script>
+    <script src="gfx/lighting.js" charset="utf-8"></script>
+    <!-- Minijuegos Interactivos de Memoria: Core, Array Vault y Matrix Grid -->
+    <script src="minigames/core.js" charset="utf-8"></script>
+    <script src="minigames/array-vault.js" charset="utf-8"></script>
+    <script src="minigames/matrix-grid.js" charset="utf-8"></script>
+    <!-- Expansión "Operación Outer Heaven": sigilo avanzado, BIT LOCK, rangos, Mantis -->
+    <script src="expansion.js" charset="utf-8"></script>
 </body>
 </html>
