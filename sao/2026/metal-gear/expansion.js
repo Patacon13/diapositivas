@@ -56,6 +56,7 @@
         };
     }
     XP.stats = freshStats();
+    window.XP = XP;
 
     // -------------------------------------------------------------------------
     // 2. LIMPIEZA DE OPCIONES (la correcta ya no se delata por larga/explicada)

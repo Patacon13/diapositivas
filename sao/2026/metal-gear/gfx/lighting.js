@@ -170,14 +170,20 @@
             });
         }
 
-        // E. Rejillas Láser
+        // E. Rejillas Láser (Soporte omnidireccional)
         if (currentRoom.lasers) {
             currentRoom.lasers.forEach(laser => {
                 const term = hackTerminals.find(t => t.id === laser.terminalId);
                 const active = term ? !term.unlocked : true;
                 if (active) {
-                    lCtx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-                    lCtx.fillRect(laser.x1 - 12, laser.y1, 24, laser.y2 - laser.y1);
+                    lCtx.save();
+                    lCtx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+                    lCtx.lineWidth = 26;
+                    lCtx.beginPath();
+                    lCtx.moveTo(laser.x1, laser.y1);
+                    lCtx.lineTo(laser.x2, laser.y2);
+                    lCtx.stroke();
+                    lCtx.restore();
                 }
             });
         }

@@ -1963,8 +1963,8 @@
                     <!-- Nariz sutil -->
                     <path d="M 49 44 L 48 51 L 52 51" fill="none" stroke="#D7A984" stroke-width="1.8" stroke-linecap="round" />
                     <!-- Sonrisa agradable y prolija -->
-                    <path d="M 43 56 Q 50 61 57 56" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" />
-                    <line x1="45" y1="56" x2="55" y2="56" stroke="#FFFFFF" stroke-width="1.2" />
+                    <path class="codec-mouth" d="M 43 56 Q 50 61 57 56" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" />
+                    <line class="codec-mouth" x1="45" y1="56" x2="55" y2="56" stroke="#FFFFFF" stroke-width="1.2" />
                     <!-- Cabello castaño oscuro peinado con flequillo prolijo -->
                     <path d="M 27 34 C 27 16 73 16 73 34 C 74 39 72 43 72 43 C 68 31 64 26 50 26 C 36 26 31 32 28 43 Z" fill="#26211E" />
                     <path d="M 28 26 Q 42 22 56 27 Q 66 31 68 36 Q 54 30 40 33 Q 32 35 28 39 Z" fill="#3D342E" />
@@ -2009,7 +2009,7 @@
                     <!-- Nariz sutil -->
                     <path d="M 49 43 L 48 49 L 52 49" fill="none" stroke="#E3B394" stroke-width="1.8" stroke-linecap="round" />
                     <!-- Sonrisa dulce y cálida -->
-                    <path d="M 43 54 Q 50 59 57 54" fill="none" stroke="#E11D48" stroke-width="2" stroke-linecap="round" />
+                    <path class="codec-mouth" d="M 43 54 Q 50 59 57 54" fill="none" stroke="#E11D48" stroke-width="2" stroke-linecap="round" />
                     <!-- Cabello largo castaño oscuro que cae enmarcando el rostro -->
                     <path d="M 28 28 C 30 14 70 14 72 28 C 74 34 76 50 74 65 C 72 65 67 52 67 36 C 54 28 46 28 33 36 C 33 52 28 65 26 65 C 24 50 26 34 28 28 Z" fill="#3E2723" />
                     <!-- Mechones con volumen y brillo -->
@@ -2058,8 +2058,10 @@
                     <!-- Bigote marcado -->
                     <path d="M 38 52 Q 44 50 50 53 Q 56 50 62 52 Q 50 56 38 52 Z" fill="#1C1917" />
                     <!-- Sonrisa blanca y amplia -->
-                    <path d="M 42 55 Q 50 60 58 55" fill="#881337" />
-                    <polygon points="43,55 57,55 55,58 45,58" fill="#FFFFFF" />
+                    <g class="codec-mouth">
+                        <path d="M 42 55 Q 50 60 58 55" fill="#881337" />
+                        <polygon points="43,55 57,55 55,58 45,58" fill="#FFFFFF" />
+                    </g>
                     <!-- Canas sutiles en barba -->
                     <line x1="37" y1="62" x2="41" y2="65" stroke="#A8A29E" stroke-width="1.2" />
                     <line x1="63" y1="62" x2="59" y2="65" stroke="#A8A29E" stroke-width="1.2" />
@@ -2112,9 +2114,11 @@
                     <!-- Nariz delicada -->
                     <path d="M 49 44 L 48 50 L 52 50" fill="none" stroke="#E0AB85" stroke-width="1.6" stroke-linecap="round" />
                     <!-- Sonrisa sutil y dulce con labios rosados -->
-                    <path d="M 42 56 Q 50 61 58 56" fill="#F43F5E" />
-                    <path d="M 43 56 Q 50 59 57 56" fill="#FECDD3" />
-                    <path d="M 41 56 Q 50 62 59 56" fill="none" stroke="#BE123C" stroke-width="1.4" stroke-linecap="round" />
+                    <g class="codec-mouth">
+                        <path d="M 42 56 Q 50 61 58 56" fill="#F43F5E" />
+                        <path d="M 43 56 Q 50 59 57 56" fill="#FECDD3" />
+                        <path d="M 41 56 Q 50 62 59 56" fill="none" stroke="#BE123C" stroke-width="1.4" stroke-linecap="round" />
+                    </g>
                     <!-- Cabello largo negro suelto que cae lacio enmarcando el rostro -->
                     <path d="M 26 28 C 28 12 72 12 74 28 C 76 36 78 52 75 70 C 72 70 68 54 68 36 C 58 24 42 24 32 36 C 32 54 28 70 25 70 C 22 52 24 36 26 28 Z" fill="#18181B" />
                     <!-- Partición del cabello dejando ver la frente despejada -->
@@ -2151,7 +2155,7 @@
                     <!-- Barba y bigote perfilados de atleta -->
                     <path d="M 33 46 C 33 64 42 68 50 68 C 58 68 67 64 67 46 L 64 46 C 64 61 57 65 50 65 C 43 65 36 61 36 46 Z" fill="#1C1917" />
                     <path d="M 40 54 Q 50 51 60 54 Q 50 57 40 54 Z" fill="#1C1917" />
-                    <path d="M 46 58 Q 50 62 54 58" fill="none" stroke="#1C1917" stroke-width="2" stroke-linecap="round" />
+                    <path class="codec-mouth" d="M 46 58 Q 50 62 54 58" fill="none" stroke="#1C1917" stroke-width="2" stroke-linecap="round" />
                     <!-- Ojos concentrados y cejas firmes -->
                     <rect x="34" y="38" width="10" height="2.5" rx="1" fill="#1C1917" />
                     <rect x="56" y="38" width="10" height="2.5" rx="1" fill="#1C1917" />
@@ -2215,8 +2219,10 @@
                     <!-- Barba suave / sombra de barba en mentón -->
                     <path d="M 42 59 Q 50 63 58 59" stroke="#71717A" stroke-width="2" stroke-dasharray="1.5,1.5" fill="none" />
                     <!-- Sonrisa amplia y amistosa -->
-                    <path d="M 41 54 Q 50 60 59 54" fill="#B91C1C" />
-                    <polygon points="43,54 57,54 55,57 45,57" fill="#FFFFFF" />
+                    <g class="codec-mouth">
+                        <path d="M 41 54 Q 50 60 59 54" fill="#B91C1C" />
+                        <polygon points="43,54 57,54 55,57 45,57" fill="#FFFFFF" />
+                    </g>
                 </svg>`;
             }
             return '';
@@ -2436,6 +2442,8 @@
 
         function closeCodecDialog() {
             if (typewriterTimer) clearInterval(typewriterTimer);
+            window.typewriterTimer = typewriterTimer = null;
+            window.isCodecTyping = false;
             document.getElementById('codec-screen').style.display = 'none';
             const wasCompleted = gameState.missionCompleted;
             isMandatoryCodec = false;
@@ -2459,14 +2467,16 @@
             let charIdx = 0;
             if (typewriterTimer) clearInterval(typewriterTimer);
 
-            typewriterTimer = setInterval(() => {
+            window.isCodecTyping = true;
+            window.typewriterTimer = typewriterTimer = setInterval(() => {
                 if (charIdx < item.text.length) {
                     textElem.textContent += item.text[charIdx];
                     charIdx++;
                     if (charIdx % 3 === 0) playTone(950, 0.015, 'sine', 0.02);
                 } else {
                     clearInterval(typewriterTimer);
-                    typewriterTimer = null;
+                    window.typewriterTimer = typewriterTimer = null;
+                    window.isCodecTyping = false;
                 }
             }, 18);
         }
@@ -2492,7 +2502,8 @@
             getAudioContext();
             if (typewriterTimer) {
                 clearInterval(typewriterTimer);
-                typewriterTimer = null;
+                window.typewriterTimer = typewriterTimer = null;
+                window.isCodecTyping = false;
                 const item = currentCodecQueue[currentCodecIndex];
                 if (item) document.getElementById('codec-message').textContent = item.text;
                 return;
@@ -5388,14 +5399,17 @@
             const currentRoom = facilityRooms[gameState.currentRoomId];
             if (!currentRoom) return;
 
-            // Screen Shake táctico
+            // Screen Shake táctico & Look-Ahead Cinemático Damped
             ctx.save();
+            let shakeX = 0, shakeY = 0;
             if (gameState.screenShake > 0) {
-                const shakeX = (Math.random() - 0.5) * gameState.screenShake * 16;
-                const shakeY = (Math.random() - 0.5) * gameState.screenShake * 16;
-                ctx.translate(shakeX, shakeY);
+                shakeX = (Math.random() - 0.5) * gameState.screenShake * 16;
+                shakeY = (Math.random() - 0.5) * gameState.screenShake * 16;
                 gameState.screenShake = Math.max(0, gameState.screenShake - 0.018);
             }
+            const camX = (window.CINE ? window.CINE.camX : 0);
+            const camY = (window.CINE ? window.CINE.camY : 0);
+            ctx.translate(-camX + shakeX, -camY + shakeY);
 
             // 1. Suelo táctico
             ctx.strokeStyle = '#051A0D';
@@ -5736,10 +5750,10 @@
             // Capa de Iluminación Dinámica & Raycasting en tiempo real
             if (window.renderLightingPass) window.renderLightingPass(ctx);
 
-            // Radar Soliton Miniatura
-            drawMiniRadar();
+            ctx.restore(); // Termina cámara y screenShake del mundo
 
-            ctx.restore(); // Termina screenShake
+            // Radar Soliton Miniatura (Renderizado estático en espacio de pantalla)
+            drawMiniRadar();
         }
 
         function drawVulcanBytemaster(boss, ctx) {

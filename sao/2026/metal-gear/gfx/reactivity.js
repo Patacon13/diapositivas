@@ -46,6 +46,9 @@
 
             if (inGrate && isMoving && grate.vibrate <= 0.1) {
                 grate.vibrate = 1.0;
+                if (window.playTone && !gameState.soundMuted) {
+                    try { window.playTone(180, 0.03, 'triangle', 0.04); } catch(e){}
+                }
                 // Expulsar motas de polvo de óxido
                 for (let i = 0; i < 4; i++) {
                     grateDust.push({
@@ -101,7 +104,42 @@
     window.renderReactivityWorld = function(ctx) {
         ctx.save();
 
-        // A. Cables colgantes con catenaria oscilante
+        // A. Rejillas metálicas reactivas con lamas y vibración física
+        GRATES.forEach(grate => {
+            const jx = grate.vibrate > 0 ? (Math.random() - 0.5) * grate.vibrate * 4 : 0;
+            const jy = grate.vibrate > 0 ? (Math.random() - 0.5) * grate.vibrate * 4 : 0;
+
+            ctx.save();
+            ctx.translate(grate.x + jx, grate.y + jy);
+
+            // Marco metálico
+            ctx.fillStyle = '#06190F';
+            ctx.fillRect(0, 0, grate.w, grate.h);
+            ctx.strokeStyle = grate.vibrate > 0 ? '#38BDF8' : '#00FF66';
+            ctx.lineWidth = 1.2;
+            ctx.strokeRect(0, 0, grate.w, grate.h);
+
+            // Ranuras de ventilación (slits)
+            ctx.strokeStyle = grate.vibrate > 0 ? '#6EE7B7' : '#0F5132';
+            ctx.lineWidth = 1.5;
+            for (let lx = 4; lx < grate.w - 2; lx += 4) {
+                ctx.beginPath();
+                ctx.moveTo(lx, 2);
+                ctx.lineTo(lx, grate.h - 2);
+                ctx.stroke();
+            }
+
+            // Remaches en esquinas
+            ctx.fillStyle = '#10B981';
+            ctx.fillRect(1.5, 1.5, 2, 2);
+            ctx.fillRect(grate.w - 3.5, 1.5, 2, 2);
+            ctx.fillRect(1.5, grate.h - 3.5, 2, 2);
+            ctx.fillRect(grate.w - 3.5, grate.h - 3.5, 2, 2);
+
+            ctx.restore();
+        });
+
+        // B. Cables colgantes con catenaria oscilante
         CABLES.forEach(c => {
             const swing = Math.sin(c.phase) * 6;
             const midX = (c.x1 + c.x2) / 2;
@@ -123,7 +161,7 @@
             ctx.stroke();
         });
 
-        // B. Polvo de óxido saliendo de rejillas
+        // C. Polvo de óxido saliendo de rejillas
         grateDust.forEach(d => {
             const alpha = Math.max(0, d.life / d.maxLife);
             ctx.fillStyle = `rgba(180, 83, 9, ${alpha * 0.75})`;

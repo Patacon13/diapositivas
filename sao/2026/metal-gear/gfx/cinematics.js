@@ -49,13 +49,15 @@
 
         // A. Look-Ahead sutil en la dirección de la marcha o al pegarse a paredes
         const isMoving = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].some(k => gameState.keys[k]);
-        const lookDist = p.inBox ? 4 : (isMoving ? 14 : 6);
+        const isSprinting = isMoving && gameState.keys['shift'] && !p.inBox;
+        const lookDist = p.inBox ? 4 : (isSprinting ? 20 : (isMoving ? 13 : 5));
         CINE.targetCamX = Math.cos(p.dir) * lookDist;
         CINE.targetCamY = Math.sin(p.dir) * lookDist;
 
         // Suavizado exponencial (damping de cámara)
         CINE.camX += (CINE.targetCamX - CINE.camX) * Math.min(1, dt * 5);
         CINE.camY += (CINE.targetCamY - CINE.camY) * Math.min(1, dt * 5);
+        window.CINE = CINE;
 
         // B. Transición de Alerta -> Letterbox Slam
         if (gameState.alertState === 'alert') {

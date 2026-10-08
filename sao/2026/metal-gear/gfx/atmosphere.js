@@ -12,6 +12,19 @@
     const breathPuffs = [];
     const waterRipples = [];
     const wetFootprints = [];
+    const snowFlakes = [];
+
+    // Flurries de nieve ártica en suspensión (Shadow Moses Blizzard)
+    for (let i = 0; i < 45; i++) {
+        snowFlakes.push({
+            x: Math.random() * 800,
+            y: Math.random() * 450,
+            vx: -0.8 - Math.random() * 1.5,
+            vy: 0.3 + Math.random() * 0.7,
+            size: 0.8 + Math.random() * 1.6,
+            alpha: 0.25 + Math.random() * 0.55
+        });
+    }
 
     let playerBreathTimer = 1.0;
     let playerWetSteps = 0;
@@ -191,13 +204,48 @@
             wetFootprints[i].life -= dt;
             if (wetFootprints[i].life <= 0) wetFootprints.splice(i, 1);
         }
+
+        // G. Actualizar partículas de nieve ártica
+        snowFlakes.forEach(s => {
+            s.x += s.vx;
+            s.y += s.vy;
+            if (s.x < 0) s.x = 800;
+            if (s.y > 450) s.y = 0;
+        });
     };
 
     // -------------------------------------------------------------------------
-    // RENDER: ONDAS EN CHARCOS, HUELLAS HÚMEDAS Y NUBES DE VAHO
+    // RENDER: CHARCOS, ONDAS, HUELLAS HÚMEDAS Y NUBES DE VAHO
     // -------------------------------------------------------------------------
     window.renderAtmosphereFloor = function(ctx) {
         ctx.save();
+        const now = performance.now() * 0.001;
+
+        // 0. Render de TODOS los charcos de refrigerante activos
+        PUDDLES.forEach(p => {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+
+            // Capa de fluido químico esmeralda/teal
+            ctx.fillStyle = 'rgba(6, 78, 59, 0.35)';
+            ctx.beginPath();
+            ctx.ellipse(0, 0, p.rx, p.ry, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Tensión superficial luminosa
+            ctx.strokeStyle = 'rgba(45, 212, 191, 0.4)';
+            ctx.lineWidth = 1.3;
+            ctx.stroke();
+
+            // Reflejo especular cenital dinámico
+            const shimmer = Math.sin(now * 2.2 + p.x * 0.1) * (p.rx * 0.18);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+            ctx.beginPath();
+            ctx.ellipse(-p.rx * 0.25 + shimmer, -p.ry * 0.2, p.rx * 0.32, p.ry * 0.2, 0.35, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        });
 
         // 1. Huellas húmedas con brillo reflectivo
         wetFootprints.forEach(fp => {
@@ -237,9 +285,17 @@
         ctx.restore();
     };
 
-    // Render de nubes de vapor/vaho (capa por encima de los personajes)
+    // Render de nubes de vapor/vaho y ventisca de nieve
     window.renderAtmosphereOver = function(ctx) {
         ctx.save();
+
+        // 1. Nieve ártica suspendida (Shadow Moses flurries)
+        snowFlakes.forEach(s => {
+            ctx.fillStyle = `rgba(224, 242, 254, ${s.alpha * 0.6})`;
+            ctx.fillRect(s.x, s.y, s.size, s.size);
+        });
+
+        // 2. Nubes de vaho por encima de los personajes
         breathPuffs.forEach(b => {
             ctx.save();
             ctx.globalAlpha = Math.max(0, Math.min(1, b.alpha));

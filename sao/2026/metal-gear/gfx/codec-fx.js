@@ -16,11 +16,28 @@
     // -------------------------------------------------------------------------
     // 1. ECUALIZADOR DINÁMICO DE BARRAS (VU-METER)
     // -------------------------------------------------------------------------
+    let lastMsgText = '';
+    let textChangeGrace = 0;
+
     function updateVUMeter() {
         const codecScreen = document.getElementById('codec-screen');
         if (!codecScreen || codecScreen.style.display !== 'flex') return;
 
-        const isTyping = Boolean(window.typewriterTimer);
+        // Detección robusta de typing (timer activo, flag global o texto mutando)
+        let isTyping = Boolean(window.isCodecTyping) || Boolean(window.typewriterTimer);
+        const msgElem = document.getElementById('codec-message');
+        if (msgElem) {
+            const currentText = msgElem.textContent || '';
+            if (currentText !== lastMsgText) {
+                lastMsgText = currentText;
+                textChangeGrace = 4; // Mantener modulación 4 frames
+            }
+        }
+        if (textChangeGrace > 0) {
+            textChangeGrace--;
+            isTyping = true;
+        }
+
         const bars = document.querySelectorAll('#codec-vumeter .vumeter-bar');
         if (!bars || bars.length === 0) return;
 
@@ -29,17 +46,17 @@
         bars.forEach((bar, idx) => {
             let h = 3;
             if (isTyping) {
-                // Ondas armónicas simulando modulación de voz humana
-                const wave = Math.sin(now * 1.5 + idx * 0.9) * 0.5 + Math.cos(now * 2.2 - idx * 0.4) * 0.5;
+                // Ondas armónicas de 5 bandas simulando modulación de voz humana
+                const wave = Math.sin(now * 2.2 + idx * 1.1) * 0.55 + Math.cos(now * 3.4 - idx * 0.6) * 0.45;
                 const peak = Math.max(0, wave);
-                h = Math.floor(4 + peak * 12);
+                h = Math.floor(4 + peak * 14);
             } else {
-                // Ruido de fondo en reposo (carrier signal tenue)
-                h = (idx === 2) ? 5 : (3 + Math.floor(Math.sin(now * 0.4 + idx) * 2));
+                // Ruido de fondo en reposo (carrier signal tenue de radiofrecuencia)
+                h = (idx === 2) ? 5 : (3 + Math.floor(Math.sin(now * 0.5 + idx) * 2));
             }
-            bar.style.height = `${Math.max(2, Math.min(16, h))}px`;
+            bar.style.height = `${Math.max(2, Math.min(18, h))}px`;
             bar.style.backgroundColor = isTyping ? '#00FF66' : '#008F39';
-            bar.style.boxShadow = isTyping ? '0 0 6px #00FF66' : 'none';
+            bar.style.boxShadow = isTyping ? '0 0 8px #00FF66' : 'none';
         });
 
         // ---------------------------------------------------------------------
@@ -52,15 +69,19 @@
 
         const contactFrame = document.getElementById('codec-contact-portrait');
         if (contactFrame) {
-            // Si está tipeando texto, simular apertura y cierre de boca
-            const mouthElem = contactFrame.querySelector('path[stroke="#B45309"], line[stroke="#FFFFFF"], path[stroke="#D7A984"]');
-            if (mouthElem && isTyping) {
-                talkPhase += 0.4;
+            // Animar boca con la clase unificada .codec-mouth o fallbacks
+            const mouthTargets = contactFrame.querySelectorAll('.codec-mouth, .codec-mouth *, path[stroke="#B45309"], line[stroke="#FFFFFF"], path[stroke="#D7A984"]');
+            if (mouthTargets.length > 0 && isTyping) {
+                talkPhase += 0.45;
                 const mouthOpen = Math.sin(talkPhase) > 0;
-                mouthElem.style.transform = mouthOpen ? 'scaleY(1.7)' : 'scaleY(1.0)';
-                mouthElem.style.transformOrigin = 'center';
-            } else if (mouthElem) {
-                mouthElem.style.transform = 'scaleY(1.0)';
+                mouthTargets.forEach(m => {
+                    m.style.transform = mouthOpen ? 'scaleY(1.9)' : 'scaleY(1.0)';
+                    m.style.transformOrigin = '50% 56%';
+                });
+            } else if (mouthTargets.length > 0) {
+                mouthTargets.forEach(m => {
+                    m.style.transform = 'scaleY(1.0)';
+                });
             }
         }
     }

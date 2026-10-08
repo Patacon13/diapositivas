@@ -24,6 +24,15 @@
         });
     }
 
+    function distToSegment(px, py, x1, y1, x2, y2) {
+        const dx = x2 - x1, dy = y2 - y1;
+        const l2 = dx * dx + dy * dy;
+        if (l2 === 0) return Math.hypot(px - x1, py - y1);
+        let t = ((px - x1) * dx + (py - y1) * dy) / l2;
+        t = Math.max(0, Math.min(1, t));
+        return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+    }
+
     // -------------------------------------------------------------------------
     // 1. GENERADOR DE CHISPAS Y REBOTES BALÍSTICOS
     // -------------------------------------------------------------------------
@@ -132,7 +141,7 @@
             ctx.restore();
         });
 
-        // 3. Dispersión Tyndall en Haces Láser
+        // 3. Dispersión Tyndall en Haces Láser (Segment Distance para ángulos arbitrarios)
         if (room.lasers) {
             room.lasers.forEach(laser => {
                 const term = hackTerminals.find(t => t.id === laser.terminalId);
@@ -140,9 +149,8 @@
                 if (!isBlocked) return;
 
                 ambientDust.forEach(d => {
-                    // Si el polvo está cerca del rayo láser vertical/horizontal
-                    const distToLaserX = Math.abs(d.x - laser.x1);
-                    if (distToLaserX < 12 && d.y >= laser.y1 && d.y <= laser.y2) {
+                    const dist = distToSegment(d.x, d.y, laser.x1, laser.y1, laser.x2, laser.y2);
+                    if (dist < 12) {
                         ctx.save();
                         ctx.fillStyle = '#FFFFFF';
                         ctx.shadowColor = '#FF2A2A';

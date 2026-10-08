@@ -136,7 +136,7 @@
 
         // MODO SOLID BYTE AL DESCUBIERTO (SNEAKING SUIT + RIGGING)
         ctx.translate(p.x, p.y);
-        ctx.rotate(p.dir);
+        ctx.rotate(p.dir - Math.PI / 2);
 
         const legSwing = Math.sin(GFX.playerWalk) * 7;
         const armSwing = Math.cos(GFX.playerWalk) * 5;
@@ -196,13 +196,25 @@
         ctx.fillRect(-2, 0, 5, 12);
         ctx.restore();
 
-        // SOCOM Silenciada (apuntando al frente, +X relativo a la rotación)
+        // SOCOM Silenciada (apuntando al frente, +X relativo en rotación global)
         ctx.fillStyle = '#0F172A';
         ctx.fillRect(4, 7, 3, 10); // Cuerpo pistola
         ctx.fillStyle = '#334155';
         ctx.fillRect(4.5, 17, 2, 7); // Silenciador cilíndrico
         ctx.fillStyle = '#00FF66';
         ctx.fillRect(5, 23, 1, 1); // Mira de tritio verde fosforescente
+
+        // Destello de disparo silenciado en combate
+        if (p.shotFlash > 0) {
+            ctx.fillStyle = '#FDE047';
+            ctx.shadowColor = '#F59E0B';
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.arc(5.5, 25, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            p.shotFlash = Math.max(0, p.shotFlash - 0.05);
+        }
 
         // 4. Cabeza
         // Cabello castaño oscuro

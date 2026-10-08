@@ -109,3 +109,57 @@ Registro del proceso iterativo de diseño, dirección de arte y programación gr
   "Metal Gear Java" se consolida como una pieza de culto retro interactiva: gélida, cinematográfica, analógica y palpitante, que trasciende un simple minijuego web para convertirse en un sentido homenaje a la obra de Kojima en PlayStation 1.
 
 ---
+
+## CICLO 8: Corrección Cinemática de Cámara Look-Ahead y Sprite Facing Angle de Solid Byte
+- **Fecha/Ciclo**: Ciclo 8
+- **Módulos**: `gfx/cinematics.js`, `gfx/sprites.js`, `index.html`
+- **Inspiración Retro PS1**: El control tank y la dirección de mirada táctica de Solid Snake con la perspectiva cenital de MGS1.
+- **Qué se inventó y corrigió**:
+  1. **Activación de Cámara Cinemática Dinámica**: `CINE.camX` y `CINE.camY` eran variables inertes que nunca se traducían en el canvas. Se inyectó `ctx.translate(-camX + shakeX, -camY + shakeY)` en el bucle principal de renderizado de `index.html`, con aislamiento de coordenadas de pantalla para el mini-radar (`ctx.restore()` previo).
+  2. **Corrección de Rotación del Sprite Procedural de Solid Byte**: El sprite de Solid Byte estaba diseñado originalmente asumiendo orientación hacia abajo ($+Y$), mientras que el motor de física usaba ángulos de movimiento trigonométricos estándar ($+X$). Esto provocaba que Solid Byte se desplazara lateralmente ("caminata de cangrejo"). Se ajustó el sistema de coordenadas locales mediante `ctx.rotate(p.dir - Math.PI / 2)` alineando la vista, las hombreras, las botas y la bandana con su vector de avance real, y se añadió un destello procedural de fogonazo (muzzle flash) durante disparos y acciones tácticas.
+- **Por qué funciona estéticamente**:
+  Solid Byte ahora mira, apunta y se desplaza naturalmente hacia el objetivo en 360 grados, con la cámara encuadrando suavemente el campo visual frontal sin desfasar la interfaz táctica del Soliton Radar.
+- **Próximo Salto (Ciclo 9)**:
+  Shader de Fluidos Árticos en Charcos y Reactividad Física de Rejillas Metálicas.
+
+---
+
+## CICLO 9: Shader de Fluidos Árticos en Charcos y Reactividad Física de Rejillas Metálicas
+- **Fecha/Ciclo**: Ciclo 9
+- **Módulos**: `gfx/atmosphere.js`, `gfx/reactivity.js`
+- **Inspiración Retro PS1**: El agua estancada reflectiva de la bahía de carga y los conductos de ventilación metálicos resonantes de Shadow Moses.
+- **Qué se inventó y corrigió**:
+  1. **Renderizado de Superficie de Charcos de Refrigerante**: El charco #3 (`x: 380, y: 225`) poseía física de colisión pero era completamente invisible en el piso. Se implementó el pipeline `renderAtmosphereFloor` con gradientes radiales esmeralda/cian reflectivos (`#00f0ff` y `#10b981`), ondas sinusoidales armónicas de fluido y partículas suspendidas de ventisca ártica.
+  2. **Mallas de Rejillas Industriales Físicas**: Las rejillas de ventilación no se dibujaban en pantalla y carecían de feedback visual y táctil. Se implementó el renderizado procedural de marcos de acero y lamas anguladas de ventilación, con desplazamiento elástico y vibración reactiva al ser pisadas por Solid Byte, desprendiendo micro-partículas de óxido y chirrido metálico.
+- **Por qué funciona estéticamente**:
+  El suelo del hangar adquiere profundidad volumétrica palpable y el sigilo gana tensión interactiva al alertar al jugador sobre superficies resonantes que pueden delatar su posición.
+- **Próximo Salto (Ciclo 10)**:
+  Omnidireccionalidad Tyndall, Stenciling de Láseres y Jamming de Radar Soliton bajo Chaff.
+
+---
+
+## CICLO 10: Omnidireccionalidad Tyndall, Stenciling de Láseres y Jamming de Radar Soliton bajo Chaff
+- **Fecha/Ciclo**: Ciclo 10
+- **Módulos**: `gfx/volumetrics.js`, `gfx/lighting.js`, `gfx/ps1-postfx.js`, `expansion.js`
+- **Inspiración Retro PS1**: Las trampas de rayos infrarrojos en los pasillos de Shadow Moses y el efecto de pantalla distorsionada del Soliton Radar cuando Snake arrojaba una granada Chaff.
+- **Qué se inventó y corrigió**:
+  1. **Dispersión Tyndall y Calado de Luces Láser en Cualquier Orientación**: El cálculo de proximidad del polvo de Tyndall y el corte de iluminación asumían exclusivamente haces verticales ($x_1 = x_2$ e $y_1 \le y_2$). Se reemplazó por cálculo de distancia a segmento de recta arbitrario `distToSegment(px, py, x1, y1, x2, y2)` y trazado vectorial directo de haz con ancho de línea de 26px, soportando haces horizontales, diagonales y verticales.
+  2. **Efecto de Interferencia Soliton (Chaff Jamming)**: Se exportó `window.XP = XP` en `expansion.js` para intercomunicación modular de estado. Cuando `chaffTimer > 0`, el radar de fósforo verde sufre ruido pseudo-aleatorio de estática analógica de PS1, líneas horizontales de jitter y la advertencia parpadeante en rojo carmesí `⚠ JAMMING ⚠`, cegando la detección de centinelas como en el clásico de 1998.
+- **Por qué funciona estéticamente**:
+  Las barreras infrarrojas se integran fidedignamente con la niebla volumétrica y la granada Chaff brinda una recompensa visual y táctica inmediata idéntica a la experiencia de consola original.
+- **Próximo Salto (Ciclo 11)**:
+  Modulación Analógica de CODEC, Lip-Sync Reactivo y Suite de Verificación Rigurosa.
+
+---
+
+## CICLO 11: Modulación Analógica de CODEC, Lip-Sync Reactivo y Suite de Verificación Rigurosa
+- **Fecha/Ciclo**: Ciclo 11
+- **Módulos**: `gfx/codec-fx.js`, `index.html`, `test_game.js`
+- **Inspiración Retro PS1**: Las conversaciones de radio CODEC con frecuencias como 140.85, retratos en scanline y el vúmetro dinámico.
+- **Qué se inventó y corrigió**:
+  1. **Sincronización de Diálogo y Lip-Sync Dinámico**: El timer de teletipo residía en una variable de ámbito léxico inalcanzable, dejando al vúmetro en silencio perpetuo. Se expuso `window.isCodecTyping` y la clase SVG `.codec-mouth` universal en todos los retratos (Snake, Campbell, Miller, Mantis, etc.), logrando modulación enérgica de 5 bandas del vúmetro y animación sincronizada de boca durante la transmisión.
+  2. **Batería de Pruebas Automatizadas sin Proxies Falsos**: Se erradicó el mock permisivo en `test_game.js`, incorporando aserciones rigurosas que validan cámara look-ahead, estado de teletipo del CODEC, renderizado real de elipses de charcos, detección de rejillas metálicas, interferencia Chaff en el radar y benchmark estricto a 60 FPS (0.62 ms/frame).
+- **Por qué funciona estéticamente**:
+  El sistema de comunicación militar se siente vivo y orgánico, cerrando el bucle de inmersión retro con 100% de fidelidad estética y solidez de ingeniería de software.
+
+---

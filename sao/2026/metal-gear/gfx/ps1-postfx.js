@@ -73,6 +73,38 @@
         ctx.rect(rx, ry, rw, rh);
         ctx.clip();
 
+        const isJammed = (window.XP && window.XP.chaffTimer > 0) || (window.gameState && window.gameState.radarJammed);
+        if (isJammed) {
+            // Estática analógica CRT (nieve militar) y señal bloqueada
+            for (let i = 0; i < 22; i++) {
+                const jx = rx + Math.random() * rw;
+                const jy = ry + Math.random() * rh;
+                const jw = 4 + Math.random() * 22;
+                ctx.fillStyle = Math.random() < 0.5 ? 'rgba(0, 255, 102, 0.45)' : 'rgba(239, 68, 68, 0.45)';
+                ctx.fillRect(jx, jy, jw, 1.5);
+            }
+
+            // Franja de glitch horizontal
+            const glitchY = ry + (performance.now() * 0.12) % rh;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.fillRect(rx, glitchY, rw, 3);
+
+            // Alerta parpadeante JAMMING
+            const flash = Math.sin(now * 12) > 0;
+            if (flash) {
+                ctx.fillStyle = '#EF4444';
+                ctx.shadowColor = '#EF4444';
+                ctx.shadowBlur = 8;
+                ctx.font = '900 10.5px Share Tech Mono, monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText('⚠ JAMMING ⚠', cx, cy + 4);
+                ctx.shadowBlur = 0;
+            }
+
+            ctx.restore();
+            return;
+        }
+
         // A. Haz cónico de barrido giratorio (Sonar Radar Sweep)
         const sweepGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, rw * 0.7);
         sweepGrad.addColorStop(0, 'rgba(0, 255, 102, 0.45)');
@@ -116,16 +148,17 @@
     // -------------------------------------------------------------------------
     // 3. CAPA DE DITHERING PS1 Y POST-PROCESADO
     // -------------------------------------------------------------------------
-    window.renderPS1PostFX = function(ctx) {
-        if (!ctx) return;
+    window.renderPS1PostFX = function(targetCtx) {
+        const c = targetCtx || (typeof ctx !== 'undefined' ? ctx : (window.ctx || (document.getElementById('mgs-canvas')?.getContext('2d'))));
+        if (!c) return;
 
         // A. Aplicar patrón de dithering Bayer sobre la pantalla completa
         if (ditherPattern) {
-            ctx.save();
-            ctx.globalCompositeOperation = 'overlay';
-            ctx.fillStyle = ditherPattern;
-            ctx.fillRect(0, 0, 800, 450);
-            ctx.restore();
+            c.save();
+            c.globalCompositeOperation = 'overlay';
+            c.fillStyle = ditherPattern;
+            c.fillRect(0, 0, 800, 450);
+            c.restore();
         }
 
         // B. Aberración cromática analógica en caso de alerta roja o impacto
@@ -133,25 +166,26 @@
             const now = performance.now() * 0.001;
             const flicker = Math.sin(now * 25) * 2;
             if (Math.abs(flicker) > 1.2) {
-                ctx.save();
-                ctx.globalCompositeOperation = 'screen';
-                ctx.fillStyle = 'rgba(255, 0, 40, 0.05)';
-                ctx.fillRect(flicker, 0, 800, 450);
-                ctx.fillStyle = 'rgba(0, 200, 255, 0.04)';
-                ctx.fillRect(-flicker, 0, 800, 450);
-                ctx.restore();
+                c.save();
+                c.globalCompositeOperation = 'screen';
+                c.fillStyle = 'rgba(255, 0, 40, 0.05)';
+                c.fillRect(flicker, 0, 800, 450);
+                c.fillStyle = 'rgba(0, 200, 255, 0.04)';
+                c.fillRect(-flicker, 0, 800, 450);
+                c.restore();
             }
         }
 
         // C. Dibujar el barrido de Soliton Radar
-        window.renderSolitonSweep(ctx);
+        window.renderSolitonSweep(c);
     };
 
     // Auto-hook al final del ciclo de dibujado (post-procesado global)
     const _baseDraw = window.draw;
     window.draw = function() {
         if (_baseDraw) _baseDraw();
-        if (window.renderPS1PostFX) window.renderPS1PostFX(ctx);
+        const activeCtx = (typeof ctx !== 'undefined' ? ctx : (window.ctx || (document.getElementById('mgs-canvas')?.getContext('2d'))));
+        if (window.renderPS1PostFX) window.renderPS1PostFX(activeCtx);
     };
 
     console.log('%c[GFX] Módulo de Dithering PS1 y Sonar Soliton cargado.', 'color:#34d399');

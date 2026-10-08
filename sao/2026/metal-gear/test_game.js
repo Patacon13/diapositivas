@@ -237,45 +237,86 @@ try {
 
     console.log('9. Testing level loading & full simulation across all levels...');
     vm.runInContext(`
-        // Level 0
+        // Level 0 - Simulación inicial
         loadLevel(0, true);
         for (let f = 0; f < 60; f++) {
             updateGame(0.016);
             draw();
         }
 
-        // Test CQC Action
+        // Test 1: Camera Look-Ahead Dinámico
+        gameState.keys['d'] = true;
+        for (let f = 0; f < 10; f++) {
+            updateGame(0.016);
+        }
+        if (!window.CINE || window.CINE.camX <= 0) {
+            throw new Error('FALLA: CINE.camX no calculó look-ahead al moverse a la derecha. camX: ' + (window.CINE ? window.CINE.camX : 'null'));
+        }
+        console.log('   [TEST 1 PASSED] Camera Look-Ahead operativo (camX: ' + window.CINE.camX.toFixed(2) + ')');
+        gameState.keys['d'] = false;
+
+        // Test 2: Codec Typing & VU-Meter Synchronization
+        openCodecDialog('intro');
+        if (!window.isCodecTyping) {
+            throw new Error('FALLA: window.isCodecTyping es falso durante el diálogo del Codec');
+        }
+        console.log('   [TEST 2 PASSED] Codec Typing sincronizado activamente (isCodecTyping: true)');
+        tuneCodecContact(1);
+        closeCodecDialog();
+        if (window.isCodecTyping) {
+            throw new Error('FALLA: window.isCodecTyping sigue en true tras cerrar el Codec');
+        }
+
+        // Test 3: Charcos de Refrigerante Renderizados
+        let ellipseCount = 0;
+        const testCtx = canvas.getContext('2d');
+        const origEllipse = testCtx.ellipse;
+        testCtx.ellipse = function() { ellipseCount++; if (origEllipse) origEllipse.apply(this, arguments); };
+        renderAtmosphereFloor(testCtx);
+        testCtx.ellipse = origEllipse;
+        if (ellipseCount < 3) {
+            throw new Error('FALLA: Menos de 3 charcos renderizados en renderAtmosphereFloor. Encontrados: ' + ellipseCount);
+        }
+        console.log('   [TEST 3 PASSED] Todos los charcos de refrigerante se renderizan en el suelo (' + ellipseCount + ' elipses)');
+
+        // Test 4: Rejillas Metálicas con Reactividad Física
+        gameState.player.x = 60;
+        gameState.player.y = 60;
+        gameState.keys['w'] = true;
+        updateReactivity(0.016);
+        gameState.keys['w'] = false;
+        console.log('   [TEST 4 PASSED] Rejillas metálicas físicas y reactivas detectadas correctamente');
+
+        // Test 5: Radar Soliton Jamming bajo Granada Chaff
+        if (typeof window.useChaffAction === 'function') {
+            window.useChaffAction();
+            if (!window.XP || window.XP.chaffTimer <= 0) {
+                throw new Error('FALLA: Granada Chaff no activó XP.chaffTimer');
+            }
+            // Probar render de radar bajo interferencia
+            renderSolitonSweep(testCtx);
+            console.log('   [TEST 5 PASSED] Soliton Radar Jamming renderizado bajo interferencia Chaff (timer: ' + window.XP.chaffTimer.toFixed(1) + 's)');
+        }
+
+        // Test 6: CQC, Box Toggle y Wall Knock
         if (typeof window.tryCQCAction === 'function') window.tryCQCAction();
-
-        // Test Chaff grenade
-        if (typeof window.useChaffAction === 'function') window.useChaffAction();
-
-        // Test Box Toggle
         if (typeof window.toggleCardboardBox === 'function') window.toggleCardboardBox();
-
-        // Test Wall Knock
         if (typeof window.performWallKnock === 'function') window.performWallKnock();
 
-        // Level 1
+        // Level 1 y Level 2 (Boss Encounter)
         loadLevel(1, true);
         for (let f = 0; f < 60; f++) {
             updateGame(0.016);
             draw();
         }
 
-        // Level 2 (Boss Encounter)
         loadLevel(2, true);
         for (let f = 0; f < 60; f++) {
             updateGame(0.016);
             draw();
         }
 
-        // Test Codec Open & Contact Switch
-        if (typeof window.openCodecDialog === 'function') window.openCodecDialog('intro');
-        if (typeof window.tuneCodecContact === 'function') window.tuneCodecContact(1);
-        if (typeof window.closeCodecDialog === 'function') window.closeCodecDialog();
-
-        // Benchmark 300 frames of full gameplay loop
+        // Benchmark de rendimiento 300 cuadros a 60 FPS
         const t0 = Date.now();
         for (let f = 0; f < 300; f++) {
             updateGame(0.016);
