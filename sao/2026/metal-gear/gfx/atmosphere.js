@@ -352,9 +352,20 @@
     };
 
     // API pública para rastreo de huellas húmedas por la IA centinela
-    window.getWetFootprints = function() {
+    window.getWetFootprints = function(roomId) {
+        if (roomId) return wetFootprints.filter(fp => fp.roomId === roomId);
         return wetFootprints;
     };
+
+    function clearWetFootprints(roomId) {
+        if (roomId) {
+            for (let i = wetFootprints.length - 1; i >= 0; i--) {
+                if (wetFootprints[i].roomId === roomId) wetFootprints.splice(i, 1);
+            }
+        } else {
+            wetFootprints.length = 0;
+        }
+    }
 
     window.spawnWetFootprint = function(x, y, dir = 0, life = 5.0, roomId = null) {
         const fp = {
@@ -371,6 +382,7 @@
     window.ATMOSPHERE.wetFootprints = wetFootprints;
     window.ATMOSPHERE.puddlesByRoom = puddlesByRoom;
     window.ATMOSPHERE.getRoomPuddles = getRoomPuddles;
+    window.ATMOSPHERE.clearWetFootprints = clearWetFootprints;
 
     // Auto-hook en el pipeline de renderizado y actualización
     const _origUpdate = window.updateGFXParticles;

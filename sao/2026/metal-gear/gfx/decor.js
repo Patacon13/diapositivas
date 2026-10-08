@@ -64,9 +64,9 @@
         });
 
         // 2. Huellas y polvo de Solid Byte al caminar
-        const p = gameState.player;
+        const p = typeof gameState !== 'undefined' ? gameState.player : null;
         if (p && !p.inBox) {
-            const moving = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].some(k => gameState.keys[k]);
+            const moving = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].some(k => gameState.keys && gameState.keys[k]);
             if (moving) {
                 const distSinceStep = Math.hypot(p.x - lastStepX, p.y - lastStepY);
                 if (distSinceStep > 22) {
@@ -81,6 +81,7 @@
                         maxLife: 4.5,
                         roomId: typeof gameState !== 'undefined' ? gameState.currentRoomId : 'dock'
                     });
+                    if (footprints.length > 50) footprints.shift();
                 }
 
                 if (Math.random() < 0.25) {
@@ -326,6 +327,17 @@
             ctx.restore();
         });
         ctx.restore();
+    };
+
+    window.DECOR = window.DECOR || {};
+    window.DECOR.clearFootprints = function(roomId) {
+        if (roomId) {
+            for (let i = footprints.length - 1; i >= 0; i--) {
+                if (footprints[i].roomId === roomId) footprints.splice(i, 1);
+            }
+        } else {
+            footprints.length = 0;
+        }
     };
 
     console.log('%c[GFX] Módulo de Escenografía Avanzada y Circuitos cargado.', 'color:#a78bfa');

@@ -252,17 +252,23 @@ Registro del proceso iterativo de diseño, dirección de arte y programación gr
        - Centinela tendido de lado en pose CQC: uniforme táctico, chaleco antibalas con oscilación senoidal de respiración (`breathe`), mochila/radio apoyada en el piso con antena torcida, brazo flácido con guante militar.
        - Casco militar táctico ladeado/inclinado por el impacto del derribo, con visor NVG apagado (sin energía).
        - Rifle de combate arrojado y desprendido en el piso cercano, con cañón, cargador curvo, bocacha y linterna apagada.
-       - Letras "Zzz" animadas con oscilación y resplandor cian retro, junto a una barra de aturdimiento (`CQC Stun Gauge`).
+       - Letras "Zzz" animadas con oscilación, desincronización por semilla individual (`zSeed`) y resplandor cian retro, junto a una barra de aturdimiento (`CQC Stun Gauge`).
+       - Sanitización numérica exhaustiva (`Number.isFinite`), garantizando 0 llamadas con parámetros `NaN` en Canvas 2D ante objetos vacíos o valores no definidos.
      - Se integró el renderizado dentro del canvas transformado en `draw()` de `index.html`, garantizando sincronía milimétrica con el desplazamiento de cámara.
+     - En `expansion.js`, se aplicó la transformación de cámara `(-camX, -camY)` a todos los elementos del mundo en el wrapper de `draw()` (dog tags, burbujas `!` y `?`, indicador de sprint y textos flotantes de impacto), manteniendo desacoplados los efectos de pantalla completa (viñeta centrada en pantalla, HUD y flash de alerta).
   2. **Aislamiento Estricto de Charcos y Huellas Tácticas entre Salas (`puddlesByRoom` & `fp.roomId`)**:
      - Se reemplazó el array estático global de charcos por `puddlesByRoom` en `gfx/atmosphere.js`, mapeando los fluidos exclusivamente a salas con sentido temático e industrial (`dock`, `filtration_u1`, `arena_olympo`, `transit_conduit`).
      - Se eliminó el array duplicado de charcos en `gfx/decor.js` que provocaba sobre-dibujado inútil en todas las salas.
-     - Se vinculó `roomId: gameState.currentRoomId` a cada huella húmeda generada tanto en `atmosphere.js` como en `decor.js`.
-     - En la IA reactiva de los centinelas (`index.html`), se blindó la rutina de inspección y rastreo para ignorar rigurosamente huellas donde `fp.roomId !== gameState.currentRoomId`.
+     - Se vinculó `roomId: gameState.currentRoomId` a cada huella húmeda generada tanto en `atmosphere.js` como en `decor.js`, delimitando el historial a 50 huellas máximas.
+     - En la IA reactiva de los centinelas (`index.html`), se blindó la rutina de inspección y rastreo para ignorar rigurosamente huellas donde `fp.roomId !== gameState.currentRoomId`, pasando `gameState.currentRoomId` directamente a `window.getWetFootprints`.
      - En `renderAtmosphereFloor` y `renderDecorFloor`, se filtraron las huellas para proyectar únicamente las correspondientes a la sala activa.
-     - En `switchRoom`, se introdujo un barrido que resetea el estado de investigación y rastreo de todos los guardias (`_trackingFootprints = false`, `investigateTimer = 0`, limpieza de `_investigatedFps`, burbujas anuladas), erradicando el bug en el que pisar un charco alertaba a centinelas en salas contiguas.
+     - En `switchRoom`, se resetea el estado de persecución activa (`_trackingFootprints = false`, `investigateTimer = 0`, `investigateTarget = null`), pero se preserva la memoria de huellas investigadas (`_investigatedFps`) para erradicar re-alertas redundantes sobre huellas ya inspeccionadas al regresar a una sala.
+     - En `loadLevel`, se purgan las huellas residuales previas mediante `ATMOSPHERE.clearWetFootprints()` y `DECOR.clearFootprints()`, y se resetean los contadores de hit-stop `XP.freeze = 0` y `XP.flash = 0` en `expansion.js` para evitar bloqueos del ciclo de simulación al reiniciar o cargar misiones.
   3. **Verificación Automatizada Completa**:
-     - Se agregaron las pruebas de unidad e integración `[TEST 6b]` (render de sleepers CQC con llamada a `draw()`) y `[TEST 8c]` (aislamiento de charcos por sala e inmunidad de IA entre salas) en `test_game.js`, alcanzando 100% de éxito en la suite.
+     - Se robustecieron las pruebas de unidad e integración en `test_game.js`:
+       - `[TEST 6b]`: Ejecución real de CQC sigiloso por la espalda, remoción de centinela a `room.sleepers`, verificación estricta de cero parámetros `NaN` en Canvas, dibujado con cámara desplazada en `draw()` y validación visual PS1.
+       - `[TEST 8c]`: Filtrado directo por `roomId`, aislamiento espacial de la IA entre salas (un centinela en `corridor_u1` ignora huellas de `dock`), ausencia de huellas de otra sala en el render de suelo, inmunidad a re-alerta redundante tras transición de salas y purga en `loadLevel`.
+     - 100% de éxito en la suite (19+ pruebas interactivas y 300 frames renderizados en <0.75 ms/frame).
 - **Por qué funciona estéticamente**:
-  El combate cuerpo a cuerpo y la interacción ambiental alcanzan la pureza estética de 1998: los enemigos noqueados yacen con una pose militar procedural verosímil y la lógica táctica de rastreo de huellas húmedas se mantiene hermética entre sectores, elevando el realismo y la inmersión del sigilo.
+  El combate cuerpo a cuerpo y la interacción ambiental alcanzan la pureza estética de 1998: los enemigos noqueados yacen con una pose militar procedural verosímil, las partículas de Zzz oscilan sin colisiones visuales, los overlays se mueven sólidamente con la cámara, y la física táctica de rastreo de huellas húmedas se mantiene hermética entre sectores, elevando el realismo y la inmersión del sigilo en Shadow Moses.
 

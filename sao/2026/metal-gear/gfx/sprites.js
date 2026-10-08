@@ -459,25 +459,32 @@
     // 3. SPRITE PROCEDURAL: CENTINELA DERRIBADO POR CQC (SLEEPING GUARD)
     // -------------------------------------------------------------------------
     window.renderCustomSleepingGuard = function(sg, ctx) {
-        if (!sg) return false;
+        if (!sg || !ctx) return false;
 
-        const now = performance.now() * 0.001;
-        const breathe = Math.sin(now * 2.2 + (sg.x || 0) * 0.1) * 0.75;
-        const sleepRatio = Math.max(0, Math.min(1, (sg.sleep || 0) / 25));
+        const sx = typeof sg.x === 'number' && Number.isFinite(sg.x) ? sg.x : 0;
+        const sy = typeof sg.y === 'number' && Number.isFinite(sg.y) ? sg.y : 0;
+        const sRadius = typeof sg.radius === 'number' && Number.isFinite(sg.radius) ? sg.radius : 13;
+        const sAngle = typeof sg.angle === 'number' && Number.isFinite(sg.angle) ? sg.angle : 0;
+        const sSleep = typeof sg.sleep === 'number' && Number.isFinite(sg.sleep) ? sg.sleep : 0;
+        const maxSleep = typeof sg.maxSleep === 'number' && sg.maxSleep > 0 ? sg.maxSleep : 25;
+        const sleepRatio = Math.max(0, Math.min(1, sSleep / maxSleep));
+
+        const now = (typeof performance !== 'undefined' && performance.now) ? performance.now() * 0.001 : Date.now() * 0.001;
+        const breathe = Math.sin(now * 2.2 + sx * 0.1) * 0.75;
 
         // 1. Sombra suave y difusa proyectada en el suelo
         ctx.save();
-        ctx.translate(sg.x, sg.y + 4);
+        ctx.translate(sx, sy + 4);
         ctx.scale(1.4, 0.65);
         ctx.fillStyle = 'rgba(0, 0, 0, 0.42)';
         ctx.beginPath();
-        ctx.arc(0, 0, (sg.radius || 13) * 1.25, 0, Math.PI * 2);
+        ctx.arc(0, 0, sRadius * 1.25, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 
         // 2. Rifle táctico caído y desprendido en el suelo
         ctx.save();
-        ctx.translate(sg.x + 13, sg.y + 7);
+        ctx.translate(sx + 13, sy + 7);
         ctx.rotate(0.35);
         // Sombra del arma caída
         ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
@@ -498,8 +505,8 @@
 
         // 3. Centinela tendido de lado (CQC Knockdown / Sleeper pose)
         ctx.save();
-        ctx.translate(sg.x, sg.y);
-        ctx.rotate((sg.angle || 0) + Math.PI / 2);
+        ctx.translate(sx, sy);
+        ctx.rotate(sAngle + Math.PI / 2);
 
         // Botas militares relajadas en el piso
         ctx.fillStyle = '#0F172A';
@@ -561,22 +568,23 @@
 
         // 4. Efecto Zzz retro PS1 animado con oscilación
         ctx.save();
-        const zIndex = Math.floor((now * 2.5) % 3) + 1;
-        const zBob = Math.sin(now * 3) * 2;
+        const zSeed = ((sg.id || 0) * 1.7) + sx * 0.05;
+        const zIndex = Math.floor(((now + zSeed) * 2.5) % 3) + 1;
+        const zBob = Math.sin((now + zSeed) * 3) * 2;
         ctx.font = 'bold 11px "Share Tech Mono", monospace';
         ctx.textAlign = 'center';
         ctx.fillStyle = '#38BDF8';
         ctx.shadowColor = '#0284C7';
         ctx.shadowBlur = 8;
-        ctx.fillText('Z'.repeat(zIndex), sg.x + 12, sg.y - 12 + zBob);
+        ctx.fillText('Z'.repeat(zIndex), sx + 12, sy - 12 + zBob);
         ctx.restore();
 
         // 5. Barra táctica de duración de sueño (CQC Stun Gauge)
         ctx.save();
         const barW = 26;
         const barH = 3;
-        const barX = sg.x - barW / 2;
-        const barY = sg.y + 16;
+        const barX = sx - barW / 2;
+        const barY = sy + 16;
         ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
         ctx.fillRect(barX, barY, barW, barH);
         ctx.fillStyle = '#38BDF8';

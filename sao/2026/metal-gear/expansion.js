@@ -814,7 +814,12 @@
         if (!room) return;
         const p = gameState.player;
         const t = performance.now() / 1000;
+        const camX = (window.CINE ? window.CINE.camX : 0);
+        const camY = (window.CINE ? window.CINE.camY : 0);
+
+        // 1. Capa de elementos en espacio de mundo vinculados a la cámara
         ctx.save();
+        ctx.translate(-camX, -camY);
 
         // Dog tag
         if (room._tag && !room._tag.taken) {
@@ -845,6 +850,26 @@
             ctx.restore();
         });
 
+        // Indicador de sprint
+        if (gameState.keys['shift'] && !p.inBox) {
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.fillStyle = 'rgba(251,191,36,0.85)';
+            ctx.font = '10px Share Tech Mono';
+            ctx.fillText('CORRIENDO // RUIDO', p.x, p.y + p.radius + 16);
+            ctx.restore();
+        }
+
+        // FX Textos Flotantes Tácticos (Arcade Hits)
+        try {
+            if (typeof renderFloatingTexts === 'function') renderFloatingTexts(ctx);
+        } catch (e) {}
+
+        ctx.restore();
+
+        // 2. Capa de efectos en espacio de pantalla (UI / Overlays)
+        ctx.save();
+
         // Láseres en interferencia
         if (XP.chaffTimer > 0) {
             ctx.fillStyle = `rgba(56,189,248,${0.05 + Math.random() * 0.05})`;
@@ -859,8 +884,8 @@
             ctx.fillText(`NULL ACTIVO // ${XP.chaffTimer.toFixed(1)}s`, 14, canvas.height - 14);
         }
 
-        // Viñeta táctica centrada en el jugador
-        const g = ctx.createRadialGradient(p.x, p.y, 90, p.x, p.y, 520);
+        // Viñeta táctica centrada en el jugador (en espacio de pantalla)
+        const g = ctx.createRadialGradient(p.x - camX, p.y - camY, 90, p.x - camX, p.y - camY, 520);
         const alertTint = gameState.alertState === 'alert' ? '60,0,0' : '0,0,0';
         g.addColorStop(0, `rgba(${alertTint},0)`);
         g.addColorStop(1, `rgba(${alertTint},0.55)`);
@@ -889,18 +914,6 @@
         const secs = Math.floor((performance.now() - s.start) / 1000);
         ctx.fillText(`T ${String(Math.floor(secs / 60)).padStart(2, '0')}:${String(secs % 60).padStart(2, '0')}  ALR ${s.alarms}  CQC ${s.cqc}  TAGS ${s.tags}/${s.tagsTotal}${s.streak >= 2 ? '  COMBO x' + s.streak : ''}`, canvas.width - 12, canvas.height - 10);
 
-        // Indicador de sprint
-        if (gameState.keys['shift'] && !p.inBox) {
-            ctx.textAlign = 'center';
-            ctx.fillStyle = 'rgba(251,191,36,0.85)';
-            ctx.fillText('CORRIENDO // RUIDO', p.x, p.y + p.radius + 16);
-        }
-
-        // FX Textos Flotantes Tácticos (Arcade Hits)
-        try {
-            if (typeof renderFloatingTexts === 'function') renderFloatingTexts(ctx);
-        } catch (e) {}
-
         ctx.restore();
     };
 
@@ -915,6 +928,8 @@
             XP.chaff = 1;
             XP.chaffTimer = 0;
             XP.invert = 0;
+            XP.freeze = 0;
+            XP.flash = 0;
             XP.mantisDone = false;
             refreshChaffHud();
         }

@@ -307,7 +307,51 @@ try {
         if (typeof window.renderCustomSleepingGuard !== 'function') {
             throw new Error('FALLA: window.renderCustomSleepingGuard no está definido');
         }
-        const testSleeper = { x: 300, y: 200, angle: 0, radius: 14, sleep: 20 };
+        // Robustez ante entradas nulas y vacías
+        if (window.renderCustomSleepingGuard(null, testCtx) !== false) {
+            throw new Error('FALLA: renderCustomSleepingGuard(null) debió devolver false');
+        }
+        if (window.renderCustomSleepingGuard(undefined, testCtx) !== false) {
+            throw new Error('FALLA: renderCustomSleepingGuard(undefined) debió devolver false');
+        }
+
+        // Robustez ante objeto vacío: verificar ausencia total de parámetros NaN en Canvas
+        const recordedCanvasArgs = [];
+        const wrapCtxFn = (name) => {
+            const orig = testCtx[name];
+            testCtx[name] = function() {
+                for (let i = 0; i < arguments.length; i++) {
+                    if (typeof arguments[i] === 'number' && isNaN(arguments[i])) {
+                        recordedCanvasArgs.push({ method: name, argIdx: i, args: Array.from(arguments) });
+                    }
+                }
+                if (orig) return orig.apply(this, arguments);
+            };
+            return orig;
+        };
+        const origTr = wrapCtxFn('translate');
+        const origFillT = wrapCtxFn('fillText');
+        const origFillR = wrapCtxFn('fillRect');
+        const origStrokeR = wrapCtxFn('strokeRect');
+        const origArc = wrapCtxFn('arc');
+        const origRot = wrapCtxFn('rotate');
+
+        const emptyRes = window.renderCustomSleepingGuard({}, testCtx);
+        testCtx.translate = origTr;
+        testCtx.fillText = origFillT;
+        testCtx.fillRect = origFillR;
+        testCtx.strokeRect = origStrokeR;
+        testCtx.arc = origArc;
+        testCtx.rotate = origRot;
+
+        if (!emptyRes) {
+            throw new Error('FALLA: renderCustomSleepingGuard({}) debió devolver true con fallbacks numéricos');
+        }
+        if (recordedCanvasArgs.length > 0) {
+            throw new Error('FALLA: renderCustomSleepingGuard({}) produjo argumentos NaN en Canvas: ' + JSON.stringify(recordedCanvasArgs));
+        }
+
+        const testSleeper = { id: 1, x: 300, y: 200, angle: 0, radius: 14, sleep: 20 };
         let sleeperRenderCalled = false;
         const origSleeperRender = window.renderCustomSleepingGuard;
         window.renderCustomSleepingGuard = function(sg, ctx) {
@@ -328,6 +372,27 @@ try {
         }
         window.renderCustomSleepingGuard = origSleeperRender;
         curRoomSleeper.sleepers = [];
+
+        // Ejecución real de CQC sigiloso por la espalda y transición a sleepers
+        loadLevel(0, true);
+        const roomCQC = facilityRooms[gameState.currentRoomId];
+        const gCQC = roomCQC.guards[0];
+        gCQC.angle = Math.PI / 2; // Guardia mirando al sur (+Y)
+        gameState.player.x = gCQC.x;
+        gameState.player.y = gCQC.y - 12; // Solid Byte ubicado a la espalda del guardia
+        gameState.player.dir = Math.PI / 2;
+        const initialGuardCount = roomCQC.guards.length;
+        window.tryCQCAction();
+        if (roomCQC.guards.length !== initialGuardCount - 1) {
+            throw new Error('FALLA: CQC por la espalda no removió al centinela de room.guards');
+        }
+        if (!roomCQC.sleepers || roomCQC.sleepers.length !== 1 || roomCQC.sleepers[0].sleep !== 25) {
+            throw new Error('FALLA: CQC no ingresó al centinela a room.sleepers con sleep: 25s');
+        }
+        // Dibujado con cámara desplazada activo
+        if (window.CINE) { window.CINE.camX = 18; window.CINE.camY = 12; }
+        window.draw();
+        if (window.CINE) { window.CINE.camX = 0; window.CINE.camY = 0; }
         console.log('   [TEST 6b PASSED] Renderizado Procedural de centinela dormido CQC validado con cámara y gráficos PS1');
 
         // Test 7: Sombras y Oclusión - Reducción drástica de visión de linternas en zonas oscuras
@@ -401,20 +466,29 @@ try {
             throw new Error('FALLA: corridor_u1 no debería tener charcos asignados');
         }
 
-        // Probar aislamiento de IA: huella en dock no alerta a guardia en corridor_u1
+        // Probar filtrado directo por roomId en getWetFootprints
         loadLevel(0, true);
         const fpDock = window.spawnWetFootprint(300, 200, 0, 5.0, 'dock');
         if (fpDock.roomId !== 'dock') {
             throw new Error('FALLA: spawnWetFootprint no asignó roomId: dock');
         }
-        // Cambiar a corridor_u1
+        const dockFps = window.getWetFootprints('dock');
+        const corridorFps = window.getWetFootprints('corridor_u1');
+        if (!dockFps.some(f => f.id === fpDock.id)) {
+            throw new Error('FALLA: getWetFootprints("dock") no incluyó la huella de dock');
+        }
+        if (corridorFps.some(f => f.id === fpDock.id)) {
+            throw new Error('FALLA: getWetFootprints("corridor_u1") incluyó erróneamente huella perteneciente a dock');
+        }
+
+        // Probar aislamiento de IA: huella en dock no alerta a guardia en corridor_u1
         switchRoom('corridor_u1', 50, 225);
         if (gameState.currentRoomId !== 'corridor_u1') {
             throw new Error('FALLA: switchRoom no cambió a corridor_u1');
         }
         const roomCorridor = facilityRooms['corridor_u1'];
         const gCorridor = roomCorridor.guards[0];
-        gCorridor.x = 250; gCorridor.y = 200; gCorridor.angle = 0; // Mirando hacia (300, 200)
+        gCorridor.x = 275; gCorridor.y = 200; gCorridor.angle = 0; // Mirando hacia (300, 200) a 25px
         gCorridor.investigateTimer = 0;
         gCorridor._trackingFootprints = false;
         gCorridor._bubble = null;
@@ -432,6 +506,36 @@ try {
         // En corridor_u1 no hay charcos ni huellas pertenecientes a corridor_u1
         if (rectCount > 0) {
             throw new Error('FALLA: renderAtmosphereFloor dibujó huellas de otra sala en corridor_u1');
+        }
+
+        // Probar inmunidad a re-alerta redundante: al regresar a dock, el guardia no debe re-investigar la misma huella ya vista
+        switchRoom('dock', 750, 225);
+        const roomDock = facilityRooms['dock'];
+        const gDock = roomDock.guards[0];
+        gDock.x = 275; gDock.y = 200; gDock.angle = 0; // A 25px de la huella en dock
+        updateGame(0.016); // Guardia avista e investiga fpDock por primera vez
+        if (!gDock._trackingFootprints && gDock.investigateTimer === 0) {
+            throw new Error('FALLA: Centinela en dock debió avistar la huella de su propia sala');
+        }
+        // Simular conclusión de la investigación de esa huella
+        gDock.x = 300; gDock.y = 200;
+        updateGame(0.016);
+        gDock._trackingFootprints = false;
+        gDock.investigateTimer = 0;
+        gDock.investigateTarget = null;
+        // Cambiar de sala y volver inmediatamente
+        switchRoom('corridor_u1', 50, 225);
+        switchRoom('dock', 750, 225);
+        gDock.x = 275; gDock.y = 200; gDock.angle = 0; // Vuelve a mirar hacia la misma huella a 25px
+        updateGame(0.016);
+        if (gDock._trackingFootprints || gDock.investigateTimer > 0 || (gDock._bubble && gDock._bubble.ch === '?')) {
+            throw new Error('FALLA: Centinela en dock re-alertó redundantemente sobre huella ya investigada');
+        }
+
+        // Probar limpieza en loadLevel: huellas residuales deben ser purgadas
+        loadLevel(0, true);
+        if (window.getWetFootprints().length > 0) {
+            throw new Error('FALLA: loadLevel debió purgar las huellas húmedas residuales');
         }
         console.log('   [TEST 8c PASSED] Aislamiento estricto de charcos e IA de huellas entre salas validado');
 
