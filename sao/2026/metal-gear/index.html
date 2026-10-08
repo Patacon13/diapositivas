@@ -32,18 +32,28 @@
             -webkit-user-select: none;
         }
 
+        html, body {
+            width: 100%;
+            height: 100%;
+            max-width: 100vw;
+            max-height: 100vh;
+            overflow: hidden;
+            overscroll-behavior: none;
+            touch-action: none;
+            -webkit-overflow-scrolling: auto;
+        }
+
         body {
             background-color: var(--mgs-bg);
             color: #C8E6C9;
             font-family: 'Share Tech Mono', monospace;
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow-x: hidden;
-            padding: 10px;
+            padding: 6px;
             position: relative;
+            box-sizing: border-box;
         }
 
         /* Efecto CRT Scanlines & Glow */
@@ -1094,8 +1104,25 @@
             text-decoration: underline;
         }
 
-        /* Responsividad Mobile & Touch Devices */
-        @media (max-width: 900px), (pointer: coarse) {
+        /* Responsividad Mobile & Touch Devices (iPad / Teléfonos) */
+        @media (max-width: 900px), (pointer: coarse), (max-height: 750px) {
+            body {
+                padding: 0;
+                justify-content: flex-start;
+            }
+
+            .mgs-console {
+                border-radius: 0;
+                border: none;
+                max-height: 100vh;
+                max-height: 100dvh;
+                height: 100%;
+            }
+
+            footer {
+                display: none !important;
+            }
+
             .mobile-touch-bar {
                 display: flex;
                 touch-action: none;
@@ -1103,15 +1130,6 @@
         }
 
         @media (max-width: 768px) {
-            body {
-                padding: 4px;
-                justify-content: flex-start;
-            }
-
-            .mgs-console {
-                border-radius: 8px;
-            }
-
             .hud-bar {
                 padding: 4px 6px;
                 gap: 4px;
@@ -2159,15 +2177,52 @@
         function getPortraitSVG(id) {
             if (id === 'solid_byte') {
                 return `<svg viewBox="0 0 100 100">
-                    <rect width="100" height="100" fill="#042310" />
-                    <rect x="30" y="25" width="40" height="45" fill="#78909C" />
-                    <rect x="25" y="32" width="50" height="12" fill="#1B5E20" />
-                    <polygon points="25,38 10,48 20,52" fill="#1B5E20" />
-                    <rect x="30" y="18" width="40" height="14" fill="#37474F" />
-                    <rect x="30" y="55" width="40" height="15" fill="#455A64" />
-                    <rect x="36" y="36" width="8" height="4" fill="#E0E0E0" />
-                    <rect x="56" y="36" width="8" height="4" fill="#E0E0E0" />
-                    <circle cx="72" cy="46" r="6" fill="#00FF66" opacity="0.8" />
+                    <rect width="100" height="100" fill="#03170A" />
+                    <circle cx="50" cy="50" r="46" fill="#052410" />
+                    <!-- Cuello y hombros Sneaking Suit -->
+                    <rect x="42" y="58" width="16" height="16" fill="#D4A373" />
+                    <polygon points="42,66 50,74 58,66" fill="#BC8A5F" />
+                    <!-- Hombreras y chaleco táctico grafito -->
+                    <path d="M 14 100 L 14 78 Q 28 66 38 65 L 50 82 L 62 65 Q 72 66 86 78 L 86 100 Z" fill="#0F172A" />
+                    <polygon points="26,72 38,66 46,82 32,90" fill="#1E293B" />
+                    <polygon points="74,72 62,66 54,82 68,90" fill="#1E293B" />
+                    <!-- Cuello alto Sneaking Suit con costuras tácticas -->
+                    <rect x="36" y="62" width="28" height="8" rx="2" fill="#1E293B" />
+                    <line x1="38" y1="66" x2="62" y2="66" stroke="#334155" stroke-width="1" />
+                    <!-- Rostro y mandíbula firme -->
+                    <rect x="30" y="24" width="40" height="42" rx="14" fill="#D4A373" />
+                    <!-- Sombra de barba / Barba de 3 días (5 o'clock shadow) -->
+                    <path d="M 33 50 Q 50 68 67 50 L 67 56 Q 50 69 33 56 Z" fill="rgba(60, 40, 25, 0.28)" />
+                    <!-- Orejas -->
+                    <circle cx="29" cy="45" r="4.5" fill="#BC8A5F" />
+                    <circle cx="71" cy="45" r="4.5" fill="#BC8A5F" />
+                    <!-- Headset táctico con LED verde de transmisión -->
+                    <rect x="25" y="42" width="5" height="10" rx="2" fill="#0F172A" />
+                    <line x1="27" y1="52" x2="36" y2="58" stroke="#334155" stroke-width="1.5" />
+                    <circle cx="27.5" cy="45" r="1.5" fill="#00FF66" />
+                    <!-- Bandana Táctica Verde Oliva (Mítica de Solid Snake) -->
+                    <path d="M 27 31 L 73 31 L 73 41 L 27 41 Z" fill="#15803D" />
+                    <path d="M 28 40 L 72 40 L 72 42 L 28 42 Z" fill="#14532D" />
+                    <!-- Nudo y cintas de la bandana al viento -->
+                    <polygon points="27,33 12,44 19,48" fill="#15803D" />
+                    <polygon points="27,38 15,54 22,56" fill="#166534" />
+                    <!-- Cabello castaño oscuro desmechado -->
+                    <path d="M 26 31 C 26 14 74 14 74 31 C 75 36 73 40 73 40 C 69 28 65 24 50 24 C 35 24 30 29 27 40 Z" fill="#1C1917" />
+                    <path d="M 28 24 Q 42 20 56 25 Q 66 29 68 34 Q 54 28 40 31 Q 32 33 28 37 Z" fill="#292524" />
+                    <!-- Cejas pobladas y mirada táctica -->
+                    <rect x="33" y="34" width="11" height="3" rx="1" fill="#18181B" />
+                    <rect x="56" y="34" width="11" height="3" rx="1" fill="#18181B" />
+                    <!-- Ojos concentrados de combate -->
+                    <ellipse cx="38" cy="40" rx="4" ry="2.8" fill="#FFFFFF" />
+                    <circle cx="38.5" cy="40" r="2.2" fill="#0F172A" />
+                    <circle cx="38.5" cy="40" r="1.1" fill="#059669" />
+                    <ellipse cx="62" cy="40" rx="4" ry="2.8" fill="#FFFFFF" />
+                    <circle cx="61.5" cy="40" r="2.2" fill="#0F172A" />
+                    <circle cx="61.5" cy="40" r="1.1" fill="#059669" />
+                    <!-- Nariz angulosa y boca táctica con lip-sync -->
+                    <path d="M 49 41 L 47 48 L 52 48" fill="none" stroke="#A16207" stroke-width="1.8" stroke-linecap="round" />
+                    <path class="codec-mouth" d="M 42 54 Q 50 56 58 54" fill="none" stroke="#78350F" stroke-width="2" stroke-linecap="round" />
+                    <line class="codec-mouth" x1="44" y1="54" x2="56" y2="54" stroke="#D4A373" stroke-width="1.2" />
                 </svg>`;
             } else if (id === 'coronel') {
                 // Coronel / Profesor (Tomás): Traje formal negro a medida, camisa blanca cuello abierto (sin corbata ni lentes), pin celeste y blanco
@@ -4630,76 +4685,66 @@
             if (!currentRoom) return;
 
             let nearWall = false;
-            for (let w of currentRoom.walls) {
+            for (let w of (currentRoom.walls || [])) {
                 const closestX = Math.max(w.x, Math.min(p.x, w.x + w.w));
                 const closestY = Math.max(w.y, Math.min(p.y, w.y + w.h));
                 const dist = Math.hypot(p.x - closestX, p.y - closestY);
-                if (dist <= p.radius + 18) {
+                if (dist <= p.radius + 40) {
                     nearWall = true;
                     break;
                 }
             }
 
-            if (nearWall) {
-                playSFX('knock');
-                gameState.soundWaves.push({
-                    x: p.x,
-                    y: p.y,
-                    radius: 6,
-                    maxRadius: 180,
-                    alpha: 0.95
-                });
-                showToast("¡TOC TOC! (Golpe en la pared)");
+            playSFX('knock');
+            const soundRadius = nearWall ? 320 : (p.inBox ? 220 : 280);
+            gameState.soundWaves.push({
+                x: p.x,
+                y: p.y,
+                radius: 6,
+                maxRadius: soundRadius,
+                alpha: 0.95
+            });
 
-                if (currentRoom.guards) { if (gBoxDebug) console.log("IN UPDATEGAME: room=", gameState.currentRoomId, "guards=", currentRoom.guards.length, "g0 timer=", currentRoom.guards[0].investigateTimer);
-                    currentRoom.guards.forEach(g => {
-                        const dist = Math.hypot(p.x - g.x, p.y - g.y);
-                        if (dist < 220) {
-                            if (gameState.alertState !== 'alert') {
-                                g.investigateTarget = { x: p.x, y: p.y };
-                                g.angle = Math.atan2(p.y - g.y, p.x - g.x);
-                                g.investigateTimer = 4.0;
-                                gameState.alertState = 'caution';
-                                gameState.alertTimer = Math.max(gameState.alertTimer, 4.0);
-                                const alertBox = document.getElementById('alert-box');
-                                if (alertBox) alertBox.className = 'alert-gauge active caution';
-                                const tag = document.getElementById('alert-tag');
-                                if (tag) tag.textContent = '? PRECAUCIÓN';
-                            }
-                        }
-                    });
-                }
-            } else if (p.inBox) {
-                // Golpe táctico amortiguado desde dentro de la caja de cartón (Tap Tap)
-                playSFX('knock');
-                gameState.soundWaves.push({
-                    x: p.x,
-                    y: p.y,
-                    radius: 4,
-                    maxRadius: 130,
-                    alpha: 0.85
-                });
+            if (p.inBox) {
                 showToast("¡TAP TAP! (Golpe táctico desde la caja de cartón)");
-                if (currentRoom.guards) {
-                    currentRoom.guards.forEach(g => {
-                        const dist = Math.hypot(p.x - g.x, p.y - g.y);
-                        if (dist < 160 && gameState.alertState !== 'alert') {
-                            g.investigateTarget = { x: p.x, y: p.y };
-                            g.angle = Math.atan2(p.y - g.y, p.x - g.x);
-                            g.investigateTimer = 3.5;
-                            g._inspectingBox = true;
-                            g._bubble = { ch: '?', t: 1.6 };
-                        }
-                    });
-                }
+            } else if (nearWall) {
+                showToast("¡TOC TOC! (Golpe en la pared)");
             } else {
-                playTone(180, 0.05, 'triangle', 0.08);
+                showToast("¡TAP TAP! (Golpe en el suelo metálico)");
+            }
+
+            if (currentRoom.guards) {
+                currentRoom.guards.forEach(g => {
+                    const dist = Math.hypot(p.x - g.x, p.y - g.y);
+                    if (dist < soundRadius && gameState.alertState !== 'alert') {
+                        g.investigateTarget = { x: p.x, y: p.y };
+                        g.angle = Math.atan2(p.y - g.y, p.x - g.x);
+                        g.investigateTimer = 4.5;
+                        g._trackingFootprints = false;
+                        g._inspectingBox = p.inBox;
+                        g._bubble = { ch: '?', t: 2.2 };
+                        playSFX('curious');
+                        gameState.alertState = 'caution';
+                        gameState.alertTimer = Math.max(gameState.alertTimer, 4.0);
+                        const alertBox = document.getElementById('alert-box');
+                        if (alertBox) alertBox.className = 'alert-gauge active caution';
+                        const tag = document.getElementById('alert-tag');
+                        if (tag) tag.textContent = '? PRECAUCIÓN';
+                    }
+                });
             }
         }
 
         // Detección de Teclado
         window.addEventListener('keydown', (e) => {
             const key = e.key.toLowerCase();
+            const PREVENT_SCROLL = ['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'space'];
+            if (PREVENT_SCROLL.includes(key)) {
+                const targetTag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+                if (targetTag !== 'input' && targetTag !== 'textarea') {
+                    e.preventDefault();
+                }
+            }
             gameState.keys[key] = true;
 
             const codecScreen = document.getElementById('codec-screen');

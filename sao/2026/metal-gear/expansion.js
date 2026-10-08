@@ -634,8 +634,12 @@
         room.guards.forEach(g => {
             if (Math.hypot(x - g.x, y - g.y) < radius) {
                 g.investigateTarget = { x, y };
-                g.investigateTimer = 3.5;
+                g.investigateTimer = 4.0;
                 g.angle = Math.atan2(y - g.y, x - g.x);
+                g._trackingFootprints = false;
+                g._inspectingBox = false;
+                g._bubble = { ch: '?', t: 1.8 };
+                if (typeof playSFX === 'function') playSFX('curious');
                 if (gameState.alertState !== 'alert') {
                     gameState.alertState = 'caution';
                     gameState.alertTimer = Math.max(gameState.alertTimer, 3.5);
@@ -649,6 +653,13 @@
     // Captura de teclado: tiene prioridad sobre el motor base
     window.addEventListener('keydown', e => {
         const key = e.key.toLowerCase();
+        const PREVENT_SCROLL = ['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'space'];
+        if (PREVENT_SCROLL.includes(key)) {
+            const activeTag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+            if (activeTag !== 'input' && activeTag !== 'textarea') {
+                e.preventDefault();
+            }
+        }
         if (isOpen('hack-screen')) {
             // Evita que [E]/[Espacio] reabran la terminal y deja tipear en BIT LOCK
             e.stopImmediatePropagation();
@@ -755,7 +766,7 @@
             const sprinting = gameState.keys['shift'] && moving && !p.inBox;
             if (sprinting) {
                 XP.sprintNoise -= dt;
-                if (XP.sprintNoise <= 0) { XP.sprintNoise = 0.45; noiseAt(p.x, p.y, 115); }
+                if (XP.sprintNoise <= 0) { XP.sprintNoise = 0.45; noiseAt(p.x, p.y, 185); }
             }
 
             // Dog tag

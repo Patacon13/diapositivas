@@ -395,6 +395,33 @@ try {
         if (window.CINE) { window.CINE.camX = 0; window.CINE.camY = 0; }
         console.log('   [TEST 6b PASSED] Renderizado Procedural de centinela dormido CQC validado con cámara y gráficos PS1');
 
+        // Test 6c: Reacción Sonora y Visual de Centinelas ante Wall Knock
+        loadLevel(0, true);
+        const roomKnock = facilityRooms[gameState.currentRoomId];
+        const gKnock = roomKnock.guards[0];
+        gameState.player.x = gKnock.x + 120; // A 120px de distancia del centinela
+        gameState.player.y = gKnock.y;
+        gKnock._bubble = null;
+        gKnock.investigateTimer = 0;
+        window.performWallKnock();
+        if (!gKnock._bubble || gKnock._bubble.ch !== '?') {
+            throw new Error('FALLA: performWallKnock no activó el globo ? en el centinela');
+        }
+        if (gKnock.investigateTimer <= 0 || !gKnock.investigateTarget) {
+            throw new Error('FALLA: performWallKnock no configuró investigateTarget e investigateTimer en el centinela');
+        }
+        console.log('   [TEST 6c PASSED] Reacción táctica sonora y visual ante Wall Knock verificada (? bubble y tracking)');
+
+        // Test 6d: Retrato Vectorial de Solid Byte en CODEC con Bandana y Lip-Sync
+        const solidByteSVG = getPortraitSVG('solid_byte');
+        if (!solidByteSVG.includes('codec-mouth')) {
+            throw new Error('FALLA: getPortraitSVG(solid_byte) no incluye clase .codec-mouth para lip-sync');
+        }
+        if (!solidByteSVG.includes('#15803D')) {
+            throw new Error('FALLA: getPortraitSVG(solid_byte) no incluye la bandana verde oliva mítica');
+        }
+        console.log('   [TEST 6d PASSED] Retrato de Solid Byte en CODEC validado con bandana y clase .codec-mouth');
+
         // Test 7: Sombras y Oclusión - Reducción drástica de visión de linternas en zonas oscuras
         loadLevel(0, true);
         const room0 = facilityRooms[gameState.currentRoomId];

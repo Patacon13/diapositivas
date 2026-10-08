@@ -272,3 +272,30 @@ Registro del proceso iterativo de diseño, dirección de arte y programación gr
 - **Por qué funciona estéticamente**:
   El combate cuerpo a cuerpo y la interacción ambiental alcanzan la pureza estética de 1998: los enemigos noqueados yacen con una pose militar procedural verosímil, las partículas de Zzz oscilan sin colisiones visuales, los overlays se mueven sólidamente con la cámara, y la física táctica de rastreo de huellas húmedas se mantiene hermética entre sectores, elevando el realismo y la inmersión del sigilo en Shadow Moses.
 
+---
+
+## CICLO 18: Reacción Sonora Fidedigna (Wall Knock & Sprint), Retrato Táctico de Solid Byte en CODEC y Viewport Containment Móvil / iPad (Anti-Scroll)
+- **Fecha/Ciclo**: Ciclo 18
+- **Módulos**: `index.html`, `expansion.js`, `test_game.js`, `EVOLUCION_CREATIVA.md`
+- **Inspiración Retro PS1**: La inmediatez táctil de golpear las paredes metálicas de Shadow Moses para distraer centinelas con feedback audiovisual contundente, el icónico retrato de Solid Snake en el CODEC con su bandana verde oliva y traje de infiltración, y el bloqueo estricto del viewport para que el juego se sienta como una consola portátil sólida sin barras de scroll ni desplazamientos indeseados.
+- **Qué se inventó y corrigió**:
+  1. **Reacción Sonora y Distracción Fidedigna (`performWallKnock` y `noiseAt`)**:
+     - *Umbral permisivo y distracción universal*: Se eliminó la restricción estricta de 29px para golpear muros. Ahora `[F]` permite golpear paredes a distancia permisiva (40px) generando ondas de 320px de radio ("¡TOC TOC!"), o golpear el suelo metálico desde cualquier punto de la sala ("¡TAP TAP!"), produciendo siempre una onda sonora expansiva visible y audible.
+     - *Feedback visual y auditivo inmediato en enemigos*: Al escuchar el sonido, los centinelas emiten inmediatamente el globo animado `?` (`_bubble = { ch: '?', t: 2.2 }`), reproducen el SFX procedural `curious`, interrumpen cualquier rastreo de huellas previo (`_trackingFootprints = false`) y fijan su rumbo hacia el origen del ruido (`investigateTimer = 4.5`).
+     - *Sprint Noise reactivo*: Se incrementó el radio de ruido al correr con `[SHIFT]` a 185px, disparando también el globo `?` y sonido de curiosidad en centinelas próximos.
+  2. **Retrato Vectorial Completo de Solid Byte en CODEC**:
+     - Se reemplazó el placeholder de 8 rectángulos planos vacíos por un retrato vectorial de alta fidelidad:
+       - Traje sneaking suit oscuro en tonos grafito con hombreras tácticas y cuello alto acolchado.
+       - Bandana verde oliva mítica (`#15803D`) con pliegues de sombra y cintas al viento.
+       - Mandíbula firme con sombra de barba de tres días (5 o'clock shadow).
+       - Ojos concentrados de combate con reflejo esmeralda.
+       - Headset táctico con auricular y LED verde de transmisión parpadeante (`#00FF66`).
+       - Boca animable con la clase `.codec-mouth` integrada en el pipeline de lip-sync del teletipo.
+  3. **Contención del Viewport en iPad y Dispositivos Móviles (Anti-Scroll)**:
+     - Se aplicó `overflow: hidden; overscroll-behavior: none; touch-action: none;` a `html` y `body`, fijando la altura al 100% de la ventana (`100dvh` / `100vh`).
+     - En los eventos `keydown` (tanto en `index.html` como en `expansion.js`), se interceptaron las teclas de movimiento (`ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight`, `Space`) con `e.preventDefault()`, impidiendo que el navegador desplace o scrollee la página hacia abajo al jugar.
+     - En pantallas táctiles o compactas (`@media (max-width: 900px), (max-height: 750px)`), la consola táctica se adapta al 100% del alto disponible sin margen sobrante y se oculta el footer redundante, bloqueando el marco de juego firmemente en la pantalla.
+- **Por qué funciona estéticamente**:
+  El jugador tiene control absoluto sobre la IA mediante el sonido: cada golpe y cada paso apresurado ofrecen retroalimentación física instantánea. En el CODEC, Solid Byte ya no es un recuadro verde vacío, sino el legendario agente de infiltración, y en tablets/iPad el juego se comporta como una aplicación de consola nativa, sin temblores ni desbordes.
+
+
