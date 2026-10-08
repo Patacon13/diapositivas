@@ -673,6 +673,32 @@ try {
         }
         console.log('   [TEST 10b PASSED] Retención de tema de boss durante combate validada');
 
+        // Test 10c: Protocolo de Aislamiento en Boss Arena (Bloqueo de puertas mientras el boss vive)
+        loadLevel(0, true);
+        switchRoom('arena_vulcan', 100, 225);
+        gameState.boss.hp = 100;
+        // Mover jugador hacia la puerta de salida (vulcan_west: x=0, y=175, w=24, h=100)
+        gameState.player.x = 10;
+        gameState.player.y = 225;
+        updateGame(0.016);
+        if (gameState.currentRoomId !== 'arena_vulcan') {
+            throw new Error('FALLA: El jugador pudo salir de la sala de boss mientras el boss estaba vivo');
+        }
+        if (gameState.player.x <= 24) {
+            throw new Error('FALLA: El jugador no fue repelido por la puerta sellada');
+        }
+
+        // Derrotar al boss y verificar que las puertas se desbloquean
+        gameState.boss.hp = 0;
+        gameState.boss.state = 'destroyed';
+        gameState.player.x = 10;
+        gameState.player.y = 225;
+        updateGame(0.016);
+        if (gameState.currentRoomId !== 'corridor_u1') {
+            throw new Error('FALLA: Las puertas no se desbloquearon tras neutralizar al boss, sala: ' + gameState.currentRoomId);
+        }
+        console.log('   [TEST 10c PASSED] Protocolo de Aislamiento de Boss verificado (Sellado activo y Desbloqueo post-victoria)');
+
         // Level 1 y Level 2 (Boss Encounter)
         loadLevel(1, true);
         for (let f = 0; f < 60; f++) {

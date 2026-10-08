@@ -298,4 +298,26 @@ Registro del proceso iterativo de diseño, dirección de arte y programación gr
 - **Por qué funciona estéticamente**:
   El jugador tiene control absoluto sobre la IA mediante el sonido: cada golpe y cada paso apresurado ofrecen retroalimentación física instantánea. En el CODEC, Solid Byte ya no es un recuadro verde vacío, sino el legendario agente de infiltración, y en tablets/iPad el juego se comporta como una aplicación de consola nativa, sin temblores ni desbordes.
 
+---
 
+## CICLO 19: Protocolo de Aislamiento en Boss Arenas (Sellado de Emergencia)
+- **Fecha/Ciclo**: Ciclo 19
+- **Módulos**: `index.html`, `test_game.js`, `EVOLUCION_CREATIVA.md`
+- **Inspiración Retro PS1**: Los memorables combates contra jefes en la saga *Metal Gear* (Vulcan Raven, Psycho Mantis, Rex): en el momento en que Snake ingresa a la arena de combate, las compuertas perimetrales se sellan herméticamente con advertencias de emergencia militar, impidiendo huir o alternar de sala hasta que la amenaza sea neutralizada.
+- **Qué se inventó y corrigió**:
+  1. **Protocolo de Aislamiento Táctico (`isBossLockdown`)**:
+     - Al entrar a una sala de jefe (`currentRoom.hasBoss`), el sistema emite una notificación de advertencia militar: *"🚨 ¡BLOQUEO DE EMERGENCIA! Puertas selladas hasta neutralizar la amenaza"*.
+     - Durante todo el enfrentamiento (`gameState.boss.hp > 0`), cualquier intento de atravesar las puertas de salida (`vulcan_west`, `olympo_west`, `core_west`) es bloqueado de inmediato.
+     - El espía es repelido físicamente hacia el interior de la arena (`pushback`), se reproduce el SFX táctico `door-locked` y se emite la advertencia con debounce *"🚨 PROTOCOLO DE AISLAMIENTO // PUERTAS SELLADAS HASTA NEUTRALIZAR LA AMENAZA"*, impidiendo saltos de cámara o bugs de desincronización de música.
+  2. **Renderizado de Compuertas Blindadas con Hazard Stripes**:
+     - Las puertas en arenas activas adoptan una estética de compuerta militar blindada:
+       - Relleno pulsante carmesí (`rgba(255, 42, 42, pulse)`).
+       - Franjas diagonales de peligro (*hazard stripes*) en amarillo ámbar con máscara de recorte (`ctx.clip()`) para evitar sangrado fuera del umbral.
+       - Marco de seguridad reforzado con resplandor (`shadowBlur = 8`) y tipografía militar `"SEALED"`.
+  3. **Desbloqueo y Descompresión Post-Victoria**:
+     - Una vez neutralizado el Boss (`gameState.boss.hp <= 0`), el protocolo de aislamiento se desactiva instantáneamente: las compuertas recuperan su estado normal (`PASO` / `LV.OK`) y permiten el libre tránsito del jugador.
+  4. **Prueba de Integración Automatizada (`[TEST 10c]`)**:
+     - Verifica que la colisión con la puerta de la arena de boss con vida retenga al jugador dentro de la sala y lo repela limpiamente.
+     - Verifica que tras reducir la vida del boss a 0, la puerta se desbloquee y permita la transición de sala hacia el corredor exterior.
+- **Por qué funciona estéticamente**:
+  Transforma las arenas de combate en verdaderos escenarios de tensión y clímax cinematográfico: el jugador sabe que está atrapado en un duelo a muerte sin escape hasta vencer a la máquina de guerra enemiga, reforzando la atmósfera de película interactiva de la era PS1.

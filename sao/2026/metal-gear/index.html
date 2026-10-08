@@ -4499,6 +4499,10 @@
 
             showRoomBanner(nextRoom.title, nextRoom.subtitle);
 
+            if (nextRoom.hasBoss && gameState.boss && gameState.boss.hp > 0) {
+                showToast("🚨 ¡BLOQUEO DE EMERGENCIA! Puertas selladas hasta neutralizar la amenaza.");
+            }
+
             const bossHud = document.getElementById('boss-hud');
             if (bossHud) {
                 if (nextRoom.hasBoss && gameState.boss.hp > 0) {
@@ -5099,13 +5103,29 @@
                     );
 
                     if (overlap) {
-                        if (p.keycard < door.reqKey) {
-                            playSFX('door-locked');
-                            showToast(`ACCESO BLOQUEADO // SE REQUIERE KEYCARD LV.${door.reqKey}`);
+                        const isBossLockdown = currentRoom.hasBoss && gameState.boss && gameState.boss.hp > 0;
+                        if (isBossLockdown) {
+                            if (!door._lockWarnTimer || Date.now() - door._lockWarnTimer > 1200) {
+                                door._lockWarnTimer = Date.now();
+                                playSFX('door-locked');
+                                showToast("🚨 PROTOCOLO DE AISLAMIENTO // PUERTAS SELLADAS HASTA NEUTRALIZAR LA AMENAZA");
+                            }
                             if (door.orientation === 'E') p.x = door.x - p.radius - 8;
                             else if (door.orientation === 'W') p.x = door.x + door.w + p.radius + 8;
                             else if (door.orientation === 'N') p.y = door.y + door.h + p.radius + 8;
                             else if (door.orientation === 'S') p.y = door.y - p.radius - 8;
+                            else p.x = door.x + door.w + p.radius + 8;
+                        } else if (p.keycard < door.reqKey) {
+                            if (!door._lockWarnTimer || Date.now() - door._lockWarnTimer > 1200) {
+                                door._lockWarnTimer = Date.now();
+                                playSFX('door-locked');
+                                showToast(`ACCESO BLOQUEADO // SE REQUIERE KEYCARD LV.${door.reqKey}`);
+                            }
+                            if (door.orientation === 'E') p.x = door.x - p.radius - 8;
+                            else if (door.orientation === 'W') p.x = door.x + door.w + p.radius + 8;
+                            else if (door.orientation === 'N') p.y = door.y + door.h + p.radius + 8;
+                            else if (door.orientation === 'S') p.y = door.y - p.radius - 8;
+                            else p.x = door.x + door.w + p.radius + 8;
                         } else {
                             switchRoom(door.targetRoom, door.spawnX, door.spawnY);
                         }
@@ -6027,21 +6047,56 @@
 
             // Puertas
             if (currentRoom.doors) {
+                const isLockdown = currentRoom.hasBoss && gameState.boss && gameState.boss.hp > 0;
                 currentRoom.doors.forEach(door => {
                     const hasKey = gameState.player.keycard >= door.reqKey;
                     ctx.save();
-                    ctx.fillStyle = hasKey ? 'rgba(0, 255, 102, 0.15)' : 'rgba(255, 42, 42, 0.2)';
-                    ctx.fillRect(door.x, door.y, door.w, door.h);
+                    if (isLockdown) {
+                        const pulse = Math.sin(Date.now() / 180) * 0.15 + 0.35;
+                        ctx.fillStyle = `rgba(255, 42, 42, ${pulse})`;
+                        ctx.fillRect(door.x, door.y, door.w, door.h);
 
-                    ctx.strokeStyle = hasKey ? '#00FF66' : '#FF2A2A';
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(door.x, door.y, door.w, door.h);
+                        // Franjas diagonales de compuerta blindada (hazard stripes)
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.rect(door.x, door.y, door.w, door.h);
+                        ctx.clip();
+                        ctx.strokeStyle = 'rgba(255, 200, 0, 0.25)';
+                        ctx.lineWidth = 3;
+                        for (let lx = -door.h; lx < door.w + door.h; lx += 12) {
+                            ctx.beginPath();
+                            ctx.moveTo(door.x + lx, door.y);
+                            ctx.lineTo(door.x + lx + door.h, door.y + door.h);
+                            ctx.stroke();
+                        }
+                        ctx.restore();
 
-                    ctx.fillStyle = hasKey ? '#00FF66' : '#FF2A2A';
-                    ctx.font = 'bold 9px Share Tech Mono';
-                    ctx.textAlign = 'center';
-                    const labelText = door.reqKey > 0 ? (hasKey ? `LV.${door.reqKey} OK` : `LV.${door.reqKey} LOCK`) : 'PASO';
-                    ctx.fillText(labelText, door.x + door.w / 2, door.y + door.h / 2 + 3);
+                        ctx.strokeStyle = '#FF2A2A';
+                        ctx.lineWidth = 2.5;
+                        ctx.shadowColor = '#FF2A2A';
+                        ctx.shadowBlur = 8;
+                        ctx.strokeRect(door.x, door.y, door.w, door.h);
+
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.font = 'bold 9px "Share Tech Mono", monospace';
+                        ctx.textAlign = 'center';
+                        ctx.shadowColor = '#000000';
+                        ctx.shadowBlur = 4;
+                        ctx.fillText('SEALED', door.x + door.w / 2, door.y + door.h / 2 + 3);
+                    } else {
+                        ctx.fillStyle = hasKey ? 'rgba(0, 255, 102, 0.15)' : 'rgba(255, 42, 42, 0.2)';
+                        ctx.fillRect(door.x, door.y, door.w, door.h);
+
+                        ctx.strokeStyle = hasKey ? '#00FF66' : '#FF2A2A';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(door.x, door.y, door.w, door.h);
+
+                        ctx.fillStyle = hasKey ? '#00FF66' : '#FF2A2A';
+                        ctx.font = 'bold 9px Share Tech Mono';
+                        ctx.textAlign = 'center';
+                        const labelText = door.reqKey > 0 ? (hasKey ? `LV.${door.reqKey} OK` : `LV.${door.reqKey} LOCK`) : 'PASO';
+                        ctx.fillText(labelText, door.x + door.w / 2, door.y + door.h / 2 + 3);
+                    }
                     ctx.restore();
                 });
             }
