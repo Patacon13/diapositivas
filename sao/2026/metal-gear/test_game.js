@@ -420,7 +420,15 @@ try {
         if (!solidByteSVG.includes('#15803D')) {
             throw new Error('FALLA: getPortraitSVG(solid_byte) no incluye la bandana verde oliva mítica');
         }
-        console.log('   [TEST 6d PASSED] Retrato de Solid Byte en CODEC validado con bandana y clase .codec-mouth');
+
+        // Verificar inyección en el DOM al abrir diálogo del CODEC
+        openCodecDialog('intro');
+        const playerPortraitEl = document.getElementById('codec-player-portrait');
+        if (!playerPortraitEl || !playerPortraitEl.innerHTML || !playerPortraitEl.innerHTML.includes('#15803D')) {
+            throw new Error('FALLA: codec-player-portrait en el DOM no contiene el SVG de Solid Byte tras openCodecDialog');
+        }
+        closeCodecDialog();
+        console.log('   [TEST 6d PASSED] Retrato de Solid Byte en CODEC validado con bandana y clase .codec-mouth en el DOM');
 
         // Test 7: Sombras y Oclusión - Reducción drástica de visión de linternas en zonas oscuras
         loadLevel(0, true);

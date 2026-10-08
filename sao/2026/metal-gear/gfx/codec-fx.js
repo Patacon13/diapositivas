@@ -67,10 +67,18 @@
             setTimeout(() => { blinkState = false; }, 120);
         }
 
-        const contactFrame = document.getElementById('codec-contact-portrait');
-        if (contactFrame) {
+        const isPlayerSpeaking = window.codecCurrentSpeaker && window.codecCurrentSpeaker.includes('SOLID BYTE');
+        const activeFrame = isPlayerSpeaking ? document.getElementById('codec-player-portrait') : document.getElementById('codec-contact-portrait');
+        const idleFrame = isPlayerSpeaking ? document.getElementById('codec-contact-portrait') : document.getElementById('codec-player-portrait');
+
+        if (idleFrame) {
+            const idleMouths = idleFrame.querySelectorAll('.codec-mouth, .codec-mouth *, path[stroke="#B45309"], line[stroke="#FFFFFF"], path[stroke="#D7A984"]');
+            idleMouths.forEach(m => { m.style.transform = 'scaleY(1.0)'; });
+        }
+
+        if (activeFrame) {
             // Animar boca con la clase unificada .codec-mouth o fallbacks
-            const mouthTargets = contactFrame.querySelectorAll('.codec-mouth, .codec-mouth *, path[stroke="#B45309"], line[stroke="#FFFFFF"], path[stroke="#D7A984"]');
+            const mouthTargets = activeFrame.querySelectorAll('.codec-mouth, .codec-mouth *, path[stroke="#B45309"], line[stroke="#FFFFFF"], path[stroke="#D7A984"]');
             if (mouthTargets.length > 0 && isTyping) {
                 talkPhase += 0.45;
                 const mouthOpen = Math.sin(talkPhase) > 0;

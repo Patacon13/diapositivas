@@ -1541,7 +1541,54 @@
                     <!-- Retrato Snake / Solid Byte -->
                     <div class="codec-portrait-box">
                         <div class="portrait-frame" id="codec-player-portrait">
-                            <!-- Inyectado dinámicamente -->
+                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="100" height="100" fill="#03170A" />
+                                <circle cx="50" cy="50" r="46" fill="#052410" />
+                                <!-- Cuello y hombros Sneaking Suit -->
+                                <rect x="42" y="58" width="16" height="16" fill="#D4A373" />
+                                <polygon points="42,66 50,74 58,66" fill="#BC8A5F" />
+                                <!-- Hombreras y chaleco táctico grafito -->
+                                <path d="M 14 100 L 14 78 Q 28 66 38 65 L 50 82 L 62 65 Q 72 66 86 78 L 86 100 Z" fill="#0F172A" />
+                                <polygon points="26,72 38,66 46,82 32,90" fill="#1E293B" />
+                                <polygon points="74,72 62,66 54,82 68,90" fill="#1E293B" />
+                                <!-- Cuello alto Sneaking Suit con costuras tácticas -->
+                                <rect x="36" y="62" width="28" height="8" rx="2" fill="#1E293B" />
+                                <line x1="38" y1="66" x2="62" y2="66" stroke="#334155" stroke-width="1" />
+                                <!-- Rostro y mandíbula firme -->
+                                <rect x="30" y="24" width="40" height="42" rx="14" fill="#D4A373" />
+                                <!-- Sombra de barba / Barba de 3 días (5 o'clock shadow) -->
+                                <path d="M 33 50 Q 50 68 67 50 L 67 56 Q 50 69 33 56 Z" fill="rgba(60, 40, 25, 0.28)" />
+                                <!-- Orejas -->
+                                <circle cx="29" cy="45" r="4.5" fill="#BC8A5F" />
+                                <circle cx="71" cy="45" r="4.5" fill="#BC8A5F" />
+                                <!-- Headset táctico con LED verde de transmisión -->
+                                <rect x="25" y="42" width="5" height="10" rx="2" fill="#0F172A" />
+                                <line x1="27" y1="52" x2="36" y2="58" stroke="#334155" stroke-width="1.5" />
+                                <circle cx="27.5" cy="45" r="1.5" fill="#00FF66" />
+                                <!-- Bandana Táctica Verde Oliva (Mítica de Solid Snake) -->
+                                <path d="M 27 31 L 73 31 L 73 41 L 27 41 Z" fill="#15803D" />
+                                <path d="M 28 40 L 72 40 L 72 42 L 28 42 Z" fill="#14532D" />
+                                <!-- Nudo y cintas de la bandana al viento -->
+                                <polygon points="27,33 12,44 19,48" fill="#15803D" />
+                                <polygon points="27,38 15,54 22,56" fill="#166534" />
+                                <!-- Cabello castaño oscuro desmechado -->
+                                <path d="M 26 31 C 26 14 74 14 74 31 C 75 36 73 40 73 40 C 69 28 65 24 50 24 C 35 24 30 29 27 40 Z" fill="#1C1917" />
+                                <path d="M 28 24 Q 42 20 56 25 Q 66 29 68 34 Q 54 28 40 31 Q 32 33 28 37 Z" fill="#292524" />
+                                <!-- Cejas pobladas y mirada táctica -->
+                                <rect x="33" y="34" width="11" height="3" rx="1" fill="#18181B" />
+                                <rect x="56" y="34" width="11" height="3" rx="1" fill="#18181B" />
+                                <!-- Ojos concentrados de combate -->
+                                <ellipse cx="38" cy="40" rx="4" ry="2.8" fill="#FFFFFF" />
+                                <circle cx="38.5" cy="40" r="2.2" fill="#0F172A" />
+                                <circle cx="38.5" cy="40" r="1.1" fill="#059669" />
+                                <ellipse cx="62" cy="40" rx="4" ry="2.8" fill="#FFFFFF" />
+                                <circle cx="61.5" cy="40" r="2.2" fill="#0F172A" />
+                                <circle cx="61.5" cy="40" r="1.1" fill="#059669" />
+                                <!-- Nariz angulosa y boca táctica con lip-sync -->
+                                <path d="M 49 41 L 47 48 L 52 48" fill="none" stroke="#A16207" stroke-width="1.8" stroke-linecap="round" />
+                                <path class="codec-mouth" d="M 42 54 Q 50 56 58 54" fill="none" stroke="#78350F" stroke-width="2" stroke-linecap="round" />
+                                <line class="codec-mouth" x1="44" y1="54" x2="56" y2="54" stroke="#D4A373" stroke-width="1.2" />
+                            </svg>
                         </div>
                         <span class="portrait-name">SOLID BYTE</span>
                     </div>
@@ -2694,7 +2741,7 @@
             playSFX('codec-ring');
 
             const playerPortrait = document.getElementById('codec-player-portrait');
-            if (playerPortrait && !(playerPortrait.innerHTML || '').trim()) {
+            if (playerPortrait) {
                 playerPortrait.innerHTML = getPortraitSVG('solid_byte');
             }
 
@@ -2743,6 +2790,13 @@
             if (typewriterTimer) clearInterval(typewriterTimer);
             window.typewriterTimer = typewriterTimer = null;
             window.isCodecTyping = false;
+            window.codecCurrentSpeaker = null;
+
+            const pFrame = document.getElementById('codec-player-portrait');
+            const cFrame = document.getElementById('codec-contact-portrait');
+            if (pFrame) { pFrame.style.borderColor = ''; pFrame.style.boxShadow = ''; pFrame.style.opacity = ''; }
+            if (cFrame) { cFrame.style.borderColor = ''; cFrame.style.boxShadow = ''; cFrame.style.opacity = ''; }
+
             document.getElementById('codec-screen').style.display = 'none';
             const wasCompleted = gameState.missionCompleted;
             isMandatoryCodec = false;
@@ -2759,9 +2813,25 @@
             }
 
             const item = currentCodecQueue[currentCodecIndex];
+            window.codecCurrentSpeaker = item.speaker;
             document.getElementById('codec-speaker').textContent = item.speaker;
             const textElem = document.getElementById('codec-message');
             textElem.textContent = "";
+
+            // Resaltar activamente el retrato del interlocutor en turno
+            const pFrame = document.getElementById('codec-player-portrait');
+            const cFrame = document.getElementById('codec-contact-portrait');
+            const isPlayerSpeaking = item.speaker && item.speaker.includes('SOLID BYTE');
+            if (pFrame) {
+                pFrame.style.borderColor = isPlayerSpeaking ? '#00FF66' : 'var(--mgs-green-dim)';
+                pFrame.style.boxShadow = isPlayerSpeaking ? '0 0 16px rgba(0, 255, 102, 0.5)' : 'none';
+                pFrame.style.opacity = isPlayerSpeaking ? '1' : '0.65';
+            }
+            if (cFrame) {
+                cFrame.style.borderColor = !isPlayerSpeaking ? '#00FF66' : 'var(--mgs-green-dim)';
+                cFrame.style.boxShadow = !isPlayerSpeaking ? '0 0 16px rgba(0, 255, 102, 0.5)' : 'none';
+                cFrame.style.opacity = !isPlayerSpeaking ? '1' : '0.65';
+            }
 
             let charIdx = 0;
             if (typewriterTimer) clearInterval(typewriterTimer);
