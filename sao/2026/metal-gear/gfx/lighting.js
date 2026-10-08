@@ -15,23 +15,18 @@
     lightCanvas.height = 450;
     const lCtx = lightCanvas.getContext('2d');
 
-    // Intersección rápida de rayo contra segmento de muro
+    // Intersección exacta de rayo contra segmento de muro
     function getRayIntersection(px, py, dx, dy, x1, y1, x2, y2) {
-        const r_px = px, r_py = py, r_dx = dx, r_dy = dy;
-        const s_px = x1, s_py = y1, s_dx = x2 - x1, s_dy = y2 - y1;
+        const sx = x2 - x1, sy = y2 - y1;
+        const denom = sx * dy - sy * dx;
+        if (Math.abs(denom) < 1e-9) return null;
 
-        const r_mag = Math.hypot(r_dx, r_dy);
-        const s_mag = Math.hypot(s_dx, s_dy);
-        if (r_mag === 0 || s_mag === 0) return null;
+        const ax_px = x1 - px, ay_py = y1 - py;
+        const t1 = (sx * ay_py - sy * ax_px) / denom;
+        const t2 = (dx * ay_py - dy * ax_px) / denom;
 
-        const denom = r_dx * s_dy - r_dy * s_dx;
-        if (denom === 0) return null;
-
-        const T2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / denom;
-        const T1 = (s_px + s_dx * T2 - r_px) / (r_dx || 0.00001);
-
-        if (T1 >= 0 && T2 >= 0 && T2 <= 1) {
-            return T1; // Distancia escalada a lo largo de (dx, dy)
+        if (t1 >= 0 && t2 >= 0 && t2 <= 1) {
+            return t1; // Distancia euclídea a lo largo de (dx, dy)
         }
         return null;
     }
@@ -85,39 +80,75 @@
                 { x: 320, y: 80, radius: 110, intensity: 0.85 },
                 { x: 610, y: 340, radius: 115, intensity: 0.85 }
             ],
-            dock_w1: [
-                { x: 100, y: 70, radius: 105, intensity: 0.85 },
-                { x: 320, y: 80, radius: 110, intensity: 0.85 },
-                { x: 610, y: 340, radius: 115, intensity: 0.85 }
-            ],
             corridor_u1: [
                 { x: 120, y: 225, radius: 115, intensity: 0.85 },
                 { x: 400, y: 225, radius: 120, intensity: 0.85 },
                 { x: 680, y: 225, radius: 115, intensity: 0.85 }
             ],
-            yard_vulcan: [
-                { x: 400, y: 225, radius: 190, intensity: 0.9 }
+            filtration_u1: [
+                { x: 150, y: 120, radius: 115, intensity: 0.85 },
+                { x: 600, y: 120, radius: 115, intensity: 0.85 },
+                { x: 380, y: 340, radius: 120, intensity: 0.85 }
             ],
-            filter_w1: [
-                { x: 140, y: 100, radius: 110, intensity: 0.85 },
-                { x: 600, y: 100, radius: 110, intensity: 0.85 },
-                { x: 380, y: 350, radius: 115, intensity: 0.85 }
+            arena_vulcan: [
+                { x: 400, y: 225, radius: 200, intensity: 0.95 },
+                { x: 200, y: 120, radius: 130, intensity: 0.80 },
+                { x: 600, y: 330, radius: 130, intensity: 0.80 }
             ],
-            corridor_u2: [
+            warehouse_entry: [
+                { x: 140, y: 120, radius: 115, intensity: 0.85 },
+                { x: 500, y: 120, radius: 115, intensity: 0.85 },
+                { x: 320, y: 340, radius: 115, intensity: 0.85 }
+            ],
+            warehouse_junction: [
                 { x: 150, y: 225, radius: 115, intensity: 0.85 },
-                { x: 420, y: 225, radius: 120, intensity: 0.85 },
-                { x: 680, y: 225, radius: 115, intensity: 0.85 }
+                { x: 400, y: 225, radius: 125, intensity: 0.85 },
+                { x: 650, y: 225, radius: 115, intensity: 0.85 }
             ],
-            olympo_arena: [
-                { x: 400, y: 225, radius: 190, intensity: 0.95 }
+            loop_storage: [
+                { x: 200, y: 140, radius: 120, intensity: 0.85 },
+                { x: 580, y: 140, radius: 120, intensity: 0.85 },
+                { x: 380, y: 340, radius: 120, intensity: 0.85 }
             ],
-            rex_hangar: [
+            modular_lab_u2: [
+                { x: 180, y: 140, radius: 120, intensity: 0.85 },
+                { x: 580, y: 140, radius: 120, intensity: 0.85 },
+                { x: 380, y: 330, radius: 120, intensity: 0.85 }
+            ],
+            arena_olympo: [
+                { x: 400, y: 225, radius: 210, intensity: 1.0 },
+                { x: 220, y: 130, radius: 130, intensity: 0.80 },
+                { x: 580, y: 320, radius: 130, intensity: 0.80 }
+            ],
+            vector_vault: [
+                { x: 160, y: 120, radius: 115, intensity: 0.85 },
+                { x: 580, y: 120, radius: 115, intensity: 0.85 },
+                { x: 360, y: 340, radius: 120, intensity: 0.85 }
+            ],
+            transit_conduit: [
+                { x: 150, y: 225, radius: 120, intensity: 0.85 },
+                { x: 400, y: 225, radius: 125, intensity: 0.85 },
+                { x: 650, y: 225, radius: 120, intensity: 0.85 }
+            ],
+            string_archive: [
+                { x: 200, y: 140, radius: 120, intensity: 0.85 },
+                { x: 600, y: 140, radius: 120, intensity: 0.85 },
+                { x: 400, y: 340, radius: 120, intensity: 0.85 }
+            ],
+            matrix_center: [
+                { x: 180, y: 130, radius: 120, intensity: 0.85 },
+                { x: 580, y: 130, radius: 120, intensity: 0.85 },
+                { x: 380, y: 330, radius: 120, intensity: 0.85 }
+            ],
+            sorting_subcore: [
+                { x: 180, y: 140, radius: 120, intensity: 0.85 },
+                { x: 600, y: 140, radius: 120, intensity: 0.85 },
+                { x: 380, y: 330, radius: 120, intensity: 0.85 }
+            ],
+            rex_core: [
+                { x: 400, y: 225, radius: 220, intensity: 1.0 },
                 { x: 200, y: 140, radius: 130, intensity: 0.85 },
-                { x: 600, y: 140, radius: 130, intensity: 0.85 },
-                { x: 400, y: 350, radius: 140, intensity: 0.85 }
-            ],
-            rex_cockpit: [
-                { x: 400, y: 225, radius: 210, intensity: 1.0 }
+                { x: 600, y: 330, radius: 130, intensity: 0.85 }
             ]
         };
 

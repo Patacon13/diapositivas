@@ -28,6 +28,8 @@
 
     let playerBreathTimer = 1.0;
     let playerWetSteps = 0;
+    let lastFootprintX = -999;
+    let lastFootprintY = -999;
     const guardBreathTimers = new WeakMap();
 
     // Charcos interactivos por coordenadas de sala
@@ -136,10 +138,13 @@
         });
 
         if (inPuddle) {
-            playerWetSteps = 6; // Quedan 6 pasos húmedos
-        } else if (isMoving && playerWetSteps > 0) {
-            if (Math.random() < 0.15) {
+            playerWetSteps = 8; // Pasos húmedos restantes
+        } else if (isMoving && !p.inBox && playerWetSteps > 0) {
+            const distFromLastFp = Math.hypot(p.x - lastFootprintX, p.y - lastFootprintY);
+            if (distFromLastFp >= 18) {
                 playerWetSteps--;
+                lastFootprintX = p.x;
+                lastFootprintY = p.y;
                 wetFootprints.push({
                     x: p.x,
                     y: p.y,
@@ -148,6 +153,7 @@
                     maxLife: 5.0,
                     id: 'wfp_' + Math.random().toString(36).substr(2, 9)
                 });
+                if (wetFootprints.length > 50) wetFootprints.shift();
             }
         }
 

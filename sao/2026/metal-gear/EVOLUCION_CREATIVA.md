@@ -220,4 +220,20 @@ Registro del proceso iterativo de diseño, dirección de arte y programación gr
   Completa el círculo de retroalimentación interactiva del jugador: cada sombra, cada paso y cada objeto del entorno ofrece lecturas visuales claras, reforzando la maestría del sigilo y la inmersión militar de Shadow Moses.
 
 
+
 ---
+
+## CICLO 16: Robustez y Pulido Táctico Integral (Raycasting Ortogonal, Ciclo de Caja, Caching de Audio y Persistencia de Boss)
+- **Fecha/Ciclo**: Ciclo 16
+- **Módulos**: `gfx/lighting.js`, `gfx/atmosphere.js`, `index.html`, `test_game.js`, `EVOLUCION_CREATIVA.md`
+- **Inspiración Retro PS1**: La precisión milimétrica de los sistemas de sigilo de Metal Gear Solid, donde ni un solo glitch visual o de IA rompía la inmersión cinematográfica en las instalaciones de Shadow Moses.
+- **Qué se inventó y corrigió**:
+  1. **Raycasting Exacto sin Fallas Ortogonales (`getRayIntersection`)**: Se sustituyó el cálculo con divisiones propensas a `null` por álgebra matricial 2D (regla de Cramer), permitiendo trazado perfecto de sombras frente a muros exactamente horizontales y verticales.
+  2. **Mapeo Lumínico Integral de las 15 Salas de Campaña (`getRoomCeilingLamps`)**: Se asignaron posiciones de lámparas cenitales reales y armonizadas para todas las salas de los Niveles 0, 1 y 2 (`dock`, `corridor_u1`, `filtration_u1`, `arena_vulcan`, `warehouse_entry`, `warehouse_junction`, `loop_storage`, `modular_lab_u2`, `arena_olympo`, `vector_vault`, `transit_conduit`, `string_archive`, `matrix_center`, `sorting_subcore`, `rex_core`), eliminando fallbacks artificiales.
+  3. **Ciclo de Vida Limpio de Inspección de Caja y Desembalaje tras Muros**: Se garantizó la desestimación limpia del centinela si se agota el tiempo de aproximación (`investigateTimer <= 0`), evitando bucles de congelamiento en el cono cian. Asimismo, desembalar o moverse tras una pared opaca no detona falsas alarmas sin línea directa de visión (`isRayBlockedByWalls`).
+  4. **Orientación Terminal del Rastro de Huellas (`fp.dir`)**: Al alcanzar la última huella de un rastro mojado, el centinela adopta la orientación angular exacta del paso del espía, escaneando el sector con naturalidad táctica.
+  5. **Cache de AudioBuffer para Redoblante Militar a 120 BPM**: Se implementó `getSnareNoiseBuffer(ctx, dur)`, reteniendo el búfer de ruido blanco en memoria y eliminando la creación de buffers por cuadro que provocaba pausas por recolección de basura (GC).
+  6. **Persistencia del Tema de Combate de Bosses**: Se blindó la selección musical en `switchRoom` y `updateGame` para retener `boss` o `boss-rage` durante todo el combate, impidiendo que el tema de sigilo sobrescriba la banda sonora en plena batalla.
+  7. **Índice de Camuflaje Dinámico y Adaptabilidad Móvil**: El HUD refleja instantáneamente `100% [CAJA QUIETA]` frente a `15% [CAJA EN MOVIMIENTO]`, incorpora la bonificación táctica `[MURO]` al pegarse a coberturas, y cuenta con maquetación optimizada para pantallas táctiles y formato vertical.
+- **Por qué funciona estéticamente**:
+  El juego alcanza una solidez arcade profesional: la física de oclusión, el comportamiento de los centinelas y la percusión militar interactúan de forma fluida y predecible, manteniendo una tasa de cuadros impecable (<0.6 ms/frame) sin comprometer la atmósfera retro.

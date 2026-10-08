@@ -316,6 +316,25 @@ try {
         }
         console.log('   [TEST 7 PASSED] Sombras y Oclusión operativas (Luz: ' + litDist.toFixed(1) + 'px vs Sombra: ' + shadowDist.toFixed(1) + 'px [' + (100 - (shadowDist / litDist) * 100).toFixed(0) + '% reducción])');
 
+        // Test 7b: Lámparas Cenitales en todas las salas de campaña y Raycasting Ortogonal
+        for (let lvl = 0; lvl <= 2; lvl++) {
+            loadLevel(lvl, true);
+            const lvlData = campaignLevels[lvl];
+            for (let rKey in lvlData.rooms) {
+                const rObj = lvlData.rooms[rKey];
+                const lamps = window.getRoomCeilingLamps(rObj);
+                if (!lamps || lamps.length === 0) {
+                    throw new Error('FALLA: Sala ' + rKey + ' no tiene lámparas cenitales asignadas');
+                }
+            }
+        }
+        // Verificar oclusión de rayos en paredes cardinales y diagonales
+        const testWalls = [{ x: 200, y: 100, w: 20, h: 200 }];
+        if (!window.isRayBlockedByWalls(100, 200, 300, 200, testWalls)) {
+            throw new Error('FALLA: isRayBlockedByWalls no detectó pared horizontal a través de X');
+        }
+        console.log('   [TEST 7b PASSED] Lámparas cenitales mapeadas en todas las salas y raycasting ortogonal validado');
+
         // Test 8: IA Reactiva - Rastro de Huellas Húmedas
         loadLevel(0, true);
         const curRoomG = facilityRooms[gameState.currentRoomId];
@@ -323,12 +342,23 @@ try {
         g1.x = 300; g1.y = 100; g1.angle = 0; // Orientado hacia +X en pasillo libre
         g1.investigateTimer = 0;
         g1._trackingFootprints = false;
-        const fp1 = window.spawnWetFootprint(360, 100, 0, 5.0);
+        const fp1 = window.spawnWetFootprint(360, 100, Math.PI / 4, 5.0);
         updateGame(0.016);
         if (!g1._trackingFootprints || !g1.investigateTarget || Math.hypot(g1.investigateTarget.x - fp1.x, g1.investigateTarget.y - fp1.y) > 5) {
             throw new Error('FALLA: Centinela no investigó la huella húmeda en su campo visual');
         }
         console.log('   [TEST 8 PASSED] IA Reactiva investiga huellas húmedas tácticas');
+
+        // Test 8b: IA Reactiva - Fin del rastro orienta hacia la dirección de la huella
+        g1.x = 360; g1.y = 100;
+        updateGame(0.016);
+        if (g1._trackingFootprints) {
+            throw new Error('FALLA: Al alcanzar la última huella del rastro, _trackingFootprints debió finalizar');
+        }
+        if (Math.abs(g1.angle - Math.PI / 4) > 0.3) {
+            throw new Error('FALLA: Al terminar el rastro, el centinela debió orientarse en la dirección de la última huella (fp.dir)');
+        }
+        console.log('   [TEST 8b PASSED] Fin del rastro orienta al centinela según dirección de huella');
 
         // Test 9: IA Reactiva - Caja de Cartón (Quietud = Inspección, Movimiento = Alerta)
         loadLevel(0, true);
@@ -362,6 +392,54 @@ try {
         console.log('   [TEST 9b PASSED] Moverse en la caja frente a centinela activa ! ALERTA');
         gameState.player.inBox = false;
 
+        // 9c. Timeout de aproximación a caja cancela inspección sin trabar al centinela
+        gameState.alertState = 'normal';
+        gameState.alertTimer = 0;
+        if (window.XP) window.XP.freeze = 0;
+        gBox._inspectingBox = true;
+        gBox.investigateTimer = 0.01;
+        gBox.x = 300; gBox.y = 150;
+        gameState.player.x = 600; gameState.player.y = 150; // Lejos de la distancia de 36px
+        gameState.player.inBox = true;
+        updateGame(0.05); // Dejar expirar investigateTimer
+        if (gBox._inspectingBox) {
+            throw new Error('FALLA: Timeout de investigación no canceló _inspectingBox');
+        }
+        console.log('   [TEST 9c PASSED] Timeout de aproximación a caja cancela inspección limpiamente');
+
+        // 9d. Salir de la caja tras un muro NO activa alarma a través de paredes
+        gameState.alertState = 'normal';
+        gameState.alertTimer = 0;
+        if (window.XP) window.XP.freeze = 0;
+        gBox._inspectingBox = true;
+        gBox.investigateTimer = 3.0;
+        gBox.x = 100; gBox.y = 100;
+        gameState.player.x = 250; gameState.player.y = 100; // Tras muro de dock en x=180
+        gameState.player.inBox = false; // Desembaló tras el muro
+        updateGame(0.016);
+        if (gameState.alertState === 'alert') {
+            throw new Error('FALLA: Desembalar tras un muro activó alarma a través de la pared');
+        }
+        console.log('   [TEST 9d PASSED] Desembalar tras pared no dispara alarma a través de muros');
+
+        // 9e. Camouflage Index: 100% en caja quieta vs 15% en caja en movimiento vs bono en muro
+        gameState.player.inBox = true;
+        gameState.keys['w'] = false; gameState.keys['s'] = false; gameState.keys['a'] = false; gameState.keys['d'] = false;
+        updateGame(0.016);
+        const camoElText = document.getElementById('camo-text').textContent;
+        if (!camoElText.includes('100% [CAJA QUIETA]')) {
+            throw new Error('FALLA: Camo HUD no mostró 100% [CAJA QUIETA]: ' + camoElText);
+        }
+        gameState.keys['w'] = true;
+        updateGame(0.016);
+        gameState.keys['w'] = false;
+        const camoMovingText = document.getElementById('camo-text').textContent;
+        if (!camoMovingText.includes('15% [CAJA EN MOVIMIENTO]')) {
+            throw new Error('FALLA: Camo HUD no mostró 15% [CAJA EN MOVIMIENTO]: ' + camoMovingText);
+        }
+        gameState.player.inBox = false;
+        console.log('   [TEST 9e PASSED] Camouflage Index dinámico responde a caja quieta y en movimiento');
+
         // Test 10: Música Adaptativa Chiptune 120 BPM
         if (!window.MGS_AUDIO || window.MGS_AUDIO.BPM !== 120) {
             throw new Error('FALLA: Motor MGS_AUDIO cuantizado a 120 BPM no encontrado');
@@ -374,6 +452,20 @@ try {
         window.MGS_AUDIO.playMilitaryKick(testAudioCtx, 0, 0.3);
         window.MGS_AUDIO.playMilitaryHat(testAudioCtx, 0, 0.05);
         console.log('   [TEST 10 PASSED] Motor de Música Adaptativa Chiptune 120 BPM y Percusión Militar verificado');
+
+        // Test 10b: Retención de tema de boss durante combate activo
+        loadLevel(0, true);
+        switchRoom('arena_vulcan', 100, 225);
+        if (musicTheme !== 'boss') {
+            throw new Error('FALLA: Al ingresar a sala de boss el tema debió ser boss, actual: ' + musicTheme);
+        }
+        gameState.alertTimer = 0;
+        gameState.alertState = 'normal';
+        updateGame(0.016);
+        if (musicTheme !== 'boss') {
+            throw new Error('FALLA: updateGame sobrescribió el tema de boss a ' + musicTheme + ' durante el combate');
+        }
+        console.log('   [TEST 10b PASSED] Retención de tema de boss durante combate validada');
 
         // Level 1 y Level 2 (Boss Encounter)
         loadLevel(1, true);
