@@ -303,6 +303,78 @@ try {
         if (typeof window.toggleCardboardBox === 'function') window.toggleCardboardBox();
         if (typeof window.performWallKnock === 'function') window.performWallKnock();
 
+        // Test 7: Sombras y Oclusión - Reducción drástica de visión de linternas en zonas oscuras
+        loadLevel(0, true);
+        const room0 = facilityRooms[gameState.currentRoomId];
+        const dummyGuard = { x: 300, y: 200, angle: 0, fov: Math.PI / 3, viewDist: 150 };
+        const litPlayer = { x: 320, y: 80 }; // Bajo lámpara de techo
+        const litDist = window.getGuardEffectiveViewDist(dummyGuard, litPlayer, room0);
+        const shadowPlayer = { x: 50, y: 380 }; // En penumbra táctica distante de lámparas
+        const shadowDist = window.getGuardEffectiveViewDist(dummyGuard, shadowPlayer, room0);
+        if (shadowDist >= litDist * 0.7) {
+            throw new Error('FALLA: Sombras no redujeron drásticamente la visión. litDist: ' + litDist + ', shadowDist: ' + shadowDist);
+        }
+        console.log('   [TEST 7 PASSED] Sombras y Oclusión operativas (Luz: ' + litDist.toFixed(1) + 'px vs Sombra: ' + shadowDist.toFixed(1) + 'px [' + (100 - (shadowDist / litDist) * 100).toFixed(0) + '% reducción])');
+
+        // Test 8: IA Reactiva - Rastro de Huellas Húmedas
+        loadLevel(0, true);
+        const curRoomG = facilityRooms[gameState.currentRoomId];
+        const g1 = curRoomG.guards[0];
+        g1.x = 300; g1.y = 100; g1.angle = 0; // Orientado hacia +X en pasillo libre
+        g1.investigateTimer = 0;
+        g1._trackingFootprints = false;
+        const fp1 = window.spawnWetFootprint(360, 100, 0, 5.0);
+        updateGame(0.016);
+        if (!g1._trackingFootprints || !g1.investigateTarget || Math.hypot(g1.investigateTarget.x - fp1.x, g1.investigateTarget.y - fp1.y) > 5) {
+            throw new Error('FALLA: Centinela no investigó la huella húmeda en su campo visual');
+        }
+        console.log('   [TEST 8 PASSED] IA Reactiva investiga huellas húmedas tácticas');
+
+        // Test 9: IA Reactiva - Caja de Cartón (Quietud = Inspección, Movimiento = Alerta)
+        loadLevel(0, true);
+        const roomBox = facilityRooms[gameState.currentRoomId];
+        const gBox = roomBox.guards[0];
+        gBox.x = 300; gBox.y = 150; gBox.angle = 0;
+        gBox.investigateTimer = 0;
+        gBox._inspectingBox = false;
+        gBox._boxInspectedCooldown = 0;
+        gameState.roomGraceTimer = 0;
+        gameState.alertState = 'normal';
+        gameState.alertTimer = 0;
+        gameState.player.x = 350; gameState.player.y = 150;
+        gameState.player.inBox = true;
+        // 9a. Caja quieta -> Inspección curiosa sin alerta inmediata
+        gameState.keys['w'] = false; gameState.keys['s'] = false; gameState.keys['a'] = false; gameState.keys['d'] = false;
+        updateGame(0.016);
+        if (!gBox._inspectingBox || gameState.alertState === 'alert') {
+            throw new Error('FALLA: Caja quieta debió activar inspección curiosa sin alarma. inspecting: ' + gBox._inspectingBox + ', alert: ' + gameState.alertState);
+        }
+        console.log('   [TEST 9a PASSED] Caja de cartón quieta activa inspección curiosa de centinela');
+
+        // 9b. Caja en movimiento -> Alerta inmediata
+        gBox._inspectingBox = false;
+        gameState.keys['d'] = true;
+        updateGame(0.016);
+        gameState.keys['d'] = false;
+        if (gameState.alertState !== 'alert') {
+            throw new Error('FALLA: Moverse en la caja frente a centinela debió activar ! ALERTA');
+        }
+        console.log('   [TEST 9b PASSED] Moverse en la caja frente a centinela activa ! ALERTA');
+        gameState.player.inBox = false;
+
+        // Test 10: Música Adaptativa Chiptune 120 BPM
+        if (!window.MGS_AUDIO || window.MGS_AUDIO.BPM !== 120) {
+            throw new Error('FALLA: Motor MGS_AUDIO cuantizado a 120 BPM no encontrado');
+        }
+        setMusicTheme('sneaking');
+        setMusicTheme('caution');
+        setMusicTheme('alert');
+        const testAudioCtx = getAudioContext();
+        window.MGS_AUDIO.playMilitarySnare(testAudioCtx, 0, 0.2, false);
+        window.MGS_AUDIO.playMilitaryKick(testAudioCtx, 0, 0.3);
+        window.MGS_AUDIO.playMilitaryHat(testAudioCtx, 0, 0.05);
+        console.log('   [TEST 10 PASSED] Motor de Música Adaptativa Chiptune 120 BPM y Percusión Militar verificado');
+
         // Level 1 y Level 2 (Boss Encounter)
         loadLevel(1, true);
         for (let f = 0; f < 60; f++) {

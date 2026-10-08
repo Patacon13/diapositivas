@@ -163,3 +163,61 @@ Registro del proceso iterativo de diseño, dirección de arte y programación gr
   El sistema de comunicación militar se siente vivo y orgánico, cerrando el bucle de inmersión retro con 100% de fidelidad estética y solidez de ingeniería de software.
 
 ---
+
+## CICLO 12: IA Reactiva de Centinelas (Rastreo de Huellas Húmedas e Inspección Curiosa de Caja de Cartón)
+- **Fecha/Ciclo**: Ciclo 12
+- **Módulos**: `index.html`, `gfx/atmosphere.js`, `test_game.js`
+- **Inspiración Retro PS1**: La legendaria IA enemiga de Metal Gear Solid (1998) en el helipuerto y la dársena, donde los centinelas genómicos descubrían huellas en la nieve y se acercaban perplejos a una solitaria caja de cartón.
+- **Qué se inventó y corrigió**:
+  1. **Rastreo Escalonado de Huellas Húmedas**: Al pisar charcos de refrigerante o agua estancada, Solid Byte deja una estela de huellas húmedas con tiempo de vida finito (`life: 5.0s`). Cuando un centinela divisa una huella en su cono visual, emite un globo de interrogación (`?`), reproduce el SFX procedural `curious`, suspende su patrulla y rastrea el rastro paso a paso hacia el último punto transitado.
+  2. **Doble Comportamiento ante la Caja de Cartón (`[B]`)**:
+     - *Quietud absoluta*: Si el centinela divisa la caja inmóvil, entra en estado de inspección curiosa (`_inspectingBox = true`). Camina hacia ella con un haz cian de escrutinio, la examina de cerca durante 1.4s y la golpea con la bota con un golpe sordo (*"Solo una caja... Bah."*), entrando en un tiempo de enfriamiento de 8 segundos sin dar la alarma.
+     - *Movimiento o abandono de la caja*: Si el jugador intenta moverse o salir de la caja ante la mirada del centinela, se activa inmediatamente el signo de exclamación (`! ALERTA`) y el combate general.
+- **Por qué funciona estéticamente**:
+  El jugador experimenta la tensión genuina del sigilo táctico: congelarse en el lugar dentro de la caja mientras los pasos del guardia resuenan y se aproximan crea momentos cinematográficos inolvidables.
+
+---
+
+## CICLO 13: Sombras y Oclusión Táctica (Penumbra y Reducción Drástica de Linternas Enemigas)
+- **Fecha/Ciclo**: Ciclo 13
+- **Módulos**: `gfx/lighting.js`, `gfx/sprites.js`, `test_game.js`
+- **Inspiración Retro PS1**: Los rincones en penumbra profunda de las bodegas nucleares de Shadow Moses y el camuflaje pegado a las paredes.
+- **Qué se inventó y corrigió**:
+  1. **Modelo Fotométrico de Penumbra Ambiental y Oclusión**: Se implementó `getAmbientLightLevel(x, y, room)` combinando fuentes lumínicas físicas (lámparas cenitales con radio de atenuación, terminales de seguridad emisivas, raciones de café, barreras láser y el núcleo de Vulcan Raven / Metal Gear REX).
+  2. **Reducción Drástica de Rango de Visión Enemiga**: Se implementó `getGuardEffectiveViewDist(g, p, room)`. En zonas oscuras (`lightLevel < 0.35`), el alcance visual de las linternas enemigas se desploma en más del 50-65% (de 150px a ~54px), con un bono adicional del 15% si el agente permanece inmóvil y un factor de absorción del 28% al abrazar muros (`wall-hug`).
+  3. **Aura Táctica de Camuflaje en Sombras**: Solid Byte renderiza un sutil halo punteado de camuflaje sigiloso en `gfx/sprites.js` cuando se oculta en oscuridad táctica, proporcionando feedback visual intuitivo e inmediato de su seguridad relativa.
+- **Por qué funciona estéticamente**:
+  El espacio de juego ya no es un plano binario visto/no visto, sino un gradiente táctico de luz y sombra donde esconderse entre contenedores o cortar la distancia en la penumbra se convierte en una estrategia viable y gratificante.
+
+---
+
+## CICLO 14: Motor de Música Adaptativa Chiptune 120 BPM (Capas Dinámicas y Percusión Militar Procedural)
+- **Fecha/Ciclo**: Ciclo 14
+- **Módulos**: `index.html`, `test_game.js`
+- **Inspiración Retro PS1**: La banda sonora icónica de TAPPY y Kazuki Muraoka para Metal Gear Solid, con sus tempos militares marciales a 120 BPM, cajas con bordonero metálico y subidas de tensión dinámica entre infiltración y alarma.
+- **Qué se inventó y corrigió**:
+  1. **Motor de Cuantización a 120 BPM (`MGS_AUDIO`)**: Se desarrolló un sintetizador Web Audio polifónico procedural cuantizado a 120 BPM con pasos de semicorchea de 125 ms (`CHIPTUNE_STEP_MS = 125`). Cero archivos MP3 externos y estrictamente cero uso de Web Speech API.
+  2. **Capas Temáticas Adaptativas (Sneaking / Caution / Alert / Boss / Boss-Rage)**:
+     - *Sneaking*: Línea de bajo arpegiada en modo menor, percusión minimalista con hi-hat y pulsos de sintetizador en onda triangular.
+     - *Caution*: Entrada de redoblante militar procedural con bordón de alambre simulado mediante ruido blanco filtrado paso-alto y transitorio de afinación descendente.
+     - *Alert*: Bombo sub-grave táctico contundente (`sweep de 140Hz a 32Hz`), redobles rápidos de redoblante marcial y arpegios agudos de sierra en tensión ascendente.
+     - *Boss / Boss-Rage*: Ritmos de síncopa marcial pesada y doble tempo para encuentros de alta letalidad contra Vulcan Java y REX.
+  3. **Transiciones Cuantizadas sin Cortes**: El motor actualiza de forma suave los osciladores y volúmenes (`linearRampToValueAtTime`) en el siguiente pulso rítmico, evitando chasquidos sonoros o saltos bruscos de volumen.
+- **Por qué funciona estéticamente**:
+  El diseño sonoro procedural genera adrenalina pura: escuchar el redoble marcial cobrar fuerza al cometer un descuido sumerge al jugador instantáneamente en la atmósfera de un espía táctico de finales de los 90.
+
+---
+
+## CICLO 15: Game Feel Táctico: Camouflage Index en HUD, Tap desde la Caja y Cono de Curiosidad
+- **Fecha/Ciclo**: Ciclo 15
+- **Módulos**: `index.html`, `gfx/sprites.js`, `test_game.js`
+- **Inspiración Retro PS1**: Los detalles obsesivos de jugabilidad que caracterizan a la saga Metal Gear: el porcentaje de camuflaje, golpear la caja desde adentro y el lenguaje visual de conos de visión y signos de exclamación/interrogación.
+- **Qué se inventó y corrigió**:
+  1. **Indicador de Camuflaje en Tiempo Real (`#hud-camo`)**: Integrado en la fila superior del HUD táctico, exhibe el porcentaje de visibilidad y estado táctico actual (`% CAMO [SOMBRA|PENUMBRA|EXPUESTO|CAJA ZIP]`), recalculado cuadro a cuadro con barras de color dinámicas (cian sigiloso para sombras profundas, ámbar para penumbra, rojo para exposición total, verde oliva para la caja).
+  2. **Interacción de Golpe Táctico Amortiguado (`performWallKnock` `[F]`)**: Si Solid Byte presiona `[F]` sin estar pegado a una pared pero encontrándose dentro de la caja de cartón, genera un "¡TAP TAP!" amortiguado con una onda sónica concentrada de 130px de radio, permitiendo atraer deliberadamente a centinelas cercanos para someterlos mediante CQC sin ser descubierto de inmediato.
+  3. **Haz de Cono de Inspección Curiosa**: Los centinelas en modo de curiosidad proyectan un cono cian pulsante hacia el objetivo de investigación, diferenciándolo visualmente del cono ámbar de patrulla y el cono carmesí de alerta máxima.
+- **Por qué funciona estéticamente**:
+  Completa el círculo de retroalimentación interactiva del jugador: cada sombra, cada paso y cada objeto del entorno ofrece lecturas visuales claras, reforzando la maestría del sigilo y la inmersión militar de Shadow Moses.
+
+
+---

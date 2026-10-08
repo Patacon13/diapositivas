@@ -66,6 +66,198 @@
         };
     }
 
+    function distToSegment(px, py, x1, y1, x2, y2) {
+        const dx = x2 - x1, dy = y2 - y1;
+        const l2 = dx * dx + dy * dy;
+        if (l2 === 0) return Math.hypot(px - x1, py - y1);
+        let t = ((px - x1) * dx + (py - y1) * dy) / l2;
+        t = Math.max(0, Math.min(1, t));
+        return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+    }
+
+    function getRoomCeilingLamps(room) {
+        if (!room) return [];
+        if (room.ceilingLamps) return room.ceilingLamps;
+
+        const lampsByRoom = {
+            dock: [
+                { x: 100, y: 70, radius: 105, intensity: 0.85 },
+                { x: 320, y: 80, radius: 110, intensity: 0.85 },
+                { x: 610, y: 340, radius: 115, intensity: 0.85 }
+            ],
+            dock_w1: [
+                { x: 100, y: 70, radius: 105, intensity: 0.85 },
+                { x: 320, y: 80, radius: 110, intensity: 0.85 },
+                { x: 610, y: 340, radius: 115, intensity: 0.85 }
+            ],
+            corridor_u1: [
+                { x: 120, y: 225, radius: 115, intensity: 0.85 },
+                { x: 400, y: 225, radius: 120, intensity: 0.85 },
+                { x: 680, y: 225, radius: 115, intensity: 0.85 }
+            ],
+            yard_vulcan: [
+                { x: 400, y: 225, radius: 190, intensity: 0.9 }
+            ],
+            filter_w1: [
+                { x: 140, y: 100, radius: 110, intensity: 0.85 },
+                { x: 600, y: 100, radius: 110, intensity: 0.85 },
+                { x: 380, y: 350, radius: 115, intensity: 0.85 }
+            ],
+            corridor_u2: [
+                { x: 150, y: 225, radius: 115, intensity: 0.85 },
+                { x: 420, y: 225, radius: 120, intensity: 0.85 },
+                { x: 680, y: 225, radius: 115, intensity: 0.85 }
+            ],
+            olympo_arena: [
+                { x: 400, y: 225, radius: 190, intensity: 0.95 }
+            ],
+            rex_hangar: [
+                { x: 200, y: 140, radius: 130, intensity: 0.85 },
+                { x: 600, y: 140, radius: 130, intensity: 0.85 },
+                { x: 400, y: 350, radius: 140, intensity: 0.85 }
+            ],
+            rex_cockpit: [
+                { x: 400, y: 225, radius: 210, intensity: 1.0 }
+            ]
+        };
+
+        return lampsByRoom[room.id] || [
+            { x: 220, y: 225, radius: 120, intensity: 0.8 },
+            { x: 580, y: 225, radius: 120, intensity: 0.8 }
+        ];
+    }
+
+    function checkRayWall(x1, y1, x2, y2, walls) {
+        if (typeof window.isRayBlockedByWalls === 'function') {
+            return window.isRayBlockedByWalls(x1, y1, x2, y2, walls);
+        }
+        if (typeof isRayBlockedByWalls === 'function') {
+            return isRayBlockedByWalls(x1, y1, x2, y2, walls);
+        }
+        return false;
+    }
+
+    function getAmbientLightLevel(x, y, room) {
+        if (!room) return 0.5;
+        let totalLight = 0.08; // Penumbra oscura táctica base
+
+        // En sirena roja de ALERTA, la baliza estroboscópica ilumina el hangar
+        if (typeof gameState !== 'undefined' && gameState.alertState === 'alert') {
+            totalLight += 0.22;
+        }
+
+        const walls = room.walls || [];
+
+        // 1. Lámparas cenitales
+        const lamps = getRoomCeilingLamps(room);
+        for (let i = 0; i < lamps.length; i++) {
+            const lamp = lamps[i];
+            const d = Math.hypot(x - lamp.x, y - lamp.y);
+            if (d < lamp.radius) {
+                if (!checkRayWall(lamp.x, lamp.y, x, y, walls)) {
+                    totalLight += (1 - d / lamp.radius) * (lamp.intensity || 0.85);
+                }
+            }
+        }
+
+        // 2. Terminales de seguridad
+        if (room.terminals) {
+            for (let i = 0; i < room.terminals.length; i++) {
+                const term = room.terminals[i];
+                const tx = term.x + term.w / 2, ty = term.y + term.h / 2;
+                const d = Math.hypot(x - tx, y - ty);
+                if (d < 65 && !checkRayWall(tx, ty, x, y, walls)) {
+                    totalLight += (1 - d / 65) * 0.75;
+                }
+            }
+        }
+
+        // 3. Raciones
+        if (room.items) {
+            for (let i = 0; i < room.items.length; i++) {
+                const item = room.items[i];
+                if (!item.taken && item.type === 'coffee') {
+                    const ix = item.x + 12, iy = item.y + 12;
+                    const d = Math.hypot(x - ix, y - iy);
+                    if (d < 50 && !checkRayWall(ix, iy, x, y, walls)) {
+                        totalLight += (1 - d / 50) * 0.6;
+                    }
+                }
+            }
+        }
+
+        // 4. Barreras láser
+        if (room.lasers) {
+            for (let i = 0; i < room.lasers.length; i++) {
+                const laser = room.lasers[i];
+                const d = distToSegment(x, y, laser.x1, laser.y1, laser.x2, laser.y2);
+                if (d < 45) {
+                    totalLight += (1 - d / 45) * 0.7;
+                }
+            }
+        }
+
+        // 5. Reactor del jefe
+        if (room.hasBoss && typeof gameState !== 'undefined' && gameState.boss && gameState.boss.hp > 0) {
+            const d = Math.hypot(x - gameState.boss.x, y - gameState.boss.y);
+            if (d < 220) {
+                totalLight += (1 - d / 220) * 0.9;
+            }
+        }
+
+        // Oclusión de muros: estar a menos de 22px de un muro profundiza la sombra (wall-hug camo)
+        if (walls.length > 0) {
+            let nearWall = false;
+            for (let i = 0; i < walls.length; i++) {
+                const w = walls[i];
+                const cx = Math.max(w.x, Math.min(x, w.x + w.w));
+                const cy = Math.max(w.y, Math.min(y, w.y + w.h));
+                if (Math.hypot(x - cx, y - cy) <= 22) {
+                    nearWall = true;
+                    break;
+                }
+            }
+            if (nearWall) {
+                totalLight *= 0.72;
+            }
+        }
+
+        return Math.max(0.06, Math.min(1.0, totalLight));
+    }
+
+    function getGuardEffectiveViewDist(g, p, room) {
+        const baseDist = g.viewDist || 150;
+        if (!p || !room) return baseDist;
+
+        // En alerta de combate, los centinelas están al 100% de reflejos
+        if (typeof gameState !== 'undefined' && gameState.alertState === 'alert') {
+            return baseDist;
+        }
+
+        // Nivel de iluminación en la posición de Solid Byte
+        const lightLevel = getAmbientLightLevel(p.x, p.y, room);
+
+        // Sombras y Oclusión: las zonas oscuras reducen drásticamente la visión de las linternas enemigas
+        // Si lightLevel >= 0.7, visión normal (100%).
+        // Si lightLevel < 0.35 (oscuridad/sombra profunda), reducción drástica de más del 50-65%
+        const shadowFactor = 0.35 + 0.65 * Math.min(1.0, lightLevel / 0.7);
+        let effectiveDist = baseDist * shadowFactor;
+
+        // Si Solid Byte no se está moviendo en la sombra, bono extra de ocultamiento
+        if (typeof gameState !== 'undefined' && gameState.keys) {
+            const isMoving = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].some(k => gameState.keys[k]);
+            if (!isMoving && lightLevel < 0.4) {
+                effectiveDist *= 0.85;
+            }
+        }
+
+        return Math.max(45, effectiveDist);
+    }
+
+    window.getAmbientLightLevel = getAmbientLightLevel;
+    window.getGuardEffectiveViewDist = getGuardEffectiveViewDist;
+    window.getRoomCeilingLamps = getRoomCeilingLamps;
+
     // -------------------------------------------------------------------------
     // RENDER PASS: ILUMINACIÓN DINÁMICA
     // -------------------------------------------------------------------------
@@ -200,6 +392,31 @@
             lCtx.arc(bx, by, 220, 0, Math.PI * 2);
             lCtx.fill();
         }
+
+        // G. Lámparas Cenitales Industriales (Recortar penumbra)
+        const ceilingLamps = getRoomCeilingLamps(currentRoom);
+        ceilingLamps.forEach(lamp => {
+            const lGlow = lCtx.createRadialGradient(lamp.x, lamp.y, 10, lamp.x, lamp.y, lamp.radius);
+            lGlow.addColorStop(0, 'rgba(0, 0, 0, 0.88)');
+            lGlow.addColorStop(0.65, 'rgba(0, 0, 0, 0.55)');
+            lGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            lCtx.fillStyle = lGlow;
+            lCtx.beginPath();
+            lCtx.arc(lamp.x, lamp.y, lamp.radius, 0, Math.PI * 2);
+            lCtx.fill();
+        });
+
+        // 2b. Halos tenues de luz cálida en el suelo bajo las lámparas
+        ceilingLamps.forEach(lamp => {
+            const floorGrad = ctx.createRadialGradient(lamp.x, lamp.y, 6, lamp.x, lamp.y, lamp.radius * 0.9);
+            floorGrad.addColorStop(0, 'rgba(255, 235, 190, 0.08)');
+            floorGrad.addColorStop(0.7, 'rgba(255, 235, 190, 0.02)');
+            floorGrad.addColorStop(1, 'rgba(255, 235, 190, 0)');
+            ctx.fillStyle = floorGrad;
+            ctx.beginPath();
+            ctx.arc(lamp.x, lamp.y, lamp.radius * 0.9, 0, Math.PI * 2);
+            ctx.fill();
+        });
 
         // 3. Estampar buffer de luz en el canvas principal
         ctx.save();

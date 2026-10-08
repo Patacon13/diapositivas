@@ -180,6 +180,20 @@
         ctx.fillStyle = '#00FF66'; // Insignia luminosa miniatura
         ctx.fillRect(-2, -5, 4, 1.5);
 
+        // Halo de camuflaje táctico en sombra
+        const curRoom = (typeof facilityRooms !== 'undefined' && typeof gameState !== 'undefined') ? facilityRooms[gameState.currentRoomId] : null;
+        const pLight = (typeof window.getAmbientLightLevel === 'function' && curRoom) ? window.getAmbientLightLevel(p.x, p.y, curRoom) : 0.5;
+        if (pLight < 0.35) {
+            ctx.save();
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 4]);
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 14, 11, 0, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+        }
+
         // 3. Brazos sosteniendo arma (SOCOM silenciada)
         ctx.fillStyle = '#1E293B';
         // Brazo izquierdo (apoyo)
@@ -279,6 +293,10 @@
             coneColorInner = 'rgba(255, 42, 42, 0.35)';
             coneColorOuter = 'rgba(255, 42, 42, 0.02)';
             coneLineColor  = 'rgba(255, 42, 42, 0.85)';
+        } else if (g._inspectingBox || g._trackingFootprints) {
+            coneColorInner = 'rgba(56, 189, 248, 0.32)';
+            coneColorOuter = 'rgba(56, 189, 248, 0.02)';
+            coneLineColor  = 'rgba(56, 189, 248, 0.85)';
         } else if (gameState.alertState === 'caution' || g.investigateTimer > 0) {
             coneColorInner = 'rgba(251, 191, 36, 0.28)';
             coneColorOuter = 'rgba(251, 191, 36, 0.02)';

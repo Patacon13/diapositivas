@@ -144,8 +144,9 @@
                     x: p.x,
                     y: p.y,
                     dir: p.dir,
-                    life: 3.5,
-                    maxLife: 3.5
+                    life: 5.0,
+                    maxLife: 5.0,
+                    id: 'wfp_' + Math.random().toString(36).substr(2, 9)
                 });
             }
         }
@@ -319,6 +320,24 @@
         });
         ctx.restore();
     };
+
+    // API pública para rastreo de huellas húmedas por la IA centinela
+    window.getWetFootprints = function() {
+        return wetFootprints;
+    };
+
+    window.spawnWetFootprint = function(x, y, dir = 0, life = 5.0) {
+        const fp = {
+            x, y, dir,
+            life, maxLife: life,
+            id: 'wfp_' + Math.random().toString(36).substr(2, 9)
+        };
+        wetFootprints.push(fp);
+        return fp;
+    };
+
+    window.ATMOSPHERE = window.ATMOSPHERE || {};
+    window.ATMOSPHERE.wetFootprints = wetFootprints;
 
     // Auto-hook en el pipeline de renderizado y actualización
     const _origUpdate = window.updateGFXParticles;

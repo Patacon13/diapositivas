@@ -204,6 +204,22 @@
             transition: width 0.2s ease;
         }
 
+        /* Badge de Camuflaje Táctico (Sombras / Oclusión / Caja) */
+        .camo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #34D399;
+            border-radius: 6px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: #34D399;
+            box-shadow: 0 0 10px rgba(52, 211, 153, 0.2);
+            transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+        }
+
         /* Estado de Alerta (ALERT GAUGE) */
         .alert-gauge {
             display: none;
@@ -1379,6 +1395,11 @@
                         </div>
                     </div>
 
+                    <div class="camo-badge" id="hud-camo" title="Índice de Camuflaje Táctico (Sombras / Caja)">
+                        <i class="fa-solid fa-user-secret"></i>
+                        <span id="camo-text">CAMO 85%</span>
+                    </div>
+
                     <div class="keycard-badge" id="hud-keycard" title="Nivel de Tarjeta de Seguridad (Keycard)">
                         <i class="fa-solid fa-id-card"></i>
                         <span id="keycard-text">LV. 0</span>
@@ -1766,6 +1787,11 @@
                         osc.stop(now + offset + 0.05);
                     });
 
+                } else if (name === 'curious') {
+                    // Ping de sospecha/curiosidad táctica PS1 del centinela
+                    playTone(587.33, 0.08, 'sine', 0.22);
+                    setTimeout(() => playTone(880.0, 0.12, 'sine', 0.25), 60);
+
                 } else if (name === 'door-open') {
                     // Apertura de compuerta táctica (siseo neumático y tono ascendente)
                     playTone(440, 0.08, 'triangle', 0.25);
@@ -1823,76 +1849,277 @@
             }, 2500);
         }
 
-        // Bandas Sonoras Procedurales (Sneaking, Alert, Boss Battle & Boss Rage)
-        const sneakingBass = [110, 0, 110, 130.81, 0, 110, 146.83, 130.81];
-        const alertArp = [220, 261.63, 293.66, 349.23, 392, 349.23, 293.66, 261.63];
-        const bossBass = [73.42, 73.42, 87.31, 73.42, 98.0, 87.31, 73.42, 110.0];
-        const bossRageArp = [146.83, 174.61, 220, 293.66, 349.23, 293.66, 220, 174.61];
+        // =========================================================================
+        // MOTOR DE MÚSICA ADAPTATIVA CHIPTUNE (CUANTIZADO A 120 BPM)
+        // Capas dinámicas en D menor: Sneak / Caution / Alert / Boss + Percusión Militar
+        // =========================================================================
+        const CHIPTUNE_BPM = 120;
+        const CHIPTUNE_STEP_MS = 125; // 16th note step = (60 / (120 * 4)) * 1000
+
+        // Secuencias armónicas cuantizadas a 16 pasos (1 compás de 4/4)
+        const sneakBassSeq = [73.42, 0, 73.42, 87.31, 0, 73.42, 98.0, 87.31, 73.42, 0, 73.42, 87.31, 103.83, 110.0, 87.31, 82.41];
+        const cautionArpSeq = [293.66, 349.23, 440.0, 293.66, 349.23, 392.0, 440.0, 349.23, 293.66, 349.23, 440.0, 523.25, 440.0, 349.23, 329.63, 261.63];
+        const alertLeadSeq  = [587.33, 587.33, 0, 698.46, 659.25, 587.33, 0, 830.61, 880.0, 0, 698.46, 587.33, 659.25, 698.46, 783.99, 880.0];
+        const alertBassSeq  = [110, 110, 130.81, 110, 146.83, 110, 164.81, 146.83, 110, 110, 130.81, 110, 174.61, 164.81, 146.83, 130.81];
+        const bossBassSeq   = [73.42, 73.42, 87.31, 73.42, 98.0, 87.31, 73.42, 110.0, 73.42, 73.42, 87.31, 73.42, 116.54, 110.0, 98.0, 87.31];
+        const bossRageSeq   = [146.83, 174.61, 220, 293.66, 349.23, 293.66, 220, 174.61, 146.83, 174.61, 220, 329.63, 349.23, 293.66, 220, 174.61];
+
+        // 1. Percusión Militar Procedural Sintetizada (Caja Militar con Entorchado)
+        function playMilitarySnare(ctx, time, vol = 0.22, isRoll = false) {
+            if (!ctx || !soundEnabled || ctx.state === 'suspended') return;
+            try {
+                const now = time || ctx.currentTime || 0;
+                const dur = isRoll ? 0.05 : 0.11;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                if (osc && gain) {
+                    osc.type = 'triangle';
+                    if (osc.frequency && osc.frequency.setValueAtTime) {
+                        osc.frequency.setValueAtTime(185, now);
+                        if (osc.frequency.exponentialRampToValueAtTime) {
+                            osc.frequency.exponentialRampToValueAtTime(75, now + dur);
+                        }
+                    }
+                    if (gain.gain && gain.gain.setValueAtTime) {
+                        gain.gain.setValueAtTime(vol * 0.5, now);
+                        if (gain.gain.exponentialRampToValueAtTime) {
+                            gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+                        }
+                    }
+                    osc.connect(gain);
+                    gain.connect(masterGain || ctx.destination);
+                    if (osc.start) osc.start(now);
+                    if (osc.stop) osc.stop(now + dur);
+                }
+
+                // Generación procedural del entorchado militar metálico (Snare Wire Rattle)
+                if (typeof ctx.createBuffer === 'function') {
+                    const sr = ctx.sampleRate || 44100;
+                    const bSize = Math.max(1, Math.floor(sr * dur));
+                    const buf = ctx.createBuffer(1, bSize, sr);
+                    const chan = buf.getChannelData(0);
+                    for (let i = 0; i < bSize; i++) {
+                        chan[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bSize * 0.35));
+                    }
+                    const nSrc = ctx.createBufferSource();
+                    const nGain = ctx.createGain();
+                    nSrc.buffer = buf;
+                    if (nGain.gain && nGain.gain.setValueAtTime) {
+                        nGain.gain.setValueAtTime(vol * 0.7, now);
+                        if (nGain.gain.exponentialRampToValueAtTime) {
+                            nGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+                        }
+                    }
+                    if (typeof ctx.createBiquadFilter === 'function') {
+                        const filt = ctx.createBiquadFilter();
+                        filt.type = 'bandpass';
+                        filt.frequency.setValueAtTime(2400, now);
+                        filt.Q.setValueAtTime(1.8, now);
+                        nSrc.connect(filt);
+                        filt.connect(nGain);
+                    } else {
+                        nSrc.connect(nGain);
+                    }
+                    nGain.connect(masterGain || ctx.destination);
+                    if (nSrc.start) nSrc.start(now);
+                } else {
+                    const rOsc = ctx.createOscillator();
+                    const rGain = ctx.createGain();
+                    if (rOsc && rGain) {
+                        rOsc.type = 'sawtooth';
+                        if (rOsc.frequency && rOsc.frequency.setValueAtTime) {
+                            rOsc.frequency.setValueAtTime(850, now);
+                            if (rOsc.frequency.exponentialRampToValueAtTime) {
+                                rOsc.frequency.exponentialRampToValueAtTime(120, now + dur);
+                            }
+                        }
+                        if (rGain.gain && rGain.gain.setValueAtTime) {
+                            rGain.gain.setValueAtTime(vol * 0.6, now);
+                            if (rGain.gain.exponentialRampToValueAtTime) {
+                                rGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+                            }
+                        }
+                        rOsc.connect(rGain);
+                        rGain.connect(masterGain || ctx.destination);
+                        if (rOsc.start) rOsc.start(now);
+                        if (rOsc.stop) rOsc.stop(now + dur);
+                    }
+                }
+            } catch (e) {}
+        }
+
+        // 2. Bombo Táctico Procedural (Kick Drum Punch Sub-bass)
+        function playMilitaryKick(ctx, time, vol = 0.32) {
+            if (!ctx || !soundEnabled || ctx.state === 'suspended') return;
+            try {
+                const now = time || ctx.currentTime || 0;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                if (osc && gain) {
+                    osc.type = 'sine';
+                    if (osc.frequency && osc.frequency.setValueAtTime) {
+                        osc.frequency.setValueAtTime(145, now);
+                        if (osc.frequency.exponentialRampToValueAtTime) {
+                            osc.frequency.exponentialRampToValueAtTime(36, now + 0.08);
+                        }
+                    }
+                    if (gain.gain && gain.gain.setValueAtTime) {
+                        gain.gain.setValueAtTime(vol, now);
+                        if (gain.gain.exponentialRampToValueAtTime) {
+                            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+                        }
+                    }
+                    osc.connect(gain);
+                    gain.connect(masterGain || ctx.destination);
+                    if (osc.start) osc.start(now);
+                    if (osc.stop) osc.stop(now + 0.09);
+                }
+            } catch (e) {}
+        }
+
+        // 3. Hi-Hat Metálico Chiptune
+        function playMilitaryHat(ctx, time, vol = 0.05, open = false) {
+            if (!ctx || !soundEnabled || ctx.state === 'suspended') return;
+            try {
+                const now = time || ctx.currentTime || 0;
+                const dur = open ? 0.08 : 0.025;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                if (osc && gain) {
+                    osc.type = 'sawtooth';
+                    if (osc.frequency && osc.frequency.setValueAtTime) {
+                        osc.frequency.setValueAtTime(7500, now);
+                        if (osc.frequency.exponentialRampToValueAtTime) {
+                            osc.frequency.exponentialRampToValueAtTime(3200, now + dur);
+                        }
+                    }
+                    if (gain.gain && gain.gain.setValueAtTime) {
+                        gain.gain.setValueAtTime(vol, now);
+                        if (gain.gain.exponentialRampToValueAtTime) {
+                            gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+                        }
+                    }
+                    osc.connect(gain);
+                    gain.connect(masterGain || ctx.destination);
+                    if (osc.start) osc.start(now);
+                    if (osc.stop) osc.stop(now + dur);
+                }
+            } catch (e) {}
+        }
+
+        // 4. Tick Cuantizado a 120 BPM con Capas Dinámicas
+        function onQuantizedMusicTick() {
+            if (!soundEnabled || musicTheme === 'none') return;
+            const ctx = getAudioContext();
+            if (!ctx || ctx.state === 'suspended') return;
+
+            const step = musicStep % 16;
+            const isBossRoom = facilityRooms[gameState?.currentRoomId]?.hasBoss;
+            const currentAlert = (typeof gameState !== 'undefined') ? gameState.alertState : 'normal';
+
+            if (musicTheme === 'boss' || (isBossRoom && musicTheme !== 'boss-rage')) {
+                // Tema de Boss (Heavy Industrial 120 BPM)
+                const bNote = bossBassSeq[step];
+                playTone(bNote, 0.14, 'sawtooth', 0.16);
+                if (step % 4 === 0) {
+                    playMilitaryKick(ctx, null, 0.38);
+                } else if (step % 2 === 0) {
+                    playMilitarySnare(ctx, null, 0.25);
+                }
+            } else if (musicTheme === 'boss-rage') {
+                // Tema de Furia del Boss (Industrial Rage 120 BPM doble tiempo)
+                const rNote = bossRageSeq[step];
+                playTone(rNote, 0.08, 'sawtooth', 0.18);
+                if (step % 2 === 0) {
+                    playMilitaryKick(ctx, null, 0.40);
+                    playMilitarySnare(ctx, null, 0.28, true);
+                }
+            } else {
+                // MOTOR ADAPTATIVO POR CAPAS: SNEAK / CAUTION / ALERT
+                const isAlert = currentAlert === 'alert' || musicTheme === 'alert';
+                const isCaution = currentAlert === 'caution' || musicTheme === 'caution';
+
+                // CAPA 1: SNEAK (Base omnipresente de sigilo e infiltración)
+                const sBass = sneakBassSeq[step];
+                if (sBass > 0) {
+                    playTone(sBass, 0.09, 'triangle', isAlert ? 0.11 : (isCaution ? 0.14 : 0.16));
+                }
+                if (step === 0) {
+                    playTone(440, 0.05, 'sine', 0.02);
+                } else if (step === 8) {
+                    playTone(587.33, 0.05, 'sine', 0.02);
+                }
+
+                // Percusión de Sigilo (Mínima)
+                if (!isCaution && !isAlert) {
+                    if (step === 0) playMilitaryKick(ctx, null, 0.18);
+                    if (step === 4 || step === 12) playMilitaryHat(ctx, null, 0.03);
+                }
+
+                // CAPA 2: CAUTION (Tensión, búsqueda y cadencia militar)
+                if (isCaution || isAlert) {
+                    const cNote = cautionArpSeq[step];
+                    playTone(cNote, 0.07, 'sawtooth', isAlert ? 0.07 : 0.09);
+
+                    // Cadencia de tambor militar en Caution
+                    if (!isAlert) {
+                        if (step === 0 || step === 8) playMilitaryKick(ctx, null, 0.26);
+                        if (step === 4 || step === 12) playMilitarySnare(ctx, null, 0.20);
+                        if (step === 10) playMilitarySnare(ctx, null, 0.11, true); // Ghost tap
+                        if (step === 14 || step === 15) playMilitarySnare(ctx, null, 0.17, true); // Pickup roll
+                        if (step % 2 === 0) playMilitaryHat(ctx, null, 0.04);
+                    }
+                }
+
+                // CAPA 3: ALERT (Alarma bélica, lead de combate y marcha militar total)
+                if (isAlert) {
+                    const aLead = alertLeadSeq[step];
+                    if (aLead > 0) {
+                        playTone(aLead, 0.11, 'square', 0.16);
+                    }
+                    const aBass = alertBassSeq[step];
+                    playTone(aBass, 0.08, 'sawtooth', 0.12);
+
+                    // Marcha militar completa en Alerta (Bombo 4-on-the-floor + Redobles)
+                    if (step % 4 === 0) {
+                        playMilitaryKick(ctx, null, 0.36);
+                    }
+                    // Redobles militares y sincopas de combate
+                    if ([2, 4, 6, 7, 10, 12, 14, 15].includes(step)) {
+                        playMilitarySnare(ctx, null, [14, 15].includes(step) ? 0.22 : 0.26, [7, 15].includes(step));
+                    }
+                    playMilitaryHat(ctx, null, 0.06, step % 4 === 2);
+                }
+            }
+
+            musicStep = (musicStep + 1) % 16;
+        }
 
         function setMusicTheme(theme) {
-            if (musicTheme === theme) return;
             musicTheme = theme;
-            if (musicInterval) clearInterval(musicInterval);
-            musicInterval = null;
+            if (theme === 'none' || !soundEnabled) {
+                if (musicInterval) {
+                    clearInterval(musicInterval);
+                    musicInterval = null;
+                }
+                return;
+            }
 
-            if (!soundEnabled || theme === 'none') return;
-
-            const ctx = getAudioContext();
-            musicStep = 0;
-
-            if (theme === 'sneaking') {
-                // Tema de Sigilo Ambiental (105 BPM)
-                musicInterval = setInterval(() => {
-                    if (!soundEnabled || musicTheme !== 'sneaking') return;
-                    const bass = sneakingBass[musicStep % sneakingBass.length];
-                    if (bass > 0) {
-                        playTone(bass, 0.18, 'sawtooth', 0.08);
-                    }
-                    if (musicStep % 4 === 0) {
-                        playTone(1760, 0.06, 'sine', 0.02);
-                    }
-                    musicStep++;
-                }, 140);
-
-            } else if (theme === 'alert') {
-                // Tema de Persecución Centinelas (145 BPM)
-                musicInterval = setInterval(() => {
-                    if (!soundEnabled || musicTheme !== 'alert') return;
-                    const note = alertArp[musicStep % alertArp.length];
-                    playTone(note, 0.09, 'square', 0.11);
-                    if (musicStep % 2 === 0) {
-                        playTone(110, 0.14, 'sawtooth', 0.14);
-                    }
-                    musicStep++;
-                }, 100);
-
-            } else if (theme === 'boss') {
-                // Tema de Combate contra Boss (Heavy Industrial Synth 135 BPM)
-                musicInterval = setInterval(() => {
-                    if (!soundEnabled || musicTheme !== 'boss') return;
-                    const note = bossBass[musicStep % bossBass.length];
-                    playTone(note, 0.16, 'sawtooth', 0.16);
-                    if (musicStep % 4 === 0) {
-                        playTone(146.83, 0.22, 'square', 0.12);
-                    } else if (musicStep % 2 === 0) {
-                        playTone(55, 0.2, 'triangle', 0.22);
-                    }
-                    musicStep++;
-                }, 110);
-
-            } else if (theme === 'boss-rage') {
-                // Tema de Furia del Boss (Ultra-rápido 165 BPM)
-                musicInterval = setInterval(() => {
-                    if (!soundEnabled || musicTheme !== 'boss-rage') return;
-                    const note = bossRageArp[musicStep % bossRageArp.length];
-                    playTone(note, 0.08, 'sawtooth', 0.18);
-                    if (musicStep % 2 === 0) {
-                        playTone(73.42, 0.15, 'square', 0.25);
-                    }
-                    musicStep++;
-                }, 90);
+            // Iniciar reloj cuantizado a 120 BPM si no estaba corriendo
+            if (!musicInterval) {
+                musicInterval = setInterval(onQuantizedMusicTick, CHIPTUNE_STEP_MS);
             }
         }
+
+        window.MGS_AUDIO = {
+            BPM: CHIPTUNE_BPM,
+            STEP_MS: CHIPTUNE_STEP_MS,
+            getStep: () => musicStep,
+            getTheme: () => musicTheme,
+            playMilitarySnare,
+            playMilitaryKick,
+            playMilitaryHat
+        };
 
         function toggleAudio() {
             soundEnabled = !soundEnabled;
@@ -4393,6 +4620,29 @@
                         }
                     });
                 }
+            } else if (p.inBox) {
+                // Golpe táctico amortiguado desde dentro de la caja de cartón (Tap Tap)
+                playSFX('knock');
+                gameState.soundWaves.push({
+                    x: p.x,
+                    y: p.y,
+                    radius: 4,
+                    maxRadius: 130,
+                    alpha: 0.85
+                });
+                showToast("¡TAP TAP! (Golpe táctico desde la caja de cartón)");
+                if (currentRoom.guards) {
+                    currentRoom.guards.forEach(g => {
+                        const dist = Math.hypot(p.x - g.x, p.y - g.y);
+                        if (dist < 160 && gameState.alertState !== 'alert') {
+                            g.investigateTarget = { x: p.x, y: p.y };
+                            g.angle = Math.atan2(p.y - g.y, p.x - g.x);
+                            g.investigateTimer = 3.5;
+                            g._inspectingBox = true;
+                            g._bubble = { ch: '?', t: 1.6 };
+                        }
+                    });
+                }
             } else {
                 playTone(180, 0.05, 'triangle', 0.08);
             }
@@ -4836,17 +5086,48 @@
                 currentRoom.guards.forEach(g => {
                     const distToPlayer = Math.hypot(p.x - g.x, p.y - g.y);
 
+                    // Sombras y Oclusión: visión de linternas drásticamente reducida en penumbra
+                    const effectiveViewDist = (typeof window.getGuardEffectiveViewDist === 'function')
+                        ? window.getGuardEffectiveViewDist(g, p, currentRoom)
+                        : (g.viewDist || 150);
+
                     let seesPlayerNow = false;
                     // Solo detectar si terminó el período de gracia de entrada
-                    if ((gameState.roomGraceTimer || 0) <= 0 && distToPlayer < g.viewDist) {
+                    if ((gameState.roomGraceTimer || 0) <= 0 && distToPlayer < effectiveViewDist) {
                         const angleToPlayer = Math.atan2(p.y - g.y, p.x - g.x);
                         let diff = Math.abs(angleToPlayer - g.angle);
                         while (diff > Math.PI) diff = Math.abs(diff - 2 * Math.PI);
 
                         if (diff < g.fov / 2) {
                             if (!isRayBlockedByWalls(g.x, g.y, p.x, p.y, currentRoom.walls)) {
-                                if (p.inBox && dx === 0 && dy === 0 && distToPlayer > 35) {
-                                    // Caja efectiva
+                                if (p.inBox) {
+                                    const isMoving = (dx !== 0 || dy !== 0);
+                                    if (isMoving) {
+                                        // IA Reactiva: Caja en movimiento = ¡ALERTA INMEDIATA!
+                                        seesPlayerNow = true;
+                                        g._bubble = { ch: '!', t: 2.0 };
+                                        g._inspectingBox = false;
+                                        showToast('¡¿LA CAJA SE ESTÁ MOVIENDO?! ¡INTRUSO IDENTIFICADO!');
+                                    } else {
+                                        // IA Reactiva: Caja en quietud = ¡INSPECCIÓN CURIOSA!
+                                        if (gameState.alertState === 'alert') {
+                                            seesPlayerNow = true;
+                                        } else if ((g._boxInspectedCooldown || 0) <= 0) {
+                                            if (!g._inspectingBox) {
+                                                g._inspectingBox = true;
+                                                g._bubble = { ch: '?', t: 1.8 };
+                                                g.investigateTarget = { x: p.x, y: p.y };
+                                                g.investigateTimer = 4.0;
+                                                g._boxInspectTimer = 0;
+                                                showToast('Centinela: "¿Eh? ¿Una caja de cartón...?"');
+                                                playSFX('curious');
+                                            }
+                                            seesPlayerNow = false;
+                                        } else {
+                                            // Ya inspeccionada recientemente
+                                            seesPlayerNow = false;
+                                        }
+                                    }
                                 } else {
                                     seesPlayerNow = true;
                                 }
@@ -4856,6 +5137,103 @@
 
                     if (seesPlayerNow) {
                         triggerAlert();
+                    }
+
+                    // Enfriamiento de inspección de caja
+                    if (g._boxInspectedCooldown > 0) {
+                        g._boxInspectedCooldown -= dt;
+                    }
+
+                    // Manejo del ciclo de inspección curiosa de la caja
+                    if (g._inspectingBox) {
+                        const isMoving = (dx !== 0 || dy !== 0);
+                        if (isMoving || !p.inBox) {
+                            // Se movió o salió de la caja frente a los ojos del guardia: alarma inmediata
+                            g._inspectingBox = false;
+                            g._bubble = { ch: '!', t: 2.0 };
+                            showToast('¡TE MOVISTE FRENTE AL CENTINELA!');
+                            triggerAlert();
+                        } else if (distToPlayer <= 34) {
+                            g._boxInspectTimer = (g._boxInspectTimer || 0) + dt;
+                            g.angle = Math.atan2(p.y - g.y, p.x - g.x);
+                            if (g._boxInspectTimer >= 1.4) {
+                                g._bubble = { ch: '?', t: 1.0 };
+                                showToast('Centinela: "Solo una caja... Bah." (Inspección superada)');
+                                playSFX('knock');
+                                g._boxInspectedCooldown = 8.0;
+                                g._inspectingBox = false;
+                                g._boxInspectTimer = 0;
+                                g.investigateTarget = null;
+                                g.investigateTimer = 0;
+                            }
+                        }
+                    }
+
+                    // IA Reactiva: Centinelas investigan huellas húmedas
+                    if (gameState.alertState !== 'alert' && !g._inspectingBox && (g.investigateTimer <= 0 || g._trackingFootprints)) {
+                        if (typeof window.getWetFootprints === 'function') {
+                            const wetFps = window.getWetFootprints();
+                            if (wetFps && wetFps.length > 0) {
+                                if (!g._investigatedFps) g._investigatedFps = new Set();
+
+                                if (g._trackingFootprints && g.investigateTarget) {
+                                    const dToTgt = Math.hypot(g.investigateTarget.x - g.x, g.investigateTarget.y - g.y);
+                                    if (dToTgt <= 24) {
+                                        let nextFp = null;
+                                        let minTrailDist = 55;
+                                        for (let fp of wetFps) {
+                                            if (g._investigatedFps.has(fp.id)) continue;
+                                            const dfp = Math.hypot(fp.x - g.x, fp.y - g.y);
+                                            if (dfp < minTrailDist && !isRayBlockedByWalls(g.x, g.y, fp.x, fp.y, currentRoom.walls)) {
+                                                nextFp = fp;
+                                                minTrailDist = dfp;
+                                            }
+                                        }
+                                        if (nextFp) {
+                                            g._investigatedFps.add(nextFp.id);
+                                            g.investigateTarget = { x: nextFp.x, y: nextFp.y };
+                                            g.investigateTimer = 3.5;
+                                            g.angle = Math.atan2(nextFp.y - g.y, nextFp.x - g.x);
+                                            g._bubble = { ch: '?', t: 1.4 };
+                                        } else {
+                                            g._trackingFootprints = false;
+                                            g.angle += Math.sin(Date.now() * 0.008) * 0.08;
+                                        }
+                                    }
+                                } else if (g.investigateTimer <= 0) {
+                                    let spottedFp = null;
+                                    let minSpottedDist = 999;
+                                    for (let fp of wetFps) {
+                                        if (g._investigatedFps.has(fp.id)) continue;
+                                        const dfp = Math.hypot(fp.x - g.x, fp.y - g.y);
+                                        const fpSightDist = (typeof window.getGuardEffectiveViewDist === 'function')
+                                            ? window.getGuardEffectiveViewDist(g, fp, currentRoom)
+                                            : (g.viewDist || 150);
+                                        if (dfp < fpSightDist * 0.85 && dfp < minSpottedDist) {
+                                            const angToFp = Math.atan2(fp.y - g.y, fp.x - g.x);
+                                            let diffFp = Math.abs(angToFp - g.angle);
+                                            while (diffFp > Math.PI) diffFp = Math.abs(diffFp - 2 * Math.PI);
+                                            if (diffFp < g.fov / 2) {
+                                                if (!isRayBlockedByWalls(g.x, g.y, fp.x, fp.y, currentRoom.walls)) {
+                                                    spottedFp = fp;
+                                                    minSpottedDist = dfp;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (spottedFp) {
+                                        g._investigatedFps.add(spottedFp.id);
+                                        g._bubble = { ch: '?', t: 2.0 };
+                                        g.investigateTarget = { x: spottedFp.x, y: spottedFp.y };
+                                        g.investigateTimer = 4.0;
+                                        g._trackingFootprints = true;
+                                        g.angle = Math.atan2(spottedFp.y - g.y, spottedFp.x - g.x);
+                                        showToast('Centinela: "¿Huellas húmedas?!" (Rastreando)');
+                                        playSFX('curious');
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     if (gameState.alertState === 'alert') {
@@ -5277,7 +5655,7 @@
                     if (alertTag) alertTag.textContent = '? PRECAUCIÓN';
                     if (alertNum) alertNum.textContent = (gameState.alertTimer * 9.99).toFixed(2);
                     if (soundEnabled && musicTheme === 'alert') {
-                        setMusicTheme('sneaking');
+                        setMusicTheme('caution');
                     }
                 } else {
                     gameState.alertTimer = 0;
@@ -5285,6 +5663,38 @@
                     if (alertBox) alertBox.className = 'alert-gauge';
                     if (soundEnabled) setMusicTheme('sneaking');
                 }
+            }
+
+            // 5. Actualización del Índice de Camuflaje Táctico (Sombras / Caja)
+            const camoEl = document.getElementById('camo-text');
+            const camoBadge = document.getElementById('hud-camo');
+            if (camoEl && camoBadge) {
+                let camoVal = 20;
+                let camoLabel = 'EXPUESTO';
+                let camoColor = '#F59E0B';
+                if (p.inBox) {
+                    camoVal = 100;
+                    camoLabel = 'CAJA ZIP';
+                    camoColor = '#34D399';
+                } else {
+                    const pLight = (typeof window.getAmbientLightLevel === 'function')
+                        ? window.getAmbientLightLevel(p.x, p.y, currentRoom)
+                        : 0.5;
+                    camoVal = Math.round((1 - pLight) * 100);
+                    if (camoVal >= 65) {
+                        camoLabel = 'SOMBRA';
+                        camoColor = '#34D399';
+                    } else if (camoVal >= 38) {
+                        camoLabel = 'PENUMBRA';
+                        camoColor = '#38BDF8';
+                    } else {
+                        camoLabel = 'EXPUESTO';
+                        camoColor = '#F59E0B';
+                    }
+                }
+                camoEl.textContent = `${camoVal}% [${camoLabel}]`;
+                camoBadge.style.borderColor = camoColor;
+                camoBadge.style.color = camoColor;
             }
         }
 
@@ -5326,6 +5736,7 @@
             }
             return false;
         }
+        window.isRayBlockedByWalls = isRayBlockedByWalls;
 
         function takeDamage(amount) {
             gameState.player.hp = Math.max(0, gameState.player.hp - amount);
