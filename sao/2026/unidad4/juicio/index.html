@@ -1,0 +1,2358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ace Coder: El Juicio al Programador | SAO 2026 - UTN FRSF</title>
+  <link rel="icon" type="image/svg+xml" href="../../../dist/assets/favicon.svg">
+
+  <!-- Fuentes e Iconos -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Fira+Code:wght@400;600;700&family=Poppins:wght@600;800;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* ========================================================
+       VARIABLES Y PALETA RETRO ACE ATTORNEY / UTN FRSF
+       ======================================================== */
+    :root {
+      --court-blue: #1d4ed8;
+      --court-blue-dark: #0f172a;
+      --court-red: #b91c1c;
+      --court-red-dark: #7f1d1d;
+      --court-gold: #f59e0b;
+      --court-gold-light: #fef08a;
+      --court-green: #10b981;
+      --wood-dark: #451a03;
+      --wood-mid: #78350f;
+      --wood-light: #b45309;
+      --utn-blue: #002B5B;
+      --cyan-accent: #38bdf8;
+      --bg-dark: #0a0f1d;
+      --bg-card: rgba(15, 23, 42, 0.88);
+      --font-pixel: 'Press Start 2P', monospace;
+      --font-code: 'Fira Code', monospace;
+      --font-ui: 'Inter', sans-serif;
+      --font-heading: 'Poppins', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-dark);
+      color: #f8fafc;
+      font-family: var(--font-ui);
+    }
+
+    /* CONTENEDOR PRINCIPAL */
+    #court-app {
+      display: flex;
+      flex-direction: column;
+      width: 100vw;
+      height: 100dvh;
+      position: relative;
+      background: radial-gradient(circle at 50% 30%, #1e293b 0%, #0b0f19 100%);
+      overflow: hidden;
+    }
+
+    /* ========================================================
+       HEADER INSTITUCIONAL Y BARRA SUPERIOR
+       ======================================================== */
+    .court-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 14px;
+      background: rgba(10, 15, 29, 0.95);
+      border-bottom: 2px solid #334155;
+      z-index: 40;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .header-branding {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-utn {
+      background: var(--court-blue);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .game-title {
+      font-family: var(--font-pixel);
+      font-size: 0.75rem;
+      color: var(--court-gold);
+      text-shadow: 2px 2px 0px #000;
+      letter-spacing: -0.5px;
+    }
+
+    .case-indicator {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #94a3b8;
+      background: #1e293b;
+      padding: 2px 8px;
+      border-radius: 12px;
+      border: 1px solid #334155;
+    }
+
+    /* MEDIDOR DE CREDIBILIDAD / CORAZONES */
+    .credibility-meter {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+    }
+
+    .cred-label {
+      font-family: var(--font-pixel);
+      font-size: 0.55rem;
+      color: #cbd5e1;
+      margin-right: 2px;
+    }
+
+    .cred-points {
+      display: flex;
+      gap: 4px;
+    }
+
+    .cred-point {
+      font-family: var(--font-pixel);
+      font-size: 0.8rem;
+      color: #ef4444;
+      text-shadow: 0 0 6px rgba(239, 68, 68, 0.8);
+      transition: all 0.3s ease;
+    }
+
+    .cred-point.lost {
+      color: #475569;
+      text-shadow: none;
+      transform: scale(0.8);
+    }
+
+    /* BOTONES HEADER */
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-top {
+      background: #1e293b;
+      color: #f1f5f9;
+      border: 1px solid #475569;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-top:hover {
+      background: #334155;
+      border-color: var(--cyan-accent);
+      color: #fff;
+    }
+
+    .btn-top.btn-evidence {
+      background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+      border-color: #60a5fa;
+      color: #fff;
+      box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-top.btn-code {
+      background: linear-gradient(135deg, #065f46, #059669);
+      border-color: #34d399;
+      color: #fff;
+    }
+
+    /* ========================================================
+       SALA DEL TRIBUNAL (STAGE CENTRAL)
+       ======================================================== */
+    .court-stage {
+      flex: 1;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      perspective: 1000px;
+      background: #020617;
+    }
+
+    /* FONDO DECORATIVO DE LA SALA */
+    .stage-background {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+      z-index: 1;
+    }
+
+    /* AMBIENTES: JUEZ, DEFENSA, FISCAL, TESTIGO */
+    .bg-judge {
+      background: radial-gradient(circle at 50% 20%, #312e81 0%, #0f172a 80%);
+    }
+
+    .bg-defense {
+      background: linear-gradient(135deg, #0c4a6e 0%, #082f49 50%, #020617 100%);
+    }
+
+    .bg-prosecution {
+      background: linear-gradient(225deg, #7f1d1d 0%, #450a0a 50%, #020617 100%);
+    }
+
+    .bg-witness {
+      background: radial-gradient(circle at 50% 40%, #1e293b 0%, #020617 90%);
+    }
+
+    /* PILARES Y ELEMENTOS DE FONDO SVG */
+    .court-decor {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0.35;
+      background-image: 
+        repeating-linear-gradient(90deg, transparent, transparent 120px, rgba(255, 255, 255, 0.03) 120px, rgba(255, 255, 255, 0.03) 124px),
+        linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.8) 100%);
+    }
+
+    /* BANCO / ESTRADO */
+    .court-bench {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 110px;
+      background: linear-gradient(180deg, #92400e 0%, #451a03 30%, #1c0a00 100%);
+      border-top: 5px solid #d97706;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.8), inset 0 2px 0 rgba(255,255,255,0.2);
+      z-index: 5;
+    }
+
+    .court-bench::after {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 10%;
+      right: 10%;
+      height: 6px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 3px;
+    }
+
+    /* PERSONAJES (AVATARES Y SPRITES SVG/CSS) */
+    .character-container {
+      position: absolute;
+      bottom: 60px;
+      width: 320px;
+      height: 340px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      z-index: 4;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* POSICIONES */
+    .pos-defense {
+      left: 10%;
+      transform: translateX(0);
+    }
+
+    .pos-prosecution {
+      right: 10%;
+      transform: translateX(0);
+    }
+
+    .pos-judge {
+      left: 50%;
+      transform: translateX(-50%) scale(1.05);
+      bottom: 90px;
+    }
+
+    .pos-witness {
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 50px;
+    }
+
+    /* SPRITE SVG DE PERSONAJES */
+    .char-sprite {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 15px 20px rgba(0,0,0,0.7));
+      transition: transform 0.2s ease;
+    }
+
+    /* ANIMACIONES DE PERSONAJES */
+    .anim-talking {
+      animation: charTalk 0.25s infinite alternate ease-in-out;
+    }
+
+    .anim-desk-slam {
+      animation: deskSlam 0.4s ease-out;
+    }
+
+    .anim-point {
+      animation: pointPose 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .anim-shock {
+      animation: shockDamage 0.6s ease-in-out;
+    }
+
+    .anim-headshake {
+      animation: headShake 0.8s ease-in-out;
+    }
+
+    @keyframes charTalk {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-4px); }
+    }
+
+    @keyframes deskSlam {
+      0% { transform: translateY(-30px) scale(1.08); }
+      40% { transform: translateY(12px) scale(0.96); }
+      70% { transform: translateY(-6px); }
+      100% { transform: translateY(0) scale(1); }
+    }
+
+    @keyframes pointPose {
+      0% { transform: translateX(-30px) scale(0.95); }
+      100% { transform: translateX(20px) scale(1.12); }
+    }
+
+    @keyframes shockDamage {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      10% { transform: translate(-15px, -10px) rotate(-4deg); filter: brightness(2) contrast(1.5); }
+      25% { transform: translate(15px, 8px) rotate(4deg); }
+      40% { transform: translate(-12px, -6px) rotate(-3deg); }
+      55% { transform: translate(10px, 4px) rotate(2deg); }
+      70% { transform: translate(-6px, -2px) rotate(-1deg); }
+      85% { transform: translate(4px, 1px) rotate(1deg); }
+    }
+
+    @keyframes headShake {
+      0%, 100% { transform: rotate(0deg); }
+      20% { transform: rotate(-8deg); }
+      40% { transform: rotate(8deg); }
+      60% { transform: rotate(-5deg); }
+      80% { transform: rotate(5deg); }
+    }
+
+    /* ========================================================
+       BANNER DE TESTIMONIO / INTERROGATORIO (CROSS-EXAMINATION)
+       ======================================================== */
+    .testimony-banner {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, transparent, rgba(185, 28, 28, 0.95) 20%, rgba(185, 28, 28, 0.95) 80%, transparent);
+      color: #fff;
+      padding: 6px 40px;
+      font-family: var(--font-pixel);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0px #000;
+      border-top: 2px solid var(--court-gold);
+      border-bottom: 2px solid var(--court-gold);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testimony-banner.banner-cross {
+      background: linear-gradient(90deg, transparent, rgba(29, 78, 216, 0.95) 20%, rgba(29, 78, 216, 0.95) 80%, transparent);
+    }
+
+    /* CONTADOR DE DECLARACIONES (1/4) */
+    .statement-counter {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--court-gold);
+      color: var(--court-gold);
+      font-family: var(--font-pixel);
+      font-size: 0.65rem;
+      padding: 5px 10px;
+      border-radius: 4px;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    /* ========================================================
+       CUADRO DE DIÁLOGO CLÁSICO ACE ATTORNEY
+       ======================================================== */
+    .dialogue-box-wrapper {
+      position: relative;
+      width: 100%;
+      padding: 0 16px 12px 16px;
+      z-index: 30;
+      flex-shrink: 0;
+    }
+
+    .dialogue-box {
+      position: relative;
+      width: 100%;
+      min-height: 130px;
+      max-height: 170px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 3px solid #475569;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(8px);
+      transition: border-color 0.2s ease;
+    }
+
+    .dialogue-box.theme-defense {
+      border-color: #3b82f6;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .dialogue-box.theme-prosecution {
+      border-color: #ef4444;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .dialogue-box.theme-judge {
+      border-color: var(--court-gold);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(245, 158, 11, 0.3);
+    }
+
+    /* ETIQUETA CON NOMBRE DEL HABLANTE */
+    .speaker-name-tag {
+      position: absolute;
+      top: -14px;
+      left: 20px;
+      background: #0f172a;
+      padding: 3px 14px;
+      border-radius: 6px;
+      border: 2px solid #64748b;
+      font-family: var(--font-pixel);
+      font-size: 0.65rem;
+      letter-spacing: 1px;
+      color: #f8fafc;
+      text-transform: uppercase;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .speaker-name-tag.tag-defense {
+      border-color: #3b82f6;
+      color: #93c5fd;
+    }
+
+    .speaker-name-tag.tag-prosecution {
+      border-color: #ef4444;
+      color: #fca5a5;
+    }
+
+    .speaker-name-tag.tag-judge {
+      border-color: var(--court-gold);
+      color: #fde047;
+    }
+
+    .speaker-name-tag.tag-witness {
+      border-color: #10b981;
+      color: #6ee7b7;
+    }
+
+    /* TEXTO PRINCIPAL DE DIÁLOGO */
+    .dialogue-text {
+      font-size: 1.05rem;
+      line-height: 1.5;
+      color: #f8fafc;
+      font-weight: 500;
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 20px;
+      word-break: break-word;
+    }
+
+    .dialogue-text code {
+      font-family: var(--font-code);
+      background: #000;
+      color: var(--cyan-accent);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #334155;
+      font-size: 0.95rem;
+    }
+
+    /* FLECHA DE AVANCE */
+    .dialogue-arrow {
+      position: absolute;
+      bottom: 12px;
+      right: 18px;
+      color: var(--court-gold);
+      font-size: 1.1rem;
+      animation: bounceArrow 0.6s infinite alternate ease-in-out;
+      cursor: pointer;
+    }
+
+    @keyframes bounceArrow {
+      0% { transform: translateY(0); opacity: 0.6; }
+      100% { transform: translateY(4px); opacity: 1; }
+    }
+
+    /* ========================================================
+       BARRA DE ACCIONES DE INTERROGATORIO (CROSS-EXAMINATION)
+       ======================================================== */
+    .cross-examination-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .nav-statements {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-action {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 2px solid #475569;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-family: var(--font-pixel);
+      font-size: 0.65rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    .btn-action:hover {
+      background: #334155;
+      transform: translateY(-2px);
+    }
+
+    .btn-action:active {
+      transform: translateY(1px);
+    }
+
+    /* BOTÓN ¡UN MOMENTO! */
+    .btn-hold-it {
+      background: linear-gradient(135deg, #065f46, #059669);
+      border-color: #34d399;
+      color: #fff;
+      text-shadow: 1px 1px 0px #000;
+    }
+
+    .btn-hold-it:hover {
+      background: linear-gradient(135deg, #047857, #10b981);
+      border-color: #6ee7b7;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+    }
+
+    /* BOTÓN ¡PROTESTA! */
+    .btn-objection {
+      background: linear-gradient(135deg, #991b1b, #dc2626);
+      border-color: #f87171;
+      color: #fff;
+      text-shadow: 1px 1px 0px #000;
+      font-size: 0.72rem;
+      padding: 8px 18px;
+    }
+
+    .btn-objection:hover {
+      background: linear-gradient(135deg, #b91c1c, #ef4444);
+      border-color: #fca5a5;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+    }
+
+    /* ========================================================
+       SPLASH SCREENS DRAMÁTICOS (¡OBJECTION!, ¡HOLD IT!, ¡TAKE THAT!)
+       ======================================================== */
+    .splash-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .splash-overlay.active {
+      display: flex;
+      pointer-events: auto;
+    }
+
+    /* LÍNEAS DE VELOCIDAD ANIME / MANGA */
+    .speed-lines {
+      position: absolute;
+      inset: 0;
+      background: repeating-conic-gradient(
+        from 0deg,
+        rgba(255, 255, 255, 0.15) 0deg 3deg,
+        transparent 3deg 6deg
+      );
+      animation: spinLines 1.2s infinite linear;
+      opacity: 0.8;
+    }
+
+    @keyframes spinLines {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .splash-bg-objection {
+      background: radial-gradient(circle, #dc2626 0%, #7f1d1d 70%, #450a0a 100%);
+    }
+
+    .splash-bg-holdit {
+      background: radial-gradient(circle, #059669 0%, #064e3b 70%, #022c22 100%);
+    }
+
+    .splash-bg-takethat {
+      background: radial-gradient(circle, #d97706 0%, #78350f 70%, #451a03 100%);
+    }
+
+    /* GLOBO / CARTEL DEL GRITO */
+    .bubble-burst {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: popSlam 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      filter: drop-shadow(0 20px 30px rgba(0,0,0,0.9));
+    }
+
+    .burst-text {
+      font-family: var(--font-pixel);
+      font-size: clamp(2rem, 7vw, 4.2rem);
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: -2px;
+      -webkit-text-stroke: 3px #000;
+      text-shadow: 
+        4px 4px 0px #000,
+        -4px 4px 0px #000,
+        4px -4px 0px #000,
+        -4px -4px 0px #000,
+        0 0 20px rgba(255, 255, 255, 0.8);
+      transform: rotate(-4deg);
+      white-space: nowrap;
+    }
+
+    @keyframes popSlam {
+      0% { transform: scale(0.1) rotate(-15deg); opacity: 0; }
+      50% { transform: scale(1.2) rotate(4deg); opacity: 1; }
+      75% { transform: scale(0.95) rotate(-2deg); }
+      100% { transform: scale(1) rotate(-4deg); opacity: 1; }
+    }
+
+    /* SACUDIDA DE PANTALLA (SCREEN SHAKE) */
+    .shake-screen {
+      animation: screenShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    @keyframes screenShake {
+      10%, 90% { transform: translate3d(-3px, 4px, 0); }
+      20%, 80% { transform: translate3d(5px, -5px, 0); }
+      30%, 50%, 70% { transform: translate3d(-6px, 3px, 0); }
+      40%, 60% { transform: translate3d(6px, -4px, 0); }
+    }
+
+    /* FLASH BLANCO */
+    .flash-overlay {
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 150;
+    }
+
+    .flash-overlay.active {
+      animation: whiteFlash 0.35s ease-out;
+    }
+
+    @keyframes whiteFlash {
+      0% { opacity: 0.95; }
+      100% { opacity: 0; }
+    }
+
+    /* ========================================================
+       MODAL EXPEDIENTE JUDICIAL / COURT RECORD (EVIDENCIAS)
+       ======================================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 80;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .court-modal {
+      width: 100%;
+      max-width: 860px;
+      max-height: 85vh;
+      background: #0f172a;
+      border: 3px solid var(--court-gold);
+      border-radius: 14px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.9), 0 0 20px rgba(245, 158, 11, 0.3);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalFadeIn 0.25s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      background: linear-gradient(90deg, #1e293b, #0f172a);
+      padding: 12px 18px;
+      border-bottom: 2px solid #334155;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-family: var(--font-pixel);
+      font-size: 0.85rem;
+      color: var(--court-gold);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-close-modal {
+      background: #334155;
+      color: #fff;
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease;
+    }
+
+    .btn-close-modal:hover {
+      background: #ef4444;
+    }
+
+    .modal-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      background: #020617;
+    }
+
+    /* LISTA DE EVIDENCIAS (IZQUIERDA) */
+    .evidence-list {
+      width: 45%;
+      border-right: 2px solid #1e293b;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .evidence-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #0f172a;
+      border: 2px solid #334155;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .evidence-item:hover {
+      background: #1e293b;
+      border-color: #64748b;
+    }
+
+    .evidence-item.selected {
+      background: rgba(30, 58, 138, 0.7);
+      border-color: #60a5fa;
+      box-shadow: 0 0 10px rgba(96, 165, 250, 0.4);
+    }
+
+    .evidence-icon {
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e293b;
+      border-radius: 8px;
+      border: 1px solid #475569;
+      color: var(--court-gold);
+      flex-shrink: 0;
+    }
+
+    .evidence-info {
+      overflow: hidden;
+    }
+
+    .evidence-name {
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: #f8fafc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .evidence-type {
+      font-size: 0.68rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* DETALLE DE EVIDENCIA (DERECHA) */
+    .evidence-detail {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
+      background: #090d16;
+    }
+
+    .detail-main {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .detail-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1e3a8a;
+      color: #93c5fd;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      align-self: flex-start;
+    }
+
+    .detail-title {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      color: var(--court-gold);
+      font-weight: 800;
+    }
+
+    .detail-desc {
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    .detail-code-snip {
+      background: #020617;
+      border: 1px solid #334155;
+      padding: 10px;
+      border-radius: 6px;
+      font-family: var(--font-code);
+      font-size: 0.8rem;
+      color: var(--cyan-accent);
+      white-space: pre-wrap;
+    }
+
+    .modal-footer {
+      padding: 12px 18px;
+      background: #0f172a;
+      border-top: 2px solid #1e293b;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .btn-present-evidence {
+      background: linear-gradient(135deg, #b91c1c, #ef4444);
+      color: #fff;
+      border: 2px solid #fca5a5;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-family: var(--font-pixel);
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-present-evidence:hover {
+      background: linear-gradient(135deg, #dc2626, #f87171);
+      transform: scale(1.03);
+    }
+
+    /* ========================================================
+       MODAL CÓDIGO JAVA DEL CASO
+       ======================================================== */
+    .code-viewer-container {
+      padding: 16px;
+      overflow-y: auto;
+      max-height: 60vh;
+      background: #020617;
+      border-radius: 8px;
+      border: 1px solid #1e293b;
+      font-family: var(--font-code);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #f8fafc;
+    }
+
+    .code-line {
+      display: flex;
+      gap: 14px;
+    }
+
+    .code-line:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .line-num {
+      color: #475569;
+      width: 24px;
+      text-align: right;
+      user-select: none;
+    }
+
+    .line-content {
+      flex: 1;
+    }
+
+    .kw { color: #f43f5e; font-weight: 700; }
+    .type { color: #38bdf8; }
+    .fn { color: #fbbf24; font-weight: 600; }
+    .str { color: #34d399; }
+    .num { color: #a78bfa; }
+    .com { color: #64748b; font-style: italic; }
+
+    /* ========================================================
+       MODAL VEREDICTO FINAL (¡NO CULPABLE!)
+       ======================================================== */
+    .verdict-banner {
+      font-family: var(--font-pixel);
+      font-size: clamp(2rem, 8vw, 4.5rem);
+      color: var(--court-gold);
+      text-shadow: 0 0 30px rgba(245, 158, 11, 0.8), 4px 4px 0 #000;
+      letter-spacing: 6px;
+      text-align: center;
+      animation: verdictDrop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      margin-bottom: 20px;
+    }
+
+    @keyframes verdictDrop {
+      0% { transform: scale(3); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 120;
+    }
+
+    /* FOOTER INSTITUCIONAL */
+    .court-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 16px;
+      background: #020617;
+      border-top: 1px solid #1e293b;
+      font-size: 0.65rem;
+      color: #64748b;
+      z-index: 40;
+    }
+
+    /* ========================================================
+       RESPONSIVE DESIGN (MOBILE PORTRAIT Y LANDSCAPE)
+       ======================================================== */
+    @media (max-width: 768px) {
+      .game-title {
+        font-size: 0.6rem;
+      }
+      .badge-utn span {
+        display: none;
+      }
+      .character-container {
+        width: 240px;
+        height: 260px;
+        bottom: 50px;
+      }
+      .court-bench {
+        height: 80px;
+      }
+      .dialogue-box {
+        min-height: 120px;
+        padding: 16px 18px;
+      }
+      .dialogue-text {
+        font-size: 0.92rem;
+      }
+      .testimony-banner {
+        font-size: 0.6rem;
+        padding: 4px 20px;
+      }
+      .modal-body {
+        flex-direction: column;
+      }
+      .evidence-list {
+        width: 100%;
+        max-height: 35vh;
+        border-right: none;
+        border-bottom: 2px solid #1e293b;
+      }
+    }
+
+    @media (max-height: 520px) {
+      .court-header {
+        padding: 3px 10px;
+      }
+      .character-container {
+        width: 200px;
+        height: 200px;
+        bottom: 35px;
+      }
+      .court-bench {
+        height: 55px;
+      }
+      .dialogue-box {
+        min-height: 95px;
+        max-height: 110px;
+        padding: 12px 14px;
+      }
+      .dialogue-text {
+        font-size: 0.85rem;
+      }
+      .testimony-banner {
+        top: 6px;
+        padding: 2px 15px;
+        font-size: 0.55rem;
+      }
+      .cross-examination-bar {
+        margin-top: 4px;
+      }
+      .btn-action {
+        padding: 5px 10px;
+        font-size: 0.58rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="court-app">
+    <!-- FLASH OVERLAY PARA IMPACTOS -->
+    <div id="flash-fx" class="flash-overlay"></div>
+
+    <!-- CANVAS PARA CONFETI -->
+    <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
+    <!-- HEADER INSTITUCIONAL -->
+    <header class="court-header">
+      <div class="header-branding">
+        <div class="badge-utn">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span>UTN FRSF</span>
+        </div>
+        <div class="game-title">ACE CODER: EL JUICIO</div>
+        <div id="case-badge" class="case-indicator">CASO 1: EL CAJERO</div>
+      </div>
+
+      <!-- MEDIDOR DE CREDIBILIDAD / CORAZONES -->
+      <div class="credibility-meter" title="Credibilidad procesal">
+        <span class="cred-label">CREDIBILIDAD:</span>
+        <div class="cred-points" id="credibility-points">
+          <span class="cred-point"><i class="fa-solid fa-exclamation"></i></span>
+          <span class="cred-point"><i class="fa-solid fa-exclamation"></i></span>
+          <span class="cred-point"><i class="fa-solid fa-exclamation"></i></span>
+          <span class="cred-point"><i class="fa-solid fa-exclamation"></i></span>
+          <span class="cred-point"><i class="fa-solid fa-exclamation"></i></span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="btn-sound-toggle" class="btn-top" title="Activar/Silenciar audio">
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
+        <button id="btn-open-code" class="btn-top btn-code">
+          <i class="fa-solid fa-code"></i> <span>Código Java</span>
+        </button>
+        <button id="btn-open-evidence" class="btn-top btn-evidence">
+          <i class="fa-solid fa-briefcase"></i> <span>Acta de Pruebas</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ESCENARIO DEL TRIBUNAL -->
+    <main class="court-stage" id="court-stage">
+      <div id="stage-bg" class="stage-background bg-judge"></div>
+      <div class="court-decor"></div>
+
+      <!-- BANNER DE TESTIMONIO / INTERROGATORIO -->
+      <div id="testimony-banner" class="testimony-banner" style="display: none;">
+        <i class="fa-solid fa-gavel"></i>
+        <span id="banner-text">TESTIMONIO DE LA FISCALÍA</span>
+      </div>
+
+      <!-- CONTADOR DE FRASES (EJ: 2 / 4) -->
+      <div id="statement-counter" class="statement-counter" style="display: none;">1 / 4</div>
+
+      <!-- PERSONAJE EN ESCENA (SPRITES SVG) -->
+      <div id="character-wrapper" class="character-container pos-judge">
+        <!-- SVG Sprite inyectado dinámicamente -->
+        <svg id="char-svg" class="char-sprite" viewBox="0 0 300 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Renderizado dinámico del Juez, Fiscal o Abogado -->
+        </svg>
+      </div>
+
+      <!-- ESTRADO DE MADERA -->
+      <div class="court-bench"></div>
+    </main>
+
+    <!-- CUADRO DE DIÁLOGO ACE ATTORNEY -->
+    <div class="dialogue-box-wrapper">
+      <div id="dialogue-box" class="dialogue-box theme-judge">
+        <div id="speaker-tag" class="speaker-name-tag tag-judge">JUEZ UTN</div>
+        <div id="dialogue-content" class="dialogue-text">
+          Se abre la sesión en este Tribunal Académico. El acusado está imputado por presunta manipulación fraudulenta de memoria.
+        </div>
+        <div id="dialogue-arrow" class="dialogue-arrow">
+          <i class="fa-solid fa-play"></i>
+        </div>
+      </div>
+
+      <!-- BOTONES DE INTERROGATORIO (CROSS-EXAMINATION) -->
+      <div id="cross-bar" class="cross-examination-bar" style="display: none;">
+        <div class="nav-statements">
+          <button id="btn-prev-statement" class="btn-action">
+            <i class="fa-solid fa-arrow-left"></i> Anterior
+          </button>
+          <button id="btn-next-statement" class="btn-action">
+            Siguiente <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <button id="btn-hold-it" class="btn-action btn-hold-it">
+            <i class="fa-solid fa-hand"></i> ¡UN MOMENTO!
+          </button>
+          <button id="btn-objection" class="btn-action btn-objection">
+            <i class="fa-solid fa-bolt"></i> ¡PROTESTA!
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER INSTITUCIONAL -->
+    <footer class="court-footer">
+      <div><strong>TUTI / UTN SANTA FE</strong> &bull; Sistemas de Automatización de Oficinas (SAO 2026)</div>
+      <div>Unidad 4: Modularización &bull; Simulación Procesal de Memoria</div>
+    </footer>
+  </div>
+
+  <!-- ========================================================
+       SPLASH SCREENS (OBJECTION, HOLD IT, TAKE THAT)
+       ======================================================== -->
+  <div id="splash-objection" class="splash-overlay splash-bg-objection">
+    <div class="speed-lines"></div>
+    <div class="bubble-burst">
+      <div class="burst-text" style="color: #ffdd00;">¡PROTESTA!</div>
+    </div>
+  </div>
+
+  <div id="splash-holdit" class="splash-overlay splash-bg-holdit">
+    <div class="speed-lines"></div>
+    <div class="bubble-burst">
+      <div class="burst-text" style="color: #6ee7b7;">¡UN MOMENTO!</div>
+    </div>
+  </div>
+
+  <div id="splash-takethat" class="splash-overlay splash-bg-takethat">
+    <div class="speed-lines"></div>
+    <div class="bubble-burst">
+      <div class="burst-text" style="color: #fde047;">¡TOMA ESTO!</div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL: ACTA DE PRUEBAS / EXPEDIENTE JUDICIAL
+       ======================================================== -->
+  <div id="modal-evidence" class="modal-overlay">
+    <div class="court-modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-briefcase"></i> EXPEDIENTE JUDICIAL &bull; PRUEBAS
+        </div>
+        <button id="btn-close-evidence" class="btn-close-modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="evidence-list" id="evidence-list-container">
+          <!-- Items inyectados dinámicamente -->
+        </div>
+
+        <div class="evidence-detail" id="evidence-detail-container">
+          <div class="detail-main">
+            <div class="detail-badge" id="detail-badge">LEGISLACIÓN JAVA</div>
+            <div class="detail-title" id="detail-title">Artículo 42: Pasaje por Valor</div>
+            <div class="detail-desc" id="detail-desc">
+              Selecciona una prueba del inventario para examinar sus fundamentos técnicos y presentarla como contradicción ante el fiscal.
+            </div>
+            <div class="detail-code-snip" id="detail-snip" style="display: none;"></div>
+          </div>
+
+          <div class="modal-footer">
+            <button id="btn-present" class="btn-present-evidence" style="display: none;">
+              <i class="fa-solid fa-gavel"></i> ¡PRESENTAR PRUEBA!
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL: CÓDIGO JAVA DEL CASO
+       ======================================================== -->
+  <div id="modal-code" class="modal-overlay">
+    <div class="court-modal" style="max-width: 650px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-file-code"></i> CÓDIGO DE LA CAUSA: <span id="code-case-name" style="color: #fff; margin-left: 6px;">Cajero.java</span>
+        </div>
+        <button id="btn-close-code" class="btn-close-modal">✕</button>
+      </div>
+      <div style="padding: 16px; background: #020617;">
+        <div class="code-viewer-container" id="code-lines-container">
+          <!-- Código inyectado dinámicamente -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL: VEREDICTO DE NO CULPABILIDAD (VICTORIA)
+       ======================================================== */
+  -->
+  <div id="modal-verdict" class="modal-overlay">
+    <div class="court-modal" style="max-width: 580px; text-align: center; border-color: var(--court-gold);">
+      <div style="padding: 30px 20px; background: #020617; display: flex; flex-direction: column; align-items: center;">
+        <div class="verdict-banner">¡NO CULPABLE!</div>
+        <p id="verdict-summary" style="font-size: 1rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 24px; max-width: 460px;">
+          El tribunal ha quedado plenamente convencido. La acusación del fiscal ha sido desarmada mediante la correcta aplicación del modelo de memoria de Java.
+        </p>
+        <button id="btn-next-case" class="btn-present-evidence" style="background: linear-gradient(135deg, #059669, #10b981); border-color: #6ee7b7;">
+          <i class="fa-solid fa-forward"></i> SIGUIENTE CASO DE ESTUDIO
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       LÓGICA DEL JUEGO: MOTOR DE AUDIO, ESTADOS Y CASOS
+       ======================================================== -->
+  <script>
+    /* ========================================================
+       1. SINTETIZADOR PROCEDURAL DE AUDIO WEB AUDIO API
+       ======================================================== */
+    class CourtAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+        this.typingOsc = null;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      toggleMute() {
+        this.muted = !this.muted;
+        return this.muted;
+      }
+
+      // Sonido bleep de tipeo de diálogo (estilo Phoenix Wright GBA)
+      playTypeBlip(freq = 440) {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          
+          gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.05);
+        } catch(e) {}
+      }
+
+      // Golpe de martillo del Juez (Gavel slam)
+      playGavel() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(120, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.2);
+
+          gain.gain.setValueAtTime(0.35, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.35);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.35);
+        } catch(e) {}
+      }
+
+      // Desk slam (golpe de mesa de defensa o fiscal)
+      playDeskSlam() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(90, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(25, this.ctx.currentTime + 0.25);
+
+          gain.gain.setValueAtTime(0.4, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.3);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.3);
+        } catch(e) {}
+      }
+
+      // Sonido dramático de ¡PROTESTA! (Corte de látigo y acorde mayor/menor agresivo)
+      playObjectionStab() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const notes = [220, 277.18, 329.63, 440, 554.37];
+          notes.forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime + (idx * 0.02));
+            
+            gain.gain.setValueAtTime(0.18, this.ctx.currentTime + (idx * 0.02));
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.5);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            osc.start(this.ctx.currentTime + (idx * 0.02));
+            osc.stop(this.ctx.currentTime + 0.55);
+          });
+        } catch(e) {}
+      }
+
+      // Sonido de daño / penalización por protesta incorrecta
+      playDamage() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(60, this.ctx.currentTime + 0.4);
+
+          gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.45);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.45);
+        } catch(e) {}
+      }
+
+      // Sonido de victoria / Veredicto
+      playFanfare() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const melody = [523.25, 659.25, 783.99, 1046.50];
+          melody.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime + (i * 0.12));
+
+            gain.gain.setValueAtTime(0.25, this.ctx.currentTime + (i * 0.12));
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + (i * 0.12) + 0.6);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            osc.start(this.ctx.currentTime + (i * 0.12));
+            osc.stop(this.ctx.currentTime + (i * 0.12) + 0.65);
+          });
+        } catch(e) {}
+      }
+    }
+
+    const sound = new CourtAudioEngine();
+
+    /* ========================================================
+       2. SPRITES VECTORIALES DINÁMICOS DE PERSONAJES (SVG)
+       ======================================================== */
+    const SPRITES = {
+      // EL JUEZ DE LA UTN
+      judge: `
+        <g id="judge-sprite">
+          <!-- Toga / Hombros -->
+          <path d="M 50 320 L 70 170 Q 150 140 230 170 L 250 320 Z" fill="#0f172a" stroke="#1e293b" stroke-width="4"/>
+          <!-- Cuello blanco y medalla UTN -->
+          <polygon points="125,175 175,175 150,225" fill="#f8fafc" />
+          <circle cx="150" cy="245" r="14" fill="#f59e0b" stroke="#78350f" stroke-width="2"/>
+          <text x="150" y="249" font-size="9" font-family="sans-serif" font-weight="900" fill="#000" text-anchor="middle">UTN</text>
+          <!-- Cabeza y Cabello canoso -->
+          <circle cx="150" cy="115" r="45" fill="#fed7aa" />
+          <!-- Barba tupida -->
+          <path d="M 115 125 Q 150 205 185 125 Q 195 160 150 185 Q 105 160 115 125 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="2"/>
+          <!-- Ojos serenos y cejas pobladas -->
+          <path d="M 125 102 Q 137 96 142 102" stroke="#64748b" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <path d="M 158 102 Q 163 96 175 102" stroke="#64748b" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <circle cx="135" cy="112" r="3" fill="#1e293b"/>
+          <circle cx="165" cy="112" r="3" fill="#1e293b"/>
+          <!-- Bigote -->
+          <path d="M 130 132 Q 150 140 170 132 Q 150 146 130 132 Z" fill="#f1f5f9"/>
+          <!-- Peluca clásica de magistrado -->
+          <path d="M 105 110 Q 100 65 150 65 Q 200 65 195 110 Q 210 125 195 145 Q 185 105 175 90 Q 150 85 125 90 Q 115 105 105 145 Q 90 125 105 110 Z" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+        </g>
+      `,
+
+      // FISCAL MILES NULLPOINTER (TRAJE BORDÓ Y PEINADO AFILADO)
+      prosecution: `
+        <g id="prosecution-sprite">
+          <!-- Traje elegante bordó -->
+          <path d="M 60 320 L 80 180 Q 150 150 220 180 L 240 320 Z" fill="#7f1d1d" stroke="#450a0a" stroke-width="4"/>
+          <!-- Chaleco negro y pañuelo victoriano (Jabot) -->
+          <polygon points="120,185 180,185 150,260" fill="#1e293b"/>
+          <path d="M 135 185 Q 150 195 165 185 Q 150 215 135 185 Z" fill="#f8fafc"/>
+          <path d="M 138 200 Q 150 215 162 200 Q 150 230 138 200 Z" fill="#f1f5f9"/>
+          <!-- Cabeza -->
+          <circle cx="150" cy="120" r="42" fill="#ffedd5"/>
+          <!-- Expresión de superioridad / ceño fruncido -->
+          <path d="M 128 108 L 144 114" stroke="#450a0a" stroke-width="3" stroke-linecap="round"/>
+          <path d="M 172 108 L 156 114" stroke="#450a0a" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="138" cy="120" r="3.5" fill="#450a0a"/>
+          <circle cx="162" cy="120" r="3.5" fill="#450a0a"/>
+          <path d="M 142 140 Q 150 136 158 140" stroke="#7f1d1d" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <!-- Cabello plateado / castaño afilado estilo Edgeworth -->
+          <path d="M 105 110 Q 110 65 150 65 Q 190 65 195 110 Q 205 90 185 75 Q 150 60 115 75 Q 95 90 105 110 Z" fill="#475569" stroke="#334155" stroke-width="2"/>
+          <polygon points="150,68 140,115 147,112" fill="#475569"/>
+          <polygon points="150,68 160,115 153,112" fill="#334155"/>
+        </g>
+      `,
+
+      // ABOGADO DEFENSOR WRIGHT / ALUMNO TUTOR (TRAJE AZUL UTN Y CORBATA ROJA)
+      defense: `
+        <g id="defense-sprite">
+          <!-- Traje azul UTN -->
+          <path d="M 60 320 L 80 175 Q 150 145 220 175 L 240 320 Z" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="4"/>
+          <!-- Camisa blanca y corbata roja -->
+          <polygon points="125,175 175,175 150,250" fill="#f8fafc" />
+          <polygon points="144,180 156,180 152,240 148,240" fill="#ef4444" stroke="#991b1b" stroke-width="1.5"/>
+          <!-- Cabeza -->
+          <circle cx="150" cy="115" r="42" fill="#fed7aa"/>
+          <!-- Expresión decidida -->
+          <path d="M 128 106 Q 138 102 144 105" stroke="#1e293b" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M 172 106 Q 162 102 156 105" stroke="#1e293b" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <circle cx="137" cy="114" r="3.5" fill="#0f172a"/>
+          <circle cx="163" cy="114" r="3.5" fill="#0f172a"/>
+          <path d="M 144 135 Q 150 140 156 135" stroke="#1e293b" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <!-- Pelo con púas icónico hacia atrás estilo Phoenix Wright -->
+          <path d="M 105 115 Q 115 70 150 70 Q 185 70 195 115 L 215 95 L 195 85 L 220 70 L 185 60 L 205 45 L 165 48 L 175 30 L 140 45 L 130 55 L 105 115 Z" fill="#090d16" stroke="#000" stroke-width="2"/>
+        </g>
+      `,
+
+      // TESTIGO / ALUMNO ACUSADO EN EL ESTRADO
+      witness: `
+        <g id="witness-sprite">
+          <!-- Buzo con capucha de estudiante -->
+          <path d="M 70 320 L 90 190 Q 150 165 210 190 L 230 320 Z" fill="#047857" stroke="#064e3b" stroke-width="4"/>
+          <!-- Remera UTN y cordones de capucha -->
+          <polygon points="130,195 170,195 150,240" fill="#1e293b"/>
+          <line x1="140" y1="200" x2="140" y2="230" stroke="#f8fafc" stroke-width="2"/>
+          <line x1="160" y1="200" x2="160" y2="230" stroke="#f8fafc" stroke-width="2"/>
+          <!-- Cabeza con anteojos y sudor frío -->
+          <circle cx="150" cy="130" r="40" fill="#fed7aa"/>
+          <!-- Anteojos nerd -->
+          <rect x="125" y="120" width="20" height="15" rx="3" fill="none" stroke="#0284c7" stroke-width="2.5"/>
+          <rect x="155" y="120" width="20" height="15" rx="3" fill="none" stroke="#0284c7" stroke-width="2.5"/>
+          <line x1="145" y1="127" x2="155" y2="127" stroke="#0284c7" stroke-width="2.5"/>
+          <circle cx="135" cy="127" r="2.5" fill="#0f172a"/>
+          <circle cx="165" cy="127" r="2.5" fill="#0f172a"/>
+          <!-- Gotas de sudor cómico -->
+          <path d="M 188 115 Q 192 110 194 116 Q 194 122 188 122 Q 185 118 188 115 Z" fill="#38bdf8"/>
+          <!-- Pelo despeinado -->
+          <path d="M 112 125 Q 115 85 150 85 Q 185 85 188 125 Q 170 100 150 102 Q 130 100 112 125 Z" fill="#78350f"/>
+        </g>
+      `
+    };
+
+    /* ========================================================
+       3. BASE DE DATOS DE CASOS PEDAGÓGICOS (SAO 2026 - MODULARIZACIÓN)
+       ======================================================== */
+    const COURT_CASES = [
+      {
+        id: 1,
+        title: "CASO 1: EL FRAUDE DEL CAJERO AUTOMÁTICO",
+        codeFilename: "CajeroBanco.java",
+        codeSnippet: [
+          "public class CajeroBanco {",
+          "    public static void main(String[] args) {",
+          "        int saldoCuenta = 1000;",
+          "        acreditarPremio(saldoCuenta);",
+          "        System.out.println(\"Saldo final: \" + saldoCuenta);",
+          "    }",
+          "",
+          "    public static void acreditarPremio(int monto) {",
+          "        monto = monto + 5000;",
+          "    }",
+          "}"
+        ],
+        evidenceList: [
+          {
+            id: "ev-val",
+            name: "Art. 42: Pasaje por Valor",
+            type: "Regla Canónica Java",
+            badge: "MODELO DE MEMORIA",
+            icon: "fa-solid fa-clone",
+            desc: "En Java, los argumentos primitivos (int, double, boolean) se pasan SIEMPRE por COPIA DE VALOR. Cualquier reasignación al parámetro formal dentro del método afecta solo a su copia local y jamás altera la variable original del llamador.",
+            snip: "monto = monto + 5000; // Solo modifica la copia local de la pila"
+          },
+          {
+            id: "ev-stack",
+            name: "Registro del Call Stack",
+            type: "Evidencia Forense",
+            badge: "PILA DE EJECUCIÓN",
+            icon: "fa-solid fa-layer-group",
+            desc: "Cada invocación crea un Stack Frame independiente en la cima de la pila. Cuando acreditarPremio( ) termina y se cierra su llave }, su marco se destruye de inmediato junto con la variable local 'monto'.",
+            snip: "[Stack Frame acreditarPremio()] -> DESTRUIDO AL SALIR\n[Stack Frame main()] -> saldoCuenta sigue valiendo 1000"
+          },
+          {
+            id: "ev-ram",
+            name: "Volcado de Memoria RAM",
+            type: "Peritaje Técnico",
+            badge: "VARIABLES LOCALES",
+            icon: "fa-solid fa-microchip",
+            desc: "La variable 'saldoCuenta' del main reside en una dirección de memoria distinta a la variable 'monto'. Al no existir punteros ni paso por referencia para primitivos en Java, no hubo comunicación posterior.",
+            snip: "&saldoCuenta != &monto"
+          },
+          {
+            id: "ev-void",
+            name: "Dictamen de Retorno Void",
+            type: "Firma de Método",
+            badge: "CONTRATO SINTÁCTICO",
+            icon: "fa-solid fa-ban",
+            desc: "El método acreditarPremio fue declarado como 'void', lo que estipula formalmente que no devuelve ningún dato almacenable ni resultado de retorno.",
+            snip: "public static void acreditarPremio(int monto)"
+          }
+        ],
+        correctStatementIndex: 2, // Frase 3 (índice 2) es la falacia
+        correctEvidenceId: "ev-val", // o ev-stack
+        prosecutionStatements: [
+          {
+            text: "El acusado invocó al método acreditarPremio pasándole su variable de saldo de 1000 pesos.",
+            holdItReply: "¡En efecto! En la línea 4 se pasa 'saldoCuenta' como argumento real a la llamada."
+          },
+          {
+            text: "Dentro del método en la línea 9, el parámetro formal 'monto' sumó 5000 pesos.",
+            holdItReply: "¡Así es! La instrucción 'monto = monto + 5000' se ejecutó dentro del bloque del método."
+          },
+          {
+            text: "Por lo tanto, ¡la variable saldoCuenta en el main fue alterada automáticamente y pasó a valer 6000 pesos!",
+            holdItReply: "¡El fiscal asegura que las variables están enlazadas mágicamente por el argumento!"
+          },
+          {
+            text: "¡El cajero automático entregó 6000 pesos y el banco sufrió un desfalco financiero!",
+            holdItReply: "El fiscal afirma que el ticket imprimió $6.000, pero aún no mostró el ticket impreso..."
+          }
+        ],
+        defenseObjectionArgument: "¡Su Señoría! En Java, los argumentos primitivos se pasan por COPIA DE VALOR. La variable 'monto' fue únicamente una copia local dentro del marco de acreditarPremio. Cuando el método finalizó, su memoria se evaporó y 'saldoCuenta' en el main nunca cambió de 1000 pesos. ¡El saldo final impreso siempre fue 1000!",
+        verdictExplanation: "El tribunal absuelve al alumno. Los tipos primitivos en Java nunca pueden mutar la variable del llamador porque Java es 100% pasaje por copia de valor."
+      },
+      {
+        id: 2,
+        title: "CASO 2: EL ROBO DEL RETORNO FANTASMA",
+        codeFilename: "FacturaShopping.java",
+        codeSnippet: [
+          "public class FacturaShopping {",
+          "    public static void main(String[] args) {",
+          "        double total = 200.0;",
+          "        calcularDescuento(total);",
+          "        System.out.println(\"A pagar: \" + total);",
+          "    }",
+          "",
+          "    public static double calcularDescuento(double subtotal) {",
+          "        return subtotal * 0.70;",
+          "    }",
+          "}"
+        ],
+        evidenceList: [
+          {
+            id: "ev-return",
+            name: "Pérdida de Retorno no Asignado",
+            type: "Regla Canónica Java",
+            badge: "CONTRATO DEL RETURN",
+            icon: "fa-solid fa-arrow-turn-down",
+            desc: "Si un método devuelve un valor mediante 'return' pero el llamador no lo almacena en una variable (por ejemplo haciendo 'total = calcularDescuento(total);'), el valor devuelto se descarta inmediatamente en la nada.",
+            snip: "calcularDescuento(total); // ¡El retorno 140.0 se perdió en el limbo!"
+          },
+          {
+            id: "ev-val",
+            name: "Art. 42: Pasaje por Valor",
+            type: "Regla Canónica Java",
+            badge: "MODELO DE MEMORIA",
+            icon: "fa-solid fa-clone",
+            desc: "El parámetro subtotal es una copia independiente del total original.",
+            snip: "double subtotal = 200.0 (copia)"
+          },
+          {
+            id: "ev-scope",
+            name: "Principio de Encapsulamiento Local",
+            type: "Doctrina de Ámbito",
+            badge: "SCOPE DE VARIABLES",
+            icon: "fa-solid fa-cube",
+            desc: "Un método no tiene acceso directo a las variables de otro método; la única forma de comunicación hacia afuera es mediante el valor que arroja el return.",
+            snip: "Scope aislado entre { y }"
+          }
+        ],
+        correctStatementIndex: 2, // Frase 3
+        correctEvidenceId: "ev-return",
+        prosecutionStatements: [
+          {
+            text: "El acusado creó una función con retorno double para calcular un descuento del 30%.",
+            holdItReply: "Es verídico: la firma dice 'public static double calcularDescuento'."
+          },
+          {
+            text: "Al ejecutarse, la función calculó exitosamente 140.0 pesos y ejecutó return.",
+            holdItReply: "200.0 multiplicado por 0.70 arroja 140.0 como resultado de la expresión."
+          },
+          {
+            text: "¡Al tener un return, la variable total en el main se transformó instantáneamente en 140 pesos!",
+            holdItReply: "¡El fiscal asume que el return reescribe variables por telepatía sin una asignación!"
+          },
+          {
+            text: "¡Por lo tanto el cliente pagó 140 pesos en vez de 200 y el comercio fue estafado!",
+            holdItReply: "El fiscal insiste en que el descuento se aplicó en la caja registradora."
+          }
+        ],
+        defenseObjectionArgument: "¡PROTESTA! Un método que devuelve un valor NO modifica las variables del llamador a menos que este lo capture explícitamente. En la línea 4 se ejecutó 'calcularDescuento(total);' en el vacío, sin ninguna asignación a la variable 'total'. ¡El valor 140.0 devuelto se descartó de la memoria y la variable 'total' continuó en 200 pesos!",
+        verdictExplanation: "El tribunal declara NO CULPABLE al acusado. El return calcula y arroja un valor, pero si el llamador no hace 'total = funcion(...)', el valor se pierde en el aire."
+      },
+      {
+        id: 3,
+        title: "CASO 3: LA ASIGNACIÓN ILEGAL DEL VOID",
+        codeFilename: "TicketFiscal.java",
+        codeSnippet: [
+          "public class TicketFiscal {",
+          "    public static void main(String[] args) {",
+          "        String texto = \"PAGO_OK\";",
+          "        String resultado = emitirTicket(texto);",
+          "        System.out.println(resultado);",
+          "    }",
+          "",
+          "    public static void emitirTicket(String msg) {",
+          "        System.out.println(\"*** \" + msg + \" ***\");",
+          "    }",
+          "}"
+        ],
+        evidenceList: [
+          {
+            id: "ev-void-incomp",
+            name: "Dictamen de Incompatibilidad Void",
+            type: "Fallo del Compilador (javac)",
+            badge: "ERROR DE COMPILACIÓN",
+            icon: "fa-solid fa-triangle-exclamation",
+            desc: "Un método con tipo de retorno 'void' NO RETORNA NADA. Intentar asignar su invocación a una variable produce un error fatal de compilación: 'incompatible types: void cannot be converted to String'. Ese código jamás pudo haberse ejecutado.",
+            snip: "error: incompatible types: void cannot be converted to java.lang.String"
+          },
+          {
+            id: "ev-print-vs-return",
+            name: "Diferencia: Imprimir vs Retornar",
+            type: "Principio de Salida",
+            badge: "SALIDA ESTÁNDAR",
+            icon: "fa-solid fa-terminal",
+            desc: "System.out.println escribe caracteres en la consola/pantalla, pero NO devuelve ningún dato a la memoria del programa.",
+            snip: "System.out.println != return"
+          }
+        ],
+        correctStatementIndex: 1, // Frase 2: "guardó el retorno en la variable resultado"
+        correctEvidenceId: "ev-void-incomp",
+        prosecutionStatements: [
+          {
+            text: "El método emitirTicket tiene un System.out.println que imprime un comprobante.",
+            holdItReply: "Es correcto, el cuerpo del método imprime el mensaje rodeado de asteriscos."
+          },
+          {
+            text: "El acusado capturó ese comprobante guardando el retorno del método en la variable 'resultado'.",
+            holdItReply: "¡El fiscal afirma que el método le devolvió una cadena de texto a la variable!"
+          },
+          {
+            text: "Y luego utilizó esa variable para validar una transacción fraudulenta en el sistema.",
+            holdItReply: "El fiscal basa todo su caso en que la variable 'resultado' contenía el ticket."
+          }
+        ],
+        defenseObjectionArgument: "¡PROTESTA! ¡La prueba de la fiscalía es materialmente imposible! El método emitirTicket es de tipo VOID, lo que significa que no retorna absolutamente nada. En Java, escribir 'String resultado = emitirTicket(texto)' genera un error de compilación inmediato. ¡Ese programa jamás pudo haber corrido porque la JVM jamás lo aceptó!",
+        verdictExplanation: "¡Inocente! Los métodos void solo ejecutan acciones secundarias (efectos de lado como imprimir) y no pueden ser asignados a ninguna variable."
+      }
+    ];
+
+    /* ========================================================
+       4. CONTROLADOR DEL JUEGO (GAME STATE MACHINE)
+       ======================================================== */
+    class CourtGameController {
+      constructor() {
+        this.currentCaseIndex = 0;
+        this.credibility = 5;
+        this.currentStatementIndex = 0;
+        this.selectedEvidenceId = null;
+        this.isTyping = false;
+        this.typingTimeout = null;
+        this.inCrossExamination = false;
+
+        this.initDom();
+        this.bindEvents();
+        this.loadCase(0);
+      }
+
+      initDom() {
+        this.dom = {
+          app: document.getElementById('court-app'),
+          stageBg: document.getElementById('stage-bg'),
+          charWrapper: document.getElementById('character-wrapper'),
+          charSvg: document.getElementById('char-svg'),
+          speakerTag: document.getElementById('speaker-tag'),
+          dialogueBox: document.getElementById('dialogue-box'),
+          dialogueContent: document.getElementById('dialogue-content'),
+          dialogueArrow: document.getElementById('dialogue-arrow'),
+          testimonyBanner: document.getElementById('testimony-banner'),
+          bannerText: document.getElementById('banner-text'),
+          statementCounter: document.getElementById('statement-counter'),
+          crossBar: document.getElementById('cross-bar'),
+          caseBadge: document.getElementById('case-badge'),
+          credibilityPoints: document.getElementById('credibility-points'),
+          flashFx: document.getElementById('flash-fx'),
+          confettiCanvas: document.getElementById('confetti-canvas'),
+
+          // Splash screens
+          splashObjection: document.getElementById('splash-objection'),
+          splashHoldit: document.getElementById('splash-holdit'),
+          splashTakethat: document.getElementById('splash-takethat'),
+
+          // Modales
+          modalEvidence: document.getElementById('modal-evidence'),
+          evidenceList: document.getElementById('evidence-list-container'),
+          detailBadge: document.getElementById('detail-badge'),
+          detailTitle: document.getElementById('detail-title'),
+          detailDesc: document.getElementById('detail-desc'),
+          detailSnip: document.getElementById('detail-snip'),
+          btnPresent: document.getElementById('btn-present'),
+
+          modalCode: document.getElementById('modal-code'),
+          codeCaseName: document.getElementById('code-case-name'),
+          codeLines: document.getElementById('code-lines-container'),
+
+          modalVerdict: document.getElementById('modal-verdict'),
+          verdictSummary: document.getElementById('verdict-summary'),
+          btnNextCase: document.getElementById('btn-next-case'),
+
+          // Botones
+          btnSound: document.getElementById('btn-sound-toggle'),
+          btnOpenCode: document.getElementById('btn-open-code'),
+          btnOpenEvidence: document.getElementById('btn-open-evidence'),
+          btnCloseEvidence: document.getElementById('btn-close-evidence'),
+          btnCloseCode: document.getElementById('btn-close-code'),
+          btnPrev: document.getElementById('btn-prev-statement'),
+          btnNext: document.getElementById('btn-next-statement'),
+          btnHoldIt: document.getElementById('btn-hold-it'),
+          btnObjection: document.getElementById('btn-objection')
+        };
+      }
+
+      bindEvents() {
+        // Sonido toggle
+        this.dom.btnSound.addEventListener('click', () => {
+          const isMuted = sound.toggleMute();
+          this.dom.btnSound.innerHTML = isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+        });
+
+        // Click en diálogo para avanzar o terminar tipeo
+        this.dom.dialogueBox.addEventListener('click', () => {
+          if (this.isTyping) {
+            this.finishTypingEarly();
+          } else if (!this.inCrossExamination) {
+            this.advanceStory();
+          }
+        });
+
+        // Navegación de testimonios
+        this.dom.btnPrev.addEventListener('click', () => this.navigateStatement(-1));
+        this.dom.btnNext.addEventListener('click', () => this.navigateStatement(1));
+
+        // Botón ¡UN MOMENTO!
+        this.dom.btnHoldIt.addEventListener('click', () => this.triggerHoldIt());
+
+        // Botón ¡PROTESTA!
+        this.dom.btnObjection.addEventListener('click', () => {
+          this.openEvidenceModal(true); // Modo acusación / presentar
+        });
+
+        // Abrir/Cerrar Modales
+        this.dom.btnOpenEvidence.addEventListener('click', () => this.openEvidenceModal(false));
+        this.dom.btnCloseEvidence.addEventListener('click', () => this.closeEvidenceModal());
+        this.dom.btnOpenCode.addEventListener('click', () => this.openCodeModal());
+        this.dom.btnCloseCode.addEventListener('click', () => this.closeCodeModal());
+
+        // Presentar evidencia desde modal
+        this.dom.btnPresent.addEventListener('click', () => this.presentEvidence());
+
+        // Siguiente caso
+        this.dom.btnNextCase.addEventListener('click', () => {
+          this.dom.modalVerdict.classList.remove('active');
+          if (this.currentCaseIndex < COURT_CASES.length - 1) {
+            this.loadCase(this.currentCaseIndex + 1);
+          } else {
+            // Reiniciar con felicitaciones
+            this.loadCase(0);
+          }
+        });
+
+        // Soporte de Teclado (Espacio / Flechas)
+        window.addEventListener('keydown', (e) => {
+          if (e.key === ' ' || e.key === 'Enter') {
+            if (this.isTyping) this.finishTypingEarly();
+          } else if (e.key === 'ArrowLeft' && this.inCrossExamination) {
+            this.navigateStatement(-1);
+          } else if (e.key === 'ArrowRight' && this.inCrossExamination) {
+            this.navigateStatement(1);
+          }
+        });
+      }
+
+      /* ========================================================
+         CARGA DE CASO Y FLUJO NARRATIVO
+         ======================================================== */
+      loadCase(caseIdx) {
+        this.currentCaseIndex = caseIdx;
+        this.currentCase = COURT_CASES[caseIdx];
+        this.credibility = 5;
+        this.currentStatementIndex = 0;
+        this.inCrossExamination = false;
+        this.updateCredibilityUi();
+
+        this.dom.caseBadge.textContent = `CASO ${this.currentCase.id}: ${this.currentCase.title.split(':')[1].trim()}`;
+        this.dom.testimonyBanner.style.display = 'none';
+        this.dom.statementCounter.style.display = 'none';
+        this.dom.crossBar.style.display = 'none';
+
+        // Renderizar visor de código
+        this.renderCodeViewer();
+        // Renderizar lista de evidencias
+        this.renderEvidenceList();
+
+        // Secuencia inicial del caso
+        this.introStep = 0;
+        this.runIntroSequence();
+      }
+
+      runIntroSequence() {
+        const c = this.currentCase;
+        if (this.introStep === 0) {
+          this.setSpeaker('judge', 'JUEZ UTN', 'bg-judge', 'pos-judge');
+          sound.playGavel();
+          this.flashScreen();
+          this.typeText(`Se abre la sesión para tratar el ${c.title}. Se acusa al alumno de cometer fraude en la ejecución del código.`);
+        } else if (this.introStep === 1) {
+          this.setSpeaker('prosecution', 'FISCAL NULLPOINTER', 'bg-prosecution', 'pos-prosecution');
+          sound.playDeskSlam();
+          this.dom.charSvg.classList.add('anim-desk-slam');
+          setTimeout(() => this.dom.charSvg.classList.remove('anim-desk-slam'), 400);
+          this.typeText("¡La evidencia es concluyente, Su Señoría! El acusado ejecutó un método que alteró la memoria del sistema. ¡Escuchen mi testimonio!");
+        } else if (this.introStep === 2) {
+          this.startCrossExamination();
+        }
+      }
+
+      advanceStory() {
+        this.introStep++;
+        this.runIntroSequence();
+      }
+
+      /* ========================================================
+         MODO INTERROGATORIO (CROSS-EXAMINATION)
+         ======================================================== */
+      startCrossExamination() {
+        this.inCrossExamination = true;
+        this.currentStatementIndex = 0;
+
+        this.dom.testimonyBanner.style.display = 'flex';
+        this.dom.testimonyBanner.classList.add('banner-cross');
+        this.dom.bannerText.textContent = 'INTERROGATORIO AL FISCAL';
+        this.dom.statementCounter.style.display = 'block';
+        this.dom.crossBar.style.display = 'flex';
+
+        this.setSpeaker('prosecution', 'FISCAL NULLPOINTER', 'bg-prosecution', 'pos-prosecution');
+        this.displayCurrentStatement();
+      }
+
+      displayCurrentStatement() {
+        const statements = this.currentCase.prosecutionStatements;
+        const cur = statements[this.currentStatementIndex];
+
+        this.dom.statementCounter.textContent = `${this.currentStatementIndex + 1} / ${statements.length}`;
+        this.setSpeaker('prosecution', 'FISCAL NULLPOINTER', 'bg-prosecution', 'pos-prosecution');
+        this.typeText(cur.text);
+      }
+
+      navigateStatement(delta) {
+        const total = this.currentCase.prosecutionStatements.length;
+        this.currentStatementIndex = (this.currentStatementIndex + delta + total) % total;
+        this.displayCurrentStatement();
+      }
+
+      /* ========================================================
+         ACCIÓN: ¡UN MOMENTO! (HOLD IT)
+         ======================================================== */
+      triggerHoldIt() {
+        sound.playDeskSlam();
+        this.showSplash(this.dom.splashHoldit, 800, () => {
+          this.setSpeaker('defense', 'DEFENSA WRIGHT', 'bg-defense', 'pos-defense');
+          const cur = this.currentCase.prosecutionStatements[this.currentStatementIndex];
+          this.typeText(`¡Un momento, Fiscal! Respecto a esa declaración... ¿qué fundamentos tiene?`);
+          
+          setTimeout(() => {
+            this.setSpeaker('prosecution', 'FISCAL NULLPOINTER', 'bg-prosecution', 'pos-prosecution');
+            this.typeText(cur.holdItReply);
+          }, 2400);
+        });
+      }
+
+      /* ========================================================
+         ACCIÓN: ¡PROTESTA! Y PRESENTACIÓN DE PRUEBA
+         ======================================================== */
+      presentEvidence() {
+        if (!this.selectedEvidenceId) return;
+        this.closeEvidenceModal();
+
+        sound.playObjectionStab();
+        this.shakeScreen();
+        this.flashScreen();
+
+        this.showSplash(this.dom.splashObjection, 900, () => {
+          this.setSpeaker('defense', 'DEFENSA WRIGHT', 'bg-defense', 'pos-defense');
+          this.dom.charSvg.classList.add('anim-point');
+          setTimeout(() => this.dom.charSvg.classList.remove('anim-point'), 600);
+
+          const isCorrectStatement = (this.currentStatementIndex === this.currentCase.correctStatementIndex);
+          const isCorrectEvidence = (this.selectedEvidenceId === this.currentCase.correctEvidenceId || 
+            (this.currentCase.id === 1 && this.selectedEvidenceId === 'ev-stack'));
+
+          if (isCorrectStatement && isCorrectEvidence) {
+            // ¡ACIERTO ROTUNDO!
+            this.handleSuccessContradiction();
+          } else {
+            // ¡ERROR PROCESAL!
+            this.handlePenalty(isCorrectStatement);
+          }
+        });
+      }
+
+      handleSuccessContradiction() {
+        this.typeText(this.currentCase.defenseObjectionArgument);
+
+        setTimeout(() => {
+          // Fiscal en shock / Breakdown
+          this.setSpeaker('prosecution', 'FISCAL NULLPOINTER', 'bg-prosecution', 'pos-prosecution');
+          this.dom.charSvg.classList.add('anim-shock');
+          sound.playDamage();
+          this.typeText("¡¿Q-QUÉEE?! ¡¿Cómo que por copia?! ¡¿Las variables no se conectan por el nombre del parámetro?!");
+
+          setTimeout(() => {
+            this.dom.charSvg.classList.remove('anim-shock');
+            // Juez da el veredicto
+            this.setSpeaker('judge', 'JUEZ UTN', 'bg-judge', 'pos-judge');
+            sound.playGavel();
+            this.flashScreen();
+            this.typeText("¡Silencio en la sala! La defensa ha demostrado con fundamentos rigurosos de arquitectura de memoria que no hubo manipulación indebida.");
+
+            setTimeout(() => {
+              this.showVictoryModal();
+            }, 3000);
+          }, 3200);
+        }, 4000);
+      }
+
+      handlePenalty(isCorrectStatement) {
+        this.credibility--;
+        this.updateCredibilityUi();
+        sound.playDamage();
+        this.shakeScreen();
+
+        if (this.credibility <= 0) {
+          // Game Over procesal
+          this.setSpeaker('judge', 'JUEZ UTN', 'bg-judge', 'pos-judge');
+          sound.playGavel();
+          this.typeText("¡Basta! La defensa ha agotado la paciencia de este tribunal con argumentos sin sustento. ¡Declaro al acusado CULPABLE por falta de pruebas válidas!");
+          setTimeout(() => {
+            alert("Has perdido toda tu credibilidad. Reintentemos el caso.");
+            this.loadCase(this.currentCaseIndex);
+          }, 3500);
+          return;
+        }
+
+        // Advertencia del juez
+        this.setSpeaker('judge', 'JUEZ UTN', 'bg-judge', 'pos-judge');
+        if (!isCorrectStatement) {
+          this.typeText("¡Abogado! Esa prueba no contradice la afirmación actual del fiscal. ¡Le aplico una sanción procesal!");
+        } else {
+          this.typeText("Esa prueba no refuta el punto central de la acusación. ¡Preste atención a las reglas de pasaje de datos en Java!");
+        }
+
+        setTimeout(() => {
+          this.displayCurrentStatement();
+        }, 3000);
+      }
+
+      showVictoryModal() {
+        sound.playFanfare();
+        this.launchConfetti();
+        this.dom.verdictSummary.textContent = this.currentCase.verdictExplanation;
+        this.dom.modalVerdict.classList.add('active');
+      }
+
+      /* ========================================================
+         UI: CONTROL DE PERSONAJES, DIÁLOGO Y EFECTOS
+         ======================================================== */
+      setSpeaker(type, name, bgClass, posClass) {
+        // Fondos
+        this.dom.stageBg.className = `stage-background ${bgClass}`;
+        // Posición
+        this.dom.charWrapper.className = `character-container ${posClass}`;
+        // Sprite
+        this.dom.charSvg.innerHTML = SPRITES[type] || SPRITES.judge;
+        // Etiqueta
+        this.dom.speakerTag.textContent = name;
+        this.dom.speakerTag.className = `speaker-name-tag tag-${type}`;
+        this.dom.dialogueBox.className = `dialogue-box theme-${type}`;
+      }
+
+      typeText(text) {
+        if (this.typingTimeout) clearTimeout(this.typingTimeout);
+        this.isTyping = true;
+        this.fullCurrentText = text;
+        this.dom.dialogueContent.innerHTML = '';
+        let charIndex = 0;
+
+        const step = () => {
+          if (charIndex < text.length) {
+            this.dom.dialogueContent.textContent += text.charAt(charIndex);
+            if (charIndex % 2 === 0) {
+              sound.playTypeBlip(400 + (charIndex % 3) * 40);
+            }
+            charIndex++;
+            this.typingTimeout = setTimeout(step, 24);
+          } else {
+            this.isTyping = false;
+          }
+        };
+
+        step();
+      }
+
+      finishTypingEarly() {
+        if (this.typingTimeout) clearTimeout(this.typingTimeout);
+        this.dom.dialogueContent.textContent = this.fullCurrentText;
+        this.isTyping = false;
+      }
+
+      updateCredibilityUi() {
+        const points = this.dom.credibilityPoints.querySelectorAll('.cred-point');
+        points.forEach((pt, idx) => {
+          if (idx < this.credibility) {
+            pt.classList.remove('lost');
+          } else {
+            pt.classList.add('lost');
+          }
+        });
+      }
+
+      showSplash(element, duration, callback) {
+        element.classList.add('active');
+        setTimeout(() => {
+          element.classList.remove('active');
+          if (callback) callback();
+        }, duration);
+      }
+
+      shakeScreen() {
+        this.dom.app.classList.remove('shake-screen');
+        void this.dom.app.offsetWidth;
+        this.dom.app.classList.add('shake-screen');
+        setTimeout(() => this.dom.app.classList.remove('shake-screen'), 400);
+      }
+
+      flashScreen() {
+        this.dom.flashFx.classList.remove('active');
+        void this.dom.flashFx.offsetWidth;
+        this.dom.flashFx.classList.add('active');
+        setTimeout(() => this.dom.flashFx.classList.remove('active'), 350);
+      }
+
+      /* ========================================================
+         MODAL DE EVIDENCIAS Y VISOR DE CÓDIGO
+         ======================================================== */
+      renderEvidenceList() {
+        this.dom.evidenceList.innerHTML = '';
+        this.currentCase.evidenceList.forEach((ev, idx) => {
+          const item = document.createElement('div');
+          item.className = `evidence-item ${idx === 0 ? 'selected' : ''}`;
+          item.innerHTML = `
+            <div class="evidence-icon"><i class="${ev.icon}"></i></div>
+            <div class="evidence-info">
+              <div class="evidence-name">${ev.name}</div>
+              <div class="evidence-type">${ev.type}</div>
+            </div>
+          `;
+          item.addEventListener('click', () => {
+            this.dom.evidenceList.querySelectorAll('.evidence-item').forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
+            this.selectEvidence(ev);
+          });
+          this.dom.evidenceList.appendChild(item);
+        });
+
+        if (this.currentCase.evidenceList.length > 0) {
+          this.selectEvidence(this.currentCase.evidenceList[0]);
+        }
+      }
+
+      selectEvidence(ev) {
+        this.selectedEvidenceId = ev.id;
+        this.dom.detailBadge.textContent = ev.badge;
+        this.dom.detailTitle.textContent = ev.name;
+        this.dom.detailDesc.textContent = ev.desc;
+        if (ev.snip) {
+          this.dom.detailSnip.textContent = ev.snip;
+          this.dom.detailSnip.style.display = 'block';
+        } else {
+          this.dom.detailSnip.style.display = 'none';
+        }
+      }
+
+      openEvidenceModal(presentMode = false) {
+        this.dom.modalEvidence.classList.add('active');
+        this.dom.btnPresent.style.display = presentMode ? 'flex' : 'none';
+      }
+
+      closeEvidenceModal() {
+        this.dom.modalEvidence.classList.remove('active');
+      }
+
+      renderCodeViewer() {
+        this.dom.codeCaseName.textContent = this.currentCase.codeFilename;
+        this.dom.codeLines.innerHTML = '';
+        this.currentCase.codeSnippet.forEach((line, idx) => {
+          const lineEl = document.createElement('div');
+          lineEl.className = 'code-line';
+          lineEl.innerHTML = `
+            <span class="line-num">${idx + 1}</span>
+            <span class="line-content">${this.highlightJava(line)}</span>
+          `;
+          this.dom.codeLines.appendChild(lineEl);
+        });
+      }
+
+      highlightJava(str) {
+        return str
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/\b(public|static|class|void|int|double|String|boolean|return)\b/g, '<span class="kw">$1</span>')
+          .replace(/(".*?")/g, '<span class="str">$1</span>')
+          .replace(/\b(\d+)\b/g, '<span class="num">$1</span>')
+          .replace(/(\/\/.*$)/g, '<span class="com">$1</span>');
+      }
+
+      openCodeModal() {
+        this.dom.modalCode.classList.add('active');
+      }
+
+      closeCodeModal() {
+        this.dom.modalCode.classList.remove('active');
+      }
+
+      /* ========================================================
+         CONFETI PROCEDURAL
+         ======================================================== */
+      launchConfetti() {
+        const canvas = this.dom.confettiCanvas;
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const colors = ['#f59e0b', '#3b82f6', '#ef4444', '#10b981', '#a855f7', '#ffffff'];
+
+        for (let i = 0; i < 90; i++) {
+          particles.push({
+            x: Math.random() * canvas.width,
+            y: -10 - Math.random() * 50,
+            size: Math.random() * 8 + 4,
+            speedY: Math.random() * 4 + 2,
+            speedX: (Math.random() - 0.5) * 3,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            rotation: Math.random() * 360,
+            rotationSpeed: (Math.random() - 0.5) * 6
+          });
+        }
+
+        let frame = 0;
+        const render = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          particles.forEach(p => {
+            p.y += p.speedY;
+            p.x += p.speedX;
+            p.rotation += p.rotationSpeed;
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            ctx.restore();
+          });
+
+          frame++;
+          if (frame < 180) {
+            requestAnimationFrame(render);
+          } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+          }
+        };
+
+        render();
+      }
+    }
+
+    // Exponer datos y controlador en window
+    window.COURT_CASES = COURT_CASES;
+    window.SPRITES = SPRITES;
+
+    // Inicializar el juego cuando el DOM esté listo
+    window.addEventListener('DOMContentLoaded', () => {
+      window.courtGame = new CourtGameController();
+    });
+  </script>
+</body>
+</html>
