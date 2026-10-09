@@ -143,6 +143,37 @@ courtCases.forEach((c, idx) => {
     process.exit(1);
   }
   console.log(`    - Evidencias que otorgan victoria: [${c.validEvidenceIds.join(', ')}]`);
+
+  // Validar mobileTitle en cada declaración
+  c.prosecutionStatements.forEach((st, sIdx) => {
+    if (!st.mobileTitle || st.mobileTitle.length > 14) {
+      console.error(`❌ ERROR: Caso ${c.id} Frase ${sIdx + 1} debe tener mobileTitle conciso (<= 14 chars), actual: "${st.mobileTitle}"`);
+      process.exit(1);
+    }
+  });
+  console.log(`    - Títulos móviles compactos validados: [${c.prosecutionStatements.map(s => s.mobileTitle).join(', ')}]`);
+});
+
+// 4. Verificación de reglas responsive en CSS
+console.log("\n--- VERIFICANDO REGLAS RESPONSIVE Y MOBILE LAYOUT ---");
+const responsiveChecks = [
+  '--stepper-cols',
+  'chip-label-mobile',
+  'chip-label-desktop',
+  'btn-nav-step',
+  'cross-actions-group',
+  '@media (max-width: 768px)',
+  '@media (max-height: 520px)',
+  'grid-template-columns: repeat(var(--stepper-cols, 4), minmax(0, 1fr))'
+];
+
+responsiveChecks.forEach(rc => {
+  if (htmlContent.includes(rc)) {
+    console.log(`  ✓ Regla responsive presente: "${rc}"`);
+  } else {
+    console.error(`  ❌ Falta regla responsive crítica: "${rc}"`);
+    process.exit(1);
+  }
 });
 
 console.log("\n====================================================");
