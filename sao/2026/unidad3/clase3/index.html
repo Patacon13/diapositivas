@@ -436,7 +436,7 @@
                 <div class="content-area">
                     <div class="cards-container">
                         <div class="concept-card" style="border-top: 5px solid var(--utn-blue);">
-                            <h3>1. Longitud Conocida (N)</h3>
+                            <h3>1. Longitud Conocida</h3>
                             <span class="tag">Ciclo Determinado (for)</span>
                             <p>
                                 Sabemos de antemano exactamente cuántos elementos tiene la secuencia (ej: 24 horas del día, 10 notas). El ciclo ejecuta N repeticiones exactas.
@@ -452,7 +452,7 @@
                         </div>
 
                         <div class="concept-card" style="border-top: 5px solid #10B981;">
-                            <h3>3. Por Propiedad</h3>
+                            <h3>3. Por Propiedad del último elemento</h3>
                             <span class="tag">Condición Intrínseca</span>
                             <p>
                                 La secuencia concluye cuando un dato satisface un predicado lógico específico (ej: encontrar el primer número par o cuando el saldo descienda a cero).
@@ -494,7 +494,7 @@
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px;">
                         <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px;">
-                            <strong style="color: var(--utn-blue);">Criterio de Parada:</strong> Longitud fija (N = 24).<br>
+                            <strong style="color: var(--utn-blue);">Criterio de Parada:</strong><br>Longitud fija (N = 24)<br>
                             <span style="font-size: 14.5px; color: #475569;">Alcanza con un bucle <code>for (int h = 0; h &lt; 24; h++)</code>.</span>
                         </div>
                         <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px;">
@@ -515,17 +515,23 @@
                     <div class="content-area">
                         <pre style="margin: 0 auto; max-width: 960px; font-size: 14px;"><code class="java" data-trim data-noescape>
 public class TemperaturasDia {
+
     public static void main(String[] args) {
-        int[] temps = {6, 5, 5, 4, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 11, 11, 10, 10, 9, 9, 9, 8};
-        
-        // Inicialización con el primer elemento
-        int min = temps[0];
-        int max = temps[0];
+        Scanner entrada = new Scanner(System.in);
+        int temp, min, max;
+        final int HORAS=24;
 
         // Recorrido de los elementos siguientes
-        for (int i = 1; i &lt; temps.length; i++) {
-            if (temps[i] &lt; min) min = temps[i];
-            if (temps[i] &gt; max) max = temps[i];
+        temp=entrada.nextInt();
+        min=temp;
+        max=temp;
+        for (int i = 0; i < HORAS-1; i++) {
+            temp=entrada.nextInt();
+            if (temp < min) {
+                min = temp;
+            } else if (temp > max) {
+                max = temp;
+            }
         }
 
         System.out.println("Temperatura Mínima: " + min + "°C");
@@ -580,6 +586,19 @@ public class TemperaturasDia {
                             </p>
                         </div>
                     </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="concept-card">
+                            <h3>Alternativas de Corte</h3>
+                            <p>
+                                <strong>Longitud conocida:</strong> el enunciado indica la cantidad de tuplas que se deben ingresar.
+                            </p>
+                            <p>
+                                <strong>Por centinela:</strong> el enunciado indica que se corta cuando, por ejemplo, la edad es <= 0.
+                            </p>
+
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
@@ -595,12 +614,12 @@ public class TemperaturasDia {
                                 <i class="fa-solid fa-chart-pie" style="color: var(--cyan-accent);"></i> Caso 3: Estadísticas del TP
                             </h4>
                             <p style="font-size: 14px; color: #475569; margin-bottom: 8px;">
-                                Secuencia de 10 notas: <code class="code-badge">[5, 9, 9, 7, 4, 5, 7, 7, 8, 4]</code>
+                                Secuencia de 10 notas: <code class="code-badge">5, 9, 9, 7, 4, 5, 7, 7, 8, 4</code>
                             </p>
                             <ul style="list-style: none; padding: 0; font-size: 13.5px; color: #475569;">
-                                <li style="margin-bottom: 6px;">&bull; <strong>Acumulador:</strong> Suma total = 65 pts.</li>
-                                <li style="margin-bottom: 6px;">&bull; <strong>Nota Promedio:</strong> 65 / 10 = <strong>6.5</strong> pts.</li>
-                                <li>&bull; <strong>Aprobados (&ge; 6):</strong> 6 alumnos &rarr; <strong>60%</strong></li>
+                                <li style="font-size: 16px;margin-bottom: 6px;">&bull; <strong>Acumulador (auxiliar):</strong> Suma total = 65 pts.</li>
+                                <li style="font-size: 16px;margin-bottom: 6px;">&bull; <strong>Nota Promedio:</strong> 65 / 10 = <strong>6.5</strong> pts.</li>
+                                <li style="font-size: 16px;margin-bottom: 6px;">&bull; <strong>Aprobados (&ge; 6):</strong> 6 alumnos &rarr; <strong>60%</strong></li>
                             </ul>
                         </div>
 
@@ -609,7 +628,8 @@ public class TemperaturasDia {
                                 <i class="fa-solid fa-id-badge" style="color: #10B981;"></i> Caso 4: Filtrado de Tuplas
                             </h4>
                             <p style="font-size: 14px; color: #475569; margin-bottom: 8px;">
-                                Tuplas <code class="code-badge">(legajo, nota)</code> filtrando los que aprobaron:
+                                Tuplas <code class="code-badge">(legajo, nota)</code> filtrando los que aprobaron sacando una nota de 6 o más puntos:
+                                <code class="code-badge">(40897, 5),(41589,9),(41235,9),(40325,7),(40325,4),(40899, 5),(43215,7),(411335,7),(41325,8),(41356,4)</code>
                             </p>
                             <div style="background: white; border: 1px dashed #CBD5E1; border-radius: 6px; padding: 8px; font-family: 'Fira Code', monospace; font-size: 12px; color: #0284C7;">
                                 41589 &bull; 41235 &bull; 40325 &bull; 43215 &bull; 411335 &bull; 41325
@@ -623,33 +643,7 @@ public class TemperaturasDia {
             </section>
 
             <!-- =========================================================================
-                 SLIDE 9: PROBLEMA OMEGAUP - J. APROXIMACIÓN DE PI (LEIBNIZ)
-                 ========================================================================= -->
-            <section>
-                <h2 class="slide-title">OMEGAUP: <span class="slide-subtitle">J. Aproximación PI de Leibniz</span></h2>
-                <div class="content-area">
-                    <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;">
-                        <h3 style="font-size: 19px; color: var(--utn-blue); margin-bottom: 8px;">Fórmula de la Sumatoria Alternada</h3>
-                        <p style="font-size: 16px; color: #475569; margin-bottom: 12px;">
-                            Se lee un valor entero N por teclado (1 &le; N &le; 250000) que indica la cantidad de términos de la serie:
-                        </p>
-                        <div style="background: white; border: 1px solid #CBD5E1; border-radius: 8px; padding: 12px; text-align: center; font-family: 'Fira Code', monospace; font-size: 18px; color: var(--utn-blue); margin-bottom: 14px;">
-                            &pi; / 4 = 1 - (1/3) + (1/5) - (1/7) + (1/9) - ...
-                        </div>
-
-                        <div class="callout-box">
-                            <i class="fa-solid fa-flag-checkered"></i>
-                            <div>
-                                <strong>¿Cuál es el criterio de parada en Leibniz?</strong>
-                                <p><strong>Longitud conocida (N):</strong> El bucle ejecuta exactamente N términos usando un ciclo <code class="code-badge">for</code>, alternando el signo (+ y -) y denominadores impares <code class="code-badge">2*i + 1</code>.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- =========================================================================
-                 SLIDE 10: PROBLEMA OMEGAUP - N. DUPLAS 1 (CENTINELA)
+                 SLIDE 9: PROBLEMA OMEGAUP - N. DUPLAS 1 (CENTINELA)
                  ========================================================================= -->
             <section>
                 <h2 class="slide-title">OMEGAUP: <span class="slide-subtitle">N. Duplas 1 (Parada por Centinela)</span></h2>
@@ -683,7 +677,7 @@ public class TemperaturasDia {
             </section>
 
             <!-- =========================================================================
-                 SLIDE 11: CIERRE INSTITUCIONAL
+                 SLIDE 10: CIERRE INSTITUCIONAL
                  ========================================================================= -->
             <section data-background-color="#F8FAFC">
                 <div class="hero-container">
@@ -789,28 +783,29 @@ public class TemperaturasDia {
         // =========================================================================
         // Códigos para OneCompiler
         // =========================================================================
-        const codeTemps = `public class Main {
-    public static void main(String[] args) {
-        // Secuencia de 24 temperaturas horarias
-        int[] temps = {6, 5, 5, 4, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 11, 11, 10, 10, 9, 9, 9, 8};
-        
-        System.out.println("=== PROCESAMIENTO DE SECUENCIA (24 HORAS) ===");
-        
-        int min = temps[0];
-        int max = temps[0];
-        int suma = temps[0];
+        const codeTemps = `import java.util.Scanner;
 
-        for (int i = 1; i < temps.length; i++) {
-            if (temps[i] < min) min = temps[i];
-            if (temps[i] > max) max = temps[i];
-            suma += temps[i];
+public class Main {
+    public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
+        int temp, min, max;
+        final int HORAS=24;
+
+        // Recorrido de los elementos siguientes
+        temp=entrada.nextInt();
+        min=temp;
+        max=temp;
+        for (int i = 0; i < HORAS-1; i++) {
+            temp=entrada.nextInt();
+            if (temp < min) {
+                min = temp;
+            } else if (temp > max) {
+                max = temp;
+            }
         }
 
-        double promedio = (double) suma / temps.length;
-
-        System.out.println("Temperatura Mínima: " + min + " °C");
-        System.out.println("Temperatura Máxima: " + max + " °C");
-        System.out.printf("Temperatura Promedio: %.2f °C\\n", promedio);
+        System.out.println("Temperatura Mínima: " + min + "°C");
+        System.out.println("Temperatura Máxima: " + max + "°C");
     }
 }`;
 
