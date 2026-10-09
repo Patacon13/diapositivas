@@ -138,10 +138,11 @@ courtCases.forEach((c, idx) => {
   console.log(`    - Falacia en frase índice: ${c.correctStatementIndex} ("${c.prosecutionStatements[c.correctStatementIndex].text}")`);
   console.log(`    - Evidencia esperada: ${c.correctEvidenceId}`);
   
-  if (!c.prosecutionStatements[c.correctStatementIndex]) {
-    console.error(`❌ ERROR: Índice de falacia inválido en caso ${c.id}`);
+  if (!c.validEvidenceIds || !Array.isArray(c.validEvidenceIds) || c.validEvidenceIds.length === 0) {
+    console.error(`❌ ERROR: Caso ${c.id} debe definir validEvidenceIds.`);
     process.exit(1);
   }
+  console.log(`    - Evidencias que otorgan victoria: [${c.validEvidenceIds.join(', ')}]`);
 });
 
 console.log("\n====================================================");
