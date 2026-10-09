@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SAO - Unidad 4: Modularización | TUTI UTN FRSF</title>
+
+    <!-- Tipografías Oficiales & Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --cyan-accent: #0284C7;
+            --cyan-light: #38BDF8;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --bg-page: #F8FAFC;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Encabezado Institucional Compacto */
+        header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 12px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .header-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge img {
+            height: 28px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .brand-titles {
+            border-left: 2px solid #E2E8F0;
+            padding-left: 12px;
+        }
+
+        .brand-titles h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            line-height: 1.2;
+        }
+
+        .brand-titles span {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--cyan-accent);
+            letter-spacing: 0.5px;
+        }
+
+        .unit-pill {
+            background: #EFF6FF;
+            color: var(--utn-blue);
+            padding: 5px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid #BFDBFE;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Hero Banner Proporcionado */
+        .hero-banner {
+            max-width: 1000px;
+            margin: 22px auto 14px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .hero-banner h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--utn-blue);
+            line-height: 1.2;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-banner h1 span {
+            color: var(--cyan-light);
+        }
+
+        .hero-banner p {
+            font-size: 14px;
+            color: var(--text-light);
+            max-width: 760px;
+            margin: 0 auto;
+            line-height: 1.45;
+        }
+
+        /* Grid de Tarjetas */
+        .cards-grid {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 16px 20px 24px 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .portal-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+            border-color: var(--cyan-light);
+        }
+
+        .portal-card.featured {
+            border: 2px solid var(--cyan-light);
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.15);
+        }
+
+        .card-accent-bar {
+            height: 5px;
+            width: 100%;
+        }
+
+        .bar-blue { background: linear-gradient(90deg, var(--utn-blue), var(--cyan-light)); }
+        .bar-gold { background: linear-gradient(90deg, var(--utn-gold), #F59E0B); }
+        .bar-red  { background: linear-gradient(90deg, #E11D48, #FB7185); }
+        .bar-dark { background: linear-gradient(90deg, #10B981, #059669); }
+        .bar-purple { background: linear-gradient(90deg, #8B5CF6, #C084FC); }
+
+        .card-content {
+            padding: 18px 18px 12px 18px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .portal-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            margin-bottom: 2px;
+        }
+
+        .card-subtitle {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--cyan-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .card-description {
+            font-size: 12.5px;
+            color: var(--text-light);
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .topics-list {
+            list-style: none;
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px dashed #E2E8F0;
+        }
+
+        .topics-list li {
+            font-size: 12px;
+            color: var(--text-main);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.35;
+        }
+
+        .topics-list li i {
+            color: var(--cyan-accent);
+            font-size: 10.5px;
+            margin-top: 2px;
+            margin-right: 7px;
+            flex-shrink: 0;
+        }
+
+        .topics-list li span {
+            flex-grow: 1;
+        }
+
+        .topics-list code {
+            font-family: 'Fira Code', monospace;
+            background: #F1F5F9;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #0284C7;
+        }
+
+        .card-footer {
+            padding: 12px 18px 16px 18px;
+            background: #F8FAFC;
+            border-top: 1px solid #F1F5F9;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--utn-blue);
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background: #001e40;
+            box-shadow: 0 4px 12px rgba(0, 43, 91, 0.25);
+        }
+
+        .btn-game {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+        }
+
+        .btn-game:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #E2E8F0;
+            color: #334155;
+        }
+
+        .btn-secondary:hover {
+            background: #CBD5E1;
+        }
+
+        /* Sección de Nómina Docente */
+        .staff-section {
+            max-width: 1240px;
+            margin: 10px auto 24px auto;
+            padding: 16px 20px;
+            background: #FFFFFF;
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 12.5px;
+        }
+
+        .staff-group h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .staff-group ul {
+            list-style: none;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .staff-group li {
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .staff-group li::before {
+            content: "•";
+            color: var(--cyan-accent);
+            font-weight: bold;
+        }
+
+        /* Footer Institucional */
+        footer {
+            background: #FFFFFF;
+            border-top: 1px solid #E2E8F0;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        footer span {
+            color: var(--utn-blue);
+            font-weight: 700;
+        }
+
+        @media (max-width: 1024px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .staff-section {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Encabezado Institucional -->
+    <header>
+        <div class="header-container">
+            <div class="brand-badge">
+                <img src="../../dist/img/logo-utn.png" alt="UTN Santa Fe" onerror="this.style.display='none'">
+                <div class="brand-titles">
+                    <h2>TUTI / UTN SANTA FE</h2>
+                    <span>Sistemas de Automatización de Oficinas (SAO 2026)</span>
+                </div>
+            </div>
+            <div class="unit-pill">
+                <i class="fa-solid fa-cube"></i> UNIDAD 4: MODULARIZACIÓN
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Banner -->
+        <section class="hero-banner">
+            <h1>UNIDAD 4: <span>MODULARIZACIÓN</span></h1>
+            <p>
+                Diseño estructurado de algoritmos mediante métodos estáticos en Java: funciones con retorno, procedimientos void, pasaje de parámetros por valor, ámbito de variables (scope), la pila de ejecución (Call Stack) y el principio de abstracción de caja negra.
+            </p>
+        </section>
+
+        <!-- Grid de 4 Tarjetas -->
+        <section class="cards-grid">
+
+            <!-- TARJETA 1: MINIJUEGO OFICIAL (DESTACADA) -->
+            <div class="portal-card featured">
+                <div>
+                    <div class="card-accent-bar bar-dark"></div>
+                    <div class="card-content">
+                        <div class="card-icon" style="color: #10B981;">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <h3>The Frame Dungeon</h3>
+                        <span class="card-subtitle">Minijuego RPG: La Mazmorra del Call Stack</span>
+                        <p class="card-description">
+                            Tomá el control del Hilo de Ejecución. Enfrentate al Duende del Scope Leak, al Gólem Monolito y al Dragón StackOverflow orquestando métodos estáticos en la pila de llamadas LIFO en tiempo real.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span>Combate por turnos estilo <em>Slay the Spire</em></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Visualizador dinámico del Call Stack en vivo</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Inspector de Tabla de Variables Locales (LVT)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Desafíos pedagógicos con feedback inmediato</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Mecánica de corte anti-StackOverflow</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="juego/index.html" class="action-btn btn-game">
+                        <span>Jugar The Frame Dungeon</span> <i class="fa-solid fa-play"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- TARJETA 2: FUNCIONES Y PROCEDIMIENTOS -->
+            <div class="portal-card">
+                <div>
+                    <div class="card-accent-bar bar-blue"></div>
+                    <div class="card-content">
+                        <div class="card-icon" style="color: var(--cyan-accent);">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <h3>Funciones vs Procedimientos</h3>
+                        <span class="card-subtitle">Métodos Estáticos en Java</span>
+                        <p class="card-description">
+                            Clasificación de subprogramas según su contrato. Declaración con <code>public static</code>, tipos de retorno y la instrucción <code>return</code>.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span>Diferencia clave entre <code>tipoRetorno</code> y <code>void</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Firma del método: nombre y parámetros</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Invocación como expresión vs como sentencia</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Retornos obligatorios en ramas condicionales</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="juego/index.html" class="action-btn btn-primary">
+                        <span>Explorar en el Códice</span> <i class="fa-solid fa-book-open"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- TARJETA 3: PARÁMETROS Y SCOPE -->
+            <div class="portal-card">
+                <div>
+                    <div class="card-accent-bar bar-purple"></div>
+                    <div class="card-content">
+                        <div class="card-icon" style="color: #8B5CF6;">
+                            <i class="fa-solid fa-diagram-project"></i>
+                        </div>
+                        <h3>Parámetros y Ámbito</h3>
+                        <span class="card-subtitle">Pasaje por Valor y Scope</span>
+                        <p class="card-description">
+                            Comunicación unidireccional y ciclo de vida de los datos. Cómo viajan las copias de los tipos primitivos y dónde nacen y mueren las variables.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span>Parámetros formales vs argumentos actuales</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Inmutabilidad de la variable llamadora (copia)</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Variables locales y aislamiento entre bloques <code>{ }</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Prevención de fugas de ámbito (Scope Leaks)</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="juego/index.html" class="action-btn btn-secondary">
+                        <span>Poner a Prueba</span> <i class="fa-solid fa-arrows-split-up-and-left"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- TARJETA 4: CALL STACK Y CAJA NEGRA -->
+            <div class="portal-card">
+                <div>
+                    <div class="card-accent-bar bar-gold"></div>
+                    <div class="card-content">
+                        <div class="card-icon" style="color: #D97706;">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <h3>Call Stack &amp; Caja Negra</h3>
+                        <span class="card-subtitle">Arquitectura de Ejecución</span>
+                        <p class="card-description">
+                            Cómo el microprocesador y la JVM administran la memoria en tiempo de ejecución. Principio de abstracción y modularización Top-Down.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span>Estructura LIFO: PUSH de llamada, POP de retorno</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Anatomía del Stack Frame: LVT y Return Address</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Caja Negra: alta cohesión y bajo acoplamiento</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Causas del error <code>StackOverflowError</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="juego/index.html" class="action-btn btn-secondary">
+                        <span>Inspeccionar Frames</span> <i class="fa-solid fa-microchip"></i>
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Nómina Docente Compacta -->
+        <section class="staff-section">
+            <div class="staff-group">
+                <h4>Profesores</h4>
+                <ul>
+                    <li>Gastón Micheri</li>
+                    <li>Tomás Assenza</li>
+                </ul>
+            </div>
+            <div class="staff-group">
+                <h4>Tutores</h4>
+                <ul>
+                    <li>Agustín Ramello</li>
+                    <li>Micaela Assenza</li>
+                    <li>Lijandy Jimenez Armas</li>
+                    <li>Macarena Moya</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Institucional -->
+    <footer>
+        TUTI / UTN <span>SANTA FE</span> — Cátedra de Sistemas de Automatización de Oficinas (SAO 2026)
+    </footer>
+
+</body>
+</html>
