@@ -30,7 +30,7 @@
       --utn-blue: #002B5B;
       --cyan-accent: #38bdf8;
       --bg-dark: #0a0f1d;
-      --bg-card: rgba(15, 23, 42, 0.88);
+      --bg-card: rgba(15, 23, 42, 0.92);
       --font-pixel: 'Press Start 2P', monospace;
       --font-code: 'Fira Code', monospace;
       --font-ui: 'Inter', sans-serif;
@@ -73,7 +73,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 6px 14px;
-      background: rgba(10, 15, 29, 0.95);
+      background: rgba(10, 15, 29, 0.96);
       border-bottom: 2px solid #334155;
       z-index: 40;
       gap: 8px;
@@ -101,36 +101,45 @@
 
     .game-title {
       font-family: var(--font-pixel);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--court-gold);
       text-shadow: 2px 2px 0px #000;
       letter-spacing: -0.5px;
     }
 
-    .case-indicator {
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: #94a3b8;
+    /* SELECTOR DE CASOS DESPLEGABLE */
+    .case-selector {
       background: #1e293b;
-      padding: 2px 8px;
-      border-radius: 12px;
-      border: 1px solid #334155;
+      color: #cbd5e1;
+      border: 1px solid #475569;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.15s ease;
     }
 
-    /* MEDIDOR DE CREDIBILIDAD / CORAZONES */
+    .case-selector:hover, .case-selector:focus {
+      border-color: var(--cyan-accent);
+      color: #fff;
+    }
+
+    /* MEDIDOR DE CREDIBILIDAD */
     .credibility-meter {
       display: flex;
       align-items: center;
       gap: 5px;
       background: rgba(0, 0, 0, 0.5);
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 6px;
       border: 1px solid #334155;
     }
 
     .cred-label {
       font-family: var(--font-pixel);
-      font-size: 0.55rem;
+      font-size: 0.52rem;
       color: #cbd5e1;
       margin-right: 2px;
     }
@@ -142,7 +151,7 @@
 
     .cred-point {
       font-family: var(--font-pixel);
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #ef4444;
       text-shadow: 0 0 6px rgba(239, 68, 68, 0.8);
       transition: all 0.3s ease;
@@ -157,7 +166,7 @@
     /* BOTONES HEADER */
     .header-actions {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
     }
 
@@ -165,9 +174,9 @@
       background: #1e293b;
       color: #f1f5f9;
       border: 1px solid #475569;
-      padding: 5px 10px;
+      padding: 5px 9px;
       border-radius: 6px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
@@ -186,7 +195,7 @@
       background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
       border-color: #60a5fa;
       color: #fff;
-      box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+      box-shadow: 0 0 8px rgba(37, 99, 235, 0.35);
     }
 
     .btn-top.btn-code {
@@ -209,7 +218,6 @@
       background: #020617;
     }
 
-    /* FONDO DECORATIVO DE LA SALA */
     .stage-background {
       position: absolute;
       inset: 0;
@@ -219,7 +227,6 @@
       z-index: 1;
     }
 
-    /* AMBIENTES: JUEZ, DEFENSA, FISCAL, TESTIGO */
     .bg-judge {
       background: radial-gradient(circle at 50% 20%, #312e81 0%, #0f172a 80%);
     }
@@ -236,7 +243,6 @@
       background: radial-gradient(circle at 50% 40%, #1e293b 0%, #020617 90%);
     }
 
-    /* PILARES Y ELEMENTOS DE FONDO SVG */
     .court-decor {
       position: absolute;
       inset: 0;
@@ -248,13 +254,13 @@
         linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.8) 100%);
     }
 
-    /* BANCO / ESTRADO */
+    /* BANCO / ESTRADO DE MADERA */
     .court-bench {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 110px;
+      height: 105px;
       background: linear-gradient(180deg, #92400e 0%, #451a03 30%, #1c0a00 100%);
       border-top: 5px solid #d97706;
       box-shadow: 0 -10px 30px rgba(0,0,0,0.8), inset 0 2px 0 rgba(255,255,255,0.2);
@@ -275,9 +281,9 @@
     /* PERSONAJES (AVATARES Y SPRITES SVG/CSS) */
     .character-container {
       position: absolute;
-      bottom: 60px;
+      bottom: 55px;
       width: 320px;
-      height: 340px;
+      height: 330px;
       display: flex;
       justify-content: center;
       align-items: flex-end;
@@ -285,7 +291,6 @@
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    /* POSICIONES */
     .pos-defense {
       left: 10%;
       transform: translateX(0);
@@ -299,16 +304,15 @@
     .pos-judge {
       left: 50%;
       transform: translateX(-50%) scale(1.05);
-      bottom: 90px;
+      bottom: 85px;
     }
 
     .pos-witness {
       left: 50%;
       transform: translateX(-50%);
-      bottom: 50px;
+      bottom: 45px;
     }
 
-    /* SPRITE SVG DE PERSONAJES */
     .char-sprite {
       width: 100%;
       height: 100%;
@@ -316,9 +320,9 @@
       transition: transform 0.2s ease;
     }
 
-    /* ANIMACIONES DE PERSONAJES */
+    /* ANIMACIONES */
     .anim-talking {
-      animation: charTalk 0.25s infinite alternate ease-in-out;
+      animation: charTalk 0.22s infinite alternate ease-in-out;
     }
 
     .anim-desk-slam {
@@ -333,58 +337,43 @@
       animation: shockDamage 0.6s ease-in-out;
     }
 
-    .anim-headshake {
-      animation: headShake 0.8s ease-in-out;
-    }
-
     @keyframes charTalk {
       0% { transform: translateY(0); }
-      100% { transform: translateY(-4px); }
+      100% { transform: translateY(-3px); }
     }
 
     @keyframes deskSlam {
-      0% { transform: translateY(-30px) scale(1.08); }
-      40% { transform: translateY(12px) scale(0.96); }
-      70% { transform: translateY(-6px); }
+      0% { transform: translateY(-28px) scale(1.06); }
+      40% { transform: translateY(10px) scale(0.97); }
+      70% { transform: translateY(-5px); }
       100% { transform: translateY(0) scale(1); }
     }
 
     @keyframes pointPose {
       0% { transform: translateX(-30px) scale(0.95); }
-      100% { transform: translateX(20px) scale(1.12); }
+      100% { transform: translateX(20px) scale(1.1); }
     }
 
     @keyframes shockDamage {
       0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      10% { transform: translate(-15px, -10px) rotate(-4deg); filter: brightness(2) contrast(1.5); }
-      25% { transform: translate(15px, 8px) rotate(4deg); }
-      40% { transform: translate(-12px, -6px) rotate(-3deg); }
-      55% { transform: translate(10px, 4px) rotate(2deg); }
-      70% { transform: translate(-6px, -2px) rotate(-1deg); }
-      85% { transform: translate(4px, 1px) rotate(1deg); }
+      10% { transform: translate(-14px, -8px) rotate(-4deg); filter: brightness(2); }
+      25% { transform: translate(14px, 6px) rotate(4deg); }
+      40% { transform: translate(-10px, -4px) rotate(-3deg); }
+      55% { transform: translate(8px, 3px) rotate(2deg); }
+      70% { transform: translate(-4px, -1px) rotate(-1deg); }
     }
 
-    @keyframes headShake {
-      0%, 100% { transform: rotate(0deg); }
-      20% { transform: rotate(-8deg); }
-      40% { transform: rotate(8deg); }
-      60% { transform: rotate(-5deg); }
-      80% { transform: rotate(5deg); }
-    }
-
-    /* ========================================================
-       BANNER DE TESTIMONIO / INTERROGATORIO (CROSS-EXAMINATION)
-       ======================================================== */
+    /* BANNER DE TESTIMONIO */
     .testimony-banner {
       position: absolute;
-      top: 16px;
+      top: 14px;
       left: 50%;
       transform: translateX(-50%);
       background: linear-gradient(90deg, transparent, rgba(185, 28, 28, 0.95) 20%, rgba(185, 28, 28, 0.95) 80%, transparent);
       color: #fff;
-      padding: 6px 40px;
+      padding: 5px 35px;
       font-family: var(--font-pixel);
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       letter-spacing: 2px;
       text-transform: uppercase;
       text-shadow: 2px 2px 0px #000;
@@ -394,163 +383,50 @@
       z-index: 10;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .testimony-banner.banner-cross {
       background: linear-gradient(90deg, transparent, rgba(29, 78, 216, 0.95) 20%, rgba(29, 78, 216, 0.95) 80%, transparent);
     }
 
-    /* CONTADOR DE DECLARACIONES (1/4) */
     .statement-counter {
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 16px;
+      right: 16px;
       background: rgba(15, 23, 42, 0.9);
       border: 1px solid var(--court-gold);
       color: var(--court-gold);
       font-family: var(--font-pixel);
       font-size: 0.65rem;
-      padding: 5px 10px;
+      padding: 4px 9px;
       border-radius: 4px;
       z-index: 10;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
     }
 
     /* ========================================================
-       CUADRO DE DIÁLOGO CLÁSICO ACE ATTORNEY
+       CUADRO DE DIÁLOGO Y STEPPER
        ======================================================== */
     .dialogue-box-wrapper {
       position: relative;
       width: 100%;
-      padding: 0 16px 12px 16px;
+      padding: 0 16px 10px 16px;
       z-index: 30;
       flex-shrink: 0;
     }
 
-    .dialogue-box {
-      position: relative;
-      width: 100%;
-      min-height: 130px;
-      max-height: 170px;
-      background: rgba(15, 23, 42, 0.96);
-      border: 3px solid #475569;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
-      padding: 20px 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      backdrop-filter: blur(8px);
-      transition: border-color 0.2s ease;
-    }
-
-    .dialogue-box.theme-defense {
-      border-color: #3b82f6;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(59, 130, 246, 0.3);
-    }
-
-    .dialogue-box.theme-prosecution {
-      border-color: #ef4444;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(239, 68, 68, 0.3);
-    }
-
-    .dialogue-box.theme-judge {
-      border-color: var(--court-gold);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(245, 158, 11, 0.3);
-    }
-
-    /* ETIQUETA CON NOMBRE DEL HABLANTE */
-    .speaker-name-tag {
-      position: absolute;
-      top: -14px;
-      left: 20px;
-      background: #0f172a;
-      padding: 3px 14px;
-      border-radius: 6px;
-      border: 2px solid #64748b;
-      font-family: var(--font-pixel);
-      font-size: 0.65rem;
-      letter-spacing: 1px;
-      color: #f8fafc;
-      text-transform: uppercase;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-
-    .speaker-name-tag.tag-defense {
-      border-color: #3b82f6;
-      color: #93c5fd;
-    }
-
-    .speaker-name-tag.tag-prosecution {
-      border-color: #ef4444;
-      color: #fca5a5;
-    }
-
-    .speaker-name-tag.tag-judge {
-      border-color: var(--court-gold);
-      color: #fde047;
-    }
-
-    .speaker-name-tag.tag-witness {
-      border-color: #10b981;
-      color: #6ee7b7;
-    }
-
-    /* TEXTO PRINCIPAL DE DIÁLOGO */
-    .dialogue-text {
-      font-size: 1.05rem;
-      line-height: 1.5;
-      color: #f8fafc;
-      font-weight: 500;
-      flex: 1;
-      overflow-y: auto;
-      padding-right: 20px;
-      word-break: break-word;
-    }
-
-    .dialogue-text code {
-      font-family: var(--font-code);
-      background: #000;
-      color: var(--cyan-accent);
-      padding: 2px 6px;
-      border-radius: 4px;
-      border: 1px solid #334155;
-      font-size: 0.95rem;
-    }
-
-    /* FLECHA DE AVANCE */
-    .dialogue-arrow {
-      position: absolute;
-      bottom: 12px;
-      right: 18px;
-      color: var(--court-gold);
-      font-size: 1.1rem;
-      animation: bounceArrow 0.6s infinite alternate ease-in-out;
-      cursor: pointer;
-    }
-
-    @keyframes bounceArrow {
-      0% { transform: translateY(0); opacity: 0.6; }
-      100% { transform: translateY(4px); opacity: 1; }
-    }
-
-    /* ========================================================
-       BARRA DE ACCIONES DE INTERROGATORIO (CROSS-EXAMINATION)
-       ======================================================== */
-    /* STEPPER Y GUÍA DIDÁCTICA DEL INTERROGATORIO */
     .cross-header-panel {
       margin-bottom: 6px;
     }
 
     .cross-help-banner {
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.96);
       border-left: 3px solid var(--cyan-accent);
       border-right: 1px solid #334155;
       border-top: 1px solid #334155;
       border-bottom: 1px solid #334155;
       padding: 5px 12px;
-      font-size: 0.73rem;
+      font-size: 0.72rem;
       color: #cbd5e1;
       border-radius: 6px;
       margin-bottom: 6px;
@@ -558,7 +434,6 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
 
     .testimony-stepper {
@@ -598,6 +473,103 @@
       box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
     }
 
+    .dialogue-box {
+      position: relative;
+      width: 100%;
+      min-height: 125px;
+      max-height: 165px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 3px solid #475569;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
+      padding: 18px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+    }
+
+    .dialogue-box.theme-defense {
+      border-color: #3b82f6;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .dialogue-box.theme-prosecution {
+      border-color: #ef4444;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .dialogue-box.theme-judge {
+      border-color: var(--court-gold);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(245, 158, 11, 0.3);
+    }
+
+    .speaker-name-tag {
+      position: absolute;
+      top: -13px;
+      left: 18px;
+      background: #0f172a;
+      padding: 2px 12px;
+      border-radius: 6px;
+      border: 2px solid #64748b;
+      font-family: var(--font-pixel);
+      font-size: 0.62rem;
+      letter-spacing: 1px;
+      color: #f8fafc;
+      text-transform: uppercase;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .speaker-name-tag.tag-defense { border-color: #3b82f6; color: #93c5fd; }
+    .speaker-name-tag.tag-prosecution { border-color: #ef4444; color: #fca5a5; }
+    .speaker-name-tag.tag-judge { border-color: var(--court-gold); color: #fde047; }
+    .speaker-name-tag.tag-witness { border-color: #10b981; color: #6ee7b7; }
+
+    .dialogue-text {
+      font-size: 1.02rem;
+      line-height: 1.5;
+      color: #f8fafc;
+      font-weight: 500;
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 18px;
+      word-break: break-word;
+    }
+
+    .dialogue-text code {
+      font-family: var(--font-code);
+      background: #000;
+      color: var(--cyan-accent);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #334155;
+      font-size: 0.92rem;
+    }
+
+    .dialogue-prompt {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      color: var(--court-gold);
+      font-family: var(--font-pixel);
+      margin-top: 4px;
+      opacity: 0.9;
+    }
+
+    .dialogue-arrow {
+      animation: bounceArrow 0.6s infinite alternate ease-in-out;
+    }
+
+    @keyframes bounceArrow {
+      0% { transform: translateY(0); opacity: 0.6; }
+      100% { transform: translateY(4px); opacity: 1; }
+    }
+
+    /* BARRA DE ACCIONES DE INTERROGATORIO */
     .cross-examination-bar {
       display: flex;
       justify-content: space-between;
@@ -632,42 +604,32 @@
       transform: translateY(-2px);
     }
 
-    .btn-action:active {
-      transform: translateY(1px);
-    }
-
-    /* BOTÓN ¡UN MOMENTO! */
     .btn-hold-it {
       background: linear-gradient(135deg, #065f46, #059669);
       border-color: #34d399;
       color: #fff;
-      text-shadow: 1px 1px 0px #000;
     }
 
     .btn-hold-it:hover {
       background: linear-gradient(135deg, #047857, #10b981);
-      border-color: #6ee7b7;
       box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
     }
 
-    /* BOTÓN ¡PROTESTA! */
     .btn-objection {
       background: linear-gradient(135deg, #991b1b, #dc2626);
       border-color: #f87171;
       color: #fff;
-      text-shadow: 1px 1px 0px #000;
       font-size: 0.72rem;
       padding: 8px 18px;
     }
 
     .btn-objection:hover {
       background: linear-gradient(135deg, #b91c1c, #ef4444);
-      border-color: #fca5a5;
       box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
     }
 
     /* ========================================================
-       SPLASH SCREENS DRAMÁTICOS (¡OBJECTION!, ¡HOLD IT!, ¡TAKE THAT!)
+       SPLASH SCREENS (OBJECTION, HOLD IT, TAKE THAT)
        ======================================================== */
     .splash-overlay {
       position: fixed;
@@ -685,7 +647,6 @@
       pointer-events: auto;
     }
 
-    /* LÍNEAS DE VELOCIDAD ANIME / MANGA */
     .speed-lines {
       position: absolute;
       inset: 0;
@@ -703,19 +664,10 @@
       to { transform: rotate(360deg); }
     }
 
-    .splash-bg-objection {
-      background: radial-gradient(circle, #dc2626 0%, #7f1d1d 70%, #450a0a 100%);
-    }
+    .splash-bg-objection { background: radial-gradient(circle, #dc2626 0%, #7f1d1d 70%, #450a0a 100%); }
+    .splash-bg-holdit { background: radial-gradient(circle, #059669 0%, #064e3b 70%, #022c22 100%); }
+    .splash-bg-takethat { background: radial-gradient(circle, #d97706 0%, #78350f 70%, #451a03 100%); }
 
-    .splash-bg-holdit {
-      background: radial-gradient(circle, #059669 0%, #064e3b 70%, #022c22 100%);
-    }
-
-    .splash-bg-takethat {
-      background: radial-gradient(circle, #d97706 0%, #78350f 70%, #451a03 100%);
-    }
-
-    /* GLOBO / CARTEL DEL GRITO */
     .bubble-burst {
       position: relative;
       display: flex;
@@ -749,7 +701,6 @@
       100% { transform: scale(1) rotate(-4deg); opacity: 1; }
     }
 
-    /* SACUDIDA DE PANTALLA (SCREEN SHAKE) */
     .shake-screen {
       animation: screenShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
     }
@@ -761,7 +712,6 @@
       40%, 60% { transform: translate3d(6px, -4px, 0); }
     }
 
-    /* FLASH BLANCO */
     .flash-overlay {
       position: fixed;
       inset: 0;
@@ -781,7 +731,7 @@
     }
 
     /* ========================================================
-       MODAL EXPEDIENTE JUDICIAL / COURT RECORD (EVIDENCIAS)
+       MODALES (EVIDENCIAS, CÓDIGO, DIPLOMA)
        ======================================================== */
     .modal-overlay {
       position: fixed;
@@ -795,9 +745,7 @@
       backdrop-filter: blur(5px);
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
 
     .court-modal {
       width: 100%;
@@ -829,7 +777,7 @@
 
     .modal-title {
       font-family: var(--font-pixel);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--court-gold);
       display: flex;
       align-items: center;
@@ -851,9 +799,7 @@
       transition: background 0.15s ease;
     }
 
-    .btn-close-modal:hover {
-      background: #ef4444;
-    }
+    .btn-close-modal:hover { background: #ef4444; }
 
     .modal-body {
       display: flex;
@@ -862,7 +808,6 @@
       background: #020617;
     }
 
-    /* LISTA DE EVIDENCIAS (IZQUIERDA) */
     .evidence-list {
       width: 45%;
       border-right: 2px solid #1e293b;
@@ -897,9 +842,9 @@
     }
 
     .evidence-icon {
-      font-size: 1.5rem;
-      width: 40px;
-      height: 40px;
+      font-size: 1.4rem;
+      width: 38px;
+      height: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -910,13 +855,11 @@
       flex-shrink: 0;
     }
 
-    .evidence-info {
-      overflow: hidden;
-    }
+    .evidence-info { overflow: hidden; }
 
     .evidence-name {
       font-weight: 700;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: #f8fafc;
       white-space: nowrap;
       overflow: hidden;
@@ -924,13 +867,12 @@
     }
 
     .evidence-type {
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       color: #94a3b8;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
-    /* DETALLE DE EVIDENCIA (DERECHA) */
     .evidence-detail {
       flex: 1;
       padding: 20px;
@@ -962,13 +904,13 @@
 
     .detail-title {
       font-family: var(--font-heading);
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       color: var(--court-gold);
       font-weight: 800;
     }
 
     .detail-desc {
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       line-height: 1.6;
       color: #cbd5e1;
     }
@@ -1000,7 +942,7 @@
       padding: 10px 24px;
       border-radius: 8px;
       font-family: var(--font-pixel);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -1011,21 +953,19 @@
 
     .btn-present-evidence:hover {
       background: linear-gradient(135deg, #dc2626, #f87171);
-      transform: scale(1.03);
+      transform: scale(1.02);
     }
 
-    /* ========================================================
-       MODAL CÓDIGO JAVA DEL CASO
-       ======================================================== */
+    /* VISOR DE CÓDIGO JAVA */
     .code-viewer-container {
-      padding: 16px;
+      padding: 14px;
       overflow-y: auto;
       max-height: 60vh;
       background: #020617;
       border-radius: 8px;
       border: 1px solid #1e293b;
       font-family: var(--font-code);
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       line-height: 1.6;
       color: #f8fafc;
     }
@@ -1035,9 +975,7 @@
       gap: 14px;
     }
 
-    .code-line:hover {
-      background: rgba(255, 255, 255, 0.04);
-    }
+    .code-line:hover { background: rgba(255, 255, 255, 0.04); }
 
     .line-num {
       color: #475569;
@@ -1046,9 +984,7 @@
       user-select: none;
     }
 
-    .line-content {
-      flex: 1;
-    }
+    .line-content { flex: 1; }
 
     .kw { color: #f43f5e; font-weight: 700; }
     .type { color: #38bdf8; }
@@ -1057,23 +993,36 @@
     .num { color: #a78bfa; }
     .com { color: #64748b; font-style: italic; }
 
-    /* ========================================================
-       MODAL VEREDICTO FINAL (¡NO CULPABLE!)
-       ======================================================== */
-    .verdict-banner {
-      font-family: var(--font-pixel);
-      font-size: clamp(2rem, 8vw, 4.5rem);
-      color: var(--court-gold);
-      text-shadow: 0 0 30px rgba(245, 158, 11, 0.8), 4px 4px 0 #000;
-      letter-spacing: 6px;
+    /* DIPLOMA FINAL */
+    .diploma-card {
+      border: 4px solid var(--court-gold);
+      background: radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 100%);
+      padding: 24px;
+      border-radius: 12px;
       text-align: center;
-      animation: verdictDrop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      margin-bottom: 20px;
+      position: relative;
     }
 
-    @keyframes verdictDrop {
-      0% { transform: scale(3); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+    .diploma-header {
+      font-family: var(--font-pixel);
+      font-size: 0.85rem;
+      color: var(--court-gold);
+      margin-bottom: 8px;
+    }
+
+    .diploma-title {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      color: #fff;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .diploma-body {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-bottom: 20px;
     }
 
     .confetti-canvas {
@@ -1083,7 +1032,7 @@
       z-index: 120;
     }
 
-    /* FOOTER INSTITUCIONAL */
+    /* FOOTER */
     .court-footer {
       display: flex;
       justify-content: space-between;
@@ -1096,38 +1045,19 @@
       z-index: 40;
     }
 
-    /* ========================================================
-       RESPONSIVE DESIGN (MOBILE PORTRAIT Y LANDSCAPE)
-       ======================================================== */
+    /* RESPONSIVE DESIGN */
     @media (max-width: 768px) {
-      .game-title {
-        font-size: 0.6rem;
-      }
-      .badge-utn span {
-        display: none;
-      }
+      .game-title { font-size: 0.6rem; }
+      .badge-utn span { display: none; }
       .character-container {
-        width: 240px;
-        height: 260px;
-        bottom: 50px;
+        width: 230px;
+        height: 250px;
+        bottom: 45px;
       }
-      .court-bench {
-        height: 80px;
-      }
-      .dialogue-box {
-        min-height: 120px;
-        padding: 16px 18px;
-      }
-      .dialogue-text {
-        font-size: 0.92rem;
-      }
-      .testimony-banner {
-        font-size: 0.6rem;
-        padding: 4px 20px;
-      }
-      .modal-body {
-        flex-direction: column;
-      }
+      .court-bench { height: 75px; }
+      .dialogue-box { min-height: 115px; padding: 14px 16px; }
+      .dialogue-text { font-size: 0.9rem; }
+      .modal-body { flex-direction: column; }
       .evidence-list {
         width: 100%;
         max-height: 35vh;
@@ -1137,47 +1067,28 @@
     }
 
     @media (max-height: 520px) {
-      .court-header {
-        padding: 3px 10px;
-      }
+      .court-header { padding: 3px 10px; }
       .character-container {
-        width: 200px;
-        height: 200px;
-        bottom: 35px;
+        width: 190px;
+        height: 190px;
+        bottom: 30px;
       }
-      .court-bench {
-        height: 55px;
-      }
+      .court-bench { height: 50px; }
       .dialogue-box {
-        min-height: 95px;
-        max-height: 110px;
-        padding: 12px 14px;
+        min-height: 90px;
+        max-height: 105px;
+        padding: 10px 12px;
       }
-      .dialogue-text {
-        font-size: 0.85rem;
-      }
-      .testimony-banner {
-        top: 6px;
-        padding: 2px 15px;
-        font-size: 0.55rem;
-      }
-      .cross-examination-bar {
-        margin-top: 4px;
-      }
-      .btn-action {
-        padding: 5px 10px;
-        font-size: 0.58rem;
-      }
+      .dialogue-text { font-size: 0.82rem; }
+      .cross-examination-bar { margin-top: 3px; }
+      .btn-action { padding: 4px 8px; font-size: 0.58rem; }
     }
   </style>
 </head>
 <body>
 
   <div id="court-app">
-    <!-- FLASH OVERLAY PARA IMPACTOS -->
     <div id="flash-fx" class="flash-overlay"></div>
-
-    <!-- CANVAS PARA CONFETI -->
     <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
 
     <!-- HEADER INSTITUCIONAL -->
@@ -1188,10 +1099,18 @@
           <span>UTN FRSF</span>
         </div>
         <div class="game-title">ACE CODER: EL JUICIO</div>
-        <div id="case-badge" class="case-indicator">CASO 1: EL CAJERO</div>
+        
+        <!-- SELECTOR DE EPISODIOS -->
+        <select id="case-select" class="case-selector" title="Seleccionar episodio de juicio">
+          <option value="0">Episodio 1: El Cajero Automático</option>
+          <option value="1">Episodio 2: El Retorno Fantasma</option>
+          <option value="2">Episodio 3: La Asignación del Void</option>
+          <option value="3">Episodio 4: Nombres Duplicados (Scope)</option>
+          <option value="4">Episodio 5: Llamadas Anidadas (Stack)</option>
+        </select>
       </div>
 
-      <!-- MEDIDOR DE CREDIBILIDAD / CORAZONES -->
+      <!-- MEDIDOR DE CREDIBILIDAD -->
       <div class="credibility-meter" title="Credibilidad procesal">
         <span class="cred-label">CREDIBILIDAD:</span>
         <div class="cred-points" id="credibility-points">
@@ -1204,8 +1123,8 @@
       </div>
 
       <div class="header-actions">
-        <button id="btn-sound-toggle" class="btn-top" title="Activar/Silenciar audio">
-          <i class="fa-solid fa-volume-high"></i>
+        <button id="btn-sound-toggle" class="btn-top" title="Cambiar modo de audio">
+          <i class="fa-solid fa-music"></i> <span id="sound-label">BGM+SFX</span>
         </button>
         <button id="btn-open-code" class="btn-top btn-code">
           <i class="fa-solid fa-code"></i> <span>Código Java</span>
@@ -1221,24 +1140,21 @@
       <div id="stage-bg" class="stage-background bg-judge"></div>
       <div class="court-decor"></div>
 
-      <!-- BANNER DE TESTIMONIO / INTERROGATORIO -->
+      <!-- BANNER DE TESTIMONIO -->
       <div id="testimony-banner" class="testimony-banner" style="display: none;">
         <i class="fa-solid fa-gavel"></i>
         <span id="banner-text">TESTIMONIO DE LA FISCALÍA</span>
       </div>
 
-      <!-- CONTADOR DE FRASES (EJ: 2 / 4) -->
       <div id="statement-counter" class="statement-counter" style="display: none;">1 / 4</div>
 
-      <!-- PERSONAJE EN ESCENA (SPRITES SVG) -->
+      <!-- PERSONAJE EN ESCENA -->
       <div id="character-wrapper" class="character-container pos-judge">
-        <!-- SVG Sprite inyectado dinámicamente -->
         <svg id="char-svg" class="char-sprite" viewBox="0 0 300 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Renderizado dinámico del Juez, Fiscal o Abogado -->
+          <!-- Renderizado SVG -->
         </svg>
       </div>
 
-      <!-- ESTRADO DE MADERA -->
       <div class="court-bench"></div>
     </main>
 
@@ -1247,24 +1163,25 @@
       <!-- GUÍA DIDÁCTICA Y STEPPER DE DECLARACIONES -->
       <div id="cross-header-panel" class="cross-header-panel" style="display: none;">
         <div class="cross-help-banner">
-          <span><i class="fa-solid fa-lightbulb" style="color: var(--court-gold);"></i> <strong>Testimonio del Fiscal:</strong> Elegí cada afirmación para escucharla. Encontrá la FALSA sobre Java y tocala con <strong>[¡PROTESTA!]</strong></span>
+          <span><i class="fa-solid fa-lightbulb" style="color: var(--court-gold);"></i> <strong>Testimonio del Fiscal:</strong> Escuchá cada declaración. Encontrá la FALSA sobre Java y tocala con <strong>[¡PROTESTA!]</strong></span>
         </div>
         <div id="testimony-stepper" class="testimony-stepper">
-          <!-- Chips de declaraciones inyectados dinámicamente -->
+          <!-- Botones inyectados dinámicamente -->
         </div>
       </div>
 
       <div id="dialogue-box" class="dialogue-box theme-judge">
         <div id="speaker-tag" class="speaker-name-tag tag-judge">JUEZ UTN</div>
         <div id="dialogue-content" class="dialogue-text">
-          Se abre la sesión en este Tribunal Académico. El acusado está imputado por presunta manipulación fraudulenta de memoria.
+          Se abre la sesión en este Tribunal Académico...
         </div>
-        <div id="dialogue-arrow" class="dialogue-arrow">
-          <i class="fa-solid fa-play"></i>
+        <div class="dialogue-prompt">
+          <span id="dialogue-prompt-text">Click para continuar</span>
+          <i class="fa-solid fa-play dialogue-arrow"></i>
         </div>
       </div>
 
-      <!-- BOTONES DE INTERROGATORIO (CROSS-EXAMINATION) -->
+      <!-- ACCIONES DE INTERROGATORIO (CROSS-EXAMINATION) -->
       <div id="cross-bar" class="cross-examination-bar" style="display: none;">
         <div class="nav-statements">
           <button id="btn-prev-statement" class="btn-action">
@@ -1289,13 +1206,11 @@
     <!-- FOOTER INSTITUCIONAL -->
     <footer class="court-footer">
       <div><strong>TUTI / UTN SANTA FE</strong> &bull; Sistemas de Automatización de Oficinas (SAO 2026)</div>
-      <div>Unidad 4: Modularización &bull; Simulación Procesal de Memoria</div>
+      <div>Unidad 4: Modularización &bull; Simulador Oficial de Trazas y Memoria</div>
     </footer>
   </div>
 
-  <!-- ========================================================
-       SPLASH SCREENS (OBJECTION, HOLD IT, TAKE THAT)
-       ======================================================== -->
+  <!-- SPLASH SCREENS -->
   <div id="splash-objection" class="splash-overlay splash-bg-objection">
     <div class="speed-lines"></div>
     <div class="bubble-burst">
@@ -1317,9 +1232,7 @@
     </div>
   </div>
 
-  <!-- ========================================================
-       MODAL: ACTA DE PRUEBAS / EXPEDIENTE JUDICIAL
-       ======================================================== -->
+  <!-- MODAL: ACTA DE PRUEBAS -->
   <div id="modal-evidence" class="modal-overlay">
     <div class="court-modal">
       <div class="modal-header">
@@ -1329,23 +1242,19 @@
         <button id="btn-close-evidence" class="btn-close-modal">✕</button>
       </div>
 
-      <div id="evidence-hint-banner" style="background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid #334155; padding: 6px 16px; font-size: 0.75rem; color: #cbd5e1; display: flex; align-items: center; gap: 8px;">
+      <div id="evidence-hint-banner" style="background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid #334155; padding: 6px 16px; font-size: 0.74rem; color: #cbd5e1; display: flex; align-items: center; gap: 8px;">
         <i class="fa-solid fa-circle-question" style="color: var(--court-gold);"></i>
-        <span id="evidence-hint-text">Seleccioná la prueba que refuta la acusación del fiscal y presioná <strong>¡PRESENTAR PRUEBA!</strong></span>
+        <span>Seleccioná la regla de Java que desmiente al fiscal y presioná <strong>¡PRESENTAR PRUEBA!</strong></span>
       </div>
 
       <div class="modal-body">
-        <div class="evidence-list" id="evidence-list-container">
-          <!-- Items inyectados dinámicamente -->
-        </div>
+        <div class="evidence-list" id="evidence-list-container"></div>
 
         <div class="evidence-detail" id="evidence-detail-container">
           <div class="detail-main">
             <div class="detail-badge" id="detail-badge">LEGISLACIÓN JAVA</div>
             <div class="detail-title" id="detail-title">Artículo 42: Pasaje por Valor</div>
-            <div class="detail-desc" id="detail-desc">
-              Selecciona una prueba del inventario para examinar sus fundamentos técnicos y presentarla como contradicción ante el fiscal.
-            </div>
+            <div class="detail-desc" id="detail-desc"></div>
             <div class="detail-code-snip" id="detail-snip" style="display: none;"></div>
           </div>
 
@@ -1359,77 +1268,100 @@
     </div>
   </div>
 
-  <!-- ========================================================
-       MODAL: CÓDIGO JAVA DEL CASO
-       ======================================================== -->
+  <!-- MODAL: CÓDIGO JAVA -->
   <div id="modal-code" class="modal-overlay">
     <div class="court-modal" style="max-width: 650px;">
       <div class="modal-header">
         <div class="modal-title">
-          <i class="fa-solid fa-file-code"></i> CÓDIGO DE LA CAUSA: <span id="code-case-name" style="color: #fff; margin-left: 6px;">Cajero.java</span>
+          <i class="fa-solid fa-file-code"></i> CÓDIGO DE LA CAUSA: <span id="code-case-name" style="color: #fff; margin-left: 6px;"></span>
         </div>
         <button id="btn-close-code" class="btn-close-modal">✕</button>
       </div>
       <div style="padding: 16px; background: #020617;">
-        <div class="code-viewer-container" id="code-lines-container">
-          <!-- Código inyectado dinámicamente -->
-        </div>
+        <div class="code-viewer-container" id="code-lines-container"></div>
       </div>
     </div>
   </div>
 
-  <!-- ========================================================
-       MODAL: VEREDICTO DE NO CULPABILIDAD (VICTORIA)
-       ======================================================== */
-  -->
+  <!-- MODAL: VEREDICTO DE NO CULPABILIDAD -->
   <div id="modal-verdict" class="modal-overlay">
     <div class="court-modal" style="max-width: 580px; text-align: center; border-color: var(--court-gold);">
       <div style="padding: 30px 20px; background: #020617; display: flex; flex-direction: column; align-items: center;">
-        <div class="verdict-banner">¡NO CULPABLE!</div>
-        <p id="verdict-summary" style="font-size: 1rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 24px; max-width: 460px;">
-          El tribunal ha quedado plenamente convencido. La acusación del fiscal ha sido desarmada mediante la correcta aplicación del modelo de memoria de Java.
-        </p>
+        <div style="font-family: var(--font-pixel); font-size: clamp(2rem, 7vw, 4rem); color: var(--court-gold); text-shadow: 0 0 30px rgba(245, 158, 11, 0.8), 4px 4px 0 #000; letter-spacing: 5px; margin-bottom: 16px;">
+          ¡NO CULPABLE!
+        </div>
+        <p id="verdict-summary" style="font-size: 0.95rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 24px; max-width: 460px;"></p>
         <button id="btn-next-case" class="btn-present-evidence" style="background: linear-gradient(135deg, #059669, #10b981); border-color: #6ee7b7;">
-          <i class="fa-solid fa-forward"></i> SIGUIENTE CASO DE ESTUDIO
+          <i class="fa-solid fa-forward"></i> SIGUIENTE EPISODIO
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DIPLOMA FINAL DE GRADUACIÓN -->
+  <div id="modal-diploma" class="modal-overlay">
+    <div class="court-modal" style="max-width: 640px;">
+      <div class="diploma-card">
+        <div class="diploma-header">★ UNIVERSIDAD TECNOLÓGICA NACIONAL &bull; FRSF ★</div>
+        <h2 class="diploma-title">DIPLOMA AL MÉRITO EN MODULARIZACIÓN</h2>
+        <div class="diploma-body">
+          Por haber defendido con éxito los 5 casos del tribunal académico, demostrando conocimiento absoluto de:
+          <br><br>
+          <strong>✔ Pasaje de Parámetros por Copia de Valor</strong><br>
+          <strong>✔ Contrato de Retorno y Asignación de Funciones</strong><br>
+          <strong>✔ Incompatibilidad Estricta de Métodos Void</strong><br>
+          <strong>✔ Ámbito (Scope) y Aislamiento de Variables Locales</strong><br>
+          <strong>✔ Pila de Ejecución LIFO y Composición de Stack Frames</strong>
+        </div>
+        <button id="btn-restart-all" class="btn-present-evidence" style="margin: 0 auto; background: linear-gradient(135deg, #1d4ed8, #3b82f6); border-color: #93c5fd;">
+          <i class="fa-solid fa-rotate-right"></i> REINICIAR TRIBUNAL DESDE EL INICIO
         </button>
       </div>
     </div>
   </div>
 
   <!-- ========================================================
-       LÓGICA DEL JUEGO: MOTOR DE AUDIO, ESTADOS Y CASOS
+       LÓGICA DEL MOTOR: AUDIO PROCEDURAL, DIÁLOGOS Y CASOS
        ======================================================== -->
   <script>
     /* ========================================================
-       1. SINTETIZADOR PROCEDURAL DE AUDIO WEB AUDIO API
+       1. MOTOR DE AUDIO COMPLETO (BGM CHIPTUNE + SFX RETRO)
        ======================================================== */
     class CourtAudioEngine {
       constructor() {
         this.ctx = null;
-        this.muted = false;
-        this.typingOsc = null;
+        this.mode = 'all'; // 'all' (BGM+SFX), 'sfx', 'muted'
+        this.bgmTimer = null;
+        this.currentBgmTrack = null;
+        this.step = 0;
       }
 
       init() {
         if (!this.ctx) {
           const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (AudioContext) {
-            this.ctx = new AudioContext();
-          }
+          if (AudioContext) this.ctx = new AudioContext();
         }
         if (this.ctx && this.ctx.state === 'suspended') {
           this.ctx.resume();
         }
       }
 
-      toggleMute() {
-        this.muted = !this.muted;
-        return this.muted;
+      cycleAudioMode() {
+        if (this.mode === 'all') this.mode = 'sfx';
+        else if (this.mode === 'sfx') this.mode = 'muted';
+        else this.mode = 'all';
+
+        if (this.mode === 'muted' || this.mode === 'sfx') {
+          this.stopBgm();
+        } else if (this.mode === 'all' && this.currentBgmTrack) {
+          this.startBgm(this.currentBgmTrack);
+        }
+        return this.mode;
       }
 
-      // Sonido bleep de tipeo de diálogo (estilo Phoenix Wright GBA)
+      // SFX: Tipeo de diálogo estilo GBA
       playTypeBlip(freq = 440) {
-        if (this.muted) return;
+        if (this.mode === 'muted') return;
         this.init();
         if (!this.ctx) return;
 
@@ -1438,21 +1370,18 @@
           const gain = this.ctx.createGain();
           osc.type = 'square';
           osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-          
-          gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
-
+          gain.gain.setValueAtTime(0.025, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
-
           osc.start();
-          osc.stop(this.ctx.currentTime + 0.05);
+          osc.stop(this.ctx.currentTime + 0.04);
         } catch(e) {}
       }
 
-      // Golpe de martillo del Juez (Gavel slam)
+      // SFX: Martillazo del Juez
       playGavel() {
-        if (this.muted) return;
+        if (this.mode === 'muted') return;
         this.init();
         if (!this.ctx) return;
 
@@ -1460,23 +1389,20 @@
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.type = 'triangle';
-          osc.frequency.setValueAtTime(120, this.ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.2);
-
+          osc.frequency.setValueAtTime(130, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(25, this.ctx.currentTime + 0.22);
           gain.gain.setValueAtTime(0.35, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.35);
-
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.3);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
-
           osc.start();
-          osc.stop(this.ctx.currentTime + 0.35);
+          osc.stop(this.ctx.currentTime + 0.3);
         } catch(e) {}
       }
 
-      // Desk slam (golpe de mesa de defensa o fiscal)
+      // SFX: Desk Slam
       playDeskSlam() {
-        if (this.muted) return;
+        if (this.mode === 'muted') return;
         this.init();
         if (!this.ctx) return;
 
@@ -1484,23 +1410,20 @@
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(90, this.ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(25, this.ctx.currentTime + 0.25);
-
-          gain.gain.setValueAtTime(0.4, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.3);
-
+          osc.frequency.setValueAtTime(95, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(20, this.ctx.currentTime + 0.25);
+          gain.gain.setValueAtTime(0.35, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.28);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
-
           osc.start();
-          osc.stop(this.ctx.currentTime + 0.3);
+          osc.stop(this.ctx.currentTime + 0.28);
         } catch(e) {}
       }
 
-      // Sonido dramático de ¡PROTESTA! (Corte de látigo y acorde mayor/menor agresivo)
+      // SFX: Objection Impact Stab
       playObjectionStab() {
-        if (this.muted) return;
+        if (this.mode === 'muted') return;
         this.init();
         if (!this.ctx) return;
 
@@ -1511,22 +1434,19 @@
             const gain = this.ctx.createGain();
             osc.type = 'sawtooth';
             osc.frequency.setValueAtTime(freq, this.ctx.currentTime + (idx * 0.02));
-            
-            gain.gain.setValueAtTime(0.18, this.ctx.currentTime + (idx * 0.02));
+            gain.gain.setValueAtTime(0.16, this.ctx.currentTime + (idx * 0.02));
             gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.5);
-
             osc.connect(gain);
             gain.connect(this.ctx.destination);
-
             osc.start(this.ctx.currentTime + (idx * 0.02));
-            osc.stop(this.ctx.currentTime + 0.55);
+            osc.stop(this.ctx.currentTime + 0.52);
           });
         } catch(e) {}
       }
 
-      // Sonido de daño / penalización por protesta incorrecta
+      // SFX: Error procesal
       playDamage() {
-        if (this.muted) return;
+        if (this.mode === 'muted') return;
         this.init();
         if (!this.ctx) return;
 
@@ -1534,152 +1454,174 @@
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(150, this.ctx.currentTime);
-          osc.frequency.linearRampToValueAtTime(60, this.ctx.currentTime + 0.4);
-
-          gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.45);
-
+          osc.frequency.setValueAtTime(160, this.ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(50, this.ctx.currentTime + 0.35);
+          gain.gain.setValueAtTime(0.28, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.4);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
-
           osc.start();
-          osc.stop(this.ctx.currentTime + 0.45);
+          osc.stop(this.ctx.currentTime + 0.4);
         } catch(e) {}
       }
 
-      // Sonido de victoria / Veredicto
+      // SFX: Fanfarria de Veredicto
       playFanfare() {
-        if (this.muted) return;
+        if (this.mode === 'muted') return;
         this.init();
         if (!this.ctx) return;
 
         try {
-          const melody = [523.25, 659.25, 783.99, 1046.50];
+          const melody = [523.25, 659.25, 783.99, 1046.50, 1318.51];
           melody.forEach((freq, i) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, this.ctx.currentTime + (i * 0.12));
-
-            gain.gain.setValueAtTime(0.25, this.ctx.currentTime + (i * 0.12));
-            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + (i * 0.12) + 0.6);
-
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime + (i * 0.1));
+            gain.gain.setValueAtTime(0.2, this.ctx.currentTime + (i * 0.1));
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + (i * 0.1) + 0.6);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
-
-            osc.start(this.ctx.currentTime + (i * 0.12));
-            osc.stop(this.ctx.currentTime + (i * 0.12) + 0.65);
+            osc.start(this.ctx.currentTime + (i * 0.1));
+            osc.stop(this.ctx.currentTime + (i * 0.1) + 0.65);
           });
         } catch(e) {}
+      }
+
+      // BGM PROCEDURAL (Chiptune loop suave)
+      startBgm(track = 'lobby') {
+        this.currentBgmTrack = track;
+        if (this.mode !== 'all') return;
+        this.init();
+        if (!this.ctx) return;
+        this.stopBgm();
+
+        this.step = 0;
+        const bpm = track === 'cross' ? 128 : (track === 'cornered' ? 144 : 96);
+        const interval = (60 / bpm) * 1000 / 4; // semicorcheas
+
+        // Patrones melódicos pentatónicos
+        const lobbyNotes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63];
+        const crossNotes = [220.00, 246.94, 261.63, 293.66, 329.63, 293.66];
+        const corneredNotes = [440.00, 554.37, 659.25, 880.00, 659.25, 554.37];
+
+        const notes = track === 'cross' ? crossNotes : (track === 'cornered' ? corneredNotes : lobbyNotes);
+
+        this.bgmTimer = setInterval(() => {
+          if (this.mode !== 'all' || !this.ctx) return;
+          try {
+            // Nota melódica suave cada 2 pasos
+            if (this.step % 2 === 0) {
+              const freq = notes[(this.step / 2) % notes.length];
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+              gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
+              gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.start();
+              osc.stop(this.ctx.currentTime + 0.16);
+            }
+
+            // Pulso de bajo cada 4 pasos
+            if (this.step % 4 === 0) {
+              const bassOsc = this.ctx.createOscillator();
+              const bassGain = this.ctx.createGain();
+              bassOsc.type = 'sine';
+              bassOsc.frequency.setValueAtTime(track === 'cross' ? 110 : 130.81, this.ctx.currentTime);
+              bassGain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+              bassGain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.2);
+              bassOsc.connect(bassGain);
+              bassGain.connect(this.ctx.destination);
+              bassOsc.start();
+              bassOsc.stop(this.ctx.currentTime + 0.22);
+            }
+
+            this.step++;
+          } catch(e) {}
+        }, interval);
+      }
+
+      stopBgm() {
+        if (this.bgmTimer) {
+          clearInterval(this.bgmTimer);
+          this.bgmTimer = null;
+        }
       }
     }
 
     const sound = new CourtAudioEngine();
 
     /* ========================================================
-       2. SPRITES VECTORIALES DINÁMICOS DE PERSONAJES (SVG)
+       2. SPRITES SVG VECTORIALES DE PERSONAJES
        ======================================================== */
     const SPRITES = {
-      // EL JUEZ DE LA UTN
       judge: `
         <g id="judge-sprite">
-          <!-- Toga / Hombros -->
           <path d="M 50 320 L 70 170 Q 150 140 230 170 L 250 320 Z" fill="#0f172a" stroke="#1e293b" stroke-width="4"/>
-          <!-- Cuello blanco y medalla UTN -->
           <polygon points="125,175 175,175 150,225" fill="#f8fafc" />
           <circle cx="150" cy="245" r="14" fill="#f59e0b" stroke="#78350f" stroke-width="2"/>
           <text x="150" y="249" font-size="9" font-family="sans-serif" font-weight="900" fill="#000" text-anchor="middle">UTN</text>
-          <!-- Cabeza y Cabello canoso -->
           <circle cx="150" cy="115" r="45" fill="#fed7aa" />
-          <!-- Barba tupida -->
           <path d="M 115 125 Q 150 205 185 125 Q 195 160 150 185 Q 105 160 115 125 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="2"/>
-          <!-- Ojos serenos y cejas pobladas -->
           <path d="M 125 102 Q 137 96 142 102" stroke="#64748b" stroke-width="4" stroke-linecap="round" fill="none"/>
           <path d="M 158 102 Q 163 96 175 102" stroke="#64748b" stroke-width="4" stroke-linecap="round" fill="none"/>
           <circle cx="135" cy="112" r="3" fill="#1e293b"/>
           <circle cx="165" cy="112" r="3" fill="#1e293b"/>
-          <!-- Bigote -->
           <path d="M 130 132 Q 150 140 170 132 Q 150 146 130 132 Z" fill="#f1f5f9"/>
-          <!-- Peluca clásica de magistrado -->
           <path d="M 105 110 Q 100 65 150 65 Q 200 65 195 110 Q 210 125 195 145 Q 185 105 175 90 Q 150 85 125 90 Q 115 105 105 145 Q 90 125 105 110 Z" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
         </g>
       `,
-
-      // FISCAL MILES NULLPOINTER (TRAJE BORDÓ Y PEINADO AFILADO)
       prosecution: `
         <g id="prosecution-sprite">
-          <!-- Traje elegante bordó -->
           <path d="M 60 320 L 80 180 Q 150 150 220 180 L 240 320 Z" fill="#7f1d1d" stroke="#450a0a" stroke-width="4"/>
-          <!-- Chaleco negro y pañuelo victoriano (Jabot) -->
           <polygon points="120,185 180,185 150,260" fill="#1e293b"/>
           <path d="M 135 185 Q 150 195 165 185 Q 150 215 135 185 Z" fill="#f8fafc"/>
-          <path d="M 138 200 Q 150 215 162 200 Q 150 230 138 200 Z" fill="#f1f5f9"/>
-          <!-- Cabeza -->
           <circle cx="150" cy="120" r="42" fill="#ffedd5"/>
-          <!-- Expresión de superioridad / ceño fruncido -->
           <path d="M 128 108 L 144 114" stroke="#450a0a" stroke-width="3" stroke-linecap="round"/>
           <path d="M 172 108 L 156 114" stroke="#450a0a" stroke-width="3" stroke-linecap="round"/>
           <circle cx="138" cy="120" r="3.5" fill="#450a0a"/>
           <circle cx="162" cy="120" r="3.5" fill="#450a0a"/>
           <path d="M 142 140 Q 150 136 158 140" stroke="#7f1d1d" stroke-width="2" stroke-linecap="round" fill="none"/>
-          <!-- Cabello plateado / castaño afilado estilo Edgeworth -->
           <path d="M 105 110 Q 110 65 150 65 Q 190 65 195 110 Q 205 90 185 75 Q 150 60 115 75 Q 95 90 105 110 Z" fill="#475569" stroke="#334155" stroke-width="2"/>
-          <polygon points="150,68 140,115 147,112" fill="#475569"/>
-          <polygon points="150,68 160,115 153,112" fill="#334155"/>
         </g>
       `,
-
-      // ABOGADO DEFENSOR WRIGHT / ALUMNO TUTOR (TRAJE AZUL UTN Y CORBATA ROJA)
       defense: `
         <g id="defense-sprite">
-          <!-- Traje azul UTN -->
           <path d="M 60 320 L 80 175 Q 150 145 220 175 L 240 320 Z" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="4"/>
-          <!-- Camisa blanca y corbata roja -->
           <polygon points="125,175 175,175 150,250" fill="#f8fafc" />
           <polygon points="144,180 156,180 152,240 148,240" fill="#ef4444" stroke="#991b1b" stroke-width="1.5"/>
-          <!-- Cabeza -->
           <circle cx="150" cy="115" r="42" fill="#fed7aa"/>
-          <!-- Expresión decidida -->
           <path d="M 128 106 Q 138 102 144 105" stroke="#1e293b" stroke-width="3" stroke-linecap="round" fill="none"/>
           <path d="M 172 106 Q 162 102 156 105" stroke="#1e293b" stroke-width="3" stroke-linecap="round" fill="none"/>
           <circle cx="137" cy="114" r="3.5" fill="#0f172a"/>
           <circle cx="163" cy="114" r="3.5" fill="#0f172a"/>
           <path d="M 144 135 Q 150 140 156 135" stroke="#1e293b" stroke-width="2" stroke-linecap="round" fill="none"/>
-          <!-- Pelo con púas icónico hacia atrás estilo Phoenix Wright -->
           <path d="M 105 115 Q 115 70 150 70 Q 185 70 195 115 L 215 95 L 195 85 L 220 70 L 185 60 L 205 45 L 165 48 L 175 30 L 140 45 L 130 55 L 105 115 Z" fill="#090d16" stroke="#000" stroke-width="2"/>
         </g>
       `,
-
-      // TESTIGO / ALUMNO ACUSADO EN EL ESTRADO
       witness: `
         <g id="witness-sprite">
-          <!-- Buzo con capucha de estudiante -->
           <path d="M 70 320 L 90 190 Q 150 165 210 190 L 230 320 Z" fill="#047857" stroke="#064e3b" stroke-width="4"/>
-          <!-- Remera UTN y cordones de capucha -->
-          <polygon points="130,195 170,195 150,240" fill="#1e293b"/>
-          <line x1="140" y1="200" x2="140" y2="230" stroke="#f8fafc" stroke-width="2"/>
-          <line x1="160" y1="200" x2="160" y2="230" stroke="#f8fafc" stroke-width="2"/>
-          <!-- Cabeza con anteojos y sudor frío -->
           <circle cx="150" cy="130" r="40" fill="#fed7aa"/>
-          <!-- Anteojos nerd -->
           <rect x="125" y="120" width="20" height="15" rx="3" fill="none" stroke="#0284c7" stroke-width="2.5"/>
           <rect x="155" y="120" width="20" height="15" rx="3" fill="none" stroke="#0284c7" stroke-width="2.5"/>
           <line x1="145" y1="127" x2="155" y2="127" stroke="#0284c7" stroke-width="2.5"/>
           <circle cx="135" cy="127" r="2.5" fill="#0f172a"/>
           <circle cx="165" cy="127" r="2.5" fill="#0f172a"/>
-          <!-- Gotas de sudor cómico -->
           <path d="M 188 115 Q 192 110 194 116 Q 194 122 188 122 Q 185 118 188 115 Z" fill="#38bdf8"/>
-          <!-- Pelo despeinado -->
           <path d="M 112 125 Q 115 85 150 85 Q 185 85 188 125 Q 170 100 150 102 Q 130 100 112 125 Z" fill="#78350f"/>
         </g>
       `
     };
 
     /* ========================================================
-       3. BASE DE DATOS DE CASOS PEDAGÓGICOS (SAO 2026 - MODULARIZACIÓN)
+       3. BASE DE DATOS DE LOS 5 CASOS PEDAGÓGICOS (MODULARIZACIÓN)
        ======================================================== */
     const COURT_CASES = [
+      // CASO 1: PASAJE POR VALOR
       {
         id: 1,
         title: "CASO 1: EL FRAUDE DEL CAJERO AUTOMÁTICO",
@@ -1722,7 +1664,7 @@
             type: "Peritaje Técnico",
             badge: "VARIABLES LOCALES",
             icon: "fa-solid fa-microchip",
-            desc: "La variable 'saldoCuenta' del main reside en una dirección de memoria distinta a la variable 'monto'. Al no existir punteros ni paso por referencia para primitivos en Java, no hubo comunicación posterior.",
+            desc: "La variable 'saldoCuenta' del main reside en una dirección de memoria distinta a la variable 'monto'. Al no existir paso por referencia para primitivos en Java, no hubo comunicación posterior.",
             snip: "&saldoCuenta != &monto"
           },
           {
@@ -1735,7 +1677,7 @@
             snip: "public static void acreditarPremio(int monto)"
           }
         ],
-        correctStatementIndex: 2, // Frase 3 (índice 2) es la falacia
+        correctStatementIndex: 2,
         correctEvidenceId: "ev-val",
         validEvidenceIds: ["ev-val", "ev-stack", "ev-ram"],
         invalidFeedbacks: {
@@ -1766,6 +1708,8 @@
         defenseObjectionArgument: "¡Su Señoría! En Java, los argumentos primitivos se pasan por COPIA DE VALOR. La variable 'monto' fue únicamente una copia local dentro del marco de acreditarPremio. Cuando el método finalizó, su memoria se evaporó y 'saldoCuenta' en el main nunca cambió de 1000 pesos. ¡El saldo final impreso siempre fue 1000!",
         verdictExplanation: "El tribunal absuelve al alumno. Los tipos primitivos en Java nunca pueden mutar la variable del llamador porque Java es 100% pasaje por copia de valor."
       },
+
+      // CASO 2: RETORNO NO ASIGNADO
       {
         id: 2,
         title: "CASO 2: EL ROBO DEL RETORNO FANTASMA",
@@ -1812,7 +1756,7 @@
             snip: "Scope aislado entre { y }"
           }
         ],
-        correctStatementIndex: 2, // Frase 3
+        correctStatementIndex: 2,
         correctEvidenceId: "ev-return",
         validEvidenceIds: ["ev-return", "ev-scope"],
         invalidFeedbacks: {
@@ -1844,6 +1788,8 @@
         defenseObjectionArgument: "¡PROTESTA! Un método que devuelve un valor NO modifica las variables del llamador a menos que este lo capture explícitamente. En la línea 4 se ejecutó 'calcularDescuento(total);' en el vacío, sin ninguna asignación a la variable 'total'. ¡El valor 140.0 devuelto se descartó de la memoria y la variable 'total' continuó en 200 pesos!",
         verdictExplanation: "El tribunal declara NO CULPABLE al acusado. El return calcula y arroja un valor, pero si el llamador no hace 'total = funcion(...)', el valor se pierde en el aire."
       },
+
+      // CASO 3: TIPO VOID INCOMPATIBLE
       {
         id: 3,
         title: "CASO 3: LA ASIGNACIÓN ILEGAL DEL VOID",
@@ -1881,7 +1827,7 @@
             snip: "System.out.println != return"
           }
         ],
-        correctStatementIndex: 1, // Frase 2: "guardó el retorno en la variable resultado"
+        correctStatementIndex: 1,
         correctEvidenceId: "ev-void-incomp",
         validEvidenceIds: ["ev-void-incomp", "ev-print-vs-return"],
         invalidFeedbacks: {
@@ -1906,11 +1852,149 @@
         ],
         defenseObjectionArgument: "¡PROTESTA! ¡La prueba de la fiscalía es materialmente imposible! El método emitirTicket es de tipo VOID, lo que significa que no retorna absolutamente nada. En Java, escribir 'String resultado = emitirTicket(texto)' genera un error de compilación inmediato. ¡Ese programa jamás pudo haber corrido porque la JVM jamás lo aceptó!",
         verdictExplanation: "¡Inocente! Los métodos void solo ejecutan acciones secundarias (efectos de lado como imprimir) y no pueden ser asignados a ninguna variable."
+      },
+
+      // CASO 4: ÁMBITO / SCOPE Y HOMÓNIMOS
+      {
+        id: 4,
+        title: "CASO 4: EL CONFLICTO DE NOMBRES DUPLICADOS",
+        codeFilename: "ControlStock.java",
+        codeSnippet: [
+          "public class ControlStock {",
+          "    public static void main(String[] args) {",
+          "        int stock = 50;",
+          "        procesarVenta();",
+          "        System.out.println(\"Stock restante: \" + stock);",
+          "    }",
+          "",
+          "    public static void procesarVenta() {",
+          "        int stock = 0; // Misma denominación local",
+          "    }",
+          "}"
+        ],
+        evidenceList: [
+          {
+            id: "ev-scope-iso",
+            name: "Aislamiento de Scope Local",
+            type: "Doctrina de Ámbito",
+            badge: "ÁMBITO DE VARIABLES",
+            icon: "fa-solid fa-cube",
+            desc: "Las variables declaradas dentro de un método solo viven entre sus llaves { y }. Dos métodos distintos pueden tener variables locales con el mismo nombre ('stock') sin que tengan ninguna conexión ni compartan memoria.",
+            snip: "main.stock != procesarVenta.stock"
+          },
+          {
+            id: "ev-stack-iso",
+            name: "Marcos Aislados del Call Stack",
+            type: "Evidencia de Pila",
+            badge: "CALL STACK",
+            icon: "fa-solid fa-layer-group",
+            desc: "Al invocar procesarVenta(), la JVM crea un nuevo marco con su propio espacio de variables. El stock = 50 del main quedó congelado en el marco inferior.",
+            snip: "Stack Frame [procesarVenta] sobre Stack Frame [main]"
+          }
+        ],
+        correctStatementIndex: 2,
+        correctEvidenceId: "ev-scope-iso",
+        validEvidenceIds: ["ev-scope-iso", "ev-stack-iso"],
+        invalidFeedbacks: {
+          "default": "Juez UTN: 'Abogado, concéntrese en cómo Java maneja variables locales que tienen el mismo nombre en métodos separados.'"
+        },
+        prosecutionStatements: [
+          {
+            shortTitle: "1. Stock inicial 50",
+            text: "El main inicializó una variable stock en 50 unidades y luego llamó a procesarVenta().",
+            holdItReply: "Correcto, la variable 'stock' en el main almacena el valor 50."
+          },
+          {
+            shortTitle: "2. Variable local en 0",
+            text: "El método procesarVenta declaró una variable con el mismísimo nombre 'stock' en 0.",
+            holdItReply: "Es exacto: dentro del método hay una instrucción 'int stock = 0;'."
+          },
+          {
+            shortTitle: "3. Confusión de nombres",
+            text: "¡Al llamarse exactamente igual, el stock = 0 del método sobreescribió al stock del main!",
+            holdItReply: "¡El fiscal sostiene que las variables homónimas se mezclan y chocan entre sí!"
+          },
+          {
+            shortTitle: "4. Inventario vacío",
+            text: "¡El depósito quedó marcado en cero y el negocio perdió todo su stock registrado!",
+            holdItReply: "El fiscal insiste en que el main imprimió 0 unidades."
+          }
+        ],
+        defenseObjectionArgument: "¡PROTESTA! En Java, las variables locales están estrictamente aisladas dentro de su bloque { }. La variable 'stock' de procesarVenta() es una entidad completamente distinta que nació y murió dentro de ese método. ¡El 'stock' del main jamás fue modificado y la consola imprimió 50 unidades!",
+        verdictExplanation: "¡Inocente! Las variables locales con el mismo nombre no colisionan entre métodos porque cada una vive en su propio ámbito y marco de pila."
+      },
+
+      // CASO 5: LLAMADAS ANIDADAS / COMPOSICIÓN
+      {
+        id: 5,
+        title: "CASO 5: LA COMPOSICIÓN ANIDADA",
+        codeFilename: "CalculadoraBonus.java",
+        codeSnippet: [
+          "public class CalculadoraBonus {",
+          "    public static void main(String[] args) {",
+          "        int base = 10;",
+          "        int resultado = duplicar(sumarCinco(base));",
+          "        System.out.println(\"Resultado: \" + resultado);",
+          "    }",
+          "    public static int sumarCinco(int n) { return n + 5; }",
+          "    public static int duplicar(int n) { return n * 2; }",
+          "}"
+        ],
+        evidenceList: [
+          {
+            id: "ev-nested-eval",
+            name: "Evaluación Interior-Exterior",
+            type: "Regla Canónica Java",
+            badge: "EVALUACIÓN DE EXPRESIONES",
+            icon: "fa-solid fa-arrows-to-circle",
+            desc: "En expresiones compuestas f(g(x)), la JVM evalúa primero la llamada interna g(x), obtiene su valor de retorno, y recién luego pasa ese resultado como argumento a la llamada externa f().",
+            snip: "sumarCinco(10) -> 15\nduplicar(15) -> 30"
+          },
+          {
+            id: "ev-lifo-stack",
+            name: "Orden LIFO de la Pila",
+            type: "Evidencia de Pila",
+            badge: "CALL STACK",
+            icon: "fa-solid fa-layer-group",
+            desc: "La pila apila primero sumarCinco(), al terminar la desapila entregando 15, y luego apila duplicar(15) obteniendo 30.",
+            snip: "PUSH sumarCinco -> POP 15 -> PUSH duplicar -> POP 30"
+          }
+        ],
+        correctStatementIndex: 2,
+        correctEvidenceId: "ev-nested-eval",
+        validEvidenceIds: ["ev-nested-eval", "ev-lifo-stack"],
+        invalidFeedbacks: {
+          "default": "Juez UTN: 'Abogado, analice en qué orden resuelve la JVM los métodos anidados en una expresión matemática.'"
+        },
+        prosecutionStatements: [
+          {
+            shortTitle: "1. Composición",
+            text: "La línea 4 realiza una invocación compuesta: duplicar(sumarCinco(base)).",
+            holdItReply: "Es verídico: el argumento de duplicar es la llamada a sumarCinco."
+          },
+          {
+            shortTitle: "2. Métodos puros",
+            text: "sumarCinco suma 5 y duplicar multiplica su entrada por 2.",
+            holdItReply: "Las operaciones aritméticas son claras y directas."
+          },
+          {
+            shortTitle: "3. Orden inverso",
+            text: "¡El fiscal afirma que duplicar se ejecutó primero, multiplicó 10x2=20, y luego sumó 5 dando 25!",
+            holdItReply: "¡El fiscal alega que se evalúa de izquierda a derecha sin importar los paréntesis!"
+          },
+          {
+            shortTitle: "4. Resultado erróneo",
+            text: "¡El alumno calculó mal el bono y entregó 25 en vez de 30 pesos!",
+            holdItReply: "El fiscal insiste en que el resultado fue 25."
+          }
+        ],
+        defenseObjectionArgument: "¡PROTESTA! En Java, los argumentos anidados se evalúan estrictamente de ADENTRO hacia AFUERA. La llamada interna 'sumarCinco(10)' se ejecuta primero entregando 15. Luego, 'duplicar(15)' recibe 15 y entrega 30. ¡El resultado almacenado e impreso siempre fue 30!",
+        verdictExplanation: "¡Inocente! En las llamadas compuestas, los subprogramas internos se resuelven primero en la pila de ejecución antes de alimentar a la función exterior."
       }
     ];
 
     /* ========================================================
-       4. CONTROLADOR DEL JUEGO (GAME STATE MACHINE)
+       4. CONTROLADOR DEL JUEGO CON COLA DE DIÁLOGO REACTIVA
        ======================================================== */
     class CourtGameController {
       constructor() {
@@ -1918,13 +2002,18 @@
         this.credibility = 5;
         this.currentStatementIndex = 0;
         this.selectedEvidenceId = null;
-        this.isTyping = false;
-        this.typingTimeout = null;
         this.inCrossExamination = false;
+
+        // COLA DE MENSAJES (Elimina el bug de cortes anticipados)
+        this.dialogueQueue = [];
+        this.isTyping = false;
+        this.currentTypingText = '';
+        this.typingTimeout = null;
 
         this.initDom();
         this.bindEvents();
-        this.loadCase(0);
+        this.loadProgress();
+        this.loadCase(this.currentCaseIndex);
       }
 
       initDom() {
@@ -1936,14 +2025,14 @@
           speakerTag: document.getElementById('speaker-tag'),
           dialogueBox: document.getElementById('dialogue-box'),
           dialogueContent: document.getElementById('dialogue-content'),
-          dialogueArrow: document.getElementById('dialogue-arrow'),
+          dialoguePromptText: document.getElementById('dialogue-prompt-text'),
           testimonyBanner: document.getElementById('testimony-banner'),
           bannerText: document.getElementById('banner-text'),
           statementCounter: document.getElementById('statement-counter'),
           crossBar: document.getElementById('cross-bar'),
           crossHeaderPanel: document.getElementById('cross-header-panel'),
           testimonyStepper: document.getElementById('testimony-stepper'),
-          caseBadge: document.getElementById('case-badge'),
+          caseSelect: document.getElementById('case-select'),
           credibilityPoints: document.getElementById('credibility-points'),
           flashFx: document.getElementById('flash-fx'),
           confettiCanvas: document.getElementById('confetti-canvas'),
@@ -1956,7 +2045,6 @@
           // Modales
           modalEvidence: document.getElementById('modal-evidence'),
           evidenceList: document.getElementById('evidence-list-container'),
-          evidenceHintText: document.getElementById('evidence-hint-text'),
           detailBadge: document.getElementById('detail-badge'),
           detailTitle: document.getElementById('detail-title'),
           detailDesc: document.getElementById('detail-desc'),
@@ -1970,9 +2058,12 @@
           modalVerdict: document.getElementById('modal-verdict'),
           verdictSummary: document.getElementById('verdict-summary'),
           btnNextCase: document.getElementById('btn-next-case'),
+          modalDiploma: document.getElementById('modal-diploma'),
+          btnRestartAll: document.getElementById('btn-restart-all'),
 
           // Botones
           btnSound: document.getElementById('btn-sound-toggle'),
+          soundLabel: document.getElementById('sound-label'),
           btnOpenCode: document.getElementById('btn-open-code'),
           btnOpenEvidence: document.getElementById('btn-open-evidence'),
           btnCloseEvidence: document.getElementById('btn-close-evidence'),
@@ -1985,40 +2076,53 @@
       }
 
       bindEvents() {
-        // Sonido toggle
+        // Toggle de audio (BGM+SFX -> SFX -> Muted)
         this.dom.btnSound.addEventListener('click', () => {
-          const isMuted = sound.toggleMute();
-          this.dom.btnSound.innerHTML = isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
-        });
-
-        // Click en diálogo para avanzar o terminar tipeo
-        this.dom.dialogueBox.addEventListener('click', () => {
-          if (this.isTyping) {
-            this.finishTypingEarly();
-          } else if (!this.inCrossExamination) {
-            this.advanceStory();
+          const mode = sound.cycleAudioMode();
+          if (mode === 'all') {
+            this.dom.btnSound.innerHTML = '<i class="fa-solid fa-music"></i> <span>BGM+SFX</span>';
+          } else if (mode === 'sfx') {
+            this.dom.btnSound.innerHTML = '<i class="fa-solid fa-volume-high"></i> <span>Solo SFX</span>';
+          } else {
+            this.dom.btnSound.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> <span>Silencio</span>';
           }
         });
 
-        // Navegación de testimonios
+        // Selector de casos
+        this.dom.caseSelect.addEventListener('change', (e) => {
+          this.loadCase(parseInt(e.target.value, 10));
+        });
+
+        // Click en diálogo: completa tipeo o avanza cola (Solución clave del bug)
+        this.dom.dialogueBox.addEventListener('click', () => {
+          this.handleDialogueInteraction();
+        });
+
+        // Teclado (Espacio / Enter / Flechas)
+        window.addEventListener('keydown', (e) => {
+          if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            this.handleDialogueInteraction();
+          } else if (e.key === 'ArrowLeft' && this.inCrossExamination) {
+            this.navigateStatement(-1);
+          } else if (e.key === 'ArrowRight' && this.inCrossExamination) {
+            this.navigateStatement(1);
+          }
+        });
+
+        // Stepper de testimonios
         this.dom.btnPrev.addEventListener('click', () => this.navigateStatement(-1));
         this.dom.btnNext.addEventListener('click', () => this.navigateStatement(1));
 
-        // Botón ¡UN MOMENTO!
+        // Hold It y Objection
         this.dom.btnHoldIt.addEventListener('click', () => this.triggerHoldIt());
+        this.dom.btnObjection.addEventListener('click', () => this.openEvidenceModal(true));
 
-        // Botón ¡PROTESTA!
-        this.dom.btnObjection.addEventListener('click', () => {
-          this.openEvidenceModal(true); // Modo acusación / presentar
-        });
-
-        // Abrir/Cerrar Modales
+        // Modales
         this.dom.btnOpenEvidence.addEventListener('click', () => this.openEvidenceModal(false));
         this.dom.btnCloseEvidence.addEventListener('click', () => this.closeEvidenceModal());
         this.dom.btnOpenCode.addEventListener('click', () => this.openCodeModal());
         this.dom.btnCloseCode.addEventListener('click', () => this.closeCodeModal());
-
-        // Presentar evidencia desde modal
         this.dom.btnPresent.addEventListener('click', () => this.presentEvidence());
 
         // Siguiente caso
@@ -2027,79 +2131,178 @@
           if (this.currentCaseIndex < COURT_CASES.length - 1) {
             this.loadCase(this.currentCaseIndex + 1);
           } else {
-            // Reiniciar con felicitaciones
-            this.loadCase(0);
+            // Mostrar Diploma Final
+            this.showDiploma();
           }
         });
 
-        // Soporte de Teclado (Espacio / Flechas)
-        window.addEventListener('keydown', (e) => {
-          if (e.key === ' ' || e.key === 'Enter') {
-            if (this.isTyping) this.finishTypingEarly();
-          } else if (e.key === 'ArrowLeft' && this.inCrossExamination) {
-            this.navigateStatement(-1);
-          } else if (e.key === 'ArrowRight' && this.inCrossExamination) {
-            this.navigateStatement(1);
-          }
+        this.dom.btnRestartAll.addEventListener('click', () => {
+          this.dom.modalDiploma.classList.remove('active');
+          localStorage.removeItem('ace_coder_progress');
+          this.loadCase(0);
         });
       }
 
       /* ========================================================
-         CARGA DE CASO Y FLUJO NARRATIVO
+         SISTEMA DE COLA DE DIÁLOGOS (SIN CORTES ACCIDENTALES)
          ======================================================== */
+      queueDialogue(messages, onQueueComplete = null) {
+        this.dialogueQueue = [...messages];
+        this.onQueueComplete = onQueueComplete;
+        this.processNextDialogue();
+      }
+
+      processNextDialogue() {
+        if (this.dialogueQueue.length === 0) {
+          if (this.onQueueComplete) {
+            const cb = this.onQueueComplete;
+            this.onQueueComplete = null;
+            cb();
+          }
+          return;
+        }
+
+        const msg = this.dialogueQueue.shift();
+        this.setSpeaker(msg.speaker, msg.name, msg.bg, msg.pos);
+        if (msg.sfx) {
+          if (msg.sfx === 'gavel') sound.playGavel();
+          else if (msg.sfx === 'slam') sound.playDeskSlam();
+          else if (msg.sfx === 'shock') sound.playDamage();
+        }
+        if (msg.pose) {
+          this.dom.charSvg.classList.add(`anim-${msg.pose}`);
+          setTimeout(() => this.dom.charSvg.classList.remove(`anim-${msg.pose}`), 500);
+        }
+
+        this.typeText(msg.text);
+      }
+
+      handleDialogueInteraction() {
+        if (this.isTyping) {
+          // Si está escribiendo, terminar el texto inmediatamente
+          this.finishTypingEarly();
+        } else {
+          // Si ya terminó de escribir, avanzar al siguiente diálogo de la cola
+          if (this.dialogueQueue.length > 0) {
+            this.processNextDialogue();
+          } else if (this.onQueueComplete) {
+            const cb = this.onQueueComplete;
+            this.onQueueComplete = null;
+            cb();
+          }
+        }
+      }
+
+      typeText(text) {
+        if (this.typingTimeout) clearTimeout(this.typingTimeout);
+        this.isTyping = true;
+        this.currentTypingText = text;
+        this.dom.dialogueContent.innerHTML = '';
+        this.dom.dialoguePromptText.textContent = 'Escribiendo...';
+        this.dom.charSvg.classList.add('anim-talking');
+        let charIndex = 0;
+
+        const step = () => {
+          if (charIndex < text.length) {
+            this.dom.dialogueContent.textContent += text.charAt(charIndex);
+            if (charIndex % 2 === 0) {
+              sound.playTypeBlip(400 + (charIndex % 3) * 35);
+            }
+            charIndex++;
+            this.typingTimeout = setTimeout(step, 20);
+          } else {
+            this.isTyping = false;
+            this.dom.charSvg.classList.remove('anim-talking');
+            this.dom.dialoguePromptText.textContent = this.dialogueQueue.length > 0 ? 'Click para continuar ▶' : (this.inCrossExamination ? 'Analizá las pruebas' : 'Click para continuar ▶');
+          }
+        };
+
+        step();
+      }
+
+      finishTypingEarly() {
+        if (this.typingTimeout) clearTimeout(this.typingTimeout);
+        this.dom.dialogueContent.textContent = this.currentTypingText;
+        this.isTyping = false;
+        this.dom.charSvg.classList.remove('anim-talking');
+        this.dom.dialoguePromptText.textContent = this.dialogueQueue.length > 0 ? 'Click para continuar ▶' : (this.inCrossExamination ? 'Analizá las pruebas' : 'Click para continuar ▶');
+      }
+
+      /* ========================================================
+         CARGA DE CASOS Y PERSISTENCIA
+         ======================================================== */
+      loadProgress() {
+        try {
+          const saved = localStorage.getItem('ace_coder_case');
+          if (saved !== null) {
+            const idx = parseInt(saved, 10);
+            if (idx >= 0 && idx < COURT_CASES.length) {
+              this.currentCaseIndex = idx;
+            }
+          }
+        } catch(e) {}
+      }
+
+      saveProgress(idx) {
+        try {
+          localStorage.setItem('ace_coder_case', idx);
+        } catch(e) {}
+      }
+
       loadCase(caseIdx) {
         this.currentCaseIndex = caseIdx;
         this.currentCase = COURT_CASES[caseIdx];
+        this.saveProgress(caseIdx);
+        this.dom.caseSelect.value = caseIdx;
+
         this.credibility = 5;
         this.currentStatementIndex = 0;
         this.inCrossExamination = false;
         this.updateCredibilityUi();
 
-        this.dom.caseBadge.textContent = `CASO ${this.currentCase.id}: ${this.currentCase.title.split(':')[1].trim()}`;
         if (this.dom.crossHeaderPanel) this.dom.crossHeaderPanel.style.display = 'none';
         this.dom.testimonyBanner.style.display = 'none';
         this.dom.statementCounter.style.display = 'none';
         this.dom.crossBar.style.display = 'none';
 
-        // Renderizar visor de código
         this.renderCodeViewer();
-        // Renderizar lista de evidencias
         this.renderEvidenceList();
 
-        // Secuencia inicial del caso
-        this.introStep = 0;
-        this.runIntroSequence();
-      }
+        sound.startBgm('lobby');
 
-      runIntroSequence() {
+        // Secuencia inicial con la nueva cola de mensajes (resuelve el bug de cortes)
         const c = this.currentCase;
-        if (this.introStep === 0) {
-          this.setSpeaker('judge', 'JUEZ UTN', 'bg-judge', 'pos-judge');
-          sound.playGavel();
-          this.flashScreen();
-          this.typeText(`Se abre la sesión para tratar el ${c.title}. Se acusa al alumno de cometer fraude en la ejecución del código.`);
-        } else if (this.introStep === 1) {
-          this.setSpeaker('prosecution', 'FISCAL NULLPOINTER', 'bg-prosecution', 'pos-prosecution');
-          sound.playDeskSlam();
-          this.dom.charSvg.classList.add('anim-desk-slam');
-          setTimeout(() => this.dom.charSvg.classList.remove('anim-desk-slam'), 400);
-          this.typeText("¡La evidencia es concluyente, Su Señoría! El acusado ejecutó un método que alteró la memoria del sistema. ¡Escuchen mi testimonio!");
-        } else if (this.introStep === 2) {
+        this.queueDialogue([
+          {
+            speaker: 'judge',
+            name: 'JUEZ UTN',
+            bg: 'bg-judge',
+            pos: 'pos-judge',
+            text: `Se abre la sesión para tratar el ${c.title}. Se acusa al estudiante de manipular de forma indebida el código en Java.`,
+            sfx: 'gavel'
+          },
+          {
+            speaker: 'prosecution',
+            name: 'FISCAL NULLPOINTER',
+            bg: 'bg-prosecution',
+            pos: 'pos-prosecution',
+            text: '¡La acusación es rotunda, Su Señoría! El código del acusado contiene irregularidades graves de ejecución. ¡Escuchen con atención mi testimonio!',
+            sfx: 'slam',
+            pose: 'desk-slam'
+          }
+        ], () => {
           this.startCrossExamination();
-        }
-      }
-
-      advanceStory() {
-        this.introStep++;
-        this.runIntroSequence();
+        });
       }
 
       /* ========================================================
-         MODO INTERROGATORIO (CROSS-EXAMINATION)
+         INTERROGATORIO (CROSS-EXAMINATION)
          ======================================================== */
       startCrossExamination() {
         this.inCrossExamination = true;
         this.currentStatementIndex = 0;
+
+        sound.startBgm('cross');
 
         if (this.dom.crossHeaderPanel) this.dom.crossHeaderPanel.style.display = 'block';
         this.dom.testimonyBanner.style.display = 'flex';
@@ -2109,7 +2312,6 @@
         this.dom.crossBar.style.display = 'flex';
 
         this.renderTestimonyStepper();
-        this.setSpeaker('prosecution', 'FISCAL NULLPOINTER', 'bg-prosecution', 'pos-prosecution');
         this.displayCurrentStatement();
       }
 
@@ -2138,15 +2340,11 @@
         this.setSpeaker('prosecution', 'FISCAL NULLPOINTER', 'bg-prosecution', 'pos-prosecution');
         this.typeText(cur.text);
 
-        // Actualizar chips activos
         if (this.dom.testimonyStepper) {
           const chips = this.dom.testimonyStepper.querySelectorAll('.step-chip');
           chips.forEach((c, idx) => {
-            if (idx === this.currentStatementIndex) {
-              c.classList.add('active');
-            } else {
-              c.classList.remove('active');
-            }
+            if (idx === this.currentStatementIndex) c.classList.add('active');
+            else c.classList.remove('active');
           });
         }
       }
@@ -2163,14 +2361,26 @@
       triggerHoldIt() {
         sound.playDeskSlam();
         this.showSplash(this.dom.splashHoldit, 800, () => {
-          this.setSpeaker('defense', 'DEFENSA WRIGHT', 'bg-defense', 'pos-defense');
           const cur = this.currentCase.prosecutionStatements[this.currentStatementIndex];
-          this.typeText(`¡Un momento, Fiscal! Respecto a esa declaración... ¿qué fundamentos tiene?`);
-          
-          setTimeout(() => {
-            this.setSpeaker('prosecution', 'FISCAL NULLPOINTER', 'bg-prosecution', 'pos-prosecution');
-            this.typeText(cur.holdItReply);
-          }, 2400);
+          this.queueDialogue([
+            {
+              speaker: 'defense',
+              name: 'DEFENSA WRIGHT',
+              bg: 'bg-defense',
+              pos: 'pos-defense',
+              text: '¡Un momento, Fiscal! Respecto a esa declaración... ¿qué fundamentos tiene?',
+              sfx: 'slam'
+            },
+            {
+              speaker: 'prosecution',
+              name: 'FISCAL NULLPOINTER',
+              bg: 'bg-prosecution',
+              pos: 'pos-prosecution',
+              text: cur.holdItReply
+            }
+          ], () => {
+            this.displayCurrentStatement();
+          });
         });
       }
 
@@ -2186,29 +2396,67 @@
         this.flashScreen();
 
         this.showSplash(this.dom.splashObjection, 900, () => {
-          this.setSpeaker('defense', 'DEFENSA WRIGHT', 'bg-defense', 'pos-defense');
-          this.dom.charSvg.classList.add('anim-point');
-          setTimeout(() => this.dom.charSvg.classList.remove('anim-point'), 600);
-
           const c = this.currentCase;
           const isEvidenceValid = c.validEvidenceIds 
             ? c.validEvidenceIds.includes(this.selectedEvidenceId) 
             : (this.selectedEvidenceId === c.correctEvidenceId);
 
           if (isEvidenceValid) {
-            // ¡ACIERTO ROTUNDO!
-            // Si el alumno no estaba en la frase de la falacia, el abogado conecta la contradicción
+            // ¡ACIERTO ROTUNDO! Música triunfal
+            sound.startBgm('cornered');
+            
+            const introMsg = (this.currentStatementIndex !== c.correctStatementIndex)
+              ? `¡Fiscal! Antes de llegar a esa conclusión, usted afirmó: "${c.prosecutionStatements[c.correctStatementIndex].text}". ¡Y esa es una falacia insostenible en Java!`
+              : c.defenseObjectionArgument;
+
+            const dialogueSequence = [
+              {
+                speaker: 'defense',
+                name: 'DEFENSA WRIGHT',
+                bg: 'bg-defense',
+                pos: 'pos-defense',
+                text: introMsg,
+                pose: 'point'
+              }
+            ];
+
             if (this.currentStatementIndex !== c.correctStatementIndex) {
-              const falacia = c.prosecutionStatements[c.correctStatementIndex].text;
-              this.typeText(`¡Fiscal! Antes de llegar a esa conclusión, usted afirmó: "${falacia}". ¡Y esa es una falacia insostenible en Java!`);
-              setTimeout(() => {
-                this.handleSuccessContradiction();
-              }, 3400);
-            } else {
-              this.handleSuccessContradiction();
+              dialogueSequence.push({
+                speaker: 'defense',
+                name: 'DEFENSA WRIGHT',
+                bg: 'bg-defense',
+                pos: 'pos-defense',
+                text: c.defenseObjectionArgument,
+                pose: 'point'
+              });
             }
+
+            dialogueSequence.push(
+              {
+                speaker: 'prosecution',
+                name: 'FISCAL NULLPOINTER',
+                bg: 'bg-prosecution',
+                pos: 'pos-prosecution',
+                text: '¡¿Q-QUÉEE?! ¡¿Cómo que por copia?! ¡¿Las variables no se conectan por el nombre del parámetro?!',
+                sfx: 'shock',
+                pose: 'shock'
+              },
+              {
+                speaker: 'judge',
+                name: 'JUEZ UTN',
+                bg: 'bg-judge',
+                pos: 'pos-judge',
+                text: '¡Silencio en la sala! La defensa ha demostrado con fundamentos rigurosos de arquitectura de memoria que no hubo manipulación indebida.',
+                sfx: 'gavel'
+              }
+            );
+
+            this.queueDialogue(dialogueSequence, () => {
+              this.showVictoryModal();
+            });
+
           } else {
-            // ERROR CON RETROALIMENTACIÓN FORMATIVA CLARA
+            // ERROR FORMATIVO
             const feedback = (c.invalidFeedbacks && c.invalidFeedbacks[this.selectedEvidenceId]) 
               || (c.invalidFeedbacks && c.invalidFeedbacks.default)
               || "Juez UTN: '¡Abogado! Esa prueba no refuta el punto central de la acusación. Revise cómo opera el pasaje de datos en Java.'";
@@ -2217,54 +2465,42 @@
         });
       }
 
-      handleSuccessContradiction() {
-        this.typeText(this.currentCase.defenseObjectionArgument);
-
-        setTimeout(() => {
-          // Fiscal en shock / Breakdown
-          this.setSpeaker('prosecution', 'FISCAL NULLPOINTER', 'bg-prosecution', 'pos-prosecution');
-          this.dom.charSvg.classList.add('anim-shock');
-          sound.playDamage();
-          this.typeText("¡¿Q-QUÉEE?! ¡¿Cómo que por copia?! ¡¿Las variables no se conectan por el nombre del parámetro?!");
-
-          setTimeout(() => {
-            this.dom.charSvg.classList.remove('anim-shock');
-            // Juez da el veredicto
-            this.setSpeaker('judge', 'JUEZ UTN', 'bg-judge', 'pos-judge');
-            sound.playGavel();
-            this.flashScreen();
-            this.typeText("¡Silencio en la sala! La defensa ha demostrado con fundamentos rigurosos de arquitectura de memoria que no hubo manipulación indebida.");
-
-            setTimeout(() => {
-              this.showVictoryModal();
-            }, 3000);
-          }, 3200);
-        }, 4000);
-      }
-
       handlePenalty(feedback) {
         this.credibility--;
         this.updateCredibilityUi();
         sound.playDamage();
         this.shakeScreen();
 
-        this.setSpeaker('judge', 'JUEZ UTN', 'bg-judge', 'pos-judge');
-        sound.playGavel();
-
         if (this.credibility <= 0) {
-          this.typeText(feedback + " El tribunal llama a un cuarto intermedio. ¡Repasemos los conceptos e intentemos nuevamente!");
-          setTimeout(() => {
+          this.queueDialogue([
+            {
+              speaker: 'judge',
+              name: 'JUEZ UTN',
+              bg: 'bg-judge',
+              pos: 'pos-judge',
+              text: `${feedback} El tribunal llama a un cuarto intermedio pedagógico para que repase los apuntes. ¡Reintentemos el interrogatorio!`,
+              sfx: 'gavel'
+            }
+          ], () => {
             this.credibility = 5;
             this.updateCredibilityUi();
             this.startCrossExamination();
-          }, 4500);
+          });
           return;
         }
 
-        this.typeText(feedback + ` (Le quedan ${this.credibility} advertencias de credibilidad)`);
-        setTimeout(() => {
+        this.queueDialogue([
+          {
+            speaker: 'judge',
+            name: 'JUEZ UTN',
+            bg: 'bg-judge',
+            pos: 'pos-judge',
+            text: `${feedback} (Le quedan ${this.credibility} advertencias de credibilidad)`,
+            sfx: 'gavel'
+          }
+        ], () => {
           this.displayCurrentStatement();
-        }, 4200);
+        });
       }
 
       showVictoryModal() {
@@ -2274,59 +2510,29 @@
         this.dom.modalVerdict.classList.add('active');
       }
 
+      showDiploma() {
+        sound.playFanfare();
+        this.launchConfetti();
+        this.dom.modalDiploma.classList.add('active');
+      }
+
       /* ========================================================
-         UI: CONTROL DE PERSONAJES, DIÁLOGO Y EFECTOS
+         UI Y DETALLES GRÁFICOS
          ======================================================== */
       setSpeaker(type, name, bgClass, posClass) {
-        // Fondos
         this.dom.stageBg.className = `stage-background ${bgClass}`;
-        // Posición
         this.dom.charWrapper.className = `character-container ${posClass}`;
-        // Sprite
         this.dom.charSvg.innerHTML = SPRITES[type] || SPRITES.judge;
-        // Etiqueta
         this.dom.speakerTag.textContent = name;
         this.dom.speakerTag.className = `speaker-name-tag tag-${type}`;
         this.dom.dialogueBox.className = `dialogue-box theme-${type}`;
       }
 
-      typeText(text) {
-        if (this.typingTimeout) clearTimeout(this.typingTimeout);
-        this.isTyping = true;
-        this.fullCurrentText = text;
-        this.dom.dialogueContent.innerHTML = '';
-        let charIndex = 0;
-
-        const step = () => {
-          if (charIndex < text.length) {
-            this.dom.dialogueContent.textContent += text.charAt(charIndex);
-            if (charIndex % 2 === 0) {
-              sound.playTypeBlip(400 + (charIndex % 3) * 40);
-            }
-            charIndex++;
-            this.typingTimeout = setTimeout(step, 24);
-          } else {
-            this.isTyping = false;
-          }
-        };
-
-        step();
-      }
-
-      finishTypingEarly() {
-        if (this.typingTimeout) clearTimeout(this.typingTimeout);
-        this.dom.dialogueContent.textContent = this.fullCurrentText;
-        this.isTyping = false;
-      }
-
       updateCredibilityUi() {
         const points = this.dom.credibilityPoints.querySelectorAll('.cred-point');
         points.forEach((pt, idx) => {
-          if (idx < this.credibility) {
-            pt.classList.remove('lost');
-          } else {
-            pt.classList.add('lost');
-          }
+          if (idx < this.credibility) pt.classList.remove('lost');
+          else pt.classList.add('lost');
         });
       }
 
@@ -2353,7 +2559,7 @@
       }
 
       /* ========================================================
-         MODAL DE EVIDENCIAS Y VISOR DE CÓDIGO
+         MODALES: EVIDENCIAS Y CÓDIGO
          ======================================================== */
       renderEvidenceList() {
         this.dom.evidenceList.innerHTML = '';
@@ -2425,13 +2631,8 @@
           .replace(/(\/\/.*$)/g, '<span class="com">$1</span>');
       }
 
-      openCodeModal() {
-        this.dom.modalCode.classList.add('active');
-      }
-
-      closeCodeModal() {
-        this.dom.modalCode.classList.remove('active');
-      }
+      openCodeModal() { this.dom.modalCode.classList.add('active'); }
+      closeCodeModal() { this.dom.modalCode.classList.remove('active'); }
 
       /* ========================================================
          CONFETI PROCEDURAL
@@ -2486,11 +2687,10 @@
       }
     }
 
-    // Exponer datos y controlador en window
+    // Exponer datos globales
     window.COURT_CASES = COURT_CASES;
     window.SPRITES = SPRITES;
 
-    // Inicializar el juego cuando el DOM esté listo
     window.addEventListener('DOMContentLoaded', () => {
       window.courtGame = new CourtGameController();
     });

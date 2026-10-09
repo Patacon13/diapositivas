@@ -123,8 +123,8 @@ try {
 
 // 3. Inspeccionar estructura de COURT_CASES
 const courtCases = (sandbox.window && sandbox.window.COURT_CASES) || sandbox.COURT_CASES;
-if (!courtCases || !Array.isArray(courtCases) || courtCases.length < 3) {
-  console.error("❌ ERROR: COURT_CASES debe contener al menos 3 casos de estudio.");
+if (!courtCases || !Array.isArray(courtCases) || courtCases.length < 5) {
+  console.error("❌ ERROR: COURT_CASES debe contener los 5 casos de estudio completos.");
   process.exit(1);
 }
 
