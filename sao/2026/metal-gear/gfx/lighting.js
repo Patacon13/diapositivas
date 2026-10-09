@@ -268,21 +268,27 @@
         // Nivel de iluminación en la posición de Solid Byte
         const lightLevel = getAmbientLightLevel(p.x, p.y, room);
 
-        // Sombras y Oclusión: las zonas oscuras reducen drásticamente la visión de las linternas enemigas
-        // Si lightLevel >= 0.7, visión normal (100%).
-        // Si lightLevel < 0.35 (oscuridad/sombra profunda), reducción drástica de más del 50-65%
-        const shadowFactor = 0.35 + 0.65 * Math.min(1.0, lightLevel / 0.7);
-        let effectiveDist = baseDist * shadowFactor;
-
-        // Si Solid Byte no se está moviendo en la sombra, bono extra de ocultamiento
+        // Verificar si Solid Byte está en movimiento activo
+        let isMoving = false;
         if (typeof gameState !== 'undefined' && gameState.keys) {
-            const isMoving = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].some(k => gameState.keys[k]);
-            if (!isMoving && lightLevel < 0.4) {
+            isMoving = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].some(k => gameState.keys[k]);
+        }
+        if (p._isMoving) isMoving = true;
+
+        if (isMoving) {
+            // En movimiento: la silueta humana en desplazamiento rompe el camuflaje de penumbra.
+            // La linterna y la vista periférica captan el movimiento con un alcance del 80% al 100% de la distancia base.
+            const motionFactor = 0.80 + 0.20 * Math.min(1.0, lightLevel / 0.7);
+            return Math.max(115, baseDist * motionFactor);
+        } else {
+            // Quieto en la sombra: camuflaje táctico óptimo (reducción de más del 50-65% de visión de linterna)
+            const shadowFactor = 0.35 + 0.65 * Math.min(1.0, lightLevel / 0.7);
+            let effectiveDist = baseDist * shadowFactor;
+            if (lightLevel < 0.4) {
                 effectiveDist *= 0.85;
             }
+            return Math.max(45, effectiveDist);
         }
-
-        return Math.max(45, effectiveDist);
     }
 
     window.getAmbientLightLevel = getAmbientLightLevel;

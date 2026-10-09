@@ -345,3 +345,34 @@ Registro del proceso iterativo de diseño, dirección de arte y programación gr
      - Inspecciona cada una de las 26 preguntas verificando que tengan `id`, `name`, `question`, `code`, `explanation` válidos y exactamente 1 opción con `correct: true`. Si un docente comete un error de sintaxis o deja una pregunta sin respuesta correcta, el test lo detecta y lo señala al instante.
 - **Por qué funciona pedagógica y estéticamente**:
   Empodera al equipo docente para colaborar asincrónicamente y perfeccionar las consignas didácticas de forma ágil, manteniendo el motor del juego desacoplado, limpio y a 60 FPS clavados.
+
+---
+
+## CICLO 21: Camuflaje Dinámico en Sombras e IA Táctica de Centinelas Rodeando Muros ("Dar la vuelta")
+- **Fecha/Ciclo**: Ciclo 21
+- **Módulos**: `gfx/lighting.js`, `index.html`, `test_game.js`, `EVOLUCION_CREATIVA.md`
+- **Inspiración Retro PS1 (Stealth & Pathfinding Realista)**:
+  En los clásicos juegos de sigilo táctico de la era PlayStation (*Metal Gear Solid*, *Tenchu*), la oscuridad solo protege al agente si permanece inmóvil o en sigilo; desplazarse corriendo o caminando rompe la silueta corporal en el haz de la linterna. Por otra parte, al alertarse por un ruido táctico (*wall knock*), los soldados no se estampan contra una pared como autómatas ciegos: reconocen el obstáculo intermedio, buscan la esquina más próxima y "dan la vuelta" para investigar al intruso.
+- **Qué se inventó y perfeccionó**:
+  1. **Penalización de Camuflaje en Movimiento & Visión Táctica de Linternas**:
+     - **Sensibilidad Cinética en `gfx/lighting.js`**: `getGuardEffectiveViewDist` evalúa si Solid Byte está en movimiento (`isMoving`).
+       - Si está **estático en la sombra**: el camuflaje táctico se mantiene al máximo (~92%), reduciendo el rango de visión de la linterna de 150px a ~54px (64% de reducción, permitiendo que el centinela pase de largo sin advertirlo).
+       - Si está **caminando o corriendo en la sombra**: el desplazamiento corporal rompe la silueta. La distancia efectiva de visión sube dinámicamente a **115px - 135px**, detectando inmediatamente a cualquier intruso que camine frente al haz de luz.
+     - **HUD de Camuflaje Responsivo**:
+       - Estático en penumbra: `92% [SOMBRA [ESTÁTICO]]` (verde esmeralda).
+       - En movimiento en penumbra: se aplica penalización de rotura de silueta, descendiendo a `41% [MOVIMIENTO [DETECTABLE]]` (cian táctico / ámbar de riesgo), dando retroalimentación clara de por qué el jugador debe detenerse cuando un centinela mira en su dirección.
+     - **Detección por Proximidad Táctica en Cono Frontal**: Si el jugador camina sin caja a menos de 52px frente al centinela (`diff < π/2`), la proximidad física y las pisadas alertan al centinela inmediatamente sin importar el nivel de sombra del suelo.
+  2. **IA Táctica: Rodeando Muros ante Ruidos de Pared ("Dar la vuelta")**:
+     - **Algoritmo de Esquinas Exteriores (`findNavCornerAroundObstacle`)**:
+       - Al producirse un golpe en la pared (`performWallKnock` o ruido de pisadas) desde el lado opuesto de un rack o muro (`isRayBlockedByWalls`), el centinela evalúa los vértices exteriores del obstáculo interpuesto.
+       - Selecciona la esquina con trayectoria visible directa desde su posición actual y menor distancia proyectada hacia el origen del sonido, fijándola como waypoint de navegación (`g._navWaypoint`).
+     - **Deslizamiento Tangencial y Evasión Reactiva (`moveGuardWithObstacleAvoidance`)**:
+       - Si un paso directo colisiona con el muro, el centinela se desliza suavemente sobre el eje libre o sondea ángulos tangenciales (`±30°`, `±55°`, `±90°`, `±110°`) en vez de trabarse contra la pared.
+       - El centinela bordea el extremo del muro, dobla la esquina, recupera línea de visión directa hacia el origen del ruido y avanza hacia la posición exacta donde Solid Byte golpeó la pared.
+     - **Retorno Táctico en Precaución**: El mismo sistema de navegación periférica asiste al centinela cuando regresa a su puesto original (`spawnX, spawnY`) tras expirar el temporizador de investigación.
+  3. **Validación Automatizada Continua (`[TEST 12]` y `[TEST 13]` en `test_game.js`)**:
+     - `[TEST 12]`: Verifica que quedarse quieto en sombra otorgue `SOMBRA [ESTÁTICO]`, que moverse penalice el índice a `MOVIMIENTO [DETECTABLE]`, que la visión del guardia en movimiento supere en más de 1.5x a la estática, y que caminar a 85px en sombra frente a un centinela active `! ALERTA`.
+     - `[TEST 13]`: Posiciona a un centinela y al jugador separados por un rack en `corridor_u1`. Dispara `performWallKnock()` y valida que el centinela calcule el waypoint de esquina, bordee el obstáculo sin trabarse y cruce al otro lado del muro hasta el objetivo.
+- **Por qué funciona estéticamente y jugablemente**:
+  Eleva la inteligencia percibida de los centinelas de un nivel plano a un sigilo táctico orgánico: el jugador aprende a quedarse congelado en la sombra cuando los guardias pasan cerca, y puede usar el golpe en la pared como señuelo real para hacer que el guardia dé la vuelta a un pasillo mientras él escapa por el otro lado.
+

@@ -4449,6 +4449,7 @@
                     const dist = Math.hypot(p.x - g.x, p.y - g.y);
                     if (dist < soundRadius && gameState.alertState !== 'alert') {
                         g.investigateTarget = { x: p.x, y: p.y };
+                        g._navWaypoint = null;
                         g.angle = Math.atan2(p.y - g.y, p.x - g.x);
                         g.investigateTimer = 4.5;
                         g._trackingFootprints = false;
@@ -4934,16 +4935,18 @@
 
                     let seesPlayerNow = false;
                     // Solo detectar si terminó el período de gracia de entrada
-                    if ((gameState.roomGraceTimer || 0) <= 0 && distToPlayer < effectiveViewDist) {
+                    if ((gameState.roomGraceTimer || 0) <= 0) {
                         const angleToPlayer = Math.atan2(p.y - g.y, p.x - g.x);
                         let diff = Math.abs(angleToPlayer - g.angle);
                         while (diff > Math.PI) diff = Math.abs(diff - 2 * Math.PI);
 
-                        if (diff < g.fov / 2) {
+                        const isMovingNow = (dx !== 0 || dy !== 0) || ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].some(k => gameState.keys && gameState.keys[k]);
+
+                        // 1. Detección visual dentro del cono de linterna
+                        if (distToPlayer < effectiveViewDist && diff < g.fov / 2) {
                             if (!isRayBlockedByWalls(g.x, g.y, p.x, p.y, currentRoom.walls)) {
                                 if (p.inBox) {
-                                    const isMoving = (dx !== 0 || dy !== 0);
-                                    if (isMoving) {
+                                    if (isMovingNow) {
                                         // IA Reactiva: Caja en movimiento = ¡ALERTA INMEDIATA!
                                         seesPlayerNow = true;
                                         g._bubble = { ch: '!', t: 2.0 };
@@ -4958,6 +4961,7 @@
                                                 g._inspectingBox = true;
                                                 g._bubble = { ch: '?', t: 1.8 };
                                                 g.investigateTarget = { x: p.x, y: p.y };
+                                                g._navWaypoint = null;
                                                 g.investigateTimer = 4.0;
                                                 g._boxInspectTimer = 0;
                                                 showToast('Centinela: "¿Eh? ¿Una caja de cartón...?"');
@@ -4972,6 +4976,16 @@
                                 } else {
                                     seesPlayerNow = true;
                                 }
+                            }
+                        }
+
+                        // 2. Detección física directa por proximidad táctica:
+                        // Si Solid Byte camina sin caja a menos de 52px en el campo frontal del centinela (diff < Math.PI / 2),
+                        // la proximidad física delata la presencia sin importar la penumbra
+                        if (!seesPlayerNow && !p.inBox && isMovingNow && distToPlayer < 52 && diff < Math.PI / 2) {
+                            if (!isRayBlockedByWalls(g.x, g.y, p.x, p.y, currentRoom.walls)) {
+                                seesPlayerNow = true;
+                                g._bubble = { ch: '!', t: 1.8 };
                             }
                         }
                     }
@@ -5135,37 +5149,53 @@
                         if (g.investigateTimer <= 0) {
                             g.investigateTimer = 0;
                             g.investigateTarget = null;
+                            g._navWaypoint = null;
                             g._inspectingBox = false;
                             g._boxInspectTimer = 0;
                             g._trackingFootprints = false;
                         } else if (g.investigateTarget) {
-                            const dxTgt = g.investigateTarget.x - g.x;
-                            const dyTgt = g.investigateTarget.y - g.y;
-                            const distToTgt = Math.hypot(dxTgt, dyTgt);
-                            if (distToTgt > 18) {
-                                const ang = Math.atan2(dyTgt, dxTgt);
-                                g.angle = ang;
-                                const invSpeed = 1.15;
-                                const nextGx = g.x + Math.cos(ang) * invSpeed;
-                                const nextGy = g.y + Math.sin(ang) * invSpeed;
-                                if (!checkWallCollision(nextGx, g.y, g.radius, currentRoom.walls)) g.x = nextGx;
-                                if (!checkWallCollision(g.x, nextGy, g.radius, currentRoom.walls)) g.y = nextGy;
+                            const distToFinal = Math.hypot(g.investigateTarget.x - g.x, g.investigateTarget.y - g.y);
+                            if (distToFinal > 18) {
+                                let activeTgt = g.investigateTarget;
+
+                                // Detección de muros entre el centinela y la posición del sonido/investigación:
+                                // "Dar la vuelta" - Buscar la esquina del obstáculo para rodearlo inteligentemente
+                                if (isRayBlockedByWalls(g.x, g.y, g.investigateTarget.x, g.investigateTarget.y, currentRoom.walls)) {
+                                    if (!g._navWaypoint || Math.hypot(g._navWaypoint.x - g.x, g._navWaypoint.y - g.y) < 18) {
+                                        g._navWaypoint = findNavCornerAroundObstacle(g.x, g.y, g.investigateTarget.x, g.investigateTarget.y, g.radius, currentRoom.walls);
+                                    }
+                                    if (g._navWaypoint) {
+                                        activeTgt = g._navWaypoint;
+                                    }
+                                } else {
+                                    g._navWaypoint = null;
+                                }
+
+                                const invSpeed = 1.25;
+                                moveGuardWithObstacleAvoidance(g, activeTgt.x, activeTgt.y, invSpeed, currentRoom.walls);
                             } else {
                                 g.angle += Math.sin(Date.now() * 0.006 + g.id) * 0.04;
                             }
                         }
 
                     } else if (gameState.alertState === 'caution') {
-                        // En precaución: retornar suavemente al puesto original con detección de muros
+                        // En precaución: retornar suavemente al puesto original con navegación táctica rodeando muros
                         const distToHome = Math.hypot(g.spawnX - g.x, g.spawnY - g.y);
-                        if (distToHome > 12) {
-                            const angHome = Math.atan2(g.spawnY - g.y, g.spawnX - g.x);
-                            g.angle = angHome;
-                            const retSpeed = 0.95;
-                            const nGx = g.x + Math.cos(angHome) * retSpeed;
-                            const nGy = g.y + Math.sin(angHome) * retSpeed;
-                            if (!checkWallCollision(nGx, g.y, g.radius, currentRoom.walls)) g.x = nGx;
-                            if (!checkWallCollision(g.x, nGy, g.radius, currentRoom.walls)) g.y = nGy;
+                        if (distToHome > 14) {
+                            let homeTgt = { x: g.spawnX, y: g.spawnY };
+                            if (isRayBlockedByWalls(g.x, g.y, g.spawnX, g.spawnY, currentRoom.walls)) {
+                                if (!g._navHomeWaypoint || Math.hypot(g._navHomeWaypoint.x - g.x, g._navHomeWaypoint.y - g.y) < 18) {
+                                    g._navHomeWaypoint = findNavCornerAroundObstacle(g.x, g.y, g.spawnX, g.spawnY, g.radius, currentRoom.walls);
+                                }
+                                if (g._navHomeWaypoint) {
+                                    homeTgt = g._navHomeWaypoint;
+                                }
+                            } else {
+                                g._navHomeWaypoint = null;
+                            }
+
+                            const retSpeed = 1.0;
+                            moveGuardWithObstacleAvoidance(g, homeTgt.x, homeTgt.y, retSpeed, currentRoom.walls);
                         } else {
                             g.angle += Math.sin(Date.now() * 0.005 + g.id) * 0.035;
                         }
@@ -5581,16 +5611,34 @@
                     if (nearWall) {
                         baseCamo = Math.min(95, baseCamo + 15);
                     }
-                    camoVal = baseCamo;
-                    if (camoVal >= 65) {
-                        camoLabel = nearWall ? 'SOMBRA [MURO]' : 'SOMBRA';
-                        camoColor = '#34D399';
-                    } else if (camoVal >= 38) {
-                        camoLabel = nearWall ? 'PENUMBRA [MURO]' : 'PENUMBRA';
-                        camoColor = '#38BDF8';
+                    const isMovingPlayer = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].some(k => gameState.keys && gameState.keys[k]) || (dx !== 0 || dy !== 0);
+
+                    if (isMovingPlayer) {
+                        // El movimiento corporal quiebra la silueta en la oscuridad: penalización táctica
+                        camoVal = Math.max(12, Math.round(baseCamo * 0.45));
+                        if (camoVal >= 60) {
+                            camoLabel = nearWall ? 'SOMBRA [PASO LENTO]' : 'SOMBRA [MOVIMIENTO]';
+                            camoColor = '#34D399';
+                        } else if (camoVal >= 30) {
+                            camoLabel = nearWall ? 'PENUMBRA [MOVIMIENTO]' : 'MOVIMIENTO [DETECTABLE]';
+                            camoColor = '#38BDF8';
+                        } else {
+                            camoLabel = nearWall ? 'EXPUESTO [PASO]' : 'EXPUESTO [MOVIMIENTO]';
+                            camoColor = '#EF4444';
+                        }
                     } else {
-                        camoLabel = nearWall ? 'EXPUESTO [MURO]' : 'EXPUESTO';
-                        camoColor = '#F59E0B';
+                        // Estático: ocultamiento completo en sombra o penumbra
+                        camoVal = baseCamo;
+                        if (camoVal >= 65) {
+                            camoLabel = nearWall ? 'SOMBRA [MURO]' : 'SOMBRA [ESTÁTICO]';
+                            camoColor = '#34D399';
+                        } else if (camoVal >= 38) {
+                            camoLabel = nearWall ? 'PENUMBRA [MURO]' : 'PENUMBRA [ESTÁTICO]';
+                            camoColor = '#38BDF8';
+                        } else {
+                            camoLabel = nearWall ? 'EXPUESTO [MURO]' : 'EXPUESTO';
+                            camoColor = '#F59E0B';
+                        }
                     }
                 }
                 camoEl.textContent = `${camoVal}% [${camoLabel}]`;
@@ -5638,6 +5686,114 @@
             return false;
         }
         window.isRayBlockedByWalls = isRayBlockedByWalls;
+
+        // IA Táctica de Navegación: "Dar la vuelta" a obstáculos y muros al investigar ruidos
+        function findNavCornerAroundObstacle(fromX, fromY, toX, toY, radius, walls) {
+            if (!walls || walls.length === 0) return null;
+
+            const blockingWalls = [];
+            for (let w of walls) {
+                // Omitir muros perimetrales exteriores de la sala
+                if (w.x <= 16 && w.y <= 16 && (w.w >= 780 || w.h >= 430)) continue;
+                if (w.y >= 420 && w.w >= 780) continue;
+                if (w.x >= 770 && w.h >= 430) continue;
+                if (lineIntersectsRect(fromX, fromY, toX, toY, w.x, w.y, w.w, w.h)) {
+                    blockingWalls.push(w);
+                }
+            }
+
+            if (blockingWalls.length === 0) return null;
+
+            const margin = radius + 16;
+            const candidates = [];
+
+            for (let w of blockingWalls) {
+                const pts = [
+                    { x: w.x - margin, y: w.y - margin },
+                    { x: w.x + w.w + margin, y: w.y - margin },
+                    { x: w.x - margin, y: w.y + w.h + margin },
+                    { x: w.x + w.w + margin, y: w.y + w.h + margin }
+                ];
+
+                for (let pt of pts) {
+                    if (pt.x < 30 || pt.x > 770 || pt.y < 30 || pt.y > 420) continue;
+                    if (checkWallCollision(pt.x, pt.y, radius, walls)) continue;
+                    if (isRayBlockedByWalls(fromX, fromY, pt.x, pt.y, walls)) continue;
+
+                    const distFromGuard = Math.hypot(pt.x - fromX, pt.y - fromY);
+                    if (distFromGuard < 8) continue;
+
+                    const distToGoal = Math.hypot(toX - pt.x, toY - pt.y);
+                    const clearToGoal = !isRayBlockedByWalls(pt.x, pt.y, toX, toY, walls);
+                    const score = distFromGuard + distToGoal - (clearToGoal ? 80 : 0);
+
+                    candidates.push({ x: pt.x, y: pt.y, score, distFromGuard, clearToGoal });
+                }
+            }
+
+            if (candidates.length === 0) return null;
+            candidates.sort((a, b) => a.score - b.score);
+            return { x: candidates[0].x, y: candidates[0].y };
+        }
+        window.findNavCornerAroundObstacle = findNavCornerAroundObstacle;
+
+        function moveGuardWithObstacleAvoidance(g, targetX, targetY, speed, walls) {
+            const dx = targetX - g.x;
+            const dy = targetY - g.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist <= 3) return false;
+
+            const baseAng = Math.atan2(dy, dx);
+            const r = g.radius;
+
+            const stepX = Math.cos(baseAng) * speed;
+            const stepY = Math.sin(baseAng) * speed;
+
+            // 1. Paso directo al objetivo si está libre
+            if (!checkWallCollision(g.x + stepX, g.y + stepY, r, walls)) {
+                g.x += stepX;
+                g.y += stepY;
+                g.angle = baseAng;
+                return true;
+            }
+
+            // 2. Deslizamiento ortogonal a lo largo de la pared
+            const freeX = !checkWallCollision(g.x + stepX, g.y, r, walls);
+            const freeY = !checkWallCollision(g.x, g.y + stepY, r, walls);
+
+            if (freeX && Math.abs(stepX) > 0.15) {
+                g.x += stepX;
+                const slideY = (dy > 0 ? 1 : -1) * speed * 0.7;
+                if (!checkWallCollision(g.x, g.y + slideY, r, walls)) g.y += slideY;
+                g.angle = Math.atan2(dy, stepX);
+                return true;
+            }
+
+            if (freeY && Math.abs(stepY) > 0.15) {
+                g.y += stepY;
+                const slideX = (dx > 0 ? 1 : -1) * speed * 0.7;
+                if (!checkWallCollision(g.x + slideX, g.y, r, walls)) g.x += slideX;
+                g.angle = Math.atan2(stepY, dx);
+                return true;
+            }
+
+            // 3. Ángulos tangenciales de desvío para bordear esquinas
+            const testOffsets = [0.52, -0.52, 0.95, -0.95, Math.PI / 2, -Math.PI / 2, 1.9, -1.9, 2.35, -2.35];
+            for (let offset of testOffsets) {
+                const testAng = baseAng + offset;
+                const tx = Math.cos(testAng) * speed;
+                const ty = Math.sin(testAng) * speed;
+                if (!checkWallCollision(g.x + tx, g.y + ty, r, walls)) {
+                    g.x += tx;
+                    g.y += ty;
+                    g.angle = testAng;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        window.moveGuardWithObstacleAvoidance = moveGuardWithObstacleAvoidance;
 
         function takeDamage(amount) {
             gameState.player.hp = Math.max(0, gameState.player.hp - amount);

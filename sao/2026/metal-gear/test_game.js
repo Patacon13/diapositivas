@@ -760,6 +760,96 @@ try {
 
         console.log('   [TEST 11 PASSED] Banco de preguntas centralizado validado (' + totalTerminals + ' terminales + ' + totalBeacons + ' balizas = ' + (totalTerminals + totalBeacons) + ' preguntas verificadas)');
 
+        // Test 12: Camuflaje dinámico y detección visual en sombra (quieto vs en movimiento)
+        loadLevel(0, true);
+        const curRoomL = facilityRooms[gameState.currentRoomId];
+        gameState.player.inBox = false;
+        gameState.player.x = 50; gameState.player.y = 380;
+        gameState.keys['w'] = false; gameState.keys['a'] = false; gameState.keys['s'] = false; gameState.keys['d'] = false;
+        updateGame(0.016);
+        const camoStillText = document.getElementById('camo-text').textContent;
+        if (!camoStillText.includes('SOMBRA') || !camoStillText.includes('ESTÁTICO')) {
+            throw new Error('FALLA: Camuflaje en reposo no indicó SOMBRA [ESTÁTICO]: ' + camoStillText);
+        }
+
+        // Al moverse en la sombra, el camuflaje se penaliza drásticamente
+        gameState.keys['d'] = true;
+        updateGame(0.016);
+        gameState.keys['d'] = false;
+        const camoMoveText = document.getElementById('camo-text').textContent;
+        if (!camoMoveText.includes('DETECTABLE') && !camoMoveText.includes('MOVIMIENTO')) {
+            throw new Error('FALLA: Movimiento en sombra no redujo el camuflaje: ' + camoMoveText);
+        }
+
+        // Visión del centinela: en movimiento la distancia efectiva de visión en sombra es significativamente mayor
+        const gSense = { x: 300, y: 200, angle: Math.PI, fov: Math.PI / 3, viewDist: 150 };
+        const shadowPlStill = { x: 190, y: 200, _isMoving: false };
+        const shadowPlMove = { x: 190, y: 200, _isMoving: true };
+        const viewStill = window.getGuardEffectiveViewDist(gSense, shadowPlStill, curRoomL);
+        const viewMove = window.getGuardEffectiveViewDist(gSense, shadowPlMove, curRoomL);
+        if (viewMove <= viewStill * 1.5) {
+            throw new Error('FALLA: Visión del centinela ante objetivo en movimiento (' + viewMove + 'px) debe superar ampliamente al objetivo estático (' + viewStill + 'px)');
+        }
+
+        // Detección en cono: jugador caminando a 85px en sombra frente al centinela activa ! ALERTA
+        gameState.alertState = 'normal';
+        gameState.alertTimer = 0;
+        gameState.roomGraceTimer = 0;
+        const gWatch = curRoomL.guards[0];
+        gWatch.x = 250; gWatch.y = 100; gWatch.angle = 0; // Mirando a la derecha
+        gameState.player.x = 335; gameState.player.y = 100; // A 85px en su cono de visión
+        gameState.keys['d'] = true; // Caminando enfrente
+        updateGame(0.016);
+        gameState.keys['d'] = false;
+        if (gameState.alertState !== 'alert') {
+            throw new Error('FALLA: Centinela no detectó a Solid Byte caminando directamente frente a su linterna');
+        }
+        console.log('   [TEST 12 PASSED] Penalización de camuflaje en movimiento y agudeza visual de centinelas verificadas');
+
+        // Test 13: IA Táctica - Centinela rodea obstáculos ("dar la vuelta") ante Wall Knock
+        loadLevel(0, true);
+        switchRoom('corridor_u1', 330, 220);
+        const corrRoom = facilityRooms[gameState.currentRoomId];
+        const gNav = corrRoom.guards[0];
+        gNav.x = 330; gNav.y = 220; gNav.angle = 0;
+        // Colocar al jugador detrás del rack/muro (x: 220, y: 110, w: 32, h: 220)
+        gameState.player.x = 180; gameState.player.y = 220;
+        gNav.investigateTimer = 0;
+        gNav.investigateTarget = null;
+        gNav._navWaypoint = null;
+
+        // Comprobar que hay un muro bloqueando la visión directa
+        if (!window.isRayBlockedByWalls(gNav.x, gNav.y, gameState.player.x, gameState.player.y, corrRoom.walls)) {
+            throw new Error('FALLA: El muro entre el centinela y el jugador no fue detectado');
+        }
+
+        // Comprobar cálculo de waypoint de esquina para rodear el muro
+        const cornerWp = window.findNavCornerAroundObstacle(gNav.x, gNav.y, gameState.player.x, gameState.player.y, gNav.radius, corrRoom.walls);
+        if (!cornerWp || (cornerWp.y > 110 && cornerWp.y < 330)) {
+            throw new Error('FALLA: findNavCornerAroundObstacle no encontró una esquina despejada fuera del muro: ' + JSON.stringify(cornerWp));
+        }
+
+        // Ejecutar golpe en la pared
+        window.performWallKnock();
+        if (!gNav.investigateTarget || gNav.investigateTimer <= 0) {
+            throw new Error('FALLA: performWallKnock no activó investigateTarget en el centinela');
+        }
+
+        // Simular frames de navegación: el centinela no debe trabarse contra el muro en x=252
+        // Debe rodear el obstáculo por el extremo (y < 110 o y > 330) y cruzar hacia x < 220
+        let crossedObstacle = false;
+        for (let step = 0; step < 260; step++) {
+            updateGame(0.016);
+            if (gNav.x < 220) {
+                crossedObstacle = true;
+                break;
+            }
+        }
+        if (!crossedObstacle) {
+            throw new Error('FALLA: Centinela no logró dar la vuelta al muro. Posición final: (' + gNav.x.toFixed(1) + ', ' + gNav.y.toFixed(1) + ')');
+        }
+        console.log('   [TEST 13 PASSED] Centinela rodeó con éxito el muro táctico ("dio la vuelta") hasta cruzar hacia el objetivo');
+
         // Level 1 y Level 2 (Boss Encounter)
         loadLevel(1, true);
         for (let f = 0; f < 60; f++) {
