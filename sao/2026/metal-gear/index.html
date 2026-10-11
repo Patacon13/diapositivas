@@ -1775,6 +1775,7 @@
         }
 
         // Efectos de Sonido Icónicos de Metal Gear
+        let lastDamageSFXTime = 0;
         function playSFX(name) {
             const ctx = getAudioContext();
             if (!ctx || !soundEnabled || ctx.state === 'suspended') return;
@@ -1836,18 +1837,24 @@
                     if (gameState.player && (gameState.player.isDead || gameState.player.hp <= 0)) {
                         return;
                     }
-                    // Impacto / Disparo de centinela
+                    // Throttling para evitar acumulación agresiva al rozar lásers o contacto continuo
+                    if (now - lastDamageSFXTime < 0.16) {
+                        return;
+                    }
+                    lastDamageSFXTime = now;
+
+                    // Impacto / Disparo de centinela (volumen calibrado más bajo y cálido)
                     const osc = ctx.createOscillator();
                     const g = ctx.createGain();
                     osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(160, now);
-                    osc.frequency.linearRampToValueAtTime(40, now + 0.2);
-                    g.gain.setValueAtTime(0.5, now);
-                    g.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                    osc.frequency.setValueAtTime(140, now);
+                    osc.frequency.linearRampToValueAtTime(35, now + 0.18);
+                    g.gain.setValueAtTime(0.20, now);
+                    g.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
                     osc.connect(g);
                     g.connect(masterGain || ctx.destination);
                     osc.start(now);
-                    osc.stop(now + 0.2);
+                    osc.stop(now + 0.18);
 
                 } else if (name === 'knock') {
                     // Golpe táctico en la pared (doble tap de nudillos seco)
