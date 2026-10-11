@@ -1832,6 +1832,10 @@
                     });
 
                 } else if (name === 'damage') {
+                    // Silenciar sonido de daño si el jugador ya cayó
+                    if (gameState.player && (gameState.player.isDead || gameState.player.hp <= 0)) {
+                        return;
+                    }
                     // Impacto / Disparo de centinela
                     const osc = ctx.createOscillator();
                     const g = ctx.createGain();
@@ -1903,6 +1907,66 @@
                 } else if (name === 'boss-laser') {
                     // Disparo láser del jefe
                     playTone(1200, 0.08, 'sawtooth', 0.2);
+
+                } else if (name === 'game-over' || name === 'death') {
+                    // MGS Iconic Game Over: Impacto dramático, sting orquestal de metales y flatline de monitor cardíaco
+                    // 1. Sub-bass boom / impacto inicial
+                    const subOsc = ctx.createOscillator();
+                    const subGain = ctx.createGain();
+                    subOsc.type = 'triangle';
+                    subOsc.frequency.setValueAtTime(140, now);
+                    subOsc.frequency.exponentialRampToValueAtTime(30, now + 0.6);
+                    subGain.gain.setValueAtTime(0.7, now);
+                    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+                    subOsc.connect(subGain);
+                    subGain.connect(masterGain || ctx.destination);
+                    subOsc.start(now);
+                    subOsc.stop(now + 0.6);
+
+                    // 2. Acorde dramático orquestal MGS (Sawtooth con envolvente de metales trágicos)
+                    // Fase 1: Acorde disonante tenso de impacto (A2, C3, D#3, A3)
+                    [110, 130.81, 155.56, 220].forEach(f => {
+                        const o = ctx.createOscillator();
+                        const g = ctx.createGain();
+                        o.type = 'sawtooth';
+                        o.frequency.setValueAtTime(f, now);
+                        o.frequency.linearRampToValueAtTime(f * 0.95, now + 0.45);
+                        g.gain.setValueAtTime(0.2, now);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                        o.connect(g);
+                        g.connect(masterGain || ctx.destination);
+                        o.start(now);
+                        o.stop(now + 0.5);
+                    });
+
+                    // Fase 2: Caída trágica a tónica oscura sostenida (E2, G#2, B2, E3)
+                    [82.41, 103.83, 123.47, 164.81].forEach(f => {
+                        const o = ctx.createOscillator();
+                        const g = ctx.createGain();
+                        o.type = 'sawtooth';
+                        o.frequency.setValueAtTime(f, now + 0.38);
+                        o.frequency.exponentialRampToValueAtTime(f * 0.88, now + 1.4);
+                        g.gain.setValueAtTime(0.0001, now);
+                        g.gain.setValueAtTime(0.24, now + 0.38);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+                        o.connect(g);
+                        g.connect(masterGain || ctx.destination);
+                        o.start(now + 0.38);
+                        o.stop(now + 1.5);
+                    });
+
+                    // 3. Monitor cardíaco / Flatline ECG (pitido solemne de paro cardiorrespiratorio estilo MGS)
+                    const flatOsc = ctx.createOscillator();
+                    const flatGain = ctx.createGain();
+                    flatOsc.type = 'sine';
+                    flatOsc.frequency.setValueAtTime(940, now + 0.5);
+                    flatGain.gain.setValueAtTime(0.0001, now);
+                    flatGain.gain.setValueAtTime(0.18, now + 0.5);
+                    flatGain.gain.exponentialRampToValueAtTime(0.001, now + 2.4);
+                    flatOsc.connect(flatGain);
+                    flatGain.connect(masterGain || ctx.destination);
+                    flatOsc.start(now + 0.5);
+                    flatOsc.stop(now + 2.4);
                 }
             } catch (e) {
                 console.warn(e);
@@ -4067,6 +4131,7 @@
                 gameState.player.x = lvl.startPlayerX;
                 gameState.player.y = lvl.startPlayerY;
                 gameState.player.hp = 100;
+                gameState.player.isDead = false;
                 gameState.player.inBox = false;
                 gameState.player.dir = 0;
                 setPlayerKeycard(0);
@@ -4124,6 +4189,7 @@
                 dir: 0,
                 inBox: false,
                 hp: 100,
+                isDead: false,
                 keycard: 0
             },
             boss: {
@@ -4792,7 +4858,8 @@
             const hackOpen = document.getElementById('hack-screen').style.display === 'flex';
             const levelOpen = document.getElementById('level-select-screen') && document.getElementById('level-select-screen').style.display === 'flex';
             const minigameOpen = document.getElementById('minigame-screen') && document.getElementById('minigame-screen').style.display === 'flex';
-            if (codecOpen || hackOpen || levelOpen || minigameOpen || gameState.missionCompleted) return;
+            const debriefOpen = document.getElementById('debrief-screen') && document.getElementById('debrief-screen').style.display === 'flex';
+            if (codecOpen || hackOpen || levelOpen || minigameOpen || debriefOpen || gameState.missionCompleted || !p || p.isDead || p.hp <= 0) return;
 
             if (window.updateGFXParticles) window.updateGFXParticles(dt);
 
@@ -5796,16 +5863,20 @@
         window.moveGuardWithObstacleAvoidance = moveGuardWithObstacleAvoidance;
 
         function takeDamage(amount) {
+            if (!gameState.player || gameState.player.isDead || gameState.player.hp <= 0) return;
             gameState.player.hp = Math.max(0, gameState.player.hp - amount);
             document.getElementById('life-bar').style.width = `${gameState.player.hp}%`;
             if (gameState.player.hp <= 0) {
+                gameState.player.isDead = true;
+                gameState.screenShake = 0.5;
                 showDebriefing(false);
             }
         }
 
         function showDebriefing(won) {
-            setMusicTheme('none');
             const scr = document.getElementById('debrief-screen');
+            if (!won && scr && scr.style.display === 'flex') return;
+            setMusicTheme('none');
             const title = document.getElementById('debrief-status');
             const desc = document.getElementById('debrief-desc');
             const rank = document.getElementById('debrief-rank');
@@ -5840,20 +5911,27 @@
                     }
                 }
             } else {
-                playSFX('damage');
+                playSFX('game-over');
                 title.className = "debrief-title failure";
                 title.innerText = "SNAKE? SNAKE?! ¡SNAAAAKE!";
-                desc.innerText = `La JVM neutralizó a Solid Byte en ${lvlData ? lvlData.name : 'la misión'}.`;
-                rank.innerText = "CODENAME: RECLUTA EN RECUPERATORIO";
+                desc.innerText = `La JVM neutralizó a Solid Byte en ${lvlData ? lvlData.name : 'la misión'}. La señal vital se ha extinguido.`;
+                rank.innerText = "CODENAME: RECLUTA EN RECUPERATORIO // GAME OVER";
                 if (nextBtn) nextBtn.style.display = 'none';
             }
-            scr.style.display = 'flex';
+            if (scr) scr.style.display = 'flex';
         }
 
         function restartMission() {
-            document.getElementById('debrief-screen').style.display = 'none';
-            document.getElementById('codec-screen').style.display = 'none';
-            document.getElementById('hack-screen').style.display = 'none';
+            if (gameState.player) {
+                gameState.player.isDead = false;
+                gameState.player.hp = 100;
+            }
+            const debrief = document.getElementById('debrief-screen');
+            if (debrief) debrief.style.display = 'none';
+            const codec = document.getElementById('codec-screen');
+            if (codec) codec.style.display = 'none';
+            const hack = document.getElementById('hack-screen');
+            if (hack) hack.style.display = 'none';
 
             loadLevel(currentLevelIndex, true);
         }

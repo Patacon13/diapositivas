@@ -723,7 +723,8 @@
         dt = Math.min(dt || 0, 0.05);
         const room = facilityRooms[gameState.currentRoomId];
         const p = gameState.player;
-        const paused = isOpen('codec-screen') || isOpen('hack-screen') || isOpen('level-select-screen') || gameState.missionCompleted;
+        const paused = isOpen('codec-screen') || isOpen('hack-screen') || isOpen('level-select-screen') || isOpen('debrief-screen') || gameState.missionCompleted || !p || p.isDead || p.hp <= 0;
+        if (paused) return;
 
         if (room) ensureTag(room);
 
