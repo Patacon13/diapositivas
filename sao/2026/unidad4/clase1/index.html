@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>SAO - Unidad 4: Modularización (Clase 1) | TUTI UTN FRSF</title>
+
+    <!-- Estilos Base Reveal.js (4 niveles hacia dist/) -->
+    <link rel="stylesheet" href="../../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../../dist/plugin/highlight/monokai.css" />
+
+    <!-- Tema Oficial TUTI (Extiende utn-core.css) -->
+    <link rel="stylesheet" href="../../../../dist/theme/tuti.css" />
+
+    <!-- Tipografías Oficiales & Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Ajustes específicos para Clase 1 Unidad 4 */
+        .reveal pre {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .code-badge {
+            font-family: 'Fira Code', monospace;
+            background: #E2E8F0;
+            color: #0284C7;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        /* Cuadrantes de Razones para Modularizar */
+        .modular-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        .modular-card {
+            background: var(--bg-neutral);
+            border-radius: 16px;
+            padding: 20px 24px;
+            border: 2px solid #E2E8F0;
+            border-left: 8px solid var(--cyan-accent);
+            text-align: left;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .modular-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--cyan-accent);
+            background: #FFFFFF;
+        }
+
+        .modular-card h3 {
+            font-size: 21px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modular-card p {
+            font-size: 17px;
+            color: var(--text-light);
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        /* Diagrama de Caja Negra (Black Box) */
+        .black-box-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+            width: 100%;
+            max-width: 1020px;
+            margin: 15px auto;
+        }
+
+        .bb-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .bb-io-box {
+            background: #EFF6FF;
+            border: 2px solid #93C5FD;
+            border-radius: 14px;
+            padding: 16px 20px;
+            min-width: 180px;
+            color: var(--utn-blue);
+            font-family: 'Fira Code', monospace;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
+        }
+
+        .bb-core {
+            background: #0F172A;
+            border: 3px solid var(--utn-gold);
+            border-radius: 18px;
+            padding: 24px 32px;
+            color: #FFFFFF;
+            min-width: 280px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+        }
+
+        .bb-core h4 {
+            font-size: 20px;
+            color: var(--utn-gold);
+            margin-bottom: 6px;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .bb-core p {
+            font-size: 14px;
+            color: #94A3B8;
+            margin: 0;
+            text-align: center;
+        }
+
+        .bb-arrow {
+            font-size: 28px;
+            color: var(--cyan-accent);
+        }
+
+        /* Diagrama Árbol de Paquetes Java */
+        .packages-tree {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .pkg-badge {
+            background: #FEF3C7;
+            border: 2px solid #F59E0B;
+            border-radius: 12px;
+            padding: 12px 18px;
+            text-align: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            color: #92400E;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.1);
+        }
+
+        .pkg-badge.highlight {
+            background: #E0F2FE;
+            border-color: var(--cyan-accent);
+            color: #0369A1;
+            transform: scale(1.04);
+            box-shadow: 0 6px 18px rgba(2, 132, 199, 0.2);
+        }
+
+        /* Tabla de Métodos Math */
+        .math-table {
+            width: 100%;
+            max-width: 1080px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            font-size: 17px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .math-table th {
+            background: var(--utn-blue);
+            color: #FFFFFF;
+            padding: 12px 16px;
+            text-align: left;
+            font-family: 'Poppins', sans-serif;
+            font-size: 17px;
+        }
+
+        .math-table td {
+            padding: 9px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            color: var(--text-main);
+        }
+
+        .math-table tr:nth-child(even) {
+            background: #F8FAFC;
+        }
+
+        .math-table code {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            color: #0284C7;
+            white-space: nowrap;
+        }
+
+        /* Anatomía de Firma de Método */
+        .method-signature-card {
+            background: #0F172A;
+            border-radius: 18px;
+            padding: 24px 30px;
+            color: #FFFFFF;
+            max-width: 1040px;
+            margin: 15px auto;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        }
+
+        .signature-row {
+            display: flex;
+            justify-content: center;
+            gap: 22px;
+            font-family: 'Fira Code', monospace;
+            font-size: 26px;
+            font-weight: 600;
+            flex-wrap: wrap;
+        }
+
+        .sig-part {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sig-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: #94A3B8;
+            margin-top: 10px;
+            border-top: 2px dashed #475569;
+            padding-top: 6px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .sig-mod { color: #F472B6; }
+        .sig-ret { color: #38BDF8; }
+        .sig-name { color: #4ADE80; }
+        .sig-params { color: #FCD34D; }
+
+        /* Tarjetas de Desafíos de Calculadora */
+        .calc-level-box {
+            background: #FFFFFF;
+            border: 2px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+            text-align: left;
+        }
+
+        .calc-level-box h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            color: var(--utn-blue);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Responsividad Mobile / Vertical */
+        @media (max-aspect-ratio: 1/1), (max-width: 768px) {
+            .modular-grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            .black-box-container {
+                flex-direction: column !important;
+                gap: 12px !important;
+            }
+            .bb-arrow {
+                transform: rotate(90deg) !important;
+            }
+            .signature-row {
+                font-size: 19px !important;
+                gap: 12px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- =========================================================================
+                 SLIDE 1: PORTADA INSTITUCIONAL TUTI (Hero Split Canónico)
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <img src="../../../../dist/utnsantafe.png" alt="UTN Santa Fe" style="height: 32px; margin: 0;">
+                            <span style="font-weight: 700; color: var(--utn-blue); font-size: 18px;">TUTI</span>
+                        </div>
+                        <h1 class="hero-title" style="text-align: left; font-size: 44px !important; margin-bottom: 12px !important;">SISTEMA DE AUTOMATIZACIÓN DE OFICINAS</h1>
+                        <h3 style="font-size: 22px; color: var(--cyan-accent); font-weight: 600; margin-bottom: 24px; text-align: left;">Unidad #4 - Modularización (Clase 1: Métodos y Descomposición Modular)</h3>
+
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 2: DESCOMPOSICIÓN MODULAR ("DIVIDE Y VENCERÁS")
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">Descomposición Modular <span class="slide-subtitle">// Fundamentos</span></h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <p style="font-size: 20px; line-height: 1.5; margin-bottom: 16px;">
+                                Es una técnica de ingeniería de software donde un problema complejo se divide en <strong>subprogramas autónomos</strong>, lógicos, manejables y con propósito específico denominados <strong>módulos</strong>.
+                            </p>
+                            <div class="callout-box" style="align-items: flex-start !important; text-align: left !important;">
+                                <i class="fa-solid fa-brain" style="color: #22c55e; font-size: 24px; margin-top: 3px !important; flex-shrink: 0;"></i>
+                                <div>
+                                    <strong style="display: block; margin-bottom: 2px;">Principio: "Divide y Vencerás"</strong>
+                                    <p style="margin: 0; font-size: 16px; color: #065F46;">
+                                        Resolver varios problemas pequeños y bien delimitados es inmensamente más simple y confiable que abordar un único bloque monolítico.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Diagrama Jerárquico de Módulos en CSS Puro -->
+                        <div style="background: var(--bg-neutral); border: 2px solid #E2E8F0; border-radius: 18px; padding: 22px; text-align: center;">
+                            <div style="background: var(--utn-blue); color: #fff; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 18px; display: inline-block; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0, 43, 91, 0.2);">
+                                <i class="fa-solid fa-file-code"></i> Programa Principal (main)
+                            </div>
+                            <div style="font-size: 22px; color: #94A3B8; margin-bottom: 8px;">
+                                <i class="fa-solid fa-arrow-down"></i>
+                            </div>
+                            <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+                                <div style="background: #EFF6FF; border: 2px solid var(--cyan-accent); border-radius: 10px; padding: 10px 14px; font-size: 15px; font-weight: 600; color: #0369A1;">
+                                    <i class="fa-solid fa-cube"></i> Módulo 1 (Cálculo)
+                                </div>
+                                <div style="background: #ECFDF5; border: 2px solid #10B981; border-radius: 10px; padding: 10px 14px; font-size: 15px; font-weight: 600; color: #065F46;">
+                                    <i class="fa-solid fa-cube"></i> Módulo 2 (Validación)
+                                </div>
+                                <div style="background: #FFFBEB; border: 2px solid var(--utn-gold); border-radius: 10px; padding: 10px 14px; font-size: 15px; font-weight: 600; color: #92400E;">
+                                    <i class="fa-solid fa-cube"></i> Módulo 3 (Reporte)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 3: RAZONES PARA MODULARIZAR (4 PILARES)
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">¿Por Qué Modularizar? <span class="slide-subtitle">// Pilares de Calidad</span></h2>
+                <div class="content-area">
+                    <div class="modular-grid">
+                        <div class="modular-card">
+                            <h3><i class="fa-solid fa-arrows-split-up-and-left" style="color: var(--cyan-accent);"></i> Reducción de Complejidad</h3>
+                            <p>Descompone la solución en piezas digestibles. El programador solo atiende una tarea a la vez.</p>
+                        </div>
+                        <div class="modular-card">
+                            <h3><i class="fa-solid fa-recycle" style="color: #10B981;"></i> Reutilización (DRY)</h3>
+                            <p><em>Don't Repeat Yourself</em>. Un módulo se escribe una sola vez y se invoca múltiples veces desde cualquier lugar.</p>
+                        </div>
+                        <div class="modular-card">
+                            <h3><i class="fa-solid fa-glasses" style="color: #F59E0B;"></i> Legibilidad y Mantenimiento</h3>
+                            <p>El código se auto-documenta. Si surge un error, se aísla de inmediato en la función responsable.</p>
+                        </div>
+                        <div class="modular-card">
+                            <h3><i class="fa-solid fa-shield-halved" style="color: #6366F1;"></i> Limitación de Cambios</h3>
+                            <p>Optimizar o corregir el algoritmo interno de un módulo no afecta al resto del sistema llamador.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 4: EL PRINCIPIO DE LA CAJA NEGRA (ABSTRACCIÓN)
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">Principio de la Caja Negra <span class="slide-subtitle">// Abstracción</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 19px; margin-bottom: 12px;">
+                        Un módulo actúa como una <strong>caja negra</strong>: el invocador solo necesita conocer <strong>qué hace</strong> (su contrato de entrada y salida), sin preocuparse por <strong>cómo está implementado internamente</strong>.
+                    </p>
+
+                    <!-- Diagrama de Caja Negra -->
+                    <div class="black-box-container">
+                        <div class="bb-step">
+                            <span style="font-size: 13px; font-weight: 700; color: #64748B; margin-bottom: 6px; text-transform: uppercase;">Entrada (Parámetros)</span>
+                            <div class="bb-io-box">
+                                int a, int b
+                            </div>
+                        </div>
+
+                        <div class="bb-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                        <div class="bb-core">
+                            <h4><i class="fa-solid fa-box"></i> MÉTODO MODULAR</h4>
+                            <p>Detalles internos ocultos<br>(Algoritmo encapsulado)</p>
+                        </div>
+
+                        <div class="bb-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                        <div class="bb-step">
+                            <span style="font-size: 13px; font-weight: 700; color: #64748B; margin-bottom: 6px; text-transform: uppercase;">Salida (Return)</span>
+                            <div class="bb-io-box" style="border-color: #86EFAC; background: #ECFDF5; color: #065F46;">
+                                int resultado
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout-box" style="max-width: 980px; margin: 16px auto 0 auto; align-items: flex-start !important; text-align: left !important;">
+                        <i class="fa-solid fa-lightbulb" style="color: #F59E0B; font-size: 22px; margin-top: 3px !important; flex-shrink: 0;"></i>
+                        <div>
+                            <strong style="display: block; margin-bottom: 2px;">Evolución en los Lenguajes</strong>
+                            <p style="margin: 0; font-size: 15px; color: #78350F;">
+                                En programación estructurada (Pascal, C) se denominan <strong>Funciones</strong> (con retorno) y <strong>Procedimientos</strong> (sin retorno). En Java y POO, todos los subprogramas son <strong>Métodos</strong> pertenecientes a una clase.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 5: PAQUETES Y APIS EN JAVA
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">Modularización en Java <span class="slide-subtitle">// APIs y Paquetes</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 19px; margin-bottom: 14px;">
+                        Una <strong>API</strong> (<em>Application Programming Interface</em>) es un conjunto de clases y métodos reutilizables. Java organiza sus bibliotecas estándar en <strong>paquetes</strong> (<code>packages</code>) jerárquicos:
+                    </p>
+
+                    <div class="packages-tree">
+                        <div class="pkg-badge highlight">
+                            <i class="fa-solid fa-box-archive"></i> java.lang<br>
+                            <span style="font-size: 12px; font-weight: 500; color: #0284C7;">Math, String, System<br>(Import automático)</span>
+                        </div>
+                        <div class="pkg-badge highlight">
+                            <i class="fa-solid fa-box-archive"></i> java.util<br>
+                            <span style="font-size: 12px; font-weight: 500; color: #B45309;">Scanner, Random<br>(Requiere import)</span>
+                        </div>
+                        <div class="pkg-badge">
+                            <i class="fa-solid fa-folder-tree"></i> java.io<br>
+                            <span style="font-size: 12px; font-weight: 500; color: #64748B;">Entrada / Salida</span>
+                        </div>
+                        <div class="pkg-badge">
+                            <i class="fa-solid fa-network-wired"></i> java.net<br>
+                            <span style="font-size: 12px; font-weight: 500; color: #64748B;">Comunicaciones</span>
+                        </div>
+                    </div>
+
+                    <div style="background: #F8FAFC; border: 2px dashed #CBD5E1; border-radius: 14px; padding: 14px 20px; max-width: 980px; margin: 18px auto 0 auto; text-align: left;">
+                        <span style="font-size: 14px; font-weight: 700; color: var(--utn-blue); text-transform: uppercase;">Sentencia de Importación:</span>
+                        <pre style="margin-top: 8px;"><code class="java" data-trim>
+import java.util.Random;  // Importa la clase específica de números aleatorios
+import java.util.Scanner; // Importa la clase de lectura por teclado
+                        </code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 6: MÉTODOS ESTÁTICOS DE LA CLASE MATH
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">Paquete java.lang <span class="slide-subtitle">// Métodos de Math</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 18px; margin-bottom: 12px;">
+                        La clase <code>Math</code> provee funciones matemáticas estáticas que no requieren instanciación (se invocan directamente como <code>Math.metodo(...)</code>):
+                    </p>
+
+                    <table class="math-table">
+                        <thead>
+                            <tr>
+                                <th>Método</th>
+                                <th>Descripción</th>
+                                <th>Ejemplo en Java</th>
+                                <th>Resultado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>Math.abs(x)</code></td>
+                                <td>Valor absoluto de un número</td>
+                                <td><code>Math.abs(-25.4)</code></td>
+                                <td><code>25.4</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>Math.pow(x, y)</code></td>
+                                <td>Potencia $x^y$ ($x$ elevado a $y$)</td>
+                                <td><code>Math.pow(2.0, 5.0)</code></td>
+                                <td><code>32.0</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>Math.sqrt(x)</code></td>
+                                <td>Raíz cuadrada de $x$</td>
+                                <td><code>Math.sqrt(144.0)</code></td>
+                                <td><code>12.0</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>Math.ceil(x)</code></td>
+                                <td>Redondeo hacia arriba (menor entero $\ge x$)</td>
+                                <td><code>Math.ceil(9.2)</code></td>
+                                <td><code>10.0</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>Math.floor(x)</code></td>
+                                <td>Redondeo hacia abajo (mayor entero $\le x$)</td>
+                                <td><code>Math.floor(9.8)</code></td>
+                                <td><code>9.0</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>Math.max(x, y)</code></td>
+                                <td>Retorna el mayor entre dos valores</td>
+                                <td><code>Math.max(14, 29)</code></td>
+                                <td><code>29</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 7: NÚMEROS PSEUDO-ALEATORIOS (CLASE RANDOM)
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">Azar en Java <span class="slide-subtitle">// java.util.Random</span></h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <p style="font-size: 19px; line-height: 1.45; margin-bottom: 14px;">
+                                En computación los números son <strong>pseudo-aleatorios</strong>: se obtienen mediante un algoritmo determinista uniforme a partir de una <strong>semilla</strong> (<em>seed</em>).
+                            </p>
+                            <div class="callout-box" style="align-items: flex-start !important; text-align: left !important;">
+                                <i class="fa-solid fa-dice" style="color: #0284C7; font-size: 26px; margin-top: 3px !important; flex-shrink: 0;"></i>
+                                <div>
+                                    <strong style="display: block; margin-bottom: 2px;">Generación de Rangos</strong>
+                                    <p style="margin: 0; font-size: 15px; color: #065F46;">
+                                        <code>rnd.nextInt(n)</code> produce enteros en $[0, n-1]$. Para simular un dado de 1 a 6: <code>rnd.nextInt(6) + 1</code>.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--bg-neutral); border: 2px solid #E2E8F0; border-radius: 16px; padding: 20px; text-align: left;">
+                            <span style="font-size: 13px; font-weight: 700; color: var(--cyan-accent); text-transform: uppercase;">Pasos de Uso en Java:</span>
+                            <pre style="margin-top: 8px;"><code class="java" data-trim>
+// 1. Importar el paquete
+import java.util.Random;
+
+// 2. Crear el objeto generador
+Random rnd = new Random();
+
+// 3. Invocar métodos de azar
+int dado = rnd.nextInt(6) + 1; // 1 a 6
+double prob = rnd.nextDouble();  // 0.0 a 1.0
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 8: PRÁCTICA GUIADA: DADOS EN JAVA + ONECOMPILER
+                 ========================================================================= -->
+            <section>
+                <!-- 8.A Slide Teórica Horizontal -->
+                <section>
+                    <h2 class="slide-title">Práctica Guiada <span class="slide-subtitle">// Simulación de Dados</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 19px; margin-bottom: 14px;">
+                            Simulemos la tirada de un dado de 6 caras repetida 10 veces, registrando las salidas por consola:
+                        </p>
+                        <pre><code class="java" data-trim data-noescape>
+import java.util.Random;
+
+public class Main {
+    public static void main(String[] args) {
+        Random rnd = new Random();
+        System.out.println("=== 10 TIRADAS DE UN DADO ===");
+        
+        for (int i = 1; i &lt;= 10; i++) {
+            int tiro = rnd.nextInt(6) + 1; // Genera entre 1 y 6
+            System.out.println("Tiro #" + i + ": " + tiro);
+        }
+    }
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 8.B Slide Vertical: Compilador Interactivo 1 -->
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Sandbox en Vivo <span class="slide-subtitle">// Dados y Azar</span></h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-terminal"></i> OneCompiler - Simulación de Dados (Random)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-1', codeRandom, 'java', 'Main.java')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 9: DESAFÍO: JUEGO "DOBLE O MITAD" + ONECOMPILER
+                 ========================================================================= -->
+            <section>
+                <!-- 9.A Slide Teórica Horizontal -->
+                <section>
+                    <h2 class="slide-title">Desafío de Azar <span class="slide-subtitle">// Doble o Mitad</span></h2>
+                    <div class="content-area">
+                        <div class="two-column">
+                            <div>
+                                <div style="background: #EFF6FF; border-left: 6px solid var(--cyan-accent); padding: 16px 20px; border-radius: 12px; text-align: left; margin-bottom: 14px;">
+                                    <strong style="color: var(--utn-blue); font-size: 18px; display: block; margin-bottom: 6px;">Reglas del Juego:</strong>
+                                    <ul style="font-size: 16px; color: var(--text-main); margin: 0; padding-left: 18px;">
+                                        <li>El jugador inicia con un pozo (ej: $100) y lanza una moneda.</li>
+                                        <li><strong>Cara:</strong> duplica su pozo actual ($ \times 2 $).</li>
+                                        <li><strong>Cruz:</strong> pierde la mitad ($ / 2 $).</li>
+                                        <li>Finaliza al caer debajo de <strong>$1</strong> o tras <strong>50 tiradas</strong>.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div style="background: var(--bg-neutral); border: 2px solid #E2E8F0; border-radius: 14px; padding: 18px; text-align: left;">
+                                <span style="font-size: 13px; font-weight: 700; color: #10B981; text-transform: uppercase;">Lógica de Moneda:</span>
+                                <pre style="margin-top: 8px;"><code class="java" data-trim>
+int moneda = rnd.nextInt(2); // 0 o 1
+if (moneda == 1) {
+    pozo = pozo * 2; // Cara
+} else {
+    pozo = pozo / 2; // Cruz
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 9.B Slide Vertical: Compilador Interactivo 2 -->
+                <section id="slide-compiler-2">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Sandbox en Vivo <span class="slide-subtitle">// Doble o Mitad</span></h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-terminal"></i> OneCompiler - Simulación Doble o Mitad</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-2', codeDobleMitad, 'java', 'Main.java')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 10: ANATOMÍA DE UN MÉTODO ESTÁTICO EN JAVA
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">Anatomía de un Método <span class="slide-subtitle">// Declaración</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 18px; margin-bottom: 10px;">
+                        En la cátedra SAO declaramos métodos con <code>public static</code> para invocarlos directamente dentro de la misma clase sin instanciar objetos:
+                    </p>
+
+                    <div class="method-signature-card">
+                        <div class="signature-row">
+                            <div class="sig-part">
+                                <span class="sig-mod">public static</span>
+                                <span class="sig-label">Modificadores</span>
+                            </div>
+                            <div class="sig-part">
+                                <span class="sig-ret">int</span>
+                                <span class="sig-label">Tipo de Retorno</span>
+                            </div>
+                            <div class="sig-part">
+                                <span class="sig-name">producto</span>
+                                <span class="sig-label">Identificador (Nombre)</span>
+                            </div>
+                            <div class="sig-part">
+                                <span class="sig-params">(int a, int b)</span>
+                                <span class="sig-label">Parámetros Formales</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 18px; padding-top: 12px; border-top: 1px solid #334155; font-family: 'Fira Code', monospace; font-size: 20px; color: #F8FAFC; text-align: left;">
+                            &nbsp;&nbsp;&nbsp;&nbsp;return a * b; <span style="color: #94A3B8; font-size: 14px; font-family: 'Inter', sans-serif;">// Sentencia de retorno obligatoria</span><br>}
+                        </div>
+                    </div>
+
+                    <div class="callout-box" style="max-width: 980px; margin: 12px auto 0 auto; align-items: flex-start !important; text-align: left !important;">
+                        <i class="fa-solid fa-code" style="color: #0284C7; font-size: 22px; margin-top: 3px !important; flex-shrink: 0;"></i>
+                        <div>
+                            <strong style="display: block; margin-bottom: 2px;">Funciones vs Procedimientos</strong>
+                            <p style="margin: 0; font-size: 15px; color: #065F46;">
+                                Si el método devuelve un dato, declara su tipo (<code>int</code>, <code>double</code>, <code>boolean</code>) y exige <code>return</code>. Si no retorna nada, se declara con tipo <strong>void</strong> (procedimiento de efecto colateral, ej: imprimir por pantalla).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 11: PASAJE DE PARÁMETROS POR VALOR Y SCOPE
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">Parámetros y Ámbito <span class="slide-subtitle">// Pasaje por Valor</span></h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div style="text-align: left;">
+                            <div style="background: #EFF6FF; border-left: 6px solid var(--cyan-accent); padding: 14px 18px; border-radius: 12px; margin-bottom: 14px;">
+                                <strong style="color: var(--utn-blue); font-size: 17px; display: block; margin-bottom: 4px;">1. Pasaje Estricto por Valor</strong>
+                                <p style="font-size: 15px; color: var(--text-main); margin: 0;">
+                                    En Java los primitivos se pasan <strong>por copia</strong>. Modificar un parámetro formal dentro del método <strong>NO altera</strong> la variable original del <code>main</code>.
+                                </p>
+                            </div>
+                            <div style="background: #FFFBEB; border-left: 6px solid var(--utn-gold); padding: 14px 18px; border-radius: 12px;">
+                                <strong style="color: #92400E; font-size: 17px; display: block; margin-bottom: 4px;">2. Ámbito (Scope) de Variables</strong>
+                                <p style="font-size: 15px; color: var(--text-main); margin: 0;">
+                                    Las variables declaradas dentro de un método nacen al llamarlo y se <strong>destruyen</strong> al retornar. Ningún otro método puede acceder a ellas directamente.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Diagrama de Memoria Aislada -->
+                        <div style="background: #1E293B; border-radius: 16px; padding: 20px; color: #fff; text-align: left;">
+                            <div style="border-bottom: 1px solid #475569; padding-bottom: 8px; margin-bottom: 12px; font-weight: 700; color: var(--cyan-accent); font-size: 15px;">
+                                <i class="fa-solid fa-layer-group"></i> Call Stack (Memoria RAM)
+                            </div>
+                            <div style="background: #334155; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px;">
+                                <span style="font-size: 12px; color: #94A3B8; text-transform: uppercase; font-weight: 700;">Marco del Método: producto()</span><br>
+                                <code style="color: #4ADE80; font-size: 15px;">int a = 3;  int b = 9; (copias locales)</code>
+                            </div>
+                            <div style="background: #0F172A; border: 1px solid #475569; border-radius: 8px; padding: 10px 14px;">
+                                <span style="font-size: 12px; color: #94A3B8; text-transform: uppercase; font-weight: 700;">Marco Principal: main()</span><br>
+                                <code style="color: #38BDF8; font-size: 15px;">int n1 = 3;  int n2 = 9; (intactas)</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 12: CASO DE ESTUDIO: PROBLEMA "PRODUCTO SIMPLE" + ONECOMPILER
+                 ========================================================================= -->
+            <section>
+                <!-- 12.A Slide Teórica Horizontal -->
+                <section>
+                    <h2 class="slide-title">Caso de Estudio <span class="slide-subtitle">// Producto Simple (URI)</span></h2>
+                    <div class="content-area">
+                        <div class="two-column">
+                            <div>
+                                <p style="font-size: 18px; margin-bottom: 12px;">
+                                    Problema: Leer dos enteros y mostrar <code>PROD = X</code> delegando el cálculo a un método.
+                                </p>
+                                <div style="background: #F8FAFC; border: 2px solid #E2E8F0; border-radius: 12px; padding: 14px; text-align: left;">
+                                    <strong style="color: var(--utn-blue); font-size: 16px; display: block; margin-bottom: 6px;">Comparación Algorítmica:</strong>
+                                    <p style="font-size: 14px; color: var(--text-light); margin: 0 0 6px 0;">
+                                        <strong>Solución 1 (Directa):</strong> <code>return a * b;</code> &mdash; Eficiente e instantánea.
+                                    </p>
+                                    <p style="font-size: 14px; color: var(--text-light); margin: 0;">
+                                        <strong>Solución 2 (Sumas Sucesivas):</strong> Sumar $a$ tantas veces como indique $b$. Eficaz pero consume más ciclos de reloj.
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <pre><code class="java" data-trim data-noescape>
+public static int producto(int a, int b) {
+    return a * b; // Contrato limpio
+}
+
+public static int productoSumas(int a, int b) {
+    int acum = 0;
+    for (int i = 0; i &lt; Math.abs(b); i++) {
+        acum += a;
+    }
+    return (b &lt; 0) ? -acum : acum;
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 12.B Slide Vertical: Compilador Interactivo 3 -->
+                <section id="slide-compiler-3">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Sandbox en Vivo <span class="slide-subtitle">// Producto Simple</span></h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-terminal"></i> OneCompiler - Producto Simple Modular</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-3', codeProducto, 'java', 'Main.java')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-3" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 13: CASO GUIADO: MÚLTIPLOS Y POTENCIAS + ONECOMPILER
+                 ========================================================================= -->
+            <section>
+                <!-- 13.A Slide Teórica Horizontal -->
+                <section>
+                    <h2 class="slide-title">Práctica Guiada <span class="slide-subtitle">// Múltiplos y Potencias</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 18px; margin-bottom: 12px;">
+                            Dada una secuencia de $N$ pares $(n_1, n_2)$: si $n_1$ es múltiplo de $n_2$ mostrar su suma, caso contrario mostrar su potencia ($n_1^{n_2}$):
+                        </p>
+                        <pre><code class="java" data-trim data-noescape>
+public static boolean esMultiplo(int n1, int n2) {
+    return (n2 != 0) &amp;&amp; (n1 % n2 == 0);
+}
+
+public static int suma(int a, int b) {
+    return a + b;
+}
+
+public static double potencia(int base, int exp) {
+    return Math.pow(base, exp);
+}
+                        </code></pre>
+                        <div class="callout-box" style="max-width: 960px; margin: 12px auto 0 auto; align-items: flex-start !important; text-align: left !important;">
+                            <i class="fa-solid fa-check-double" style="color: #10B981; font-size: 20px; margin-top: 3px !important; flex-shrink: 0;"></i>
+                            <div>
+                                <strong style="display: block; margin-bottom: 2px;">El main queda limpio y declarativo:</strong>
+                                <p style="margin: 0; font-size: 15px; color: #065F46;">
+                                    <code>if (esMultiplo(n1, n2)) System.out.println("Suma: " + suma(n1, n2)); else System.out.println("Potencia: " + potencia(n1, n2));</code>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 13.B Slide Vertical: Compilador Interactivo 4 -->
+                <section id="slide-compiler-4">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Sandbox en Vivo <span class="slide-subtitle">// Múltiplos y Potencias</span></h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-terminal"></i> OneCompiler - Múltiplos y Potencias</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-4', codeMultiplos, 'java', 'Main.java')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-4" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 14: PROYECTO PROPUESTO: CALCULADORA MODULAR (NIVEL I)
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">Proyecto Guiado <span class="slide-subtitle">// Calculadora - Nivel I</span></h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div class="calc-level-box">
+                            <h4><i class="fa-solid fa-calculator" style="color: var(--cyan-accent);"></i> Menú Interactivo</h4>
+                            <pre style="font-size: 14px; margin-bottom: 10px;"><code class="plaintext" data-trim>
+CALCULADORA - Nivel I
+=====================
+1.- Sumar
+2.- Restar
+3.- Multiplicar
+4.- Dividir
+9.- Cerrar la aplicación
+                            </code></pre>
+                            <p style="font-size: 15px; color: var(--text-light); margin: 0;">
+                                El programa solicita 2 enteros, calcula el resultado mediante el módulo correspondiente y retorna al menú hasta ingresar opción 9.
+                            </p>
+                        </div>
+
+                        <div class="calc-level-box">
+                            <h4><i class="fa-solid fa-cubes" style="color: #10B981;"></i> Módulos Base Requeridos</h4>
+                            <ul style="font-size: 15px; color: var(--text-main); margin: 0; padding-left: 18px; line-height: 1.6;">
+                                <li><code>sumar(a, b)</code>: retorna la suma de ambos enteros.</li>
+                                <li><code>restar(a, b)</code>: retorna la resta de $a - b$.</li>
+                                <li><code>multiplicar(a, b)</code>: retorna el producto.</li>
+                                <li><code>dividir(a, b)</code>: retorna la división real (controlando división por cero).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 15: CALCULADORA (NIVEL II) - REUTILIZACIÓN ESTRICTA + ONECOMPILER
+                 ========================================================================= -->
+            <section>
+                <!-- 15.A Slide Teórica Horizontal -->
+                <section>
+                    <h2 class="slide-title">Calculadora Nivel II <span class="slide-subtitle">// Reutilización Modular</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 18px; margin-bottom: 12px;">
+                            En el Nivel II incorporamos operaciones avanzadas <strong>reutilizando exclusivamente</strong> los métodos ya creados:
+                        </p>
+                        <div class="modular-grid">
+                            <div class="modular-card" style="border-left-color: #F59E0B;">
+                                <h3><i class="fa-solid fa-superscript"></i> cuadradoDeUnNumero(n)</h3>
+                                <p><strong>Regla:</strong> Debe reutilizar <code>multiplicar(n, n)</code> sin usar operadores directos.</p>
+                            </div>
+                            <div class="modular-card" style="border-left-color: #10B981;">
+                                <h3><i class="fa-solid fa-percent"></i> calcularPorcentaje(total, pct)</h3>
+                                <p><strong>Regla:</strong> Reutiliza <code>multiplicar(total, pct)</code> y <code>dividir(resultado, 100)</code>.</p>
+                            </div>
+                            <div class="modular-card" style="grid-column: 1 / -1; border-left-color: var(--cyan-accent);">
+                                <h3><i class="fa-solid fa-chart-simple"></i> promedioDeTresNumeros(a, b, c)</h3>
+                                <p><strong>Regla:</strong> Reutiliza <code>sumar(sumar(a, b), c)</code> y luego <code>dividir(sumaTotal, 3)</code>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 15.B Slide Vertical: Compilador Interactivo 5 -->
+                <section id="slide-compiler-5">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Sandbox en Vivo <span class="slide-subtitle">// Calculadora Completa</span></h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-terminal"></i> OneCompiler - Calculadora Modular (Nivel I y II)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-5', codeCalculadora, 'java', 'Main.java')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-5" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 16: ECOSISTEMA PRÁCTICO (SIMULADORES Y DEPURADOR)
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">Ecosistema Interactivo <span class="slide-subtitle">// Herramientas SAO</span></h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div style="background: #FFFFFF; border: 2px solid #10B981; border-radius: 16px; padding: 22px; text-align: left; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.1);">
+                            <div style="font-size: 28px; color: #10B981; margin-bottom: 8px;">
+                                <i class="fa-solid fa-microchip"></i>
+                            </div>
+                            <h3 style="font-size: 20px; font-weight: 700; color: var(--utn-blue); margin-bottom: 6px;">La Máquina de Trazas</h3>
+                            <p style="font-size: 15px; color: var(--text-light); line-height: 1.4; margin-bottom: 14px;">
+                                Depurador paso a paso oficial de la cátedra. Visualizá en tiempo real los marcos del Call Stack, la memoria RAM y el aislamiento de variables por valor.
+                            </p>
+                            <a href="../debugger/index.html" style="background: #10B981; color: #fff; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                                <span>Abrir Depurador</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+
+                        <div style="background: #FFFFFF; border: 2px solid var(--cyan-accent); border-radius: 16px; padding: 22px; text-align: left; box-shadow: 0 6px 20px rgba(56, 189, 248, 0.1);">
+                            <div style="font-size: 28px; color: var(--cyan-accent); margin-bottom: 8px;">
+                                <i class="fa-solid fa-gavel"></i>
+                            </div>
+                            <h3 style="font-size: 20px; font-weight: 700; color: var(--utn-blue); margin-bottom: 6px;">Ace Coder: El Juicio</h3>
+                            <p style="font-size: 15px; color: var(--text-light); line-height: 1.4; margin-bottom: 14px;">
+                                Poné a prueba tus competencias de detección de errores lógicos, fugas de ámbito (scope) y llamadas recursivas en un tribunal interactivo.
+                            </p>
+                            <a href="../juicio/index.html" style="background: var(--cyan-accent); color: #fff; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                                <span>Iniciar Juicio</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 17: CIERRE INSTITUCIONAL Y CONSULTAS
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <img src="../../../../dist/utnsantafe.png" alt="UTN Santa Fe" style="height: 32px; margin: 0;">
+                            <span style="font-weight: 700; color: var(--utn-blue); font-size: 18px;">TUTI</span>
+                        </div>
+                        <h1 class="hero-title" style="font-size: 48px !important; text-align: left; margin-bottom: 10px !important;">¿PREGUNTAS?</h1>
+                        <h3 style="font-size: 20px; color: var(--text-main); font-weight: 600; margin-bottom: 15px; text-align: left;">Espacio de consultas sobre Modularización</h3>
+                        <p style="font-size: 16px; color: var(--text-light); text-align: left; margin-bottom: 20px;">¡Muchas gracias por su atención!</p>
+
+                        <div style="display: flex; gap: 14px; margin-bottom: 24px;">
+                            <a href="../index.html" style="background: var(--utn-blue); color: #fff; padding: 10px 18px; border-radius: 10px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-house"></i> <span>Portal Unidad 4</span>
+                            </a>
+                            <a href="../debugger/index.html" style="background: #10B981; color: #fff; padding: 10px 18px; border-radius: 10px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-microchip"></i> <span>Máquina de Trazas</span>
+                            </a>
+                        </div>
+
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente colocado fuera de .reveal directamente en el body -->
+    <div class="branding-footer" style="position: fixed !important; bottom: 24px; left: 35px; z-index: 9999; pointer-events: none;">
+        TUTI / UTN <span>SANTA FE</span>
+    </div>
+
+    <!-- Scripts Oficiales de Reveal.js -->
+    <script src="../../../../dist/reveal.js"></script>
+    <script src="../../../../dist/plugin/notes.js"></script>
+    <script src="../../../../dist/plugin/highlight.js"></script>
+
+    <!-- Códigos Ejecutables para OneCompiler Java -->
+    <script>
+        const codeRandom = `import java.util.Random;
+
+public class Main {
+    public static void main(String[] args) {
+        Random rnd = new Random();
+        System.out.println("=== 10 TIRADAS DE UN DADO ===");
+        
+        int suma = 0;
+        for (int i = 1; i <= 10; i++) {
+            int tiro = rnd.nextInt(6) + 1; // 1 a 6
+            suma += tiro;
+            System.out.println("Tiro #" + i + " -> Salió: " + tiro);
+        }
+        
+        double promedio = (double) suma / 10;
+        System.out.println("-----------------------------");
+        System.out.println("Suma total: " + suma);
+        System.out.println("Promedio obtenido: " + promedio);
+    }
+}`;
+
+        const codeDobleMitad = `import java.util.Random;
+
+public class Main {
+    public static void main(String[] args) {
+        Random rnd = new Random();
+        double pozo = 100.0;
+        int tirada = 0;
+        
+        System.out.println("=== JUEGO: DOBLE O MITAD ===");
+        System.out.println("Pozo inicial: $" + pozo);
+        System.out.println("----------------------------");
+        
+        while (pozo >= 1.0 && tirada < 50) {
+            tirada++;
+            int moneda = rnd.nextInt(2); // 0 = Cruz, 1 = Cara
+            
+            if (moneda == 1) {
+                pozo = pozo * 2.0;
+                System.out.println("Tirada #" + tirada + ": ¡CARA! Pozo duplicado a $" + pozo);
+            } else {
+                pozo = pozo / 2.0;
+                System.out.println("Tirada #" + tirada + ": ¡CRUZ! Pozo reducido a $" + pozo);
+            }
+        }
+        
+        System.out.println("============================");
+        System.out.println("Juego terminado en tirada #" + tirada);
+        System.out.println("Pozo final: $" + pozo);
+    }
+}`;
+
+        const codeProducto = `import java.util.Scanner;
+
+public class Main {
+    // Solución 1: Expresión directa
+    public static int producto(int a, int b) {
+        return a * b;
+    }
+
+    // Solución 2: Sumas sucesivas (algoritmo iterativo)
+    public static int productoSumas(int a, int b) {
+        int acum = 0;
+        int limite = Math.abs(b);
+        for (int i = 0; i < limite; i++) {
+            acum += a;
+        }
+        return (b < 0) ? -acum : acum;
+    }
+
+    public static void main(String[] args) {
+        int n1 = 3;
+        int n2 = 9;
+        
+        System.out.println("PROD (Solución 1 directa) = " + producto(n1, n2));
+        System.out.println("PROD (Solución 2 sumas)   = " + productoSumas(n1, n2));
+        
+        int n3 = -30;
+        int n4 = 10;
+        System.out.println("PROD con negativos = " + producto(n3, n4));
+    }
+}`;
+
+        const codeMultiplos = `public class Main {
+    public static boolean esMultiplo(int n1, int n2) {
+        if (n2 == 0) return false;
+        return (n1 % n2 == 0);
+    }
+
+    public static int suma(int a, int b) {
+        return a + b;
+    }
+
+    public static double potencia(int base, int exp) {
+        return Math.pow(base, exp);
+    }
+
+    public static void main(String[] args) {
+        int[][] pares = {
+            {10, 5},  // 10 es múltiplo de 5 -> Suma: 15
+            {2, 3},   // 2 no es múltiplo de 3 -> Potencia: 2^3 = 8.0
+            {12, 4},  // 12 es múltiplo de 4 -> Suma: 16
+            {3, 2}    // 3 no es múltiplo de 2 -> Potencia: 3^2 = 9.0
+        };
+
+        for (int i = 0; i < pares.length; i++) {
+            int n1 = pares[i][0];
+            int n2 = pares[i][1];
+            System.out.print("Par (" + n1 + ", " + n2 + ") -> ");
+            
+            if (esMultiplo(n1, n2)) {
+                System.out.println("La suma es: " + suma(n1, n2));
+            } else {
+                System.out.println("La potencia es: " + potencia(n1, n2));
+            }
+        }
+    }
+}`;
+
+        const codeCalculadora = `public class Main {
+    // --- NIVEL I: OPERACIONES ELEMENTALES ---
+    public static int sumar(int a, int b) {
+        return a + b;
+    }
+
+    public static int restar(int a, int b) {
+        return a - b;
+    }
+
+    public static int multiplicar(int a, int b) {
+        return a * b;
+    }
+
+    public static double dividir(int a, int b) {
+        if (b == 0) {
+            System.out.println("Error: No se puede dividir por cero.");
+            return 0.0;
+        }
+        return (double) a / b;
+    }
+
+    // --- NIVEL II: REUTILIZACIÓN MODULAR ---
+    public static int cuadradoDeUnNumero(int n) {
+        return multiplicar(n, n); // Reutiliza multiplicar()
+    }
+
+    public static double calcularPorcentaje(int total, int porcentaje) {
+        int producto = multiplicar(total, porcentaje);
+        return dividir(producto, 100); // Reutiliza multiplicar() y dividir()
+    }
+
+    public static double promedioDeTresNumeros(int a, int b, int c) {
+        int sumaParcial = sumar(a, b);
+        int sumaTotal = sumar(sumaParcial, c); // Reutiliza sumar()
+        return dividir(sumaTotal, 3);          // Reutiliza dividir()
+    }
+
+    public static void main(String[] args) {
+        System.out.println("=== CALCULADORA MODULAR UTN TUTI ===");
+        
+        // Pruebas Nivel I
+        System.out.println("1. Sumar(15, 25): " + sumar(15, 25));
+        System.out.println("2. Restar(50, 18): " + restar(50, 18));
+        System.out.println("3. Multiplicar(7, 8): " + multiplicar(7, 8));
+        System.out.println("4. Dividir(20, 4): " + dividir(20, 4));
+        
+        // Pruebas Nivel II (Reutilización)
+        System.out.println("------------------------------------");
+        System.out.println("5. Cuadrado de 12: " + cuadradoDeUnNumero(12));
+        System.out.println("6. 15% de 300: " + calcularPorcentaje(300, 15));
+        System.out.println("7. Promedio de (7, 8, 9): " + promedioDeTresNumeros(7, 8, 9));
+    }
+}`;
+
+        // =========================================================================
+        // REGLA CRÍTICA DE ORDEN DE EJECUCIÓN (Anti-Blank-Slide en Móviles/Vertical)
+        // =========================================================================
+        const isMobilePortrait = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
+        if (isMobilePortrait) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        // =========================================================================
+        // Canvas Adaptativo
+        // =========================================================================
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({ width: newSize.width, height: newSize.height });
+        });
+
+        // =========================================================================
+        // Inyección de Código OneCompiler en slidechanged
+        // =========================================================================
+        function sendCode(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        Reveal.on('slidechanged', event => {
+            if (event.currentSlide) {
+                if (event.currentSlide.id === 'slide-compiler-1') {
+                    sendCodeWithRetries('oc-editor-1', codeRandom, 'java', 'Main.java');
+                } else if (event.currentSlide.id === 'slide-compiler-2') {
+                    sendCodeWithRetries('oc-editor-2', codeDobleMitad, 'java', 'Main.java');
+                } else if (event.currentSlide.id === 'slide-compiler-3') {
+                    sendCodeWithRetries('oc-editor-3', codeProducto, 'java', 'Main.java');
+                } else if (event.currentSlide.id === 'slide-compiler-4') {
+                    sendCodeWithRetries('oc-editor-4', codeMultiplos, 'java', 'Main.java');
+                } else if (event.currentSlide.id === 'slide-compiler-5') {
+                    sendCodeWithRetries('oc-editor-5', codeCalculadora, 'java', 'Main.java');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
