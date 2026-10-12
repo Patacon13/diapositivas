@@ -207,9 +207,39 @@
             transform: translateY(-1px);
         }
 
+        /* Estilos de Práctica Guiada (Enunciado) */
+        .problem-statement-box {
+            background: #FFFFFF;
+            border: 2px solid #E2E8F0;
+            border-radius: 14px;
+            padding: 16px 22px;
+            max-width: 1040px;
+            margin: 0 auto 16px auto;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .condition-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            max-width: 1040px;
+            margin: 0 auto 16px auto;
+            text-align: left;
+        }
+
+        .problem-details-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 16px;
+            max-width: 1040px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
         /* Responsividad Mobile / Vertical */
         @media (max-aspect-ratio: 1/1), (max-width: 768px) {
-            .modular-grid {
+            .modular-grid, .condition-grid, .problem-details-grid {
                 grid-template-columns: 1fr !important;
                 gap: 12px !important;
             }
@@ -537,34 +567,97 @@ public static int productoSumas(int a, int b) {
             </section>
 
             <!-- =========================================================================
-                 SLIDE 8: PRÁCTICA GUIADA: MÚLTIPLOS Y POTENCIAS
+                 SLIDE 8: PRÁCTICA GUIADA: MÚLTIPLOS Y POTENCIAS (3 Pasos Verticales)
                  ========================================================================= -->
             <section>
-                <!-- 8.A Slide Teórica Horizontal -->
+                <!-- 8.A Slide Teórica Horizontal: Enunciado del Problema (Sin spoilers) -->
                 <section>
                     <h2 class="slide-title">Práctica Guiada <span class="slide-subtitle">// Múltiplos y Potencias</span></h2>
                     <div class="content-area">
-                        <p style="font-size: 18px; margin-bottom: 12px;">
-                            Dada una secuencia de N pares (n1, n2): si n1 es múltiplo de n2 mostrar su suma, caso contrario mostrar su potencia (n1 elevado a n2):
+                        <!-- Enunciado Principal -->
+                        <div class="problem-statement-box">
+                            <span style="font-size: 13px; font-weight: 700; color: var(--utn-blue); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">
+                                <i class="fa-solid fa-file-lines" style="color: var(--cyan-accent);"></i> Consigna del Problema
+                            </span>
+                            <p style="font-size: 18px; color: var(--text-main); margin: 0; line-height: 1.45;">
+                                Dada una secuencia de <strong>N pares de números</strong> <code>(n1, n2)</code>: si <code>n1</code> es múltiplo de <code>n2</code> mostrar su <strong>suma</strong>, caso contrario mostrar su <strong>potencia</strong> (<code>n1<sup>n2</sup></code>).
+                            </p>
+                        </div>
+
+                        <!-- 2 Tarjetas Condicionales -->
+                        <div class="condition-grid">
+                            <div style="background: #F0FDF4; border: 2px solid #BBF7D0; border-left: 6px solid #10B981; border-radius: 12px; padding: 14px 18px;">
+                                <h4 style="font-size: 16px; color: #166534; margin: 0 0 4px 0; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-circle-check" style="color: #10B981;"></i> Condición 1: n1 es múltiplo de n2
+                                </h4>
+                                <p style="font-size: 14px; color: #15803D; margin: 0; line-height: 1.4;">
+                                    Acción requerida: calcular y mostrar <strong>Suma = n1 + n2</strong>.
+                                </p>
+                            </div>
+
+                            <div style="background: #FFFBEB; border: 2px solid #FDE68A; border-left: 6px solid #F59E0B; border-radius: 12px; padding: 14px 18px;">
+                                <h4 style="font-size: 16px; color: #92400E; margin: 0 0 4px 0; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-triangle-exclamation" style="color: #F59E0B;"></i> Condición 2: n1 NO es múltiplo
+                                </h4>
+                                <p style="font-size: 14px; color: #B45309; margin: 0; line-height: 1.4;">
+                                    Acción requerida: calcular y mostrar <strong>Potencia = n1<sup>n2</sup></strong>.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Casos de Test y Pregunta Disparadora -->
+                        <div class="problem-details-grid">
+                            <div style="background: var(--bg-neutral); border: 2px solid #E2E8F0; border-radius: 12px; padding: 12px 18px;">
+                                <span style="font-size: 12px; font-weight: 700; color: var(--text-light); text-transform: uppercase;">Casos de Prueba (Entrada &rarr; Salida):</span>
+                                <ul style="margin: 6px 0 0 0; padding-left: 18px; font-size: 13.5px; color: var(--text-main); line-height: 1.5;">
+                                    <li>Par <code>(10, 5)</code> &rarr; 10 es múltiplo de 5 &rarr; <strong>Suma: 15</strong></li>
+                                    <li>Par <code>(2, 3)</code> &rarr; 2 no es múltiplo de 3 &rarr; <strong>Potencia: 8.0</strong></li>
+                                    <li>Par <code>(12, 4)</code> &rarr; 12 es múltiplo de 4 &rarr; <strong>Suma: 16</strong></li>
+                                    <li>Par <code>(3, 2)</code> &rarr; 3 no es múltiplo de 2 &rarr; <strong>Potencia: 9.0</strong></li>
+                                </ul>
+                            </div>
+
+                            <div class="callout-box" style="margin: 0; align-items: flex-start !important;">
+                                <i class="fa-solid fa-lightbulb" style="color: var(--utn-gold); font-size: 22px; margin-top: 3px !important; flex-shrink: 0;"></i>
+                                <div>
+                                    <strong style="display: block; font-size: 14px; color: var(--utn-blue); margin-bottom: 2px;">Pregunta disparadora:</strong>
+                                    <p style="margin: 0; font-size: 13px; color: var(--text-main); line-height: 1.4;">
+                                        ¿Qué métodos con retorno podemos definir para aislar cada operación y mantener el método <code>main</code> limpio y declarativo?
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8.B Slide Vertical: Solución Modular (Código de Métodos y Main) -->
+                <section>
+                    <h2 class="slide-title">Práctica Guiada <span class="slide-subtitle">// Solución Modular</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 17px; margin-bottom: 10px;">
+                            Descomponemos la lógica en tres métodos estáticos independientes con tipos de retorno adecuados:
                         </p>
-                        <pre><code class="java" data-trim data-noescape>
+                        <pre><code class="java" data-trim data-noescape data-line-numbers>
+// 1. Verificación booleana (controlando división por cero)
 public static boolean esMultiplo(int n1, int n2) {
     return (n2 != 0) &amp;&amp; (n1 % n2 == 0);
 }
 
+// 2. Operación aritmética de suma
 public static int suma(int a, int b) {
     return a + b;
 }
 
+// 3. Operación de potencia (reutilizando biblioteca Math)
 public static double potencia(int base, int exp) {
     return Math.pow(base, exp);
 }
                         </code></pre>
-                        <div class="callout-box" style="max-width: 960px; margin: 12px auto 0 auto; align-items: flex-start !important; text-align: left !important;">
+                        <div class="callout-box" style="max-width: 980px; margin: 12px auto 0 auto; align-items: flex-start !important; text-align: left !important;">
                             <i class="fa-solid fa-check-double" style="color: #10B981; font-size: 20px; margin-top: 3px !important; flex-shrink: 0;"></i>
                             <div>
-                                <strong style="display: block; margin-bottom: 2px;">El main queda limpio y declarativo:</strong>
-                                <p style="margin: 0; font-size: 15px; color: #065F46;">
+                                <strong style="display: block; margin-bottom: 2px;">El main queda limpio, legible y declarativo:</strong>
+                                <p style="margin: 0; font-size: 14.5px; color: #065F46;">
                                     <code>if (esMultiplo(n1, n2)) System.out.println("Suma: " + suma(n1, n2)); else System.out.println("Potencia: " + potencia(n1, n2));</code>
                                 </p>
                             </div>
@@ -572,7 +665,7 @@ public static double potencia(int base, int exp) {
                     </div>
                 </section>
 
-                <!-- 8.B Slide Vertical: Compilador Interactivo 2 -->
+                <!-- 8.C Slide Vertical: Compilador Interactivo 2 -->
                 <section id="slide-compiler-2">
                     <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Sandbox en Vivo <span class="slide-subtitle">// Múltiplos y Potencias</span></h2>
                     <div class="compiler-window">
