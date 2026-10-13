@@ -239,7 +239,9 @@ Antes de dar por finalizada la creación o refactorización de presentaciones, d
 18. **Arquitectura Modular en Hubs de Unidad (Secciones Jerárquicas)**:
     - Para evitar sobrecargar la grilla principal de clases o romper la simetría de tarjetas interactivas, los portales se estructuran en secciones temáticas con separadores elegantes (`.section-header` con línea divisoria y badge contador):
       1. **Clases & Práctica Interactiva**: Tarjetas verticales completas para las clases Reveal.js y minijuegos interactivos.
-      2. **Documentación & Material de Estudio**: Tarjetas horizontales compactas (`.docs-grid`) para el apunte de Teoría (`Apunte • PDF`) y la Guía de Práctica (`Guía de Ejercicios • PDF`) con botones de apertura externa.
+      2. **Documentación & Material de Estudio**: Tarjetas horizontales compactas (`.docs-grid`) para el apunte de Teoría (`Apunte • PDF`) y la Guía de Práctica (`Guía de Ejercicios • PDF`):
+         - **Textos de botones de acción**: Usar verbos y sustantivos directos como `<span>Abrir Teoría</span>`, `<span>Abrir Práctica</span>` (o `<span>Abrir Guía</span>`) y `<span>Abrir Anexo</span>` (evitar textos genéricos como *"Ir a SIED"* o *"Abrir en SIED"*).
+         - **Enlaces directos**: Vincular siempre directamente al recurso o PDF específico de Moodle/SIED (ej: `https://tuti.sied.utn.edu.ar/mod/resource/view.php?id=...` o `https://tuti.sied.utn.edu.ar/pluginfile.php/.../SAO%20...pdf`), nunca a la vista genérica de sección del curso (`course/view.php?id=...#section-...`).
       3. **Videos**: Fila de tarjetas interactivas (`.videos-grid`) que albergan píldoras de YouTube y grabaciones de clase en Microsoft SharePoint/Stream, identificadas con tags de plataforma (`YouTube • CÁTEDRA SAO` / `SharePoint • CÁTEDRA SAO`).
 19. **Versionado y Organización por Ciclo Lectivo (Multi-Año)**:
     - Toda presentación, hub o simulador debe alojarse dentro de su ciclo lectivo: `deploy/<materia>/<año>/...` (ej: `sao/2026/unidad2/`, `aedd/2026/clase8/`, `pba/2026/pilas_colas/`).
