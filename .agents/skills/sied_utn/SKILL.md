@@ -11,11 +11,11 @@ Esta skill proporciona conocimiento, herramientas y pautas para interactuar de f
 
 ## 1. Ubicación de los Recursos del Proyecto
 Todos los scripts, configuraciones y credenciales locales se encuentran en:
-* **En Windows:** `C:\Users\tomya\.gemini\antigravity\scratch\sied\`
+* **En Windows:** `%USERPROFILE%\.gemini\antigravity\scratch\sied\` (o `C:\Users\<tu-usuario>\.gemini\antigravity\scratch\sied\`)
 * **En Linux / Raspberry Pi:** `~/.gemini/antigravity/scratch/sied/`
 
 Archivos clave en esa carpeta:
-* `.env`: Contiene las credenciales y tokens (`SIED_TOKEN`, `SIED_PRIVATE_TOKEN`, `SIED_URL`).
+* `.env`: Contiene las credenciales y tokens del docente (`SIED_TOKEN`, `SIED_PRIVATE_TOKEN`, `SIED_URL`).
 * `.moodle_cookies.txt`: Cookies de sesión web persistentes en disco (`MozillaCookieJar`).
 * `session_manager.py`: Administrador de sesión web unificado (`MoodleSessionManager`).
 * `course_backup_pre_edit.json`: Snapshot de respaldo del aula virtual (SAO 2026).
@@ -26,8 +26,8 @@ Archivos clave en esa carpeta:
 ---
 
 ## 2. Información del Entorno y Cursos Habituales
-* **Usuario:** Tomás Assenza (`userid: 255`, email: `tassenza@frsf.utn.edu.ar`).
 * **Plataforma:** Moodle 4.5.8+ (SIED TUTI FRSF).
+* **Usuario y Autenticación:** Se detecta automáticamente según el token del `.env` mediante `core_webservice_get_site_info`. Cada docente opera con su propia cuenta y permisos.
 * **Cursos Frecuentes:**
   * **SAO 2026 - 2do. Cuat.:** `courseid: 90`
   * **PBA 2026 - 1er. Cuat.:** `courseid: 81`
