@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AEDD - Clase 18: Archivos de Texto - UTN FRSF</title>
+
+    <!-- Estilos Base Reveal.js (Ruta estandar desde aedd/2026/clase18/) -->
+    <link rel="stylesheet" href="../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../dist/plugin/highlight/monokai.css" />
+
+    <!-- Tema AEDD (Extiende utn-core.css) -->
+    <link rel="stylesheet" href="../../../dist/theme/aedd.css" />
+
+    <!-- Tipografias Oficiales e Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --danger-red: #EF4444;
+            --warning-amber: #F59E0B;
+            --success-green: #10B981;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 21px; color: var(--text-main); line-height: 1.5; text-align: left; }
+
+        .slide-title {
+            font-size: 40px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 20px !important; border-left: 12px solid var(--utn-gold);
+            padding-left: 20px; text-transform: uppercase !important; letter-spacing: -1.2px;
+            text-align: left; width: 100%;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; width: 100%; align-items: stretch; }
+
+        .tile {
+            background: var(--bg-neutral); padding: 20px; border-radius: 16px;
+            border-bottom: 5px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+        }
+        .tile:hover { transform: translateY(-4px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
+        .tile h3 { font-size: 19px; color: var(--utn-blue); margin-bottom: 8px; font-weight: 600; }
+        .tile p { font-size: 16px; color: var(--text-light); margin: 0; line-height: 1.45; }
+
+        .concept-card {
+            background: white; padding: 18px 22px; border-radius: 16px; border: 1px solid #E2E8F0;
+            border-left: 8px solid var(--utn-gold); box-shadow: 0 8px 24px rgba(0,0,0,0.04); text-align: left;
+        }
+        .concept-card h3 {
+            color: var(--utn-blue); font-size: 20px; margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
+        }
+
+        .reveal pre {
+            background: #272822; padding: 16px 20px; border-radius: 12px;
+            font-family: 'Fira Code', monospace; font-size: 14.5px; margin: 0;
+            border-left: 6px solid var(--utn-gold); box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            width: 100%; box-sizing: border-box;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+        .reveal code {
+            font-family: 'Fira Code', monospace;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .section-title-layout { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .section-title-layout h2 { font-size: 72px !important; color: var(--utn-gold) !important; font-weight: 700 !important; letter-spacing: -2px; }
+        .section-title-layout p { color: rgba(255,255,255,0.7) !important; font-size: 24px !important; font-weight: 300 !important; letter-spacing: 3px; text-align: center; }
+
+        .branding-footer {
+            position: fixed !important;
+            bottom: 24px;
+            left: 35px;
+            color: #94A3B8;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 1px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .branding-footer span { color: var(--utn-gold); }
+
+        .inciso-badge {
+            display: inline-block; background: var(--utn-gold); color: var(--utn-blue);
+            font-weight: 700; font-size: 24px; width: 44px; height: 44px; line-height: 44px;
+            text-align: center; border-radius: 50%; margin-right: 14px; flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
+        }
+        .inciso-header { display: flex; align-items: center; margin-bottom: 14px; }
+
+        .texto-enunciado {
+            background: white; padding: 18px 24px; border-radius: 14px; border: 1px solid #E2E8F0;
+            border-left: 6px solid var(--utn-blue); margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            text-align: left;
+        }
+        .texto-enunciado p { font-size: 18px; margin: 0 0 8px 0; line-height: 1.5; }
+        .texto-enunciado p:last-child { margin-bottom: 0; }
+
+        .stream-diagram {
+            display: flex; align-items: center; justify-content: center; gap: 16px;
+            background: var(--bg-neutral); padding: 18px; border-radius: 16px; margin: 15px 0;
+            border: 1px solid #E2E8F0;
+        }
+        .stream-node {
+            background: white; border: 2px solid var(--utn-blue); border-radius: 12px;
+            padding: 12px 18px; text-align: center; font-weight: 600; font-size: 16px;
+            color: var(--utn-blue); box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        .stream-arrow {
+            font-size: 20px; color: var(--utn-gold); display: flex; flex-direction: column;
+            align-items: center; gap: 2px;
+        }
+        .stream-arrow span {
+            font-size: 11px; color: var(--text-light); font-weight: 600; text-transform: uppercase;
+        }
+
+        .badge-pill {
+            display: inline-block; padding: 4px 12px; border-radius: 20px;
+            font-size: 13px; font-weight: 600; font-family: 'Fira Code', monospace;
+        }
+        .badge-pill.blue { background: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD; }
+        .badge-pill.amber { background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
+        .badge-pill.green { background: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0; }
+        .badge-pill.red { background: #FEE2E2; color: #B91C1C; border: 1px solid #FECACA; }
+
+        /* Responsive Mobile Portrait */
+        @media (max-aspect-ratio: 1/1), (max-width: 768px) {
+            .two-column { grid-template-columns: 1fr; gap: 14px; }
+            .slide-title { font-size: 30px !important; margin-bottom: 14px !important; }
+            .reveal p, .reveal li { font-size: 18px; }
+            .reveal pre { font-size: 13px; padding: 12px; overflow-x: auto; width: 100%; box-sizing: border-box; }
+            .section-title-layout h2 { font-size: 50px !important; }
+            .section-title-layout p { font-size: 18px !important; }
+            .tile { padding: 14px; }
+            .branding-footer { bottom: 15px; left: 20px; font-size: 12px; }
+            .stream-diagram { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 1: PORTADA INSTITUCIONAL AEDD -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <h1 style="color: white; font-size: 64px; line-height: 1.05; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 46px;">Clase 18: Archivos de Texto</span></h1>
+                <p style="color: rgba(255,255,255,0.7); margin-top: 35px; text-align: center; font-size: 22px;">Docentes de practica: Tomas Assenza, Facundo Sanchez</p>
+                <p style="color: rgba(255,255,255,0.35); margin-top: 10px; text-align: center; font-size: 16px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe (ISI)</p>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 2: MEMORIA RAM VS DISCO -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">¿Por Que Archivos? RAM vs Persistencia</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div class="concept-card" style="border-left-color: var(--danger-red);">
+                            <h3 style="color: var(--danger-red);"><i class="fa-solid fa-microchip"></i> Memoria RAM (Volatil)</h3>
+                            <p style="font-size: 16px; margin-bottom: 8px;">• Acceso ultra-rapido a celdas de memoria contiguas.</p>
+                            <p style="font-size: 16px; margin-bottom: 8px;">• Variables, arreglos y TDAs residen en RAM.</p>
+                            <p style="font-size: 16px; color: var(--danger-red); font-weight: 600; margin: 0;">• Al finalizar el programa o reiniciarse el equipo, su contenido desaparece por completo.</p>
+                        </div>
+                        <div class="concept-card" style="border-left-color: var(--success-green);">
+                            <h3 style="color: var(--success-green);"><i class="fa-solid fa-floppy-disk"></i> Archivo en Disco (Persistente)</h3>
+                            <p style="font-size: 16px; margin-bottom: 8px;">• Soporte de almacenamiento secundario (SSD / HDD).</p>
+                            <p style="font-size: 16px; margin-bottom: 8px;">• Capacidad masiva e independiente de la ejecucion.</p>
+                            <p style="font-size: 16px; color: var(--success-green); font-weight: 600; margin: 0;">• La informacion sobrevive entre ejecuciones y puede compartirse entre aplicaciones.</p>
+                        </div>
+                    </div>
+                    <div class="texto-enunciado" style="margin-top: 16px; padding: 14px 20px; border-left-color: var(--utn-gold);">
+                        <p style="font-size: 16px; margin: 0;">
+                            <strong>Definicion:</strong> Un <strong>Archivo de Texto</strong> es una secuencia secuencial de caracteres codificados (generalmente ASCII o UTF-8) organizados en renglones separados por saltos de linea (<code>\n</code>).
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 5: BIBLIOTECA FSTREAM Y CLASES -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Biblioteca &lt;fstream&gt;: Clases Principales</h2>
+                <div class="content-area">
+                    <p style="font-size: 17px; margin-bottom: 12px;">Para manipular archivos debemos incluir <code>#include &lt;fstream&gt;</code> en nuestro programa:</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%;">
+                        <div class="tile" style="border-top: 5px solid #0284C7; padding: 18px;">
+                            <span class="badge-pill blue" style="margin-bottom: 8px;">ifstream</span>
+                            <h4 style="font-size: 17px; color: var(--utn-blue); margin: 6px 0;">Input File Stream</h4>
+                            <p style="font-size: 14.5px; margin: 0;">Exclusivo para <strong>lectura</strong> de datos desde archivo hacia el programa. Modo implicito: <code>ios::in</code>.</p>
+                        </div>
+                        <div class="tile" style="border-top: 5px solid #16A34A; padding: 18px;">
+                            <span class="badge-pill green" style="margin-bottom: 8px;">ofstream</span>
+                            <h4 style="font-size: 17px; color: var(--utn-blue); margin: 6px 0;">Output File Stream</h4>
+                            <p style="font-size: 14.5px; margin: 0;">Exclusivo para <strong>escritura</strong>. Crea el archivo si no existe y por defecto trunca su contenido previo (<code>ios::out</code>).</p>
+                        </div>
+                        <div class="tile" style="border-top: 5px solid #D97706; padding: 18px;">
+                            <span class="badge-pill amber" style="margin-bottom: 8px;">fstream</span>
+                            <h4 style="font-size: 17px; color: var(--utn-blue); margin: 6px 0;">File Stream</h4>
+                            <p style="font-size: 14.5px; margin: 0;">Flujo bidireccional que permite combinar operaciones de lectura y escritura sobre el mismo archivo.</p>
+                        </div>
+                    </div>
+
+                    <div class="concept-card" style="margin-top: 16px; padding: 14px 20px;">
+                        <h4 style="font-size: 16px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-flag" style="color: var(--utn-gold);"></i> Modos Frecuentes de Apertura</h4>
+                        <p style="font-size: 15px; margin: 0;">
+                            <code>ios::in</code> (lectura) &bull; 
+                            <code>ios::out</code> (escritura con truncado) &bull; 
+                            <code>ios::app</code> (append: conserva lo existente y anexa al final).
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 6: APERTURA Y CONTROL DE ERRORES -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Apertura y Control de Errores</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <div class="concept-card" style="margin-bottom: 12px; padding: 14px 18px;">
+                                <p style="font-size: 15px; margin: 0; line-height: 1.5;">
+                                    <i class="fa-solid fa-triangle-exclamation" style="color: var(--danger-red); margin-right: 6px;"></i><strong>NUNCA</strong> asumir que el archivo abrio exitosamente. Puede no existir, tener la ruta mal escrita o no contar con permisos en el sistema operativo.
+                                </p>
+                            </div>
+                            <div class="tile" style="padding: 14px 18px;">
+                                <h4 style="font-size: 15.5px; color: var(--utn-blue); margin: 0 0 6px 0;"><i class="fa-solid fa-check-double" style="color: var(--success-green);"></i> Formas de Verificacion</h4>
+                                <p style="font-size: 14px; margin-bottom: 4px;">• <code>if (!archivo)</code> &rarr; Operador de conversion booleana.</p>
+                                <p style="font-size: 14px; margin-bottom: 4px;">• <code>if (archivo.fail())</code> &rarr; Retorna true si hubo falla.</p>
+                                <p style="font-size: 14px; margin: 0;">• <code>if (!archivo.is_open())</code> &rarr; Verifica conexion activa.</p>
+                            </div>
+                        </div>
+                        <div>
+                            <pre><code class="cpp" data-trim data-noescape>
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+
+using namespace std;
+
+int main() {
+    ifstream entrada("datos.txt");
+
+    if (!entrada.is_open()) {
+        cout &lt;&lt; "Error: no se pudo abrir el archivo." &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; "Archivo abierto correctamente." &lt;&lt; endl;
+        // Operaciones seguras de lectura...
+        entrada.close();
+    }
+    return 0;
+}
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 7: ESTRATEGIA 1 - LECTURA FORMATEADA (>>) -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Lectura Formateada (Operador &gt;&gt;)</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <p style="font-size: 17px; margin-bottom: 10px;">Ideal para leer datos con <strong>tipos conocidos</strong> separados por espacios en blanco, tabulaciones o saltos de linea:</p>
+                            <div class="tile" style="padding: 14px 18px; margin-bottom: 10px;">
+                                <h4 style="font-size: 16px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-forward" style="color: var(--utn-gold);"></i> Salteo Automatico de Espacios</h4>
+                                <p style="font-size: 14.5px; margin: 0;">Ignora espacios, tabulaciones y enters previos al dato.</p>
+                            </div>
+                            <div class="tile" style="padding: 14px 18px;">
+                                <h4 style="font-size: 16px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-arrows-split-up-and-left" style="color: var(--utn-blue);"></i> Conversion de Tipos</h4>
+                                <p style="font-size: 14.5px; margin: 0;">Parsea el texto directamente a <code>int</code>, <code>float</code> o <code>string</code> (hasta el proximo espacio).</p>
+                            </div>
+                        </div>
+                        <div>
+                            <pre><code class="cpp" data-trim data-noescape>
+// Archivo calificaciones.txt:
+// Perez 85 90
+// Gomez 70 82
+
+ifstream arch("calificaciones.txt");
+if (arch.is_open()) {
+    string apellido;
+    int nota1, nota2;
+    
+    // El propio flujo en la condicion controla el exito
+    while (arch &gt;&gt; apellido &gt;&gt; nota1 &gt;&gt; nota2) {
+        cout &lt;&lt; apellido &lt;&lt; ": " 
+             &lt;&lt; (nota1 + nota2) / 2.0 &lt;&lt; endl;
+    }
+    arch.close();
+}
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 8: ESTRATEGIA 2 - LECTURA LINEA A LINEA (getline) -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Lectura Linea a Linea (getline)</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <p style="font-size: 17px; margin-bottom: 10px;">Permite leer renglones completos <strong>conservando espacios intermedios</strong>:</p>
+                            <div class="concept-card" style="padding: 14px 18px; margin-bottom: 12px;">
+                                <h4 style="font-size: 16px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-align-left" style="color: var(--utn-gold);"></i> Sintaxis Estandar</h4>
+                                <p style="font-size: 14.5px; margin: 0;"><code>getline(archivo, variableString);</code><br>Lee hasta encontrar el caracter de salto de linea (<code>\n</code>).</p>
+                            </div>
+                            <div class="tile" style="padding: 14px 18px;">
+                                <h4 style="font-size: 16px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-table-columns" style="color: var(--utn-blue);"></i> Delimitador Personalizado</h4>
+                                <p style="font-size: 14.5px; margin: 0;"><code>getline(archivo, campo, ',');</code><br>Fundamental para procesar archivos CSV o columnas separadas por comas/puntos y coma.</p>
+                            </div>
+                        </div>
+                        <div>
+                            <pre><code class="cpp" data-trim data-noescape>
+// Archivo bitacora.txt con parrafos enteros
+
+ifstream bitacora("bitacora.txt");
+if (bitacora.is_open()) {
+    string renglon;
+    int numeroLinea = 1;
+
+    while (getline(bitacora, renglon)) {
+        cout &lt;&lt; "[" &lt;&lt; numeroLinea &lt;&lt; "] " 
+             &lt;&lt; renglon &lt;&lt; endl;
+        numeroLinea++;
+    }
+    bitacora.close();
+}
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 9: ESTRATEGIA 3 - LECTURA POR CARACTER (get) -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Lectura por Caracter (Metodo get)</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <p style="font-size: 17px; margin-bottom: 10px;">Cuando necesitamos procesar absolutamente <strong>cada byte</strong> sin perder nada:</p>
+                            <div class="concept-card" style="padding: 14px 18px; margin-bottom: 12px; border-left-color: #8B5CF6;">
+                                <h4 style="font-size: 16px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-font" style="color: #8B5CF6;"></i> Cero Perdida de Formato</h4>
+                                <p style="font-size: 14.5px; margin: 0;">A diferencia de <code>&gt;&gt;</code>, el metodo <code>get()</code> <strong>NO</strong> saltea espacios, tabulaciones ni saltos de linea.</p>
+                            </div>
+                            <div class="tile" style="padding: 14px 18px;">
+                                <h4 style="font-size: 16px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-shield-halved" style="color: var(--success-green);"></i> Casos Tipicos de Aplicacion</h4>
+                                <p style="font-size: 14px; margin: 0;">Algoritmos de cifrado, compresion, conteo estricto de caracteres y parsing sintactico.</p>
+                            </div>
+                        </div>
+                        <div>
+                            <pre><code class="cpp" data-trim data-noescape>
+ifstream fuente("codigo.txt");
+if (fuente.is_open()) {
+    char c;
+    int totalBytes = 0;
+
+    // Lee cada caracter individual
+    while (fuente.get(c)) {
+        totalBytes++;
+        // Analisis caracter por caracter...
+    }
+    cout &lt;&lt; "Total de caracteres: " 
+         &lt;&lt; totalBytes &lt;&lt; endl;
+    fuente.close();
+}
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE DE ESCRITURA Y CIERRE DE ARCHIVOS -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Escritura y Cierre de Archivos</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <div class="concept-card" style="margin-bottom: 12px; padding: 14px 18px;">
+                                <h4 style="font-size: 16px; color: var(--utn-blue); margin: 0 0 6px 0;"><i class="fa-solid fa-pen-to-square" style="color: var(--utn-gold);"></i> Escritura con Operador &lt;&lt;</h4>
+                                <p style="font-size: 14.5px; margin: 0;">
+                                    Permite insertar cualquier tipo de dato exactamente igual que con <code>cout</code>. Usar <code>\n</code> o <code>endl</code> para saltos de renglon.
+                                </p>
+                            </div>
+                            <div class="tile" style="padding: 14px 18px; border-top: 4px solid var(--utn-blue);">
+                                <h4 style="font-size: 16px; color: var(--utn-blue); margin: 0 0 6px 0;"><i class="fa-solid fa-lock" style="color: var(--utn-gold);"></i> ¿Por que es vital archivo.close()?</h4>
+                                <p style="font-size: 14px; margin-bottom: 4px;">• <strong>Flush del Buffer:</strong> Garantiza que los datos en RAM se graben efectivamente en el disco fisico.</p>
+                                <p style="font-size: 14px; margin: 0;">• <strong>Liberacion del Descriptor:</strong> Evita fugas de recursos en el sistema operativo.</p>
+                            </div>
+                        </div>
+                        <div>
+                            <pre><code class="cpp" data-trim data-noescape>
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+
+using namespace std;
+
+int main() {
+    // Abre para escritura (crea o sobreescribe)
+    ofstream reporte("resumen.txt");
+
+    if (reporte.is_open()) {
+        reporte &lt;&lt; "=== REPORTE ACADEMICO ===" &lt;&lt; endl;
+        reporte &lt;&lt; "Materia: Algoritmos" &lt;&lt; endl;
+        reporte &lt;&lt; "Alumnos evaluados: " &lt;&lt; 145 &lt;&lt; endl;
+        
+        reporte.close(); // Vaciado y cierre seguro
+        cout &lt;&lt; "Archivo generado con exito." &lt;&lt; endl;
+    }
+    return 0;
+}
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 13: EJERCICIO 1 (HORIZONTAL + VERTICAL) -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 13.A: Enunciado Ejercicio 1 -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">1</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Conteo de Letras, Digitos y Caracteres</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="texto-enunciado">
+                            <p><strong>Enunciado:</strong> Leer un archivo de texto llamado <code>texto.txt</code> y contar cuantitativamente:</p>
+                            <p style="margin-left: 15px;">a) La cantidad de letras del alfabeto (mayusculas y minusculas).</p>
+                            <p style="margin-left: 15px;">b) La cantidad de digitos numericos ('0' a '9').</p>
+                            <p style="margin-left: 15px;">c) La cantidad de otros caracteres (espacios, saltos de linea y puntuacion).</p>
+                            <p>Mostrar por pantalla un resumen completo al finalizar la ejecucion.</p>
+                        </div>
+                        <div class="tile" style="padding: 14px 18px; border-left: 5px solid var(--utn-gold);">
+                            <h4 style="font-size: 16px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-lightbulb" style="color: var(--utn-gold);"></i> Clave de Diseño</h4>
+                            <p style="font-size: 15px; margin: 0;">
+                                Debemos utilizar <code>archivo.get(c)</code> porque si usaramos <code>archivo &gt;&gt; c</code> los espacios y saltos de linea serian descartados automaticamente.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 13.B: Solucion Ejercicio 1 -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">1</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solucion Modular en C++</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 18px;">
+                            <div>
+                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
+// Funciones auxiliares modulares
+bool esLetra(char c) {
+    bool res = false;
+    if ((c &gt;= 'a' &amp;&amp; c &lt;= 'z') || 
+        (c &gt;= 'A' &amp;&amp; c &lt;= 'Z')) {
+        res = true;
+    }
+    return res;
+}
+
+bool esDigito(char c) {
+    bool res = false;
+    if (c &gt;= '0' &amp;&amp; c &lt;= '9') {
+        res = true;
+    }
+    return res;
+}
+                                </code></pre>
+                            </div>
+                            <div>
+                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
+// Flujo caracter a caracter
+void analizarArchivo(const string&amp; ruta, 
+                     int&amp; l, int&amp; d, int&amp; o) {
+    ifstream arch(ruta);
+    l = 0; d = 0; o = 0;
+    if (arch.is_open()) {
+        char c;
+        while (arch.get(c)) {
+            if (esLetra(c)) { l++; }
+            else if (esDigito(c)) { d++; }
+            else { o++; }
+        }
+        arch.close();
+    }
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 13.C: Compilador Vertical Ejercicio 1 -->
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 1</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox - Conteo de Caracteres</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-1', cppCodeEjercicio1, 'cpp', 'main.cpp')">Restaurar Codigo</button>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 14: EJERCICIO 2 (HORIZONTAL + VERTICAL) -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 14.A: Enunciado Ejercicio 2 -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">2</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Cifrado Cesar de un Archivo</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="texto-enunciado">
+                            <p><strong>Enunciado:</strong> Leer un archivo de texto (<code>original.txt</code>) y generar un archivo cifrado en clave (<code>enclave.txt</code>).</p>
+                            <p>Escribir en clave consiste en sumar un desplazamiento entero (<code>shift</code>) ingresado por teclado al codigo ASCII de cada caracter.</p>
+                            <p><strong>Restriccion:</strong> Los espacios en blanco y los saltos de linea no se alteran para mantener la legibilidad de la estructura del documento.</p>
+                        </div>
+                        <div class="concept-card" style="padding: 14px 18px; border-left-color: var(--utn-blue);">
+                            <h4 style="font-size: 16px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-gear" style="color: var(--utn-gold);"></i> Enfoque Tecnico</h4>
+                            <p style="font-size: 15px; margin: 0;">
+                                Abrimos simultaneamente un <code>ifstream</code> para el origen y un <code>ofstream</code> para el destino, procesando flujo caracter a caracter con <code>get()</code> y <code>put()</code>.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 14.B: Solucion Ejercicio 2 -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">2</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solucion Modular: Cifrado en Disco</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 18px;">
+                            <div>
+                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
+// Transformacion de cada caracter
+char cifrarCaracter(char c, int shift) {
+    char res = c;
+    if (c != ' ' &amp;&amp; 
+        c != '\n' &amp;&amp; 
+        c != '\r') {
+        res = static_cast&lt;char&gt;(c + shift);
+    }
+    return res;
+}
+                                </code></pre>
+                                <div class="tile" style="margin-top: 12px; padding: 12px 16px;">
+                                    <p style="font-size: 14px; margin: 0;">
+                                        <strong>Preservacion:</strong> Conservar <code>' '</code> y <code>'\n'</code> permite que el documento cifrado mantenga parrafos y palabras separadas.
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
+// Proceso simultaneo entrada &rarr; salida
+bool cifrarArchivo(const string&amp; orig, 
+                   const string&amp; dest, 
+                   int shift) {
+    ifstream entrada(orig);
+    ofstream salida(dest);
+    bool exito = false;
+
+    if (entrada.is_open() &amp;&amp; salida.is_open()) {
+        char c;
+        while (entrada.get(c)) {
+            char cif = cifrarCaracter(c, shift);
+            salida.put(cif);
+        }
+        entrada.close();
+        salida.close();
+        exito = true;
+    }
+    return exito;
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 14.C: Compilador Vertical Ejercicio 2 -->
+                <section id="slide-compiler-2">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 2</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox - Cifrado Cesar</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-2', cppCodeEjercicio2, 'cpp', 'main.cpp')">Restaurar Codigo</button>
+                        </div>
+                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 15: EJERCICIO 3 (HORIZONTAL + VERTICAL) -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 15.A: Enunciado Ejercicio 3 -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">3</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Estadisticas de Palabras en Texto</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="texto-enunciado">
+                            <p><strong>Enunciado:</strong> Leer un archivo de texto e informar:</p>
+                            <p style="margin-left: 15px;">1. La cantidad total de palabras del texto.</p>
+                            <p style="margin-left: 15px;">2. La longitud de la palabra mas larga y cual fue.</p>
+                            <p style="margin-left: 15px;">3. La cantidad de palabras que comienzan y terminan con letras elegidas por el usuario (sin distinguir mayusculas/minusculas).</p>
+                        </div>
+                        <div class="tile" style="padding: 14px 18px; border-left: 5px solid #10B981;">
+                            <h4 style="font-size: 16px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-magnifying-glass" style="color: #10B981;"></i> Estrategia Optima</h4>
+                            <p style="font-size: 15px; margin: 0;">
+                                Usamos <code>archivo &gt;&gt; palabra</code>. El operador extrae exactamente una palabra en cada iteracion ignorando espacios y saltos de linea.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 15.B: Solucion Ejercicio 3 -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">3</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solucion Modular: Analisis de Palabras</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 18px;">
+                            <div>
+                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
+char aMinuscula(char c) {
+    char res = c;
+    if (c &gt;= 'A' &amp;&amp; c &lt;= 'Z') { 
+        res = static_cast&lt;char&gt;(c + ('a' - 'A')); 
+    }
+    return res;
+}
+
+bool coincideExtremos(const string&amp; pal, 
+                      char inicio, char fin) {
+    bool coincide = false;
+    if (pal.length() &gt; 0) {
+        char p = aMinuscula(pal[0]);
+        char u = aMinuscula(pal[pal.length()-1]);
+        if (p == aMinuscula(inicio) &amp;&amp; 
+            u == aMinuscula(fin)) {
+            coincide = true;
+        }
+    }
+    return coincide;
+}
+                                </code></pre>
+                            </div>
+                            <div>
+                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
+// Bucle formateado palabra por palabra
+while (arch &gt;&gt; palabra) {
+    totalPalabras++;
+    if (palabra.length() &gt; maxLongitud) {
+        maxLongitud = palabra.length();
+        palabraMasLarga = palabra;
+    }
+    if (coincideExtremos(palabra, ini, fin)) { 
+        cantFiltro++; 
+    }
+}
+                                </code></pre>
+                                <div class="tile" style="margin-top: 12px; padding: 12px 16px;">
+                                    <p style="font-size: 14px; margin: 0;">
+                                        <strong>Ventaja:</strong> No necesitamos bucles manuales buscando espacios; el stream tokeniza de forma natural.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 15.C: Compilador Vertical Ejercicio 3 -->
+                <section id="slide-compiler-3">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 3</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox - Analisis de Palabras</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-3', cppCodeEjercicio3, 'cpp', 'main.cpp')">Restaurar Codigo</button>
+                        </div>
+                        <iframe id="oc-editor-3" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 16: EJERCICIO 4 / BONUS REGISTROS CSV -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 16.A: Enunciado Ejercicio 4 -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">4</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Registros Estructurados en Archivos CSV</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="texto-enunciado">
+                            <p><strong>Caso Real:</strong> Un archivo de texto <code>alumnos.csv</code> almacena datos separados por comas:</p>
+                            <p style="font-family: 'Fira Code', monospace; font-size: 16px; color: var(--utn-blue); margin-left: 10px;">
+                                Legajo,Nombre,Nota1,Nota2<br>
+                                10452,Lucia Martinez,8.5,9.0
+                            </p>
+                            <p>Se solicita leer el archivo, calcular el promedio de cada alumno y determinar el mejor promedio del curso.</p>
+                        </div>
+                        <div class="tile" style="padding: 14px 18px; border-left: 5px solid #8B5CF6;">
+                            <h4 style="font-size: 16px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-code-fork" style="color: #8B5CF6;"></i> Herramienta Clave</h4>
+                            <p style="font-size: 15px; margin: 0;">
+                                Aplicamos <code>getline(archivo, campo, ',')</code> pasando la coma como caracter delimitador para aislar cada columna de texto.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 16.B: Solucion Ejercicio 4 -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">4</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solucion Modular: Parsing CSV</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 18px;">
+                            <div>
+                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
+struct Alumno {
+    int legajo;
+    string nombre;
+    float promedio;
+};
+
+float calcularProm(float n1, float n2) {
+    float res = (n1 + n2) / 2.0f;
+    return res;
+}
+                                </code></pre>
+                                <div class="tile" style="margin-top: 12px; padding: 12px 16px;">
+                                    <p style="font-size: 14px; margin: 0;">
+                                        <code>stoi</code> convierte texto a entero y <code>stof</code> a flotante.
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <pre style="font-size: 12.5px;"><code class="cpp" data-trim data-noescape>
+// Lectura de registro delimitado
+string sLeg, nom, sN1, sN2;
+while (getline(arch, sLeg, ',') &amp;&amp;
+       getline(arch, nom, ',') &amp;&amp;
+       getline(arch, sN1, ',') &amp;&amp;
+       getline(arch, sN2)) {
+    
+    Alumno a;
+    a.legajo = stoi(sLeg);
+    a.nombre = nom;
+    a.promedio = calcularProm(stof(sN1), 
+                              stof(sN2));
+    
+    cout &lt;&lt; a.legajo &lt;&lt; " | " &lt;&lt; a.nombre 
+         &lt;&lt; " | Prom: " &lt;&lt; a.promedio &lt;&lt; endl;
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 16.C: Compilador Vertical Ejercicio 4 -->
+                <section id="slide-compiler-4">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 4</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox - Parsing CSV</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-4', cppCodeEjercicio4, 'cpp', 'main.cpp')">Restaurar Codigo</button>
+                        </div>
+                        <iframe id="oc-editor-4" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 17: CHECKLIST DE BUENAS PRACTICAS -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Checklist de Examen: Archivos de Texto</h2>
+                <div class="content-area">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%;">
+                        <div class="tile" style="border-left: 5px solid var(--success-green); padding: 16px;">
+                            <h4 style="font-size: 16.5px; color: var(--utn-blue); margin: 0 0 6px 0;"><i class="fa-solid fa-check" style="color: var(--success-green);"></i> 1. Verificacion Obligatoria</h4>
+                            <p style="font-size: 14.5px; margin: 0;">Siempre comprobar <code>if (!archivo.is_open())</code> antes de intentar leer o escribir.</p>
+                        </div>
+                        <div class="tile" style="border-left: 5px solid var(--success-green); padding: 16px;">
+                            <h4 style="font-size: 16.5px; color: var(--utn-blue); margin: 0 0 6px 0;"><i class="fa-solid fa-check" style="color: var(--success-green);"></i> 2. Control de Fin de Archivo</h4>
+                            <p style="font-size: 14.5px; margin: 0;">Usar <code>while (arch &gt;&gt; x)</code> o <code>while (getline(arch, s))</code>. Nunca <code>while(!arch.eof())</code> previo.</p>
+                        </div>
+                        <div class="tile" style="border-left: 5px solid var(--success-green); padding: 16px;">
+                            <h4 style="font-size: 16.5px; color: var(--utn-blue); margin: 0 0 6px 0;"><i class="fa-solid fa-check" style="color: var(--success-green);"></i> 3. Cierre Incondicional</h4>
+                            <p style="font-size: 14.5px; margin: 0;">Cerrar con <code>archivo.close()</code> para forzar el vaciado del buffer y liberar el descriptor del sistema.</p>
+                        </div>
+                        <div class="tile" style="border-left: 5px solid var(--success-green); padding: 16px;">
+                            <h4 style="font-size: 16.5px; color: var(--utn-blue); margin: 0 0 6px 0;"><i class="fa-solid fa-check" style="color: var(--success-green);"></i> 4. Limpieza al Mezclar cin y getline</h4>
+                            <p style="font-size: 14.5px; margin: 0;">Si leemos con <code>cin &gt;&gt; x</code> y luego usamos <code>getline</code>, limpiar el enter residual con <code>cin &gt;&gt; ws;</code>.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 18: CIERRE INSTITUCIONAL AEDD -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2>¿DUDAS O CONSULTAS?</h2>
+                    <p>ESPACIO PARA PUESTA EN COMUN Y PREGUNTAS</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+
+    <!-- Scripts de Reveal.js y Plugins -->
+    <script src="../../../dist/reveal.js"></script>
+    <script src="../../../dist/plugin/notes.js"></script>
+    <script src="../../../dist/plugin/highlight.js"></script>
+
+    <script>
+        // =========================================================================
+        // CODIGO FUENTE C++ PARA CADA COMPILADOR VERTICAL
+        // =========================================================================
+        const cppCodeEjercicio1 = `#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+bool esLetra(char c) {
+    bool resultado = false;
+    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+        resultado = true;
+    }
+    return resultado;
+}
+
+bool esDigito(char c) {
+    bool resultado = false;
+    if (c >= '0' && c <= '9') {
+        resultado = true;
+    }
+    return resultado;
+}
+
+void analizarArchivo(const string& ruta, int& letras, int& digitos, int& otros, bool& exito) {
+    ifstream arch(ruta);
+    letras = 0;
+    digitos = 0;
+    otros = 0;
+    exito = false;
+
+    if (arch.is_open()) {
+        exito = true;
+        char c;
+        while (arch.get(c)) {
+            if (esLetra(c)) {
+                letras++;
+            } else if (esDigito(c)) {
+                digitos++;
+            } else {
+                otros++;
+            }
+        }
+        arch.close();
+    }
+}
+
+int main() {
+    // 1. Creamos un archivo de prueba en el sandbox
+    string nombreArchivo = "texto.txt";
+    ofstream creador(nombreArchivo);
+    if (creador.is_open()) {
+        creador << "En el anio 2026, los 1450 alumnos de UTN cursaron AEDD con exito!\n";
+        creador << "Archivos de texto: leccion numero 18.";
+        creador.close();
+    }
+
+    // 2. Analizamos el contenido del archivo
+    int letras = 0, digitos = 0, otros = 0;
+    bool exito = false;
+    analizarArchivo(nombreArchivo, letras, digitos, otros, exito);
+
+    if (exito) {
+        cout << "=== RESUMEN DE ANALISIS DE TEXTO ===" << endl;
+        cout << "Total de letras alfabetica: " << letras << endl;
+        cout << "Total de digitos numericos: " << digitos << endl;
+        cout << "Total de otros caracteres:  " << otros << endl;
+        cout << "Total general de caracteres: " << (letras + digitos + otros) << endl;
+    } else {
+        cout << "Error: no se pudo abrir el archivo " << nombreArchivo << endl;
+    }
+
+    return 0;
+}`;
+
+        const cppCodeEjercicio2 = `#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+char cifrarCaracter(char c, int shift) {
+    char res = c;
+    if (c != ' ' && c != '\\n' && c != '\\r') {
+        res = static_cast<char>(c + shift);
+    }
+    return res;
+}
+
+bool cifrarArchivo(const string& origen, const string& destino, int shift) {
+    ifstream entrada(origen);
+    ofstream salida(destino);
+    bool exito = false;
+
+    if (entrada.is_open() && salida.is_open()) {
+        char c;
+        while (entrada.get(c)) {
+            char cifrado = cifrarCaracter(c, shift);
+            salida.put(cifrado);
+        }
+        entrada.close();
+        salida.close();
+        exito = true;
+    }
+    return exito;
+}
+
+void mostrarArchivo(const string& ruta) {
+    ifstream arch(ruta);
+    if (arch.is_open()) {
+        string linea;
+        while (getline(arch, linea)) {
+            cout << linea << endl;
+        }
+        arch.close();
+    }
+}
+
+int main() {
+    // 1. Creamos el archivo original.txt
+    string rutaOrigen = "original.txt";
+    string rutaDestino = "enclave.txt";
+    int desplazamiento = 3; // Cifrado Cesar simple
+
+    ofstream archOrig(rutaOrigen);
+    if (archOrig.is_open()) {
+        archOrig << "ALGORITMOS Y ESTRUCTURAS DE DATOS\\n";
+        archOrig << "CLASE 18 ARCHIVOS DE TEXTO UTN FRSF 2026";
+        archOrig.close();
+    }
+
+    cout << "--- Contenido Original (" << rutaOrigen << ") ---" << endl;
+    mostrarArchivo(rutaOrigen);
+
+    // 2. Ciframos hacia enclave.txt
+    bool ok = cifrarArchivo(rutaOrigen, rutaDestino, desplazamiento);
+
+    if (ok) {
+        cout << "\\n--- Contenido Cifrado (" << rutaDestino << " con shift " << desplazamiento << ") ---" << endl;
+        mostrarArchivo(rutaDestino);
+        cout << "\\nListo! Archivo enclave.txt generado correctamente." << endl;
+    } else {
+        cout << "Error al abrir los archivos de origen o destino." << endl;
+    }
+
+    return 0;
+}`;
+
+        const cppCodeEjercicio3 = `#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+char aMinuscula(char c) {
+    char res = c;
+    if (c >= 'A' && c <= 'Z') {
+        res = static_cast<char>(c + ('a' - 'A'));
+    }
+    return res;
+}
+
+bool coincideExtremos(const string& palabra, char inicio, char fin) {
+    bool coincide = false;
+    if (palabra.length() > 0) {
+        char primero = aMinuscula(palabra[0]);
+        char ultimo = aMinuscula(palabra[palabra.length() - 1]);
+        if (primero == aMinuscula(inicio) && ultimo == aMinuscula(fin)) {
+            coincide = true;
+        }
+    }
+    return coincide;
+}
+
+int main() {
+    // 1. Creamos archivo con varias palabras
+    string ruta = "texto_palabras.txt";
+    ofstream creador(ruta);
+    if (creador.is_open()) {
+        creador << "ala algoritmo estructura datos casa ala radar curso arbol alumnos";
+        creador.close();
+    }
+
+    char letraInicio = 'a';
+    char letraFin = 'a';
+
+    ifstream arch(ruta);
+    if (arch.is_open()) {
+        string palabra;
+        string palabraMasLarga = "";
+        int totalPalabras = 0;
+        int maxLongitud = 0;
+        int cantFiltro = 0;
+
+        // Lectura formateada: token por token
+        while (arch >> palabra) {
+            totalPalabras++;
+            if (palabra.length() > static_cast<size_t>(maxLongitud)) {
+                maxLongitud = static_cast<int>(palabra.length());
+                palabraMasLarga = palabra;
+            }
+            if (coincideExtremos(palabra, letraInicio, letraFin)) {
+                cantFiltro++;
+            }
+        }
+        arch.close();
+
+        cout << "=== ESTADISTICAS DE PALABRAS ===" << endl;
+        cout << "Cantidad total de palabras: " << totalPalabras << endl;
+        cout << "Palabra mas larga: \\"" << palabraMasLarga << "\\" (" << maxLongitud << " letras)" << endl;
+        cout << "Palabras que inician con '" << letraInicio << "' y terminan con '" << letraFin << "': " 
+             << cantFiltro << " (ej: ala)" << endl;
+    } else {
+        cout << "Error al abrir el archivo " << ruta << endl;
+    }
+
+    return 0;
+}`;
+
+        const cppCodeEjercicio4 = `#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+struct Alumno {
+    int legajo;
+    string nombre;
+    float nota1;
+    float nota2;
+    float promedio;
+};
+
+int main() {
+    // 1. Creamos un archivo CSV estructurado
+    string rutaCSV = "alumnos.csv";
+    ofstream archivoCSV(rutaCSV);
+    if (archivoCSV.is_open()) {
+        archivoCSV << "10101,Gomez Lucas,8.5,9.0\\n";
+        archivoCSV << "10102,Perez Martina,6.0,7.5\\n";
+        archivoCSV << "10103,Rodriguez Juan,9.0,10.0\\n";
+        archivoCSV << "10104,Alvarez Sofia,4.0,5.5\\n";
+        archivoCSV.close();
+    }
+
+    // 2. Procesamos el CSV campo por campo con getline delimitado
+    ifstream arch(rutaCSV);
+    if (arch.is_open()) {
+        cout << "LEGAJO | NOMBRE               | NOTA 1 | NOTA 2 | PROMEDIO" << endl;
+        cout << "------------------------------------------------------------" << endl;
+
+        string strLeg, nombre, strN1, strN2;
+        int totalAlumnos = 0;
+        float sumaPromedios = 0.0f;
+        string mejorAlumno = "";
+        float mejorPromedio = -1.0f;
+
+        while (getline(arch, strLeg, ',') &&
+               getline(arch, nombre, ',') &&
+               getline(arch, strN1, ',') &&
+               getline(arch, strN2)) {
+            
+            Alumno a;
+            a.legajo = stoi(strLeg);
+            a.nombre = nombre;
+            a.nota1 = stof(strN1);
+            a.nota2 = stof(strN2);
+            a.promedio = (a.nota1 + a.nota2) / 2.0f;
+
+            totalAlumnos++;
+            sumaPromedios += a.promedio;
+
+            if (a.promedio > mejorPromedio) {
+                mejorPromedio = a.promedio;
+                mejorAlumno = a.nombre;
+            }
+
+            cout << a.legajo << "  | " << a.nombre;
+            // Espaciado simple para alineacion
+            for (int i = 0; i < 20 - static_cast<int>(a.nombre.length()); i++) {
+                cout << " ";
+            }
+            cout << " | " << a.nota1 << "    | " << a.nota2 << "    | " << a.promedio << endl;
+        }
+        arch.close();
+
+        if (totalAlumnos > 0) {
+            cout << "------------------------------------------------------------" << endl;
+            cout << "Promedio general del curso: " << (sumaPromedios / totalAlumnos) << endl;
+            cout << "Mejor rendimiento: " << mejorAlumno << " (Promedio: " << mejorPromedio << ")" << endl;
+        }
+    } else {
+        cout << "Error: no se pudo abrir " << rutaCSV << endl;
+    }
+
+    return 0;
+}`;
+
+        // =========================================================================
+        // REGLA CRITICA DE ORDEN DE EJECUCION (Anti-Blank-Slide en Moviles/Vertical)
+        // =========================================================================
+        const isMobilePortrait = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
+        if (isMobilePortrait) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        // =========================================================================
+        // Canvas Adaptativo
+        // =========================================================================
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({ width: newSize.width, height: newSize.height });
+        });
+
+        // =========================================================================
+        // Protocolo de Inyeccion OneCompiler C++ con Reintentos
+        // =========================================================================
+        function sendCode(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        function checkCompilerSlides(slide) {
+            if (!slide) return;
+            if (slide.id === 'slide-compiler-1') {
+                sendCodeWithRetries('oc-editor-1', cppCodeEjercicio1, 'cpp', 'main.cpp');
+            } else if (slide.id === 'slide-compiler-2') {
+                sendCodeWithRetries('oc-editor-2', cppCodeEjercicio2, 'cpp', 'main.cpp');
+            } else if (slide.id === 'slide-compiler-3') {
+                sendCodeWithRetries('oc-editor-3', cppCodeEjercicio3, 'cpp', 'main.cpp');
+            } else if (slide.id === 'slide-compiler-4') {
+                sendCodeWithRetries('oc-editor-4', cppCodeEjercicio4, 'cpp', 'main.cpp');
+            }
+        }
+
+        Reveal.on('slidechanged', event => {
+            checkCompilerSlides(event.currentSlide);
+        });
+
+        Reveal.on('ready', event => {
+            checkCompilerSlides(Reveal.getCurrentSlide());
+        });
+    </script>
+</body>
+</html>
