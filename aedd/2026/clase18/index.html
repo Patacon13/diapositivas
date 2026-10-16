@@ -591,21 +591,29 @@ void analizarArchivo(const string&amp; ruta,
                     <div class="content-area">
                         <div class="two-column" style="gap: 18px;">
                             <div>
-                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
-// Transformacion de cada caracter
+                                <pre style="font-size: 12.5px;"><code class="cpp" data-trim data-noescape>
+// Transformacion con rotacion ciclica
 char cifrarCaracter(char c, int shift) {
     char res = c;
-    if (c != ' ' &amp;&amp; 
-        c != '\n' &amp;&amp; 
-        c != '\r') {
-        res = static_cast&lt;char&gt;(c + shift);
+    if (c &gt;= 'A' &amp;&amp; c &lt;= 'Z') {
+        int nuevoCodigo = c + shift;
+        if (nuevoCodigo &gt; 'Z') {
+            nuevoCodigo = nuevoCodigo - 26;
+        }
+        res = (char) nuevoCodigo;
+    } else if (c &gt;= 'a' &amp;&amp; c &lt;= 'z') {
+        int nuevoCodigo = c + shift;
+        if (nuevoCodigo &gt; 'z') {
+            nuevoCodigo = nuevoCodigo - 26;
+        }
+        res = (char) nuevoCodigo;
     }
     return res;
 }
                                 </code></pre>
-                                <div class="tile" style="margin-top: 12px; padding: 12px 16px;">
-                                    <p style="font-size: 14px; margin: 0;">
-                                        <strong>Preservacion:</strong> Conservar <code>' '</code> y <code>'\n'</code> permite que el documento cifrado mantenga parrafos y palabras separadas.
+                                <div class="tile" style="margin-top: 10px; padding: 10px 14px;">
+                                    <p style="font-size: 13.5px; margin: 0;">
+                                        <strong>Rotacion ciclica:</strong> Si supera <code>'Z'</code> (o <code>'z'</code>), vuelve a <code>'A'</code> (o <code>'a'</code>). Se preservan espacios, saltos y signos.
                                     </p>
                                 </div>
                             </div>
@@ -974,8 +982,18 @@ using namespace std;
 
 char cifrarCaracter(char c, int shift) {
     char res = c;
-    if (c != ' ' && c != '\\n' && c != '\\r') {
-        res = static_cast<char>(c + shift);
+    if (c >= 'A' && c <= 'Z') {
+        int nuevoCodigo = c + shift;
+        if (nuevoCodigo > 'Z') {
+            nuevoCodigo = nuevoCodigo - 26;
+        }
+        res = (char) nuevoCodigo;
+    } else if (c >= 'a' && c <= 'z') {
+        int nuevoCodigo = c + shift;
+        if (nuevoCodigo > 'z') {
+            nuevoCodigo = nuevoCodigo - 26;
+        }
+        res = (char) nuevoCodigo;
     }
     return res;
 }
