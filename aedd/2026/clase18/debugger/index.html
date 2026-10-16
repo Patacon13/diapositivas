@@ -39,8 +39,10 @@
 
         html, body {
             width: 100%;
-            height: 100%;
-            overflow-x: hidden;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
         }
 
         body {
@@ -50,7 +52,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 8px 12px;
+            padding: 6px 10px;
+            box-sizing: border-box;
             position: relative;
         }
 
@@ -71,16 +74,17 @@
         header {
             width: 100%;
             max-width: 1320px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 16px;
+            padding: 6px 14px;
             background: rgba(15, 23, 42, 0.94);
             border: 1px solid var(--panel-border);
-            border-radius: 12px;
+            border-radius: 10px;
             backdrop-filter: blur(14px);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             flex-shrink: 0;
             z-index: 20;
         }
@@ -217,9 +221,13 @@
             max-width: 1320px;
             display: grid;
             grid-template-columns: 1fr 1.05fr;
+            grid-template-rows: 1fr;
+            height: calc(100vh - 66px);
+            max-height: calc(100vh - 66px);
             gap: 10px;
             flex: 1;
             min-height: 0;
+            overflow: hidden;
             z-index: 10;
         }
 
@@ -232,6 +240,8 @@
             flex-direction: column;
             overflow: hidden;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            min-height: 0;
+            height: 100%;
         }
 
         .editor-tab-bar {
@@ -260,6 +270,7 @@
 
         .code-viewport {
             flex: 1;
+            min-height: 0;
             padding: 8px 0;
             overflow-y: auto;
             font-family: 'Fira Code', monospace;
@@ -335,11 +346,12 @@
         .stepper-controls-bar {
             background: rgba(15, 23, 42, 0.96);
             border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 8px 12px;
+            padding: 7px 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 10px;
+            flex-shrink: 0;
         }
 
         .explanation-text {
@@ -403,24 +415,27 @@
         .inspector-column {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             min-height: 0;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 2px;
         }
 
         .panel-card {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
-            border-radius: 12px;
-            padding: 10px 14px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 7px 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
         }
 
         .panel-header-title {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 12px;
+            margin-bottom: 5px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--cyan-accent);
             text-transform: uppercase;
@@ -433,7 +448,7 @@
             background: #070B12;
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            padding: 10px 12px 28px 12px;
+            padding: 6px 10px 22px 10px;
             overflow-x: auto;
             white-space: nowrap;
         }
@@ -445,8 +460,8 @@
         }
 
         .tape-cell {
-            width: 32px;
-            height: 36px;
+            width: 28px;
+            height: 32px;
             border: 1px solid rgba(255, 255, 255, 0.15);
             background: rgba(30, 41, 59, 0.5);
             border-radius: 5px;
@@ -455,7 +470,7 @@
             align-items: center;
             justify-content: center;
             font-family: 'Fira Code', monospace;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             color: #E2E8F0;
             position: relative;
@@ -465,8 +480,8 @@
 
         .tape-cell .cell-index {
             position: absolute;
-            top: -14px;
-            font-size: 9px;
+            top: -13px;
+            font-size: 8.5px;
             color: #64748B;
             font-weight: normal;
         }
@@ -486,18 +501,18 @@
         }
 
         .tape-cell.eof-cell {
-            width: 44px;
+            width: 38px;
             background: rgba(239, 68, 68, 0.18);
             border-color: rgba(239, 68, 68, 0.45);
             color: #FCA5A5;
-            font-size: 11px;
+            font-size: 10px;
         }
 
         .tape-cursor-marker {
             position: absolute;
-            bottom: 6px;
+            bottom: 3px;
             font-family: 'Fira Code', monospace;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 800;
             color: var(--utn-gold);
             display: flex;
@@ -613,14 +628,14 @@
             background: #05080E;
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            padding: 8px 12px;
+            padding: 6px 10px;
             font-family: 'Fira Code', monospace;
-            font-size: 11.5px;
+            font-size: 11px;
             color: #10B981;
-            min-height: 70px;
-            max-height: 100px;
+            min-height: 48px;
+            max-height: 72px;
             overflow-y: auto;
-            line-height: 1.5;
+            line-height: 1.45;
         }
 
         /* MODAL DE DESAFÍO / TRIVIA */
@@ -1115,9 +1130,9 @@
                             title: "Lectura en Fin de Archivo (EOF)",
                             prompt: "El cursor ya consumió todos los caracteres de 'saludo.txt'. ¿Qué ocurre cuando el while evalúa nuevamente (arch >> palabra)?",
                             options: [
-                                "La lectura falla: se activan las banderas eofbit y failbit, haciendo que el while evalúe a false y termine limpiamente.",
-                                "El programa produce un error de segmentación y finaliza con código de error.",
-                                "La variable 'palabra' se borra automáticamente pasando a valer NULL."
+                                "Falla la lectura: activa eofbit/failbit y el while termina.",
+                                "Causa un error de segmentación y el programa aborta.",
+                                "La variable palabra pasa a valer NULL automáticamente."
                             ],
                             correctIndex: 0,
                             explanation: "¡Exacto! El operador >> retorna el propio flujo 'arch'. Al intentar leer sin datos, se activan eofbit y failbit, y al convertirse a booleano retorna false, terminando el bucle con elegancia."
@@ -1257,9 +1272,9 @@
                             title: "¡La Trampa de while (!arch.eof())!",
                             prompt: "El cursor físico llegó al final de 'notas.txt'. ¿Cuánto vale arch.eof() en este instante exacto antes de intentar otra lectura?",
                             options: [
-                                "Vale false, porque la bandera EOF solo se activa DESPUÉS de intentar una lectura que no encuentra datos.",
-                                "Vale true inmediatamente apenas el cursor toca el último byte del archivo.",
-                                "Depende de si el archivo termina con un espacio en blanco o no."
+                                "Vale false (EOF solo se activa tras intentar leer sin datos).",
+                                "Vale true (se activa inmediatamente al tocar el último byte).",
+                                "Depende de si el archivo termina o no con espacio en blanco."
                             ],
                             correctIndex: 0,
                             explanation: "¡Correcto! En C++, eof() NO es un detector del futuro; es una bandera retrospectiva. Como no falló ninguna lectura aún, eof() es false y el bucle ¡VUELVE A ENTRAR POR ERROR!"
@@ -1352,9 +1367,9 @@
                             title: "El Enter Residual en el Stream",
                             prompt: "El operador >> extrajo el entero 10452. ¿Qué caracter quedó apuntado inmediatamente por el cursor en el stream?",
                             options: [
-                                "El caracter de salto de línea '\\n', que no fue consumido por el operador >>.",
-                                "La primera letra 'V' de Valeria, porque >> saltea todos los enters.",
-                                "El fin de archivo EOF."
+                                "El salto de línea '\\n'.",
+                                "La primera letra ('V').",
+                                "La marca de fin (EOF)."
                             ],
                             correctIndex: 0,
                             explanation: "¡Exacto! El operador >> extrae el número y frena en seco apenas encuentra un caracter que no forma parte del entero (en este caso el salto de línea '\\n')."
@@ -1401,7 +1416,7 @@
             {
                 title: "Nivel 4: Registros CSV con Delimitador Personalizado",
                 fileName: "alumnos.csv",
-                rawChars: ['1', '0', '1', ',', 'M', 'a', 'r', 'c', 'o', 's', ',', '8', '.', '5', '\n', '1', '0', '2', ',', 'S', 'o', 'f', 'i', 'a', ',', '9', '.', '0'],
+                rawChars: ['1', '0', '1', ',', 'A', 'n', 'a', ',', '9', '\n'],
                 codeLines: [
                     '#include <iostream>',
                     '#include <fstream>',
@@ -1429,7 +1444,7 @@
                 steps: [
                     {
                         line: 6,
-                        hint: 'Abre "alumnos.csv".',
+                        hint: 'Abre "alumnos.csv". El cursor se posiciona en el byte 0.',
                         cursorPos: 0,
                         flags: { good: true, eof: false, fail: false, bad: false },
                         vars: { arch: 'abierto', legajo: '""', nombre: '""', nota: '""' },
@@ -1437,7 +1452,7 @@
                     },
                     {
                         line: 8,
-                        hint: 'getline(arch, legajo, \',\'): Lee hasta la primera coma. Extrae "101".',
+                        hint: 'getline(arch, legajo, \',\'): Lee hasta la primera coma. Extrae "101" y descarta la coma.',
                         cursorPos: 4,
                         flags: { good: true, eof: false, fail: false, bad: false },
                         vars: { arch: 'abierto', legajo: '"101"', nombre: '""', nota: '""' },
@@ -1445,74 +1460,42 @@
                     },
                     {
                         line: 9,
-                        hint: 'getline(arch, nombre, \',\'): Lee hasta la segunda coma. Extrae "Marcos".',
-                        cursorPos: 11,
+                        hint: 'getline(arch, nombre, \',\'): Lee hasta la segunda coma. Extrae "Ana" y descarta la coma.',
+                        cursorPos: 8,
                         flags: { good: true, eof: false, fail: false, bad: false },
-                        vars: { arch: 'abierto', legajo: '"101"', nombre: '"Marcos"', nota: '""' },
+                        vars: { arch: 'abierto', legajo: '"101"', nombre: '"Ana"', nota: '""' },
                         output: null
                     },
                     {
                         line: 10,
-                        hint: 'getline(arch, nota): Lee hasta el salto de línea. Extrae "8.5".',
-                        cursorPos: 15,
+                        hint: 'getline(arch, nota): Lee hasta el salto de línea \\n. Extrae "9" y descarta el \\n.',
+                        cursorPos: 10,
                         flags: { good: true, eof: false, fail: false, bad: false },
-                        vars: { arch: 'abierto', legajo: '"101"', nombre: '"Marcos"', nota: '"8.5"' },
+                        vars: { arch: 'abierto', legajo: '"101"', nombre: '"Ana"', nota: '"9"' },
                         output: null
                     },
                     {
                         line: 11,
-                        hint: 'Imprime el registro completo del primer alumno.',
-                        cursorPos: 15,
+                        hint: 'cout: Imprime en consola los datos parseados del registro.',
+                        cursorPos: 10,
                         flags: { good: true, eof: false, fail: false, bad: false },
-                        vars: { arch: 'abierto', legajo: '"101"', nombre: '"Marcos"', nota: '"8.5"' },
-                        output: 'Marcos (Leg 101) -> 8.5'
+                        vars: { arch: 'abierto', legajo: '"101"', nombre: '"Ana"', nota: '"9"' },
+                        output: 'Ana (101) -> 9'
                     },
                     {
                         line: 8,
-                        hint: 'Segunda fila: getline extrae "102".',
-                        cursorPos: 19,
-                        flags: { good: true, eof: false, fail: false, bad: false },
-                        vars: { arch: 'abierto', legajo: '"102"', nombre: '"Marcos"', nota: '"8.5"' },
-                        output: null
-                    },
-                    {
-                        line: 9,
-                        hint: 'Segunda fila: getline extrae "Sofia".',
-                        cursorPos: 25,
-                        flags: { good: true, eof: false, fail: false, bad: false },
-                        vars: { arch: 'abierto', legajo: '"102"', nombre: '"Sofia"', nota: '"8.5"' },
-                        output: null
-                    },
-                    {
-                        line: 10,
-                        hint: 'Segunda fila: getline extrae "9.0". Cursor en el final del archivo.',
-                        cursorPos: 27,
-                        flags: { good: true, eof: false, fail: false, bad: false },
-                        vars: { arch: 'abierto', legajo: '"102"', nombre: '"Sofia"', nota: '"9.0"' },
-                        output: null
-                    },
-                    {
-                        line: 11,
-                        hint: 'Imprime el registro de Sofia.',
-                        cursorPos: 27,
-                        flags: { good: true, eof: false, fail: false, bad: false },
-                        vars: { arch: 'abierto', legajo: '"102"', nombre: '"Sofia"', nota: '"9.0"' },
-                        output: 'Sofia (Leg 102) -> 9.0'
-                    },
-                    {
-                        line: 8,
-                        hint: 'Intento de lectura al terminar el archivo: getline no encuentra caracteres, se activa EOF y termina el bucle.',
-                        cursorPos: 27,
+                        hint: 'while: Intenta leer el siguiente registro. Al estar al final del archivo, se activan EOF y FAIL.',
+                        cursorPos: 10,
                         flags: { good: false, eof: true, fail: true, bad: false },
-                        vars: { arch: 'fail | eof', legajo: '"102"', nombre: '"Sofia"', nota: '"9.0"' },
+                        vars: { arch: 'fail | eof', legajo: '"101"', nombre: '"Ana"', nota: '"9"' },
                         output: null
                     },
                     {
                         line: 13,
-                        hint: 'Cierra el archivo CSV.',
-                        cursorPos: 27,
+                        hint: 'Cierra el archivo CSV. Flujo completado con éxito.',
+                        cursorPos: 10,
                         flags: { good: false, eof: true, fail: true, bad: false },
-                        vars: { arch: 'cerrado', legajo: '"102"', nombre: '"Sofia"', nota: '"9.0"' },
+                        vars: { arch: 'cerrado', legajo: '"101"', nombre: '"Ana"', nota: '"9"' },
                         output: '[Parsing CSV completado con éxito]'
                     }
                 ]
