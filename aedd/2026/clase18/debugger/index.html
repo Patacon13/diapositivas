@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Stream Inspector: Depurador de Archivos C++ | AEDD - UTN FRSF</title>
+
+    <!-- Google Fonts & Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --cyan-accent: #38BDF8;
+            --cyan-dark: #0284C7;
+            --bg-dark: #090D16;
+            --panel-bg: #0F172A;
+            --panel-border: rgba(56, 189, 248, 0.22);
+            --code-bg: #070B12;
+            --danger-red: #EF4444;
+            --success-green: #10B981;
+            --warning-amber: #F59E0B;
+            --purple-accent: #A855F7;
+            --text-main: #F8FAFC;
+            --text-dim: #94A3B8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 50% 10%, #151F38 0%, #080C16 100%);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 12px;
+            position: relative;
+        }
+
+        /* Scanlines CRT sutiles */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+            z-index: 900;
+            background-size: 100% 3px;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        /* HEADER HUD */
+        header {
+            width: 100%;
+            max-width: 1320px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            background: rgba(15, 23, 42, 0.94);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 8px;
+            flex-shrink: 0;
+            z-index: 20;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            background: var(--utn-gold);
+            color: var(--utn-blue);
+            font-weight: 900;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.8px;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.35);
+        }
+
+        .brand-titles {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            color: #F8FAFC;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-sub {
+            font-size: 10.5px;
+            color: var(--cyan-accent);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 600;
+        }
+
+        /* SELECTOR DE NIVELES */
+        .level-selector-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(8, 12, 22, 0.85);
+            padding: 4px 6px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .level-tab-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #94A3B8;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .level-tab-btn:hover {
+            color: #F8FAFC;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .level-tab-btn.active {
+            background: rgba(56, 189, 248, 0.16);
+            border-color: var(--cyan-accent);
+            color: #38BDF8;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+        }
+
+        .hud-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hud-stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .hud-stat-pill.score {
+            border-color: rgba(255, 193, 7, 0.45);
+            color: #FEF08A;
+        }
+        .hud-stat-pill.streak {
+            border-color: rgba(244, 63, 94, 0.45);
+            color: #FDA4AF;
+        }
+
+        .btn-return-slides {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 43, 91, 0.8);
+            border: 1px solid var(--utn-gold);
+            color: var(--utn-gold);
+            text-decoration: none;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+        .btn-return-slides:hover {
+            background: var(--utn-gold);
+            color: var(--utn-blue);
+            transform: translateY(-1px);
+        }
+
+        /* WORKSPACE PRINCIPAL EN GRID */
+        .workspace-grid {
+            width: 100%;
+            max-width: 1320px;
+            display: grid;
+            grid-template-columns: 1fr 1.05fr;
+            gap: 10px;
+            flex: 1;
+            min-height: 0;
+            z-index: 10;
+        }
+
+        /* PANEL IZQUIERDO: EDITOR C++ */
+        .editor-container {
+            background: var(--code-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .editor-tab-bar {
+            background: #0D1424;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tab-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-bottom: none;
+            padding: 5px 12px;
+            border-radius: 6px 6px 0 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #38BDF8;
+        }
+
+        .code-viewport {
+            flex: 1;
+            padding: 8px 0;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 12.5px;
+            line-height: 1.55;
+            background: #070B12;
+            color: #E2E8F0;
+        }
+
+        .code-row {
+            display: flex;
+            align-items: center;
+            padding: 2px 8px;
+            transition: background 0.15s ease;
+            position: relative;
+        }
+
+        .code-row.active {
+            background: rgba(56, 189, 248, 0.18);
+            border-left: 4px solid var(--cyan-accent);
+            box-shadow: inset 0 0 14px rgba(56, 189, 248, 0.1);
+        }
+
+        .code-row.io-line {
+            background: rgba(255, 193, 7, 0.14);
+            border-left: 4px solid var(--utn-gold);
+        }
+
+        .row-pointer {
+            width: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--utn-gold);
+            font-size: 11px;
+            opacity: 0;
+        }
+
+        .code-row.active .row-pointer {
+            opacity: 1;
+            animation: pointerPulse 0.9s infinite alternate;
+        }
+
+        @keyframes pointerPulse {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(3px); }
+        }
+
+        .row-number {
+            width: 28px;
+            color: #475569;
+            text-align: right;
+            padding-right: 10px;
+            font-size: 11.5px;
+            user-select: none;
+        }
+
+        .row-text {
+            flex: 1;
+            white-space: pre;
+        }
+
+        /* Syntax colors */
+        .kw { color: #F472B6; font-weight: 600; }
+        .tp { color: #38BDF8; font-weight: 600; }
+        .vr { color: #F8FAFC; }
+        .nm { color: #FBBF24; }
+        .st { color: #34D399; }
+        .op { color: #CBD5E1; font-weight: bold; }
+        .cm { color: #64748B; font-style: italic; }
+
+        /* STEPPER CONTROL BAR */
+        .stepper-controls-bar {
+            background: rgba(15, 23, 42, 0.96);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .explanation-text {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #E2E8F0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .explanation-badge {
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--cyan-accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 10.5px;
+        }
+
+        .stepper-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .step-btn {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #F8FAFC;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .step-btn:hover {
+            border-color: var(--cyan-accent);
+            background: rgba(56, 189, 248, 0.15);
+            color: #38BDF8;
+            transform: translateY(-1px);
+        }
+        .step-btn.primary {
+            background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+            border-color: #38BDF8;
+            color: white;
+            box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
+        }
+        .step-btn.primary:hover {
+            background: linear-gradient(135deg, #0369A1 0%, #0284C7 100%);
+            box-shadow: 0 4px 14px rgba(56, 189, 248, 0.5);
+        }
+
+        /* PANEL DERECHO: OBSERVADOR DE STREAMS & MEMORIA */
+        .inspector-column {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 0;
+        }
+
+        .panel-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .panel-header-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--cyan-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        /* CINTA DE CARACTERES EN DISCO */
+        .tape-track-container {
+            position: relative;
+            background: #070B12;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 12px 28px 12px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .tape-cells-row {
+            display: flex;
+            gap: 4px;
+            position: relative;
+        }
+
+        .tape-cell {
+            width: 32px;
+            height: 36px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: #E2E8F0;
+            position: relative;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+        }
+
+        .tape-cell .cell-index {
+            position: absolute;
+            top: -14px;
+            font-size: 9px;
+            color: #64748B;
+            font-weight: normal;
+        }
+
+        .tape-cell.consumed {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.4);
+            color: #6EE7B7;
+        }
+
+        .tape-cell.active-pos {
+            background: rgba(255, 193, 7, 0.25);
+            border-color: var(--utn-gold);
+            color: var(--utn-gold);
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.4);
+            transform: scale(1.06);
+        }
+
+        .tape-cell.eof-cell {
+            width: 44px;
+            background: rgba(239, 68, 68, 0.18);
+            border-color: rgba(239, 68, 68, 0.45);
+            color: #FCA5A5;
+            font-size: 11px;
+        }
+
+        .tape-cursor-marker {
+            position: absolute;
+            bottom: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--utn-gold);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        /* LEDS DE ESTADO DEL STREAM */
+        .stream-leds-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .led-indicator-box {
+            background: rgba(8, 12, 22, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .led-bulb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #334155;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .led-indicator-box.active-good .led-bulb {
+            background: #10B981;
+            box-shadow: 0 0 10px #10B981;
+        }
+        .led-indicator-box.active-eof .led-bulb {
+            background: #F59E0B;
+            box-shadow: 0 0 10px #F59E0B;
+        }
+        .led-indicator-box.active-fail .led-bulb {
+            background: #EF4444;
+            box-shadow: 0 0 12px #EF4444;
+        }
+        .led-indicator-box.active-bad .led-bulb {
+            background: #A855F7;
+            box-shadow: 0 0 12px #A855F7;
+        }
+
+        .led-labels {
+            display: flex;
+            flex-direction: column;
+        }
+        .led-name {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+        .led-status {
+            font-size: 9.5px;
+            color: #64748B;
+            text-transform: uppercase;
+        }
+
+        /* VARIABLES EN MEMORIA RAM */
+        .variables-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Fira Code', monospace;
+            font-size: 11.5px;
+        }
+
+        .variables-table th {
+            text-align: left;
+            padding: 4px 8px;
+            color: #64748B;
+            font-size: 10px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .variables-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .var-name { color: #38BDF8; font-weight: 600; }
+        .var-type { color: #F472B6; font-size: 10.5px; }
+        .var-val {
+            color: #FBBF24;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .var-val.changed {
+            background: rgba(255, 193, 7, 0.3);
+            color: #FFF;
+            box-shadow: 0 0 8px rgba(255, 193, 7, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* CONSOLA DE SALIDA */
+        .terminal-container {
+            background: #05080E;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: 'Fira Code', monospace;
+            font-size: 11.5px;
+            color: #10B981;
+            min-height: 70px;
+            max-height: 100px;
+            overflow-y: auto;
+            line-height: 1.5;
+        }
+
+        /* MODAL DE DESAFÍO / TRIVIA */
+        .quiz-modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            padding: 16px;
+        }
+
+        .quiz-modal-backdrop.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .quiz-card {
+            background: #0F172A;
+            border: 2px solid var(--utn-gold);
+            border-radius: 16px;
+            max-width: 580px;
+            width: 100%;
+            padding: 22px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 193, 7, 0.25);
+            transform: scale(0.95);
+            transition: transform 0.25s ease;
+            text-align: left;
+        }
+
+        .quiz-modal-backdrop.show .quiz-card {
+            transform: scale(1);
+        }
+
+        .quiz-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .quiz-badge {
+            background: var(--utn-gold);
+            color: var(--utn-blue);
+            font-weight: 800;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+        .quiz-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #FFF;
+        }
+
+        .quiz-prompt {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #E2E8F0;
+            margin-bottom: 16px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .quiz-opt-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #F8FAFC;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quiz-opt-btn:hover {
+            border-color: var(--cyan-accent);
+            background: rgba(56, 189, 248, 0.15);
+            color: #38BDF8;
+            transform: translateX(4px);
+        }
+
+        .quiz-feedback {
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.45;
+            display: none;
+            margin-bottom: 14px;
+        }
+        .quiz-feedback.correct {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10B981;
+            color: #A7F3D0;
+            display: block;
+        }
+        .quiz-feedback.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #EF4444;
+            color: #FECACA;
+            display: block;
+        }
+
+        .quiz-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Responsive */
+        @media (max-width: 960px) {
+            .workspace-grid { grid-template-columns: 1fr; }
+            header { flex-direction: column; gap: 8px; }
+            .level-selector-row { overflow-x: auto; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===================================================================== -->
+    <!-- HEADER INSTITUCIONAL / HUD -->
+    <!-- ===================================================================== -->
+    <header>
+        <div class="brand-box">
+            <span class="brand-badge">AEDD</span>
+            <div class="brand-titles">
+                <span class="brand-title"><i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i> Stream Inspector</span>
+                <span class="brand-sub">Depurador Interactivo de Archivos de Texto C++ &bull; UTN FRSF</span>
+            </div>
+        </div>
+
+        <!-- SELECTOR DE NIVELES -->
+        <div class="level-selector-row">
+            <button class="level-tab-btn active" onclick="loadLevel(0)">
+                <i class="fa-solid fa-forward-step"></i> Nivel 1: Tokens &gt;&gt;
+            </button>
+            <button class="level-tab-btn" onclick="loadLevel(1)">
+                <i class="fa-solid fa-triangle-exclamation"></i> Nivel 2: Trampa EOF
+            </button>
+            <button class="level-tab-btn" onclick="loadLevel(2)">
+                <i class="fa-solid fa-ghost"></i> Nivel 3: Enter Fantasma
+            </button>
+            <button class="level-tab-btn" onclick="loadLevel(3)">
+                <i class="fa-solid fa-table-columns"></i> Nivel 4: CSV Delimitado
+            </button>
+        </div>
+
+        <div class="hud-actions">
+            <div class="hud-stat-pill score">
+                <i class="fa-solid fa-trophy" style="color: var(--utn-gold);"></i>
+                <span id="score-display">0 pts</span>
+            </div>
+            <div class="hud-stat-pill streak">
+                <i class="fa-solid fa-fire" style="color: #F43F5E;"></i>
+                <span id="streak-display">0x</span>
+            </div>
+            <a href="../index.html" class="btn-return-slides">
+                <i class="fa-solid fa-arrow-left"></i> Volver a Clase 18
+            </a>
+        </div>
+    </header>
+
+    <!-- ===================================================================== -->
+    <!-- ESPACIO DE TRABAJO PRINCIPAL (GRID) -->
+    <!-- ===================================================================== -->
+    <main class="workspace-grid">
+
+        <!-- PANEL IZQUIERDO: EDITOR C++ -->
+        <section class="editor-container">
+            <div class="editor-tab-bar">
+                <div class="tab-item">
+                    <i class="fa-brands fa-cuttlefish" style="color: #38BDF8;"></i> main.cpp
+                </div>
+                <span id="level-badge-title" style="font-size: 11px; color: var(--text-dim); font-weight: 600;">
+                    Nivel 1: Tokenización y Salteo de Espacios
+                </span>
+            </div>
+
+            <!-- VIEWPORT DEL CÓDIGO -->
+            <div class="code-viewport" id="code-viewport">
+                <!-- Se inyecta dinámicamente con JS según el nivel -->
+            </div>
+
+            <!-- BARRA DE CONTROLES DEL DEPURADOR -->
+            <div class="stepper-controls-bar">
+                <div class="explanation-text">
+                    <span class="explanation-badge">F8</span>
+                    <span id="step-hint-text">Presioná "Paso a Paso" o F8 para iniciar la traza.</span>
+                </div>
+                <div class="stepper-actions">
+                    <button class="step-btn" onclick="resetCurrentLevel()">
+                        <i class="fa-solid fa-rotate-left"></i> Reiniciar
+                    </button>
+                    <button class="step-btn" id="autoplay-btn" onclick="toggleAutoPlay()">
+                        <i class="fa-solid fa-play"></i> Auto
+                    </button>
+                    <button class="step-btn primary" id="next-step-btn" onclick="executeNextStep()">
+                        <i class="fa-solid fa-arrow-down"></i> Paso a Paso (F8)
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANEL DERECHO: OBSERVADOR DE STREAMS & MEMORIA -->
+        <section class="inspector-column">
+
+            <!-- 1. CINTA DE CARACTERES EN DISCO -->
+            <div class="panel-card">
+                <div class="panel-header-title">
+                    <span><i class="fa-solid fa-hard-drive"></i> Cinta del Archivo en Disco (<span id="active-filename">saludo.txt</span>)</span>
+                    <span id="tape-stats-badge" style="color: #F8FAFC; font-family: 'Fira Code', monospace; font-size: 11px;">Cursor: 0</span>
+                </div>
+
+                <div class="tape-track-container" id="tape-container">
+                    <div class="tape-cells-row" id="tape-cells-row">
+                        <!-- Celdas inyectadas con JS -->
+                    </div>
+                    <div class="tape-cursor-marker" id="tape-cursor-marker" style="left: 12px;">
+                        <i class="fa-solid fa-caret-up"></i> CABEZAL (tellg)
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. TABLERO DE FLAGS DE ESTADO DEL STREAM -->
+            <div class="panel-card">
+                <div class="panel-header-title">
+                    <span><i class="fa-solid fa-tower-broadcast"></i> Flags de Estado del Stream (iostate)</span>
+                    <span id="stream-state-label" style="font-family: 'Fira Code', monospace; font-size: 10.5px; color: #10B981;">arch.good() == true</span>
+                </div>
+
+                <div class="stream-leds-bar">
+                    <div class="led-indicator-box active-good" id="led-box-good">
+                        <div class="led-bulb"></div>
+                        <div class="led-labels">
+                            <span class="led-name">good()</span>
+                            <span class="led-status" id="led-val-good">TRUE</span>
+                        </div>
+                    </div>
+                    <div class="led-indicator-box" id="led-box-eof">
+                        <div class="led-bulb"></div>
+                        <div class="led-labels">
+                            <span class="led-name">eof()</span>
+                            <span class="led-status" id="led-val-eof">FALSE</span>
+                        </div>
+                    </div>
+                    <div class="led-indicator-box" id="led-box-fail">
+                        <div class="led-bulb"></div>
+                        <div class="led-labels">
+                            <span class="led-name">fail()</span>
+                            <span class="led-status" id="led-val-fail">FALSE</span>
+                        </div>
+                    </div>
+                    <div class="led-indicator-box" id="led-box-bad">
+                        <div class="led-bulb"></div>
+                        <div class="led-labels">
+                            <span class="led-name">bad()</span>
+                            <span class="led-status" id="led-val-bad">FALSE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. VARIABLES EN MEMORIA RAM -->
+            <div class="panel-card" style="flex: 1; display: flex; flex-direction: column;">
+                <div class="panel-header-title">
+                    <span><i class="fa-solid fa-memory"></i> Variables en Memoria RAM</span>
+                    <span style="font-size: 10.5px; color: var(--text-dim);">Actualización en vivo</span>
+                </div>
+
+                <div style="flex: 1; overflow-y: auto;">
+                    <table class="variables-table">
+                        <thead>
+                            <tr>
+                                <th>Variable</th>
+                                <th>Tipo</th>
+                                <th>Valor Actual</th>
+                            </tr>
+                        </thead>
+                        <tbody id="variables-tbody">
+                            <!-- Inyectado con JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4. TERMINAL / CONSOLA STDOUT -->
+            <div class="panel-card">
+                <div class="panel-header-title">
+                    <span><i class="fa-solid fa-terminal"></i> Salida en Consola (cout)</span>
+                    <span style="font-size: 10px; color: #10B981;">STDOUT</span>
+                </div>
+                <div class="terminal-container" id="terminal-screen">
+                    <span style="color: #64748B;">[Programa iniciado...]</span>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL POPUP DE DESAFÍO / TRIVIA -->
+    <!-- ===================================================================== -->
+    <div class="quiz-modal-backdrop" id="quiz-modal">
+        <div class="quiz-card">
+            <div class="quiz-header">
+                <span class="quiz-badge"><i class="fa-solid fa-bolt"></i> Desafío de Predicción</span>
+                <span class="quiz-title" id="quiz-title">¿Qué ocurrirá en el stream?</span>
+            </div>
+            <p class="quiz-prompt" id="quiz-prompt">Pregunta didáctica...</p>
+
+            <div class="quiz-options" id="quiz-options-container">
+                <!-- Botones inyectados dinámicamente -->
+            </div>
+
+            <div class="quiz-feedback" id="quiz-feedback">
+                <!-- Feedback con explicación pedagógica -->
+            </div>
+
+            <div class="quiz-actions" id="quiz-actions-bar" style="display: none;">
+                <button class="step-btn primary" onclick="dismissQuizAndResume()">
+                    Continuar Traza <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MOTOR DE EJECUCIÓN DEL DEPURADOR (JS PURO) -->
+    <!-- ===================================================================== -->
+    <script>
+        // ESTADO GLOBAL DEL SIMULADOR
+        let currentLevelIndex = 0;
+        let currentStepIndex = 0;
+        let score = 0;
+        let streak = 0;
+        let autoPlayInterval = null;
+        let isWaitingForQuiz = false;
+
+        // DEFINICIÓN DE LOS 4 NIVELES
+        const LEVELS = [
+            // =================================================================
+            // NIVEL 1: Tokenización con >> y salteo de espacios
+            // =================================================================
+            {
+                title: "Nivel 1: Tokenización y Salteo de Espacios",
+                fileName: "saludo.txt",
+                rawChars: [' ', ' ', 'A', 'E', 'D', 'D', ' ', ' ', ' ', 'U', 'T', 'N', ' ', ' ', ' ', '2', '0', '2', '6'],
+                codeLines: [
+                    '#include <iostream>',
+                    '#include <fstream>',
+                    '#include <string>',
+                    'using namespace std;',
+                    '',
+                    'int main() {',
+                    '    ifstream arch("saludo.txt");',
+                    '    string palabra;',
+                    '    int contador = 0;',
+                    '    while (arch >> palabra) {',
+                    '        contador++;',
+                    '        cout << "Palabra " << contador << ": [" << palabra << "]" << endl;',
+                    '    }',
+                    '    arch.close();',
+                    '    return 0;',
+                    '}'
+                ],
+                variables: [
+                    { name: 'arch', type: 'ifstream', val: 'cerrado' },
+                    { name: 'palabra', type: 'string', val: '""' },
+                    { name: 'contador', type: 'int', val: '0' }
+                ],
+                steps: [
+                    {
+                        line: 6,
+                        hint: 'Abre el archivo "saludo.txt" en modo lectura (ios::in).',
+                        cursorPos: 0,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto (good)', palabra: '""', contador: '0' },
+                        output: null
+                    },
+                    {
+                        line: 7,
+                        hint: 'Declara la variable de texto "palabra" en memoria RAM.',
+                        cursorPos: 0,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', palabra: '""', contador: '0' },
+                        output: null
+                    },
+                    {
+                        line: 8,
+                        hint: 'Inicializa el contador de palabras en 0.',
+                        cursorPos: 0,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', palabra: '""', contador: '0' },
+                        output: null
+                    },
+                    {
+                        line: 9,
+                        hint: 'arch >> palabra: Saltea los espacios iniciales y extrae "AEDD". El cursor queda en el índice 6.',
+                        cursorPos: 6,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', palabra: '"AEDD"', contador: '0' },
+                        output: null
+                    },
+                    {
+                        line: 10,
+                        hint: 'Incrementa el contador a 1.',
+                        cursorPos: 6,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', palabra: '"AEDD"', contador: '1' },
+                        output: null
+                    },
+                    {
+                        line: 11,
+                        hint: 'cout imprime la primera palabra extraída.',
+                        cursorPos: 6,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', palabra: '"AEDD"', contador: '1' },
+                        output: 'Palabra 1: [AEDD]'
+                    },
+                    {
+                        line: 9,
+                        hint: 'arch >> palabra: Saltea los 3 espacios intermedios y extrae "UTN". Cursor en índice 12.',
+                        cursorPos: 12,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', palabra: '"UTN"', contador: '1' },
+                        output: null
+                    },
+                    {
+                        line: 10,
+                        hint: 'Incrementa el contador a 2.',
+                        cursorPos: 12,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', palabra: '"UTN"', contador: '2' },
+                        output: null
+                    },
+                    {
+                        line: 11,
+                        hint: 'cout imprime la segunda palabra extraída.',
+                        cursorPos: 12,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', palabra: '"UTN"', contador: '2' },
+                        output: 'Palabra 2: [UTN]'
+                    },
+                    {
+                        line: 9,
+                        hint: 'arch >> palabra: Saltea espacios y extrae "2026". Cursor en el final del texto.',
+                        cursorPos: 19,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', palabra: '"2026"', contador: '2' },
+                        output: null
+                    },
+                    {
+                        line: 10,
+                        hint: 'Incrementa el contador a 3.',
+                        cursorPos: 19,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', palabra: '"2026"', contador: '3' },
+                        output: null
+                    },
+                    {
+                        line: 11,
+                        hint: 'cout imprime la tercera palabra.',
+                        cursorPos: 19,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', palabra: '"2026"', contador: '3' },
+                        output: 'Palabra 3: [2026]'
+                    },
+                    {
+                        line: 9,
+                        hint: 'Intento de lectura al llegar al final del archivo. Se activan EOF y FAIL.',
+                        cursorPos: 19,
+                        flags: { good: false, eof: true, fail: true, bad: false },
+                        vars: { arch: 'fail | eof', palabra: '"2026"', contador: '3' },
+                        output: null,
+                        quiz: {
+                            title: "Lectura en Fin de Archivo (EOF)",
+                            prompt: "El cursor ya consumió todos los caracteres de 'saludo.txt'. ¿Qué ocurre cuando el while evalúa nuevamente (arch >> palabra)?",
+                            options: [
+                                "La lectura falla: se activan las banderas eofbit y failbit, haciendo que el while evalúe a false y termine limpiamente.",
+                                "El programa produce un error de segmentación y finaliza con código de error.",
+                                "La variable 'palabra' se borra automáticamente pasando a valer NULL."
+                            ],
+                            correctIndex: 0,
+                            explanation: "¡Exacto! El operador >> retorna el propio flujo 'arch'. Al intentar leer sin datos, se activan eofbit y failbit, y al convertirse a booleano retorna false, terminando el bucle con elegancia."
+                        }
+                    },
+                    {
+                        line: 13,
+                        hint: 'Cierra el archivo liberando el descriptor en el sistema operativo.',
+                        cursorPos: 19,
+                        flags: { good: false, eof: true, fail: true, bad: false },
+                        vars: { arch: 'cerrado', palabra: '"2026"', contador: '3' },
+                        output: '[Archivo cerrado exitosamente]'
+                    },
+                    {
+                        line: 14,
+                        hint: 'Fin del programa (return 0).',
+                        cursorPos: 19,
+                        flags: { good: false, eof: true, fail: true, bad: false },
+                        vars: { arch: 'cerrado', palabra: '"2026"', contador: '3' },
+                        output: null
+                    }
+                ]
+            },
+
+            // =================================================================
+            // NIVEL 2: La trampa de while (!archivo.eof())
+            // =================================================================
+            {
+                title: "Nivel 2: La Trampa Mortal de while (!archivo.eof())",
+                fileName: "notas.txt",
+                rawChars: ['J', 'u', 'a', 'n', ' ', '8', '5', '\n', 'A', 'n', 'a', ' ', '9', '0'],
+                codeLines: [
+                    '#include <iostream>',
+                    '#include <fstream>',
+                    '#include <string>',
+                    'using namespace std;',
+                    '',
+                    'int main() {',
+                    '    ifstream arch("notas.txt");',
+                    '    string nombre = "nadie";',
+                    '    int nota = 0;',
+                    '    // ATENCION: Anti-patron de examen',
+                    '    while (!arch.eof()) {',
+                    '        arch >> nombre >> nota;',
+                    '        cout << "Procesado: " << nombre << " (" << nota << ")" << endl;',
+                    '    }',
+                    '    arch.close();',
+                    '    return 0;',
+                    '}'
+                ],
+                variables: [
+                    { name: 'arch', type: 'ifstream', val: 'cerrado' },
+                    { name: 'nombre', type: 'string', val: '"nadie"' },
+                    { name: 'nota', type: 'int', val: '0' }
+                ],
+                steps: [
+                    {
+                        line: 6,
+                        hint: 'Abre el archivo "notas.txt".',
+                        cursorPos: 0,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', nombre: '"nadie"', nota: '0' },
+                        output: null
+                    },
+                    {
+                        line: 7,
+                        hint: 'Inicializa nombre en "nadie".',
+                        cursorPos: 0,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', nombre: '"nadie"', nota: '0' },
+                        output: null
+                    },
+                    {
+                        line: 8,
+                        hint: 'Inicializa nota en 0.',
+                        cursorPos: 0,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', nombre: '"nadie"', nota: '0' },
+                        output: null
+                    },
+                    {
+                        line: 10,
+                        hint: 'Evalúa (!arch.eof()): eof() es false, así que !eof() es TRUE. Entra al bucle.',
+                        cursorPos: 0,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', nombre: '"nadie"', nota: '0' },
+                        output: null
+                    },
+                    {
+                        line: 11,
+                        hint: 'Lee "Juan" y 85. Cursor avanza hasta el salto de línea.',
+                        cursorPos: 8,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', nombre: '"Juan"', nota: '85' },
+                        output: null
+                    },
+                    {
+                        line: 12,
+                        hint: 'Imprime el registro de Juan.',
+                        cursorPos: 8,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', nombre: '"Juan"', nota: '85' },
+                        output: 'Procesado: Juan (85)'
+                    },
+                    {
+                        line: 10,
+                        hint: 'Evalúa (!arch.eof()): eof() aún es false. Vuelve a entrar.',
+                        cursorPos: 8,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', nombre: '"Juan"', nota: '85' },
+                        output: null
+                    },
+                    {
+                        line: 11,
+                        hint: 'Lee "Ana" y 90. Cursor queda al final del archivo (índice 14).',
+                        cursorPos: 14,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', nombre: '"Ana"', nota: '90' },
+                        output: null
+                    },
+                    {
+                        line: 12,
+                        hint: 'Imprime el registro de Ana.',
+                        cursorPos: 14,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', nombre: '"Ana"', nota: '90' },
+                        output: 'Procesado: Ana (90)'
+                    },
+                    {
+                        line: 10,
+                        hint: 'MOMENTO CRÍTICO: El cursor está al final del archivo, pero arch.eof() todavía es FALSE!',
+                        cursorPos: 14,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto (good)', nombre: '"Ana"', nota: '90' },
+                        output: null,
+                        quiz: {
+                            title: "¡La Trampa de while (!arch.eof())!",
+                            prompt: "El cursor físico llegó al final de 'notas.txt'. ¿Cuánto vale arch.eof() en este instante exacto antes de intentar otra lectura?",
+                            options: [
+                                "Vale false, porque la bandera EOF solo se activa DESPUÉS de intentar una lectura que no encuentra datos.",
+                                "Vale true inmediatamente apenas el cursor toca el último byte del archivo.",
+                                "Depende de si el archivo termina con un espacio en blanco o no."
+                            ],
+                            correctIndex: 0,
+                            explanation: "¡Correcto! En C++, eof() NO es un detector del futuro; es una bandera retrospectiva. Como no falló ninguna lectura aún, eof() es false y el bucle ¡VUELVE A ENTRAR POR ERROR!"
+                        }
+                    },
+                    {
+                        line: 11,
+                        hint: '¡ERROR! arch >> nombre >> nota falla por falta de datos. Las variables NO cambian y retienen a "Ana" y 90.',
+                        cursorPos: 14,
+                        flags: { good: false, eof: true, fail: true, bad: false },
+                        vars: { arch: 'fail | eof', nombre: '"Ana" [RETENIDO]', nota: '90 [RETENIDO]' },
+                        output: null
+                    },
+                    {
+                        line: 12,
+                        hint: '¡DESASTRE! Se ejecuta cout con las variables no actualizadas, duplicando el registro.',
+                        cursorPos: 14,
+                        flags: { good: false, eof: true, fail: true, bad: false },
+                        vars: { arch: 'fail | eof', nombre: '"Ana"', nota: '90' },
+                        output: 'Procesado: Ana (90) <-- [¡DUPLICADO INDESEADO!]'
+                    },
+                    {
+                        line: 10,
+                        hint: 'Ahora sí: eof() es true, !eof() es false. Por fin termina el bucle.',
+                        cursorPos: 14,
+                        flags: { good: false, eof: true, fail: true, bad: false },
+                        vars: { arch: 'fail | eof', nombre: '"Ana"', nota: '90' },
+                        output: null
+                    },
+                    {
+                        line: 14,
+                        hint: 'Cierra el archivo.',
+                        cursorPos: 14,
+                        flags: { good: false, eof: true, fail: true, bad: false },
+                        vars: { arch: 'cerrado', nombre: '"Ana"', nota: '90' },
+                        output: '[Archivo cerrado]'
+                    }
+                ]
+            },
+
+            // =================================================================
+            // NIVEL 3: Enter Fantasma (cin >> y getline)
+            // =================================================================
+            {
+                title: "Nivel 3: El Salto de Línea Fantasma (>> con getline)",
+                fileName: "alumno.txt",
+                rawChars: ['1', '0', '4', '5', '2', '\n', 'V', 'a', 'l', 'e', 'r', 'i', 'a', ' ', 'G', 'o', 'm', 'e', 'z'],
+                codeLines: [
+                    '#include <iostream>',
+                    '#include <fstream>',
+                    '#include <string>',
+                    'using namespace std;',
+                    '',
+                    'int main() {',
+                    '    ifstream arch("alumno.txt");',
+                    '    int legajo = 0;',
+                    '    string nombreCompleto = "";',
+                    '    ',
+                    '    arch >> legajo; // Lee numero pero deja el \\n',
+                    '    getline(arch, nombreCompleto); // Lee hasta \\n!',
+                    '    ',
+                    '    cout << "Legajo: " << legajo << endl;',
+                    '    cout << "Nombre: [" << nombreCompleto << "]" << endl;',
+                    '    arch.close();',
+                    '    return 0;',
+                    '}'
+                ],
+                variables: [
+                    { name: 'arch', type: 'ifstream', val: 'cerrado' },
+                    { name: 'legajo', type: 'int', val: '0' },
+                    { name: 'nombreCompleto', type: 'string', val: '""' }
+                ],
+                steps: [
+                    {
+                        line: 6,
+                        hint: 'Abre "alumno.txt".',
+                        cursorPos: 0,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '0', nombreCompleto: '""' },
+                        output: null
+                    },
+                    {
+                        line: 10,
+                        hint: 'arch >> legajo: Lee 10452. OJO: El cursor se detiene exactamente antes del \\n en el índice 5.',
+                        cursorPos: 5,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '10452', nombreCompleto: '""' },
+                        output: null,
+                        quiz: {
+                            title: "El Enter Residual en el Stream",
+                            prompt: "El operador >> extrajo el entero 10452. ¿Qué caracter quedó apuntado inmediatamente por el cursor en el stream?",
+                            options: [
+                                "El caracter de salto de línea '\\n', que no fue consumido por el operador >>.",
+                                "La primera letra 'V' de Valeria, porque >> saltea todos los enters.",
+                                "El fin de archivo EOF."
+                            ],
+                            correctIndex: 0,
+                            explanation: "¡Exacto! El operador >> extrae el número y frena en seco apenas encuentra un caracter que no forma parte del entero (en este caso el salto de línea '\\n')."
+                        }
+                    },
+                    {
+                        line: 11,
+                        hint: 'getline(arch, nombreCompleto): Encuentra el \\n residual y termina al instante, dejando nombreCompleto vacío!',
+                        cursorPos: 6,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '10452', nombreCompleto: '"" [VACIO]' },
+                        output: null
+                    },
+                    {
+                        line: 13,
+                        hint: 'Imprime el legajo.',
+                        cursorPos: 6,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '10452', nombreCompleto: '""' },
+                        output: 'Legajo: 10452'
+                    },
+                    {
+                        line: 14,
+                        hint: 'Imprime el nombre: ¡Quedó vacío! "Valeria Gomez" quedó sin leer en el archivo.',
+                        cursorPos: 6,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '10452', nombreCompleto: '""' },
+                        output: 'Nombre: [] <-- [CADENA VACIA]'
+                    },
+                    {
+                        line: 15,
+                        hint: 'Cierra el archivo. Moraleja: Usar siempre "arch >> ws;" antes de getline si se leyó con >>.',
+                        cursorPos: 6,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'cerrado', legajo: '10452', nombreCompleto: '""' },
+                        output: '[Fin: Solución -> agregar "arch >> ws;" antes del getline]'
+                    }
+                ]
+            },
+
+            // =================================================================
+            // NIVEL 4: Delimitadores CSV con getline
+            // =================================================================
+            {
+                title: "Nivel 4: Registros CSV con Delimitador Personalizado",
+                fileName: "alumnos.csv",
+                rawChars: ['1', '0', '1', ',', 'M', 'a', 'r', 'c', 'o', 's', ',', '8', '.', '5', '\n', '1', '0', '2', ',', 'S', 'o', 'f', 'i', 'a', ',', '9', '.', '0'],
+                codeLines: [
+                    '#include <iostream>',
+                    '#include <fstream>',
+                    '#include <string>',
+                    'using namespace std;',
+                    '',
+                    'int main() {',
+                    '    ifstream arch("alumnos.csv");',
+                    '    string legajo, nombre, nota;',
+                    '    while (getline(arch, legajo, \',\') &&',
+                    '           getline(arch, nombre, \',\') &&',
+                    '           getline(arch, nota)) {',
+                    '        cout << nombre << " (Leg " << legajo << ") -> " << nota << endl;',
+                    '    }',
+                    '    arch.close();',
+                    '    return 0;',
+                    '}'
+                ],
+                variables: [
+                    { name: 'arch', type: 'ifstream', val: 'cerrado' },
+                    { name: 'legajo', type: 'string', val: '""' },
+                    { name: 'nombre', type: 'string', val: '""' },
+                    { name: 'nota', type: 'string', val: '""' }
+                ],
+                steps: [
+                    {
+                        line: 6,
+                        hint: 'Abre "alumnos.csv".',
+                        cursorPos: 0,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '""', nombre: '""', nota: '""' },
+                        output: null
+                    },
+                    {
+                        line: 8,
+                        hint: 'getline(arch, legajo, \',\'): Lee hasta la primera coma. Extrae "101".',
+                        cursorPos: 4,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '"101"', nombre: '""', nota: '""' },
+                        output: null
+                    },
+                    {
+                        line: 9,
+                        hint: 'getline(arch, nombre, \',\'): Lee hasta la segunda coma. Extrae "Marcos".',
+                        cursorPos: 11,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '"101"', nombre: '"Marcos"', nota: '""' },
+                        output: null
+                    },
+                    {
+                        line: 10,
+                        hint: 'getline(arch, nota): Lee hasta el salto de línea. Extrae "8.5".',
+                        cursorPos: 15,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '"101"', nombre: '"Marcos"', nota: '"8.5"' },
+                        output: null
+                    },
+                    {
+                        line: 11,
+                        hint: 'Imprime el registro completo del primer alumno.',
+                        cursorPos: 15,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '"101"', nombre: '"Marcos"', nota: '"8.5"' },
+                        output: 'Marcos (Leg 101) -> 8.5'
+                    },
+                    {
+                        line: 8,
+                        hint: 'Segunda fila: getline extrae "102".',
+                        cursorPos: 19,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '"102"', nombre: '"Marcos"', nota: '"8.5"' },
+                        output: null
+                    },
+                    {
+                        line: 9,
+                        hint: 'Segunda fila: getline extrae "Sofia".',
+                        cursorPos: 25,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '"102"', nombre: '"Sofia"', nota: '"8.5"' },
+                        output: null
+                    },
+                    {
+                        line: 10,
+                        hint: 'Segunda fila: getline extrae "9.0". Cursor en el final del archivo.',
+                        cursorPos: 27,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '"102"', nombre: '"Sofia"', nota: '"9.0"' },
+                        output: null
+                    },
+                    {
+                        line: 11,
+                        hint: 'Imprime el registro de Sofia.',
+                        cursorPos: 27,
+                        flags: { good: true, eof: false, fail: false, bad: false },
+                        vars: { arch: 'abierto', legajo: '"102"', nombre: '"Sofia"', nota: '"9.0"' },
+                        output: 'Sofia (Leg 102) -> 9.0'
+                    },
+                    {
+                        line: 8,
+                        hint: 'Intento de lectura al terminar el archivo: getline no encuentra caracteres, se activa EOF y termina el bucle.',
+                        cursorPos: 27,
+                        flags: { good: false, eof: true, fail: true, bad: false },
+                        vars: { arch: 'fail | eof', legajo: '"102"', nombre: '"Sofia"', nota: '"9.0"' },
+                        output: null
+                    },
+                    {
+                        line: 13,
+                        hint: 'Cierra el archivo CSV.',
+                        cursorPos: 27,
+                        flags: { good: false, eof: true, fail: true, bad: false },
+                        vars: { arch: 'cerrado', legajo: '"102"', nombre: '"Sofia"', nota: '"9.0"' },
+                        output: '[Parsing CSV completado con éxito]'
+                    }
+                ]
+            }
+        ];
+
+        // RENDERIZADO INICIAL
+        function initApp() {
+            loadLevel(0);
+            setupKeyboardShortcuts();
+        }
+
+        // CARGAR UN NIVEL ESPECÍFICO
+        function loadLevel(idx) {
+            stopAutoPlay();
+            currentLevelIndex = idx;
+            currentStepIndex = 0;
+            isWaitingForQuiz = false;
+
+            const lvl = LEVELS[currentLevelIndex];
+
+            // Actualizar pestañas superiores
+            document.querySelectorAll('.level-tab-btn').forEach((btn, i) => {
+                if (i === idx) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+
+            document.getElementById('level-badge-title').innerText = lvl.title;
+            document.getElementById('active-filename').innerText = lvl.fileName;
+
+            // Renderizar editor de código
+            renderCodeView(lvl.codeLines);
+
+            // Renderizar cinta de archivo
+            renderTape(lvl.rawChars);
+
+            // Renderizar tabla de variables
+            renderVariablesTable(lvl.variables);
+
+            // Resetear consola
+            document.getElementById('terminal-screen').innerHTML = '<span style="color: #64748B;">[Listo para depurar ' + lvl.fileName + '...]</span>';
+
+            // Actualizar primer paso
+            applyStep(0);
+        }
+
+        // RENDERIZAR CÓDIGO CON SYNTAX SIMPLE
+        function renderCodeView(lines) {
+            const viewport = document.getElementById('code-viewport');
+            let html = '';
+            lines.forEach((line, i) => {
+                const rowNum = i + 1;
+                const formatted = highlightSyntax(line);
+                html += '<div class="code-row" id="code-row-' + i + '">' +
+                    '<span class="row-pointer"><i class="fa-solid fa-play"></i></span>' +
+                    '<span class="row-number">' + rowNum + '</span>' +
+                    '<span class="row-text">' + formatted + '</span>' +
+                    '</div>';
+            });
+            viewport.innerHTML = html;
+        }
+
+        // SYNTAX HIGHLIGHTER ROBUSTO
+        function highlightSyntax(text) {
+            let escaped = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+
+            // Proteger directivas #include
+            const includes = [];
+            escaped = escaped.replace(/(#include\s+&lt;.*?&gt;)/g, m => {
+                const id = '___INC_' + includes.length + '___';
+                includes.push('<span class="kw">' + m + '</span>');
+                return id;
+            });
+
+            // Proteger strings y comentarios
+            const tokens = [];
+            escaped = escaped.replace(/(".*?"|\/\/.*)/g, m => {
+                const id = '___TOK_' + tokens.length + '___';
+                if (m.startsWith('//')) {
+                    tokens.push('<span class="cm">' + m + '</span>');
+                } else {
+                    tokens.push('<span class="st">' + m + '</span>');
+                }
+                return id;
+            });
+
+            escaped = escaped
+                .replace(/\b(int|string|ifstream|ofstream|char|bool|void)\b/g, m => '<span class="tp">' + m + '</span>')
+                .replace(/\b(while|if|else|return|using|namespace)\b/g, m => '<span class="kw">' + m + '</span>')
+                .replace(/\b(\d+)\b/g, m => '<span class="nm">' + m + '</span>');
+
+            // Restaurar tokens protegidos
+            tokens.forEach((t, i) => {
+                escaped = escaped.replace('___TOK_' + i + '___', t);
+            });
+            includes.forEach((inc, i) => {
+                escaped = escaped.replace('___INC_' + i + '___', inc);
+            });
+
+            return escaped;
+        }
+
+        // RENDERIZAR CINTA DE DISCO
+        function renderTape(chars) {
+            const row = document.getElementById('tape-cells-row');
+            let html = '';
+            chars.forEach((ch, i) => {
+                let displayChar = ch;
+                if (ch === ' ') displayChar = '&middot;';
+                else if (ch === '\n') displayChar = '\\n';
+                html += '<div class="tape-cell" id="tape-cell-' + i + '">' +
+                    '<span class="cell-index">' + i + '</span>' +
+                    displayChar +
+                    '</div>';
+            });
+            // Celda final de EOF
+            html += '<div class="tape-cell eof-cell" id="tape-cell-eof">' +
+                '<span class="cell-index">' + chars.length + '</span>' +
+                'EOF' +
+                '</div>';
+
+            row.innerHTML = html;
+        }
+
+        // RENDERIZAR VARIABLES
+        function renderVariablesTable(vars) {
+            const tbody = document.getElementById('variables-tbody');
+            let html = '';
+            vars.forEach(v => {
+                html += '<tr>' +
+                    '<td class="var-name">' + v.name + '</td>' +
+                    '<td class="var-type">' + v.type + '</td>' +
+                    '<td><span class="var-val" id="var-val-' + v.name + '">' + v.val + '</span></td>' +
+                    '</tr>';
+            });
+            tbody.innerHTML = html;
+        }
+
+        // APLICAR UN PASO DE EJECUCIÓN
+        function applyStep(stepIdx) {
+            const lvl = LEVELS[currentLevelIndex];
+            if (stepIdx >= lvl.steps.length) {
+                document.getElementById('step-hint-text').innerHTML = '<strong style="color: #10B981;">¡Traza completada con éxito!</strong> Podés pasar al siguiente nivel.';
+                stopAutoPlay();
+                return;
+            }
+
+            const step = lvl.steps[stepIdx];
+
+            // 1. Resaltar línea de código activa
+            document.querySelectorAll('.code-row').forEach(r => r.classList.remove('active', 'io-line'));
+            const activeRow = document.getElementById('code-row-' + step.line);
+            if (activeRow) {
+                activeRow.classList.add('active');
+                activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            // 2. Actualizar explicación / hint
+            document.getElementById('step-hint-text').innerText = step.hint;
+
+            // 3. Mover cursor en la cinta
+            updateTapeCursor(step.cursorPos, lvl.rawChars.length);
+
+            // 4. Actualizar LEDs de estado
+            updateLeds(step.flags);
+
+            // 5. Actualizar valores de variables
+            for (let vName in step.vars) {
+                const el = document.getElementById('var-val-' + vName);
+                if (el) {
+                    const oldVal = el.innerText;
+                    const newVal = step.vars[vName];
+                    el.innerText = newVal;
+                    if (oldVal !== newVal) {
+                        el.classList.add('changed');
+                        setTimeout(() => el.classList.remove('changed'), 600);
+                    }
+                }
+            }
+
+            // 6. Imprimir en consola si hubo salida
+            if (step.output) {
+                const term = document.getElementById('terminal-screen');
+                term.innerHTML += '<div>&gt; ' + step.output + '</div>';
+                term.scrollTop = term.scrollHeight;
+            }
+
+            // 7. Chequear si hay Quiz interactivo en este paso
+            if (step.quiz && !step.quizResolved) {
+                isWaitingForQuiz = true;
+                stopAutoPlay();
+                showQuizModal(step.quiz);
+            }
+        }
+
+        // ACTUALIZAR CURSOR DE LA CINTA
+        function updateTapeCursor(pos, maxLen) {
+            document.getElementById('tape-stats-badge').innerText = 'Cursor: ' + pos + ' / ' + maxLen;
+
+            // Marcar celdas como consumidas o activas
+            for (let i = 0; i < maxLen; i++) {
+                const cell = document.getElementById('tape-cell-' + i);
+                if (cell) {
+                    cell.classList.remove('active-pos', 'consumed');
+                    if (i < pos) cell.classList.add('consumed');
+                    else if (i === pos) cell.classList.add('active-pos');
+                }
+            }
+            const eofCell = document.getElementById('tape-cell-eof');
+            if (eofCell) {
+                eofCell.classList.remove('active-pos');
+                if (pos >= maxLen) eofCell.classList.add('active-pos');
+            }
+
+            // Posicionar el marcador visual animado
+            const targetCell = pos >= maxLen ? eofCell : document.getElementById('tape-cell-' + pos);
+            if (targetCell) {
+                const marker = document.getElementById('tape-cursor-marker');
+                const offsetLeft = targetCell.offsetLeft + 2;
+                marker.style.left = offsetLeft + 'px';
+            }
+        }
+
+        // ACTUALIZAR LEDS
+        function updateLeds(flags) {
+            const boxGood = document.getElementById('led-box-good');
+            const boxEof = document.getElementById('led-box-eof');
+            const boxFail = document.getElementById('led-box-fail');
+            const boxBad = document.getElementById('led-box-bad');
+
+            boxGood.className = 'led-indicator-box' + (flags.good ? ' active-good' : '');
+            boxEof.className = 'led-indicator-box' + (flags.eof ? ' active-eof' : '');
+            boxFail.className = 'led-indicator-box' + (flags.fail ? ' active-fail' : '');
+            boxBad.className = 'led-indicator-box' + (flags.bad ? ' active-bad' : '');
+
+            document.getElementById('led-val-good').innerText = flags.good ? 'TRUE' : 'FALSE';
+            document.getElementById('led-val-eof').innerText = flags.eof ? 'TRUE' : 'FALSE';
+            document.getElementById('led-val-fail').innerText = flags.fail ? 'TRUE' : 'FALSE';
+            document.getElementById('led-val-bad').innerText = flags.bad ? 'TRUE' : 'FALSE';
+
+            // Etiqueta global
+            const lbl = document.getElementById('stream-state-label');
+            if (flags.good) {
+                lbl.style.color = '#10B981';
+                lbl.innerText = 'arch.good() == true | Flujo saludable';
+            } else if (flags.eof && flags.fail) {
+                lbl.style.color = '#F59E0B';
+                lbl.innerText = 'arch.eof() == true | Fin de archivo alcanzado';
+            } else if (flags.fail) {
+                lbl.style.color = '#EF4444';
+                lbl.innerText = 'arch.fail() == true | Error de lectura/formato';
+            }
+        }
+
+        // SIGUIENTE PASO
+        function executeNextStep() {
+            if (isWaitingForQuiz) return;
+            const lvl = LEVELS[currentLevelIndex];
+            if (currentStepIndex < lvl.steps.length - 1) {
+                currentStepIndex++;
+                applyStep(currentStepIndex);
+            } else {
+                applyStep(lvl.steps.length);
+            }
+        }
+
+        // REINICIAR NIVEL ACTUAL
+        function resetCurrentLevel() {
+            loadLevel(currentLevelIndex);
+        }
+
+        // AUTO PLAY
+        function toggleAutoPlay() {
+            if (autoPlayInterval) {
+                stopAutoPlay();
+            } else {
+                const btn = document.getElementById('autoplay-btn');
+                btn.innerHTML = '<i class="fa-solid fa-pause"></i> Pausa';
+                btn.style.color = '#F59E0B';
+                btn.style.borderColor = '#F59E0B';
+                autoPlayInterval = setInterval(() => {
+                    const lvl = LEVELS[currentLevelIndex];
+                    if (currentStepIndex < lvl.steps.length - 1 && !isWaitingForQuiz) {
+                        executeNextStep();
+                    } else {
+                        stopAutoPlay();
+                    }
+                }, 1300);
+            }
+        }
+
+        function stopAutoPlay() {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = null;
+                const btn = document.getElementById('autoplay-btn');
+                if (btn) {
+                    btn.innerHTML = '<i class="fa-solid fa-play"></i> Auto';
+                    btn.style.color = '#F8FAFC';
+                    btn.style.borderColor = 'rgba(255,255,255,0.15)';
+                }
+            }
+        }
+
+        // MODAL DE QUIZ
+        function showQuizModal(quiz) {
+            document.getElementById('quiz-title').innerText = quiz.title;
+            document.getElementById('quiz-prompt').innerText = quiz.prompt;
+
+            const optContainer = document.getElementById('quiz-options-container');
+            let html = '';
+            quiz.options.forEach((optText, i) => {
+                html += '<button class="quiz-opt-btn" onclick="submitQuizAnswer(' + i + ')">' +
+                    '<span style="background: rgba(255,255,255,0.1); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 11px;">' +
+                    String.fromCharCode(65 + i) + '</span>' +
+                    '<span>' + optText + '</span>' +
+                    '</button>';
+            });
+            optContainer.innerHTML = html;
+            document.getElementById('quiz-feedback').className = 'quiz-feedback';
+            document.getElementById('quiz-actions-bar').style.display = 'none';
+
+            document.getElementById('quiz-modal').classList.add('show');
+        }
+
+        function submitQuizAnswer(selectedIndex) {
+            const lvl = LEVELS[currentLevelIndex];
+            const currentStep = lvl.steps[currentStepIndex];
+            const quiz = currentStep.quiz;
+            const feedbackBox = document.getElementById('quiz-feedback');
+
+            // Deshabilitar botones de opciones
+            document.querySelectorAll('.quiz-opt-btn').forEach(b => b.style.pointerEvents = 'none');
+
+            if (selectedIndex === quiz.correctIndex) {
+                score += 100;
+                streak += 1;
+                feedbackBox.className = 'quiz-feedback correct';
+                feedbackBox.innerHTML = '<strong><i class="fa-solid fa-circle-check"></i> ¡RESPUESTA CORRECTA! (+100 pts)</strong><br>' + quiz.explanation;
+            } else {
+                streak = 0;
+                feedbackBox.className = 'quiz-feedback incorrect';
+                feedbackBox.innerHTML = '<strong><i class="fa-solid fa-circle-xmark"></i> NO EXACTAMENTE</strong><br>' + quiz.explanation;
+            }
+
+            document.getElementById('score-display').innerText = score + ' pts';
+            document.getElementById('streak-display').innerText = streak + 'x';
+
+            currentStep.quizResolved = true;
+            document.getElementById('quiz-actions-bar').style.display = 'flex';
+        }
+
+        function dismissQuizAndResume() {
+            document.getElementById('quiz-modal').classList.remove('show');
+            isWaitingForQuiz = false;
+            // Continuar con el siguiente paso tras el quiz
+            setTimeout(() => {
+                executeNextStep();
+            }, 300);
+        }
+
+        // ATAJOS DE TECLADO
+        function setupKeyboardShortcuts() {
+            window.addEventListener('keydown', e => {
+                if (isWaitingForQuiz) return;
+                if (e.key === 'F8') {
+                    e.preventDefault();
+                    executeNextStep();
+                } else if (e.key === 'F5') {
+                    e.preventDefault();
+                    resetCurrentLevel();
+                } else if (e.key === ' ') {
+                    e.preventDefault();
+                    toggleAutoPlay();
+                }
+            });
+        }
+
+        // INICIALIZAR AL CARGAR LA PÁGINA
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
