@@ -1504,6 +1504,16 @@
 
         // RENDERIZADO INICIAL
         function initApp() {
+            if (window.self !== window.top) {
+                // Embebido dentro del iframe de la diapositiva
+                const returnBtn = document.querySelector('.btn-return-slides');
+                if (returnBtn) {
+                    returnBtn.innerHTML = '<i class="fa-solid fa-up-right-from-square"></i> Pestaña Nueva';
+                    returnBtn.href = 'index.html';
+                    returnBtn.target = '_blank';
+                    returnBtn.title = 'Abrir simulador en pantalla completa';
+                }
+            }
             loadLevel(0);
             setupKeyboardShortcuts();
         }
@@ -1866,12 +1876,15 @@
                 if (isWaitingForQuiz) return;
                 if (e.key === 'F8') {
                     e.preventDefault();
+                    e.stopPropagation();
                     executeNextStep();
                 } else if (e.key === 'F5') {
                     e.preventDefault();
+                    e.stopPropagation();
                     resetCurrentLevel();
                 } else if (e.key === ' ') {
                     e.preventDefault();
+                    e.stopPropagation();
                     toggleAutoPlay();
                 }
             });
