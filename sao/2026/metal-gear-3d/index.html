@@ -1,0 +1,2717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>METAL GEAR JAVA 3D // TACTICAL CYBER-STEALTH OPERATIONS - UTN FRSF</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #040812;
+            --bg-panel: rgba(9, 18, 34, 0.84);
+            --bg-glass: rgba(12, 25, 46, 0.76);
+            --cyan: #38bdf8;
+            --cyan-glow: rgba(56, 189, 248, 0.45);
+            --emerald: #10b981;
+            --emerald-bright: #34d399;
+            --amber: #f59e0b;
+            --amber-bright: #fbbf24;
+            --crimson: #ef4444;
+            --violet: #a78bfa;
+            --text-main: #f1f5f9;
+            --text-dim: #94a3b8;
+            --font-title: 'Poppins', system-ui, sans-serif;
+            --font-ui: 'Inter', system-ui, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 20%, #0d1b32 0%, #040812 75%);
+            color: var(--text-main);
+            font-family: var(--font-ui);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* =====================================================================
+           SHELL PRINCIPAL DEL JUEGO (16:9 TACTICAL CYBER-STEALTH FRAME)
+           ===================================================================== */
+        #game-shell {
+            position: relative;
+            width: min(98vw, 1280px);
+            height: min(95vh, 780px);
+            background: #050a15;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 14px;
+            box-shadow:
+                0 24px 60px rgba(0, 0, 0, 0.85),
+                0 0 35px rgba(56, 189, 248, 0.14);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* =====================================================================
+           BARRA SUPERIOR TÁCTICA (GLASSMORPHISM HUD)
+           ===================================================================== */
+        #top-hud {
+            height: 62px;
+            background: linear-gradient(180deg, rgba(10, 20, 38, 0.96) 0%, rgba(7, 14, 28, 0.90) 100%);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.28);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            gap: 12px;
+            z-index: 30;
+            backdrop-filter: blur(12px);
+        }
+
+        .hud-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hud-card {
+            background: rgba(15, 29, 54, 0.72);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 8px;
+            padding: 5px 11px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .hud-label {
+            font-family: var(--font-mono);
+            font-size: 9.5px;
+            letter-spacing: 1.1px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .hp-track {
+            width: 145px;
+            height: 9px;
+            background: rgba(2, 6, 14, 0.9);
+            border-radius: 99px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            position: relative;
+        }
+
+        #hp-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #10b981, #38bdf8);
+            border-radius: 99px;
+            transition: width 0.2s ease, background 0.2s ease;
+        }
+
+        .hud-stat-val {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--cyan);
+        }
+
+        #alert-pill {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 6px 12px;
+            border-radius: 99px;
+            background: rgba(16, 185, 129, 0.16);
+            border: 1px solid var(--emerald);
+            color: var(--emerald-bright);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.2s ease;
+        }
+
+        #alert-pill.suspicion {
+            background: rgba(245, 158, 11, 0.18);
+            border-color: var(--amber);
+            color: var(--amber-bright);
+        }
+
+        #alert-pill.alert {
+            background: rgba(239, 68, 68, 0.22);
+            border-color: var(--crimson);
+            color: #fca5a5;
+            box-shadow: 0 0 16px rgba(239, 68, 68, 0.45);
+            animation: pulseAlert 0.75s infinite alternate;
+        }
+
+        @keyframes pulseAlert {
+            from { transform: scale(1); }
+            to { transform: scale(1.04); }
+        }
+
+        .hud-btn {
+            background: rgba(15, 29, 54, 0.85);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 7px 11px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.16s ease;
+        }
+
+        .hud-btn:hover {
+            background: rgba(56, 189, 248, 0.18);
+            border-color: var(--cyan);
+            transform: translateY(-1px);
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.3);
+        }
+
+        .hud-btn.active {
+            background: rgba(56, 189, 248, 0.25);
+            border-color: var(--cyan);
+            color: #7dd3fc;
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+        }
+
+        .hud-btn kbd {
+            background: rgba(2, 8, 20, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-size: 9.5px;
+            color: var(--amber-bright);
+        }
+
+        /* =====================================================================
+           VIEWPORT 3D PRINCIPAL + OVERLAYS TÁCTICOS
+           ===================================================================== */
+        #stage-wrap {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            background: #040812;
+            overflow: hidden;
+        }
+
+        #viewport-3d {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #viewport-3d canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+
+        #hud-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* Efecto de borde holográfico cuando el Visor Bytecode [V] está activo */
+        #visor-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 4;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            background:
+                radial-gradient(circle at 50% 50%, transparent 55%, rgba(14, 165, 233, 0.22) 100%),
+                repeating-linear-gradient(0deg, rgba(56, 189, 248, 0.04) 0px, rgba(56, 189, 248, 0.04) 1px, transparent 1px, transparent 4px);
+            border: 2px solid rgba(56, 189, 248, 0.6);
+        }
+
+        #visor-overlay.active {
+            opacity: 1;
+        }
+
+        /* =====================================================================
+           MINI-RADAR SOLITON 2D (ESQUINA SUPERIOR DERECHA)
+           ===================================================================== */
+        #radar-widget {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            width: 186px;
+            background: rgba(7, 15, 30, 0.84);
+            border: 1px solid rgba(56, 189, 248, 0.42);
+            border-radius: 10px;
+            padding: 7px;
+            z-index: 15;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .radar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 9.5px;
+            color: var(--cyan);
+            margin-bottom: 5px;
+            letter-spacing: 0.8px;
+        }
+
+        #radar-canvas {
+            width: 100%;
+            height: 98px;
+            background: #030914;
+            border-radius: 6px;
+            border: 1px solid rgba(56, 189, 248, 0.22);
+            display: block;
+        }
+
+        #sector-caption {
+            margin-top: 5px;
+            font-family: var(--font-mono);
+            font-size: 9.5px;
+            color: var(--text-dim);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* =====================================================================
+           PICTURE-IN-PICTURE (PiP) TRANSMISIÓN DE RADIO EN VIVO (NO PAUSA)
+           ===================================================================== */
+        #pip-radio {
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            width: min(410px, 60vw);
+            background: rgba(8, 18, 36, 0.88);
+            border: 1px solid rgba(56, 189, 248, 0.55);
+            border-left: 4px solid var(--cyan);
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 16;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65);
+            transform: translateX(-120%);
+            opacity: 0;
+            transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+            pointer-events: none;
+        }
+
+        #pip-radio.visible {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        #pip-avatar {
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+            background: rgba(4, 12, 24, 0.9);
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .pip-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .pip-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--cyan);
+            margin-bottom: 3px;
+        }
+
+        #pip-text {
+            font-size: 12px;
+            line-height: 1.38;
+            color: var(--text-main);
+        }
+
+        /* =====================================================================
+           BARRA DE SALUD DEL BOSS (TOP CENTER)
+           ===================================================================== */
+        #boss-hud {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(440px, 52vw);
+            background: rgba(18, 8, 18, 0.90);
+            border: 1px solid rgba(239, 68, 68, 0.6);
+            border-radius: 10px;
+            padding: 8px 14px;
+            z-index: 15;
+            display: none;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 26px rgba(239, 68, 68, 0.25);
+        }
+
+        .boss-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: #fca5a5;
+            margin-bottom: 5px;
+        }
+
+        .boss-track {
+            width: 100%;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 99px;
+            overflow: hidden;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        #boss-hp-fill {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #ef4444, #f59e0b);
+            transition: width 0.25s ease;
+        }
+
+        #boss-shield-status {
+            margin-top: 4px;
+            font-family: var(--font-mono);
+            font-size: 9.5px;
+            color: var(--amber-bright);
+            text-align: center;
+        }
+
+        /* =====================================================================
+           PROMPT CONTEXTUAL INTELIGENTE Y BANNER DE EVENTOS
+           ===================================================================== */
+        #context-prompt {
+            position: absolute;
+            bottom: 66px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(8, 20, 38, 0.92);
+            border: 1px solid var(--cyan);
+            border-radius: 99px;
+            padding: 8px 18px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            box-shadow: 0 0 24px rgba(56, 189, 248, 0.35);
+            z-index: 18;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        #toast-banner {
+            position: absolute;
+            top: 86px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 24, 46, 0.94);
+            border: 1px solid var(--amber);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--amber-bright);
+            z-index: 22;
+            display: none;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+            pointer-events: none;
+        }
+
+        /* =====================================================================
+           BARRA INFERIOR DE CONTROLES RÁPIDOS & GADGETS
+           ===================================================================== */
+        #bottom-bar {
+            height: 44px;
+            background: rgba(7, 14, 28, 0.95);
+            border-top: 1px solid rgba(56, 189, 248, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-dim);
+            z-index: 30;
+        }
+
+        .key-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: 12px;
+        }
+
+        .key-hint kbd {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-size: 10px;
+            color: var(--cyan);
+        }
+
+        /* =====================================================================
+           MODALES INTERACTIVOS (SABOTAJE EN VIVO, TERMINAL, CODEC, PORTADA)
+           ===================================================================== */
+        .modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(3, 7, 16, 0.80);
+            backdrop-filter: blur(10px);
+            z-index: 40;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .modal-backdrop.active {
+            display: flex;
+        }
+
+        .cyber-modal {
+            width: min(760px, 95%);
+            max-height: 90%;
+            overflow-y: auto;
+            background: linear-gradient(165deg, rgba(11, 23, 44, 0.97) 0%, rgba(6, 13, 26, 0.98) 100%);
+            border: 1px solid rgba(56, 189, 248, 0.5);
+            border-radius: 14px;
+            padding: 22px 26px;
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.85),
+                0 0 35px rgba(56, 189, 248, 0.18);
+            color: var(--text-main);
+        }
+
+        .modal-tag {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .modal-title {
+            font-family: var(--font-title);
+            font-size: 21px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .code-terminal-box {
+            background: #030711;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-left: 4px solid var(--cyan);
+            border-radius: 8px;
+            padding: 13px 16px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.55;
+            color: #bae6fd;
+            white-space: pre-wrap;
+            margin: 12px 0;
+        }
+
+        .token-slot {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.22);
+            border: 1px dashed var(--amber);
+            color: var(--amber-bright);
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .opt-btn {
+            background: rgba(15, 30, 56, 0.85);
+            border: 1px solid rgba(56, 189, 248, 0.32);
+            border-radius: 9px;
+            padding: 11px 14px;
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 12.5px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .opt-btn:hover {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: var(--cyan);
+            transform: translateY(-1px);
+        }
+
+        .opt-btn.correct {
+            background: rgba(16, 185, 129, 0.28);
+            border-color: var(--emerald-bright);
+            color: #a7f3d0;
+        }
+
+        .opt-btn.wrong {
+            background: rgba(239, 68, 68, 0.28);
+            border-color: var(--crimson);
+            color: #fecaca;
+        }
+
+        .feedback-box {
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.45;
+            display: none;
+        }
+
+        /* =====================================================================
+           PANTALLA DE TÍTULO HERO 3D (OVERLAY INICIAL)
+           ===================================================================== */
+        #title-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 60% 45%, rgba(8, 20, 42, 0.35) 0%, rgba(4, 8, 18, 0.80) 78%);
+            z-index: 45;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px 56px;
+        }
+
+        .hero-left {
+            max-width: 580px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(56, 189, 248, 0.14);
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            color: var(--cyan);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 99px;
+            letter-spacing: 1.2px;
+            margin-bottom: 14px;
+        }
+
+        .hero-title {
+            font-family: var(--font-title);
+            font-size: clamp(32px, 4.5vw, 52px);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            text-shadow: 0 0 30px rgba(56, 189, 248, 0.4);
+            margin-bottom: 10px;
+        }
+
+        .hero-title span {
+            color: var(--cyan);
+        }
+
+        .hero-sub {
+            font-size: 14.5px;
+            line-height: 1.55;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+
+        .feature-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .feature-pill {
+            background: rgba(15, 29, 54, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 7px;
+            padding: 6px 11px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: #e2e8f0;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, #0284c7 0%, #10b981 100%);
+            border: none;
+            color: #ffffff;
+            font-family: var(--font-title);
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            padding: 13px 28px;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 10px 28px rgba(16, 185, 129, 0.35);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 34px rgba(56, 189, 248, 0.5);
+        }
+
+        .mission-cards-right {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 340px;
+        }
+
+        .op-card {
+            background: rgba(10, 21, 40, 0.86);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 10px;
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: all 0.16s ease;
+        }
+
+        .op-card:hover {
+            border-color: var(--cyan);
+            background: rgba(16, 34, 62, 0.92);
+            transform: translateX(-4px);
+        }
+
+        /* =====================================================================
+           CONTROLES TÁCTILES MÓVILES (RESPONSIVE)
+           ===================================================================== */
+        #touch-controls {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            right: 14px;
+            display: none;
+            justify-content: space-between;
+            align-items: flex-end;
+            z-index: 25;
+            pointer-events: none;
+        }
+
+        .touch-pad, .touch-actions {
+            display: flex;
+            gap: 8px;
+            pointer-events: auto;
+        }
+
+        .t-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: rgba(10, 22, 42, 0.82);
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            color: var(--cyan);
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 900px) {
+            #title-overlay {
+                flex-direction: column;
+                padding: 20px;
+                overflow-y: auto;
+            }
+            .mission-cards-right {
+                width: 100%;
+            }
+            #touch-controls {
+                display: flex;
+            }
+            #bottom-bar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-shell">
+    <!-- BARRA TÁCTICA SUPERIOR -->
+    <header id="top-hud">
+        <div class="hud-group">
+            <div class="hud-card">
+                <div class="hud-label">
+                    <span>SOLID BYTE // BLINDAJE</span>
+                    <span id="hp-text" style="color:var(--emerald-bright);">100%</span>
+                </div>
+                <div class="hp-track">
+                    <div id="hp-fill"></div>
+                </div>
+            </div>
+
+            <div class="hud-card">
+                <div class="hud-label">CAMO INDEX</div>
+                <div class="hud-stat-val" id="camo-text">45%</div>
+            </div>
+
+            <div class="hud-card">
+                <div class="hud-label">KEYCARD</div>
+                <div class="hud-stat-val" id="keycard-text" style="color:var(--amber-bright);">LV.0</div>
+            </div>
+
+            <div id="alert-pill">
+                <span id="alert-dot">●</span>
+                <span id="alert-label">INFILTRACIÓN</span>
+            </div>
+        </div>
+
+        <div class="hud-group">
+            <button class="hud-btn" id="btn-visor" onclick="window.toggleCyberVisor()" title="Activar Visor Bytecode 3D">
+                VISOR 3D <kbd>V</kbd>
+            </button>
+            <button class="hud-btn" id="btn-cam" onclick="window.switchCamera3D()" title="Cambiar Ángulo de Cámara 3D">
+                CÁMARA: <span id="cam-label">TÁCTICA</span> <kbd>K</kbd>
+            </button>
+            <button class="hud-btn" id="btn-emp" onclick="window.useEmpGadget()" title="Detonar Granada EMP">
+                EMP (<span id="emp-count">2</span>) <kbd>G</kbd>
+            </button>
+            <button class="hud-btn" onclick="window.openMissionModal()" title="Seleccionar Operación">
+                <span id="op-badge">OP-01</span> <kbd>M</kbd>
+            </button>
+            <button class="hud-btn" onclick="window.openCodecModal()" title="Abrir Holo-CODEC">
+                CODEC <kbd>C</kbd>
+            </button>
+            <button class="hud-btn" id="btn-mute" onclick="window.toggleAudioMute()" title="Silenciar/Activar Audio">
+                AUDIO
+            </button>
+        </div>
+    </header>
+
+    <!-- ESCENARIO 3D + CAPAS TÁCTICAS -->
+    <main id="stage-wrap">
+        <div id="viewport-3d"></div>
+        <div id="visor-overlay"></div>
+        <canvas id="hud-canvas" width="800" height="450"></canvas>
+
+        <!-- Transmisión Picture-in-Picture en Vivo (No pausa el juego) -->
+        <div id="pip-radio">
+            <div id="pip-avatar"></div>
+            <div class="pip-body">
+                <div class="pip-meta">
+                    <span id="pip-speaker">CORONEL CAMPBELL</span>
+                    <span id="pip-freq">140.85 MHz // LIVE</span>
+                </div>
+                <div id="pip-text">Enlace neural establecido con el Búnker UTN.</div>
+            </div>
+        </div>
+
+        <!-- Barra de Salud de Boss -->
+        <div id="boss-hud">
+            <div class="boss-header">
+                <span id="boss-name-label">VULCAN BYTEMASTER</span>
+                <span id="boss-hp-label">100%</span>
+            </div>
+            <div class="boss-track">
+                <div id="boss-hp-fill"></div>
+            </div>
+            <div id="boss-shield-status">ESCUDO ACTIVO // HACKEÁ LA BALIZA AMARILLA CON [E]</div>
+        </div>
+
+        <!-- Mini-Radar Soliton 2D -->
+        <aside id="radar-widget">
+            <div class="radar-header">
+                <span>SOLITON RADAR 3D</span>
+                <span id="radar-status">ONLINE</span>
+            </div>
+            <canvas id="radar-canvas" width="170" height="96"></canvas>
+            <div id="sector-caption">SECTOR 01: DÁRSENA</div>
+        </aside>
+
+        <!-- Banner de Notificación Rápida -->
+        <div id="toast-banner"></div>
+
+        <!-- Prompt Contextual Inteligente [E] -->
+        <div id="context-prompt"></div>
+
+        <!-- Controles Táctiles para Móvil / Tablet -->
+        <div id="touch-controls">
+            <div class="touch-pad">
+                <button class="t-btn" onpointerdown="window.setTouchKey('KeyA',true)" onpointerup="window.setTouchKey('KeyA',false)">◀</button>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                    <button class="t-btn" onpointerdown="window.setTouchKey('KeyW',true)" onpointerup="window.setTouchKey('KeyW',false)">▲</button>
+                    <button class="t-btn" onpointerdown="window.setTouchKey('KeyS',true)" onpointerup="window.setTouchKey('KeyS',false)">▼</button>
+                </div>
+                <button class="t-btn" onpointerdown="window.setTouchKey('KeyD',true)" onpointerup="window.setTouchKey('KeyD',false)">▶</button>
+            </div>
+            <div class="touch-actions">
+                <button class="t-btn" onclick="window.triggerDash()">DASH</button>
+                <button class="t-btn" onclick="window.triggerSmartAction()" style="border-color:var(--emerald);color:var(--emerald-bright);">[E]</button>
+                <button class="t-btn" onclick="window.toggleCyberVisor()">VISOR</button>
+            </div>
+        </div>
+
+        <!-- PANTALLA HERO INICIAL -->
+        <section id="title-overlay">
+            <div class="hero-left">
+                <div class="hero-badge">● MOTOR 3D WEBGL // EDICIÓN TÁCTICA SIN LÍMITES</div>
+                <h1 class="hero-title">METAL GEAR <span>JAVA 3D</span></h1>
+                <p class="hero-sub">
+                    Infiltrate en el Búnker Subterráneo de Servidores de la UTN Santa Fe junto a <strong>Solid Byte</strong> y el <strong>Coronel Campbell</strong>. Saboteá grúas magnéticas y torretas en vivo inyectando operadores Java, usá el Visor Bytecode 3D y derrotá a los 3 colosos mecánicos.
+                </p>
+                <div class="feature-pills">
+                    <span class="feature-pill">⚡ Sabotaje Físico 3D en Vivo</span>
+                    <span class="feature-pill">◈ Visor Bytecode [V]</span>
+                    <span class="feature-pill">» Dash Táctico [ESPACIO]</span>
+                    <span class="feature-pill">◎ Derribo CQC & Acción [E]</span>
+                    <span class="feature-pill">◉ Radio PiP en Tiempo Real</span>
+                </div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                    <button class="cta-primary" id="btn-start-campaign" onclick="window.startCampaign(0)">
+                        ▶ INICIAR CAMPAÑA 3D
+                    </button>
+                    <button class="hud-btn" style="padding:12px 18px;font-size:13px;" onclick="window.openCodecSequence('intro')">
+                        ◉ ESCUCHAR BRIEFING DE HISTORIA
+                    </button>
+                </div>
+            </div>
+
+            <div class="mission-cards-right">
+                <div style="font-family:var(--font-mono);font-size:11px;color:var(--cyan);letter-spacing:1px;margin-bottom:2px;">
+                    SELECCIÓN DIRECTA DE OPERACIÓN:
+                </div>
+                <div class="op-card" onclick="window.startCampaign(0)">
+                    <div style="font-family:var(--font-mono);font-size:10px;color:var(--cyan);">OPERACIÓN 01 // UNIDADES 1 Y 2</div>
+                    <div style="font-weight:700;font-size:14px;margin:2px 0;">DÁRSENA SHADOW BYTE</div>
+                    <div style="font-size:11.5px;color:var(--text-dim);">Compilación javac, Tipos Primitivos & Boss Vulcan Bytemaster</div>
+                </div>
+                <div class="op-card" onclick="window.startCampaign(1)">
+                    <div style="font-family:var(--font-mono);font-size:10px;color:var(--emerald-bright);">OPERACIÓN 02 // UNIDADES 3 Y 4</div>
+                    <div style="font-weight:700;font-size:14px;margin:2px 0;">COMPLEJO MODULAR RAM</div>
+                    <div style="font-size:11.5px;color:var(--text-dim);">Switch, Bucles, Métodos Estáticos & Boss Cyber Olympo</div>
+                </div>
+                <div class="op-card" onclick="window.startCampaign(2)">
+                    <div style="font-family:var(--font-mono);font-size:10px;color:var(--violet);">OPERACIÓN 03 // UNIDAD 5</div>
+                    <div style="font-weight:700;font-size:14px;margin:2px 0;">NÚCLEO REX PRIME</div>
+                    <div style="font-size:11.5px;color:var(--text-dim);">Vectores, Piso Matricial 3D, Búsqueda Binaria & Metal Gear REX</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODAL 1: SABOTAJE DE CÓDIGO EN VIVO (GRÚAS Y TORRETAS 3D) -->
+        <div class="modal-backdrop" id="sabotage-modal">
+            <div class="cyber-modal">
+                <div class="modal-tag">⚡ NODO DE SABOTAJE FÍSICO 3D // INYECCIÓN DE BYTECODE EN VIVO</div>
+                <div class="modal-title" id="sab-title">SABOTAJE DE GRÚA MAGNÉTICA</div>
+                <p id="sab-desc" style="font-size:13.5px;color:#cbd5e1;margin-bottom:8px;">
+                    Seleccioná el operador o instrucción Java exacta para sobrecargar el actuador físico en la sala 3D:
+                </p>
+                <div class="code-terminal-box" id="sab-code"></div>
+                <div class="options-grid" id="sab-options"></div>
+                <div class="feedback-box" id="sab-feedback"></div>
+                <div style="display:flex;justify-content:flex-end;margin-top:14px;">
+                    <button class="hud-btn" onclick="window.closeSabotageModal()">CERRAR [ESC]</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 2: TERMINAL CURRICULAR + MINIJUEGO INTERACTIVO -->
+        <div class="modal-backdrop" id="terminal-modal">
+            <div class="cyber-modal">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <div class="modal-tag" id="term-tag">TERMINAL DE SEGURIDAD // SAO</div>
+                    <button class="hud-btn" id="btn-term-hint" onclick="window.showTerminalHint()">💡 PISTA DE CÁTEDRA</button>
+                </div>
+                <div class="modal-title" id="term-title">TERMINAL 01</div>
+                <div class="code-terminal-box" id="term-code"></div>
+                <p id="term-question" style="font-size:14px;font-weight:600;color:#f8fafc;margin:8px 0;"></p>
+                <div id="term-hint-box" style="display:none;background:rgba(245,158,11,0.14);border:1px solid var(--amber);padding:9px 12px;border-radius:8px;font-size:12.5px;color:var(--amber-bright);margin-bottom:10px;"></div>
+                <div class="options-grid" id="term-options"></div>
+
+                <!-- Sub-panel opcional: Minijuego Array Vault en Misión 3 -->
+                <div id="array-vault-panel" style="display:none;margin-top:14px;padding:12px;background:rgba(4,12,26,0.9);border:1px solid var(--cyan);border-radius:10px;">
+                    <div style="font-family:var(--font-mono);font-size:11px;color:var(--cyan);margin-bottom:8px;">
+                        🔓 BYPASS DIRECTO POR HARDWARE: Hacé clic en los índices donde <code>v[i] &gt; 50</code> para desbloquear sin penalización:
+                    </div>
+                    <div id="array-vault-cells" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;"></div>
+                </div>
+
+                <div class="feedback-box" id="term-feedback"></div>
+                <div style="display:flex;justify-content:flex-end;margin-top:14px;">
+                    <button class="hud-btn" onclick="window.closeTerminalModal()">SALIR DE TERMINAL [ESC]</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 3: HOLO-CODEC DE HISTORIA Y CONSULTA A TUTORES -->
+        <div class="modal-backdrop" id="codec-modal">
+            <div class="cyber-modal">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div>
+                        <div class="modal-tag">📻 ENLACE HOLO-CODEC // FRECUENCIA ENCRIPTADA UTN</div>
+                        <div class="modal-title" style="margin-bottom:0;">TRANSCEPTOR TÁCTICO DE CÁTEDRA</div>
+                    </div>
+                    <button class="hud-btn" onclick="window.closeCodecModal()">CERRAR [ESC]</button>
+                </div>
+
+                <div style="display:grid;grid-template-columns:130px 1fr 130px;gap:14px;align-items:center;background:#030814;border:1px solid rgba(56,189,248,0.35);border-radius:10px;padding:14px;">
+                    <div style="text-align:center;">
+                        <div id="codec-left-svg" style="width:96px;height:96px;margin:0 auto;border:1px solid var(--cyan);border-radius:10px;background:#061224;display:flex;align-items:center;justify-content:center;"></div>
+                        <div id="codec-left-name" style="font-family:var(--font-mono);font-size:10px;color:var(--cyan);margin-top:6px;font-weight:700;">CORONEL</div>
+                    </div>
+
+                    <div>
+                        <div style="font-family:var(--font-mono);font-size:11px;color:var(--emerald-bright);margin-bottom:6px;" id="codec-freq-display">
+                            PTT 140.85 MHz // CANAL SEGURO ACTIVO
+                        </div>
+                        <div id="codec-dialogue-box" style="min-height:84px;font-size:14px;line-height:1.5;color:#f1f5f9;background:rgba(12,25,48,0.65);padding:12px;border-radius:8px;border-left:3px solid var(--cyan);">
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+                            <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--text-dim);">SINTETIZADOR DE FORMANTES DE VOZ ACTIVO</span>
+                            <button class="cta-primary" style="padding:7px 16px;font-size:12px;" id="btn-codec-next" onclick="window.nextCodecLine()">SIGUIENTE ▶</button>
+                        </div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div id="codec-right-svg" style="width:96px;height:96px;margin:0 auto;border:1px solid var(--emerald);border-radius:10px;background:#061224;display:flex;align-items:center;justify-content:center;"></div>
+                        <div style="font-family:var(--font-mono);font-size:10px;color:var(--emerald-bright);margin-top:6px;font-weight:700;">SOLID BYTE</div>
+                    </div>
+                </div>
+
+                <div style="margin-top:12px;">
+                    <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--text-dim);margin-bottom:6px;">
+                        FRECUENCIAS DE SOPORTE DE CÁTEDRA (CLIC PARA LLAMAR):
+                    </div>
+                    <div id="codec-contacts-bar" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 4: SELECTOR DE OPERACIÓN [M] -->
+        <div class="modal-backdrop" id="mission-modal">
+            <div class="cyber-modal" style="max-width:580px;">
+                <div class="modal-tag">🗺️ SELECTOR DE OPERACIONES TÁCTICAS</div>
+                <div class="modal-title">CAMPAÑA SHADOW BYTE 3D</div>
+                <div id="mission-list-container" style="display:flex;flex-direction:column;gap:10px;margin:14px 0;"></div>
+                <div style="display:flex;justify-content:flex-end;">
+                    <button class="hud-btn" onclick="window.closeMissionModal()">VOLVER AL JUEGO [ESC]</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 5: VICTORIA / GAME OVER -->
+        <div class="modal-backdrop" id="end-modal">
+            <div class="cyber-modal" style="max-width:560px;text-align:center;">
+                <div class="modal-tag" id="end-tag">OPERACIÓN COMPLETADA</div>
+                <div class="modal-title" id="end-title" style="font-size:28px;">¡MISIÓN CUMPLIDA!</div>
+                <p id="end-desc" style="font-size:14px;color:#cbd5e1;margin-bottom:16px;"></p>
+                <div id="end-stats" style="background:#040a18;border:1px solid rgba(56,189,248,0.35);border-radius:10px;padding:14px;font-family:var(--font-mono);font-size:13px;margin-bottom:18px;"></div>
+                <div style="display:flex;justify-content:center;gap:12px;">
+                    <button class="cta-primary" id="btn-end-action" onclick="window.handleEndPrimaryAction()">CONTINUAR</button>
+                    <button class="hud-btn" onclick="window.startCampaign(window.gameState.levelIdx)">REINTENTAR OPERACIÓN</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- BARRA INFERIOR DE CONTROLES -->
+    <footer id="bottom-bar">
+        <div>
+            <span class="key-hint"><kbd>WASD</kbd> / <kbd>FLECHAS</kbd> Mover 360°</span>
+            <span class="key-hint"><kbd>ESPACIO</kbd> Dash Táctico</span>
+            <span class="key-hint"><kbd>E</kbd> Acción Contextual (CQC / Sabotaje / Hack / Boss)</span>
+            <span class="key-hint"><kbd>V</kbd> Visor Bytecode 3D</span>
+            <span class="key-hint"><kbd>Q</kbd> Golpear Muro (Señuelo)</span>
+            <span class="key-hint"><kbd>B</kbd> Caja Holo</span>
+        </div>
+        <div id="matrix-status-pill" style="color:var(--cyan);">
+            TUTI // CÁTEDRA SAO - UTN FRSF
+        </div>
+    </footer>
+</div>
+
+<!-- LIBRERÍAS Y MÓDULOS DEL MOTOR 3D -->
+<script src="vendor/three.min.js"></script>
+<script src="preguntas.js"></script>
+<script src="audio.js"></script>
+<script src="levels.js"></script>
+<script src="gfx3d.js"></script>
+
+<script>
+/**
+ * =============================================================================
+ * CONTROLADOR PRINCIPAL // METAL GEAR JAVA 3D
+ *  - Integración completa 3D (Three.js) + 2D Radar Soliton + Sabotaje en Vivo
+ *  - Patrullas 2D Multi-Waypoint con disparo de proyectiles en Alerta
+ *  - Piso Matricial 3D interactivo (f == c) en Operación 03
+ *  - 3 Bosses 3D con mecánicas de esquive espacial y balizas de vulnerabilidad
+ * =============================================================================
+ */
+(function () {
+    'use strict';
+
+    const LEVELS = window.MGS3D_LEVELS ? window.MGS3D_LEVELS.CAMPAIGN_LEVELS : [];
+    const CODEC_SCRIPTS = window.MGS3D_LEVELS ? window.MGS3D_LEVELS.CODEC_SCRIPTS : {};
+    const CODEC_CONTACTS = window.MGS3D_LEVELS ? window.MGS3D_LEVELS.CODEC_CONTACTS : [];
+    const PIP_TRANSMISSIONS = window.MGS3D_LEVELS ? window.MGS3D_LEVELS.PIP_TRANSMISSIONS : {};
+    const AUDIO = window.MGS3D_AUDIO;
+    const GFX = window.MGS3D_GFX;
+
+    const hudCanvas = document.getElementById('hud-canvas');
+    const hudCtx = hudCanvas.getContext('2d');
+    const radarCanvas = document.getElementById('radar-canvas');
+    const radarCtx = radarCanvas.getContext('2d');
+
+    // Retratos vectoriales SVG limpios para el Holo-CODEC y Radio PiP
+    function getPortraitSVG(speaker) {
+        const s = String(speaker || '').toUpperCase();
+        let accent = '#38bdf8';
+        let visor = '#0ea5e9';
+        let label = 'CMD';
+        if (s.includes('BYTE')) { accent = '#34d399'; visor = '#10b981'; label = 'BYTE'; }
+        else if (s.includes('LÓGICA') || s.includes('LOGICA')) { accent = '#a78bfa'; visor = '#8b5cf6'; label = 'LOG'; }
+        else if (s.includes('CAPITÁN') || s.includes('CAPITAN')) { accent = '#fbbf24'; visor = '#f59e0b'; label = 'MOD'; }
+        else if (s.includes('DEBUG')) { accent = '#fb7185'; visor = '#f43f5e'; label = 'DBG'; }
+        else if (s.includes('ALGORITMO')) { accent = '#2dd4bf'; visor = '#14b8a6'; label = 'ALG'; }
+        else if (s.includes('MANTIS')) { accent = '#e879f9'; visor = '#d946ef'; label = 'PSY'; }
+
+        return `<svg viewBox="0 0 80 80" width="100%" height="100%">
+            <rect width="80" height="80" fill="#040b18"/>
+            <circle cx="40" cy="32" r="16" fill="#0f1f38" stroke="${accent}" stroke-width="2"/>
+            <rect x="26" y="26" width="28" height="8" rx="3" fill="${visor}"/>
+            <path d="M16 72 C16 52, 64 52, 64 72 Z" fill="#0f1f38" stroke="${accent}" stroke-width="2"/>
+            <text x="40" y="75" font-family="monospace" font-size="9" fill="${accent}" text-anchor="middle" font-weight="bold">${label}</text>
+        </svg>`;
+    }
+
+    // Estado reactivo global expuesto en window para tests e inspección
+    const gameState = {
+        running: false,
+        paused: false,
+        levelIdx: 0,
+        currentRoomId: 'dock',
+        alertState: 'normal', // 'normal' | 'suspicion' | 'alert'
+        alertTimer: 0,
+        empTimer: 0,
+        visorActive: false,
+        cameraMode: 'tactical',
+        screenShake: 0,
+        score: 0,
+        sabotagesTriggered: 0,
+        cqcCount: 0,
+        matrixSolved: false,
+        mantisEncountered: false,
+        mantisTimer: 0,
+        player: {
+            x: 75,
+            y: 225,
+            radius: 12,
+            speed: 3.1,
+            dir: 0,
+            hp: 100,
+            maxHp: 100,
+            keycard: 0,
+            camoIndex: 45,
+            inBox: false,
+            empCount: 2,
+            dashTimer: 0,
+            dashCooldown: 0,
+            invulnTimer: 0
+        },
+        boss: null,
+        bossProjectiles: [],
+        guardProjectiles: [],
+        soundWaves: [],
+        floatingTexts: []
+    };
+    window.gameState = gameState;
+
+    let currentLevel = null;
+    let currentRoom = null;
+    let roomMap = {};
+    let hackTerminals = [];
+    let sabotajesList = [];
+    let arenaBeacons = [];
+    let activeBeaconIdx = 0;
+
+    // Input de teclado y táctil
+    const keys = {};
+    window.setTouchKey = function (code, pressed) {
+        keys[code] = pressed;
+    };
+
+    window.addEventListener('keydown', (e) => {
+        keys[e.code] = true;
+        if (AUDIO) AUDIO.initAudio();
+
+        if (e.code === 'Escape') {
+            closeAllModals();
+            return;
+        }
+        if (gameState.paused || !gameState.running) return;
+
+        if (e.code === 'Space' || e.code === 'ShiftLeft') {
+            e.preventDefault();
+            triggerDash();
+        } else if (e.code === 'KeyE') {
+            e.preventDefault();
+            triggerSmartAction();
+        } else if (e.code === 'KeyV' || e.code === 'Tab') {
+            e.preventDefault();
+            toggleCyberVisor();
+        } else if (e.code === 'KeyK') {
+            e.preventDefault();
+            switchCamera3D();
+        } else if (e.code === 'KeyQ') {
+            e.preventDefault();
+            triggerWallKnock();
+        } else if (e.code === 'KeyB') {
+            e.preventDefault();
+            toggleHoloBox();
+        } else if (e.code === 'KeyG') {
+            e.preventDefault();
+            useEmpGadget();
+        } else if (e.code === 'KeyC') {
+            e.preventDefault();
+            openCodecModal();
+        } else if (e.code === 'KeyM') {
+            e.preventDefault();
+            openMissionModal();
+        }
+    });
+
+    window.addEventListener('keyup', (e) => {
+        keys[e.code] = false;
+    });
+
+    // Inicializar escena Three.js 3D
+    const viewport3DEl = document.getElementById('viewport-3d');
+    if (GFX) {
+        GFX.init3D(viewport3DEl);
+    }
+
+    // -------------------------------------------------------------------------
+    // UTILIDADES GEOMÉTRICAS Y DE COLISIÓN
+    // -------------------------------------------------------------------------
+    function circleRectCollide(cx, cy, cr, rx, ry, rw, rh) {
+        const closestX = Math.max(rx, Math.min(cx, rx + rw));
+        const closestY = Math.max(ry, Math.min(cy, ry + rh));
+        const dx = cx - closestX;
+        const dy = cy - closestY;
+        return (dx * dx + dy * dy) < (cr * cr);
+    }
+
+    function canMoveTo(nx, ny, radius) {
+        if (nx - radius < 16 || nx + radius > 784 || ny - radius < 16 || ny + radius > 434) {
+            // Permitir acercarse al borde si hay una puerta abierta en ese punto
+            if (currentRoom && currentRoom.doors) {
+                for (const d of currentRoom.doors) {
+                    if (circleRectCollide(nx, ny, radius, d.x - 8, d.y - 8, d.w + 16, d.h + 16)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        if (currentRoom && currentRoom.walls) {
+            for (const w of currentRoom.walls) {
+                if (w.kind === 'perimeter') continue;
+                if (circleRectCollide(nx, ny, radius, w.x, w.y, w.w, w.h)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function lineIntersectsRect(x1, y1, x2, y2, rx, ry, rw, rh) {
+        const steps = 12;
+        for (let i = 1; i <= steps; i++) {
+            const t = i / steps;
+            const px = x1 + (x2 - x1) * t;
+            const py = y1 + (y2 - y1) * t;
+            if (px >= rx && px <= rx + rw && py >= ry && py <= ry + rh) return true;
+        }
+        return false;
+    }
+
+    function hasLineOfSight(x1, y1, x2, y2) {
+        if (!currentRoom || !currentRoom.walls) return true;
+        for (const w of currentRoom.walls) {
+            if (w.kind === 'perimeter') continue;
+            if (lineIntersectsRect(x1, y1, x2, y2, w.x, w.y, w.w, w.h)) return false;
+        }
+        return true;
+    }
+
+    function showToast(msg, color = '#fbbf24') {
+        const el = document.getElementById('toast-banner');
+        if (!el) return;
+        el.textContent = msg;
+        el.style.borderColor = color;
+        el.style.color = color;
+        el.style.display = 'block';
+        clearTimeout(el._timer);
+        el._timer = setTimeout(() => {
+            el.style.display = 'none';
+        }, 3200);
+    }
+
+    function addFloatingText(x, y, text, color = '#38bdf8') {
+        gameState.floatingTexts.push({ x, y, text, color, life: 1.2 });
+    }
+
+    // -------------------------------------------------------------------------
+    // TRANSMISIÓN PICTURE-IN-PICTURE (RADIO EN VIVO SIN PAUSAR)
+    // -------------------------------------------------------------------------
+    let pipTimeout = null;
+    function triggerPiPRadio(speaker, role, text) {
+        const box = document.getElementById('pip-radio');
+        if (!box) return;
+        document.getElementById('pip-avatar').innerHTML = getPortraitSVG(speaker);
+        document.getElementById('pip-speaker').textContent = speaker;
+        document.getElementById('pip-freq').textContent = role || '140.85 // LIVE';
+        document.getElementById('pip-text').textContent = text;
+        box.classList.add('visible');
+
+        if (AUDIO) {
+            AUDIO.playRadioSquelch(true);
+            for (let i = 0; i < Math.min(10, text.length); i++) {
+                setTimeout(() => AUDIO.playVoiceBlip(speaker, text.charCodeAt(i)), i * 55);
+            }
+        }
+
+        clearTimeout(pipTimeout);
+        pipTimeout = setTimeout(() => {
+            box.classList.remove('visible');
+        }, 6800);
+    }
+
+    // -------------------------------------------------------------------------
+    // CARGA DE OPERACIÓN Y SALAS 3D
+    // -------------------------------------------------------------------------
+    function cloneDeep(obj) {
+        return JSON.parse(JSON.stringify(obj));
+    }
+
+    function startCampaign(levelIdx = 0) {
+        if (AUDIO) AUDIO.initAudio();
+        const idx = Math.max(0, Math.min(LEVELS.length - 1, levelIdx));
+        gameState.levelIdx = idx;
+        currentLevel = cloneDeep(LEVELS[idx]);
+        roomMap = currentLevel.rooms;
+
+        const keycard1Ids = new Set(['T1_1', 'T2_1', 'T3_1']);
+        const keycard2Ids = new Set(['T1_3', 'T2_3', 'T3_3']);
+
+        hackTerminals = (currentLevel.terminals || []).map(t => {
+            const opts = (t.options || []).map(o => typeof o === 'string' ? o : o.text);
+            const ans = typeof t.answer === 'number'
+                ? t.answer
+                : (t.options || []).findIndex(o => o && o.correct);
+            return Object.assign({}, t, {
+                title: t.title || t.name || t.id,
+                options: opts,
+                answer: ans >= 0 ? ans : 0,
+                grantsKeycard: t.grantsKeycard || (keycard2Ids.has(t.id) ? 2 : (keycard1Ids.has(t.id) ? 1 : 0)),
+                requiresTerminal: t.requiresTerminal || (t.id === 'T2_3' ? 'T2_2' : null),
+                unlocked: false
+            });
+        });
+
+        sabotajesList = (currentLevel.sabotajes || []).map(s => {
+            const opts = s.options || s.tokens || [];
+            const ans = typeof s.answer === 'number'
+                ? s.answer
+                : opts.indexOf(s.correctToken);
+            return Object.assign({}, s, {
+                title: s.title || s.name || s.id,
+                prompt: s.prompt || s.desc || '',
+                codeTemplate: s.codeTemplate || `${s.codeBefore || ''}[[ INYECTAR ]]${s.codeAfter || ''}`,
+                options: opts,
+                answer: ans >= 0 ? ans : 0,
+                triggered: false
+            });
+        });
+
+        const beaconCoords = [
+            { x: 110, y: 78 },
+            { x: 690, y: 78 },
+            { x: 110, y: 372 },
+            { x: 690, y: 372 }
+        ];
+        arenaBeacons = (currentLevel.bossBeacons || []).slice(0, 4).map((b, i) => {
+            const opts = (b.options || []).map(o => typeof o === 'string' ? o : o.text);
+            const ans = typeof b.answer === 'number'
+                ? b.answer
+                : (b.options || []).findIndex(o => o && o.correct);
+            return {
+                ...b,
+                title: b.title || b.name || b.id,
+                options: opts,
+                answer: ans >= 0 ? ans : 0,
+                x: beaconCoords[i].x,
+                y: beaconCoords[i].y,
+                completed: false
+            };
+        });
+        activeBeaconIdx = 0;
+
+        const p = gameState.player;
+        p.x = currentLevel.startPlayerX || 75;
+        p.y = currentLevel.startPlayerY || 225;
+        p.dir = 0;
+        p.maxHp = 100;
+        p.hp = 100;
+        p.keycard = 0;
+        p.inBox = false;
+        p.empCount = 2;
+        p.dashTimer = 0;
+        p.dashCooldown = 0;
+        p.invulnTimer = 0;
+
+        gameState.alertState = 'normal';
+        gameState.alertTimer = 0;
+        gameState.empTimer = 0;
+        gameState.boss = null;
+        gameState.bossProjectiles = [];
+        gameState.guardProjectiles = [];
+        gameState.matrixSolved = false;
+        gameState.mantisEncountered = false;
+        gameState.running = true;
+        gameState.paused = false;
+
+        document.getElementById('title-overlay').style.display = 'none';
+        closeAllModals();
+
+        document.getElementById('op-badge').textContent = currentLevel.code;
+        document.getElementById('matrix-status-pill').textContent = `${currentLevel.code} // ${currentLevel.name}`;
+
+        enterRoom(currentLevel.startRoom, p.x, p.y);
+        updateTopHUD();
+    }
+    window.startCampaign = startCampaign;
+
+    function enterRoom(roomId, spawnX, spawnY) {
+        const nextRoom = roomMap[roomId];
+        if (!nextRoom) return;
+
+        currentRoom = nextRoom;
+        currentRoom.visited = true;
+        gameState.currentRoomId = roomId;
+        gameState.player.x = spawnX;
+        gameState.player.y = spawnY;
+        gameState.bossProjectiles = [];
+        gameState.guardProjectiles = [];
+        gameState.soundWaves = [];
+
+        // Inicializar estado de patrulla 2D en centinelas
+        (currentRoom.guards || []).forEach(g => {
+            if (typeof g.wpIdx !== 'number') g.wpIdx = 0;
+            g.waitTimer = 0;
+            g.investigateTimer = 0;
+            g.shootCooldown = 1.0;
+        });
+        if (!currentRoom.sleepers) currentRoom.sleepers = [];
+
+        // Inicializar Boss si entramos a una Boss Arena
+        const bossHud = document.getElementById('boss-hud');
+        if (currentRoom.hasBoss) {
+            if (!gameState.boss) {
+                gameState.boss = {
+                    name: currentLevel.bossName,
+                    type: currentLevel.bossType,
+                    x: 590,
+                    y: 225,
+                    hp: 100,
+                    maxHp: 100,
+                    state: 'shielded', // 'shielded' | 'stunned'
+                    stunTimer: 0,
+                    shotTimer: 1.5,
+                    vy: 1.85,
+                    elevation: 0,
+                    leapProgress: 0,
+                    leapTarget: null,
+                    laserSweeping: false,
+                    laserAngle: Math.PI
+                };
+                // Briefing automático la primera vez que entra a la arena
+                const briefKey = `boss_briefing_${currentLevel.id}`;
+                if (CODEC_SCRIPTS[briefKey]) {
+                    setTimeout(() => openCodecSequence(briefKey), 400);
+                }
+            }
+            bossHud.style.display = 'block';
+            document.getElementById('boss-name-label').textContent = currentLevel.bossName;
+            if (AUDIO) AUDIO.setMusicTheme('boss');
+        } else {
+            bossHud.style.display = 'none';
+            if (AUDIO) AUDIO.setMusicTheme(gameState.alertState === 'alert' ? 'alert' : 'stealth');
+        }
+
+        // Easter Egg de Psycho Mantis al entrar al Hangar de REX
+        if (roomId === 'rex_core' && !gameState.mantisEncountered) {
+            gameState.mantisEncountered = true;
+            gameState.mantisTimer = 4.2;
+            showToast('🔮 PSYCHO MANTIS: "Veo que estás cursando SAO en la UTN y usaste ' + gameState.sabotagesTriggered + ' sabotajes..."', '#e879f9');
+        }
+
+        document.getElementById('sector-caption').textContent = currentRoom.title;
+
+        // Construir geometría 3D de la sala
+        if (GFX) {
+            GFX.buildRoom3D(currentRoom, currentLevel, hackTerminals, sabotajesList, gameState);
+        }
+
+        // Disparar transmisión de radio PiP en vivo si corresponde
+        if (PIP_TRANSMISSIONS[roomId]) {
+            const pip = PIP_TRANSMISSIONS[roomId];
+            triggerPiPRadio(pip.speaker, pip.role, pip.text);
+        }
+    }
+    window.enterRoom = enterRoom;
+
+    // -------------------------------------------------------------------------
+    // ACCIONES DE JUGADOR: DASH, VISOR 3D, KNOCK, CAJA HOLO, EMP Y ACCIÓN [E]
+    // -------------------------------------------------------------------------
+    function triggerDash() {
+        const p = gameState.player;
+        if (p.dashCooldown > 0 || p.inBox) return;
+        p.dashTimer = 0.22;
+        p.dashCooldown = 0.85;
+        p.invulnTimer = 0.32;
+        if (AUDIO) AUDIO.playSFX('dash');
+        if (GFX) GFX.spawnDashGhost3D(p.x, p.y, p.dir);
+    }
+    window.triggerDash = triggerDash;
+
+    function toggleCyberVisor() {
+        if (!GFX) return;
+        const active = GFX.toggleVisor3D();
+        gameState.visorActive = active;
+        document.getElementById('visor-overlay').classList.toggle('active', active);
+        document.getElementById('btn-visor').classList.toggle('active', active);
+        if (AUDIO) AUDIO.playSFX('visor');
+        showToast(active ? '👁️ VISOR BYTECODE 3D ACTIVO: CABLES DE DATOS Y NODOS VISIBLES' : 'VISOR BYTECODE DESACTIVADO', '#38bdf8');
+    }
+    window.toggleCyberVisor = toggleCyberVisor;
+
+    function switchCamera3D() {
+        if (!GFX) return;
+        const mode = GFX.cycleCameraMode();
+        gameState.cameraMode = mode;
+        const names = { tactical: 'TÁCTICA', close: 'CERCANA 3D', overhead: 'CENITAL' };
+        document.getElementById('cam-label').textContent = names[mode] || 'TÁCTICA';
+    }
+    window.switchCamera3D = switchCamera3D;
+
+    function triggerWallKnock() {
+        const p = gameState.player;
+        if (AUDIO) AUDIO.playSFX('knock');
+        if (GFX) GFX.spawnShockwave3D(GFX.toWorldX(p.x), GFX.toWorldZ(p.y), 11, 0x38bdf8);
+        gameState.soundWaves.push({ x: p.x, y: p.y, r: 4, maxR: 170 });
+
+        if (currentRoom && currentRoom.guards) {
+            currentRoom.guards.forEach(g => {
+                if (Math.hypot(g.x - p.x, g.y - p.y) <= 185) {
+                    g.investigateX = p.x;
+                    g.investigateY = p.y;
+                    g.investigateTimer = 4.2;
+                    g._bubble = { ch: '?', color: '#fbbf24', timer: 2.0 };
+                    if (AUDIO) AUDIO.playGuardBark('what');
+                }
+            });
+        }
+        showToast('🔊 SEÑUELO ACÚSTICO: Los centinelas cercanos van a investigar tu posición', '#38bdf8');
+    }
+    window.triggerWallKnock = triggerWallKnock;
+
+    function toggleHoloBox() {
+        const p = gameState.player;
+        p.inBox = !p.inBox;
+        showToast(p.inBox ? '📦 HOLO-BOX EQUIPADA: Quedate quieto para camuflaje 90%' : 'HOLO-BOX GUARDADA', '#fbbf24');
+    }
+    window.toggleHoloBox = toggleHoloBox;
+
+    function useEmpGadget() {
+        const p = gameState.player;
+        if (p.empCount <= 0) {
+            showToast('⚠️ SIN CARGAS EMP DISPONIBLES', '#ef4444');
+            return;
+        }
+        p.empCount--;
+        gameState.empTimer = 6.5;
+        gameState.alertState = 'normal';
+        gameState.alertTimer = 0;
+        if (AUDIO) AUDIO.playSFX('emp');
+        if (GFX) GFX.spawnShockwave3D(GFX.toWorldX(p.x), GFX.toWorldZ(p.y), 24, 0x38bdf8);
+        showToast('⚡ PULSO EMP DETONADO: Sensores, cámaras y láseres desactivados por 6.5s', '#38bdf8');
+        updateTopHUD();
+    }
+    window.useEmpGadget = useEmpGadget;
+
+    window.toggleAudioMute = function () {
+        if (!AUDIO) return;
+        const muted = AUDIO.toggleMute();
+        document.getElementById('btn-mute').textContent = muted ? '🔇' : '🔊';
+    };
+
+    // Detecta qué acción contextual [E] está disponible en la posición actual
+    function getAvailableSmartAction() {
+        if (!currentRoom) return null;
+        const p = gameState.player;
+
+        // 1. Derribo CQC silencioso si estamos cerca de un guardia y fuera de alerta roja
+        if (currentRoom.guards && gameState.alertState !== 'alert') {
+            for (let i = 0; i < currentRoom.guards.length; i++) {
+                const g = currentRoom.guards[i];
+                const dist = Math.hypot(g.x - p.x, g.y - p.y);
+                if (dist <= 44) {
+                    return { type: 'cqc', guardIndex: i, guard: g, label: '🥋 [E] DERRIBO CQC SILENCIOSO' };
+                }
+            }
+        }
+
+        // 2. Nodo de Sabotaje Físico 3D en vivo (Grúa / Torreta EMP)
+        if (currentRoom.sabotageNodes) {
+            for (const sn of currentRoom.sabotageNodes) {
+                if (sn._used) continue;
+                const cx = sn.x + sn.w / 2;
+                const cy = sn.y + sn.h / 2;
+                if (Math.hypot(cx - p.x, cy - p.y) <= 48) {
+                    return { type: 'sabotage', node: sn, label: '⚡ [E] SABOTAJE EN VIVO: INYECTAR CÓDIGO 3D' };
+                }
+            }
+        }
+
+        // 3. Terminal Curricular
+        if (currentRoom.terminals) {
+            for (const t of currentRoom.terminals) {
+                const tData = hackTerminals.find(ht => ht.id === t.terminalId);
+                if (tData && !tData.unlocked) {
+                    const cx = t.x + t.w / 2;
+                    const cy = t.y + t.h / 2;
+                    if (Math.hypot(cx - p.x, cy - p.y) <= 50) {
+                        return { type: 'terminal', term: tData, label: `💻 [E] HACKEAR ${tData.title}` };
+                    }
+                }
+            }
+        }
+
+        // 4. Sala de Boss: Golpe crítico al reactor vulnerable o Hackeo de Baliza activa
+        if (currentRoom.hasBoss && gameState.boss && gameState.boss.hp > 0) {
+            const b = gameState.boss;
+            if (b.state === 'stunned' && Math.hypot(b.x - p.x, b.y - p.y) <= 95) {
+                return { type: 'boss_strike', label: '💥 [E] GOLPE CRÍTICO AL REACTOR EXPUESTO' };
+            }
+            const activeBeacon = arenaBeacons[activeBeaconIdx];
+            if (activeBeacon && !activeBeacon.completed) {
+                if (Math.hypot(activeBeacon.x - p.x, activeBeacon.y - p.y) <= 52) {
+                    return { type: 'beacon', beacon: activeBeacon, label: `⚡ [E] SOBRECARGAR ${activeBeacon.title}` };
+                }
+            }
+        }
+
+        return null;
+    }
+
+    function triggerSmartAction() {
+        const act = getAvailableSmartAction();
+        if (!act) return;
+
+        if (act.type === 'cqc') {
+            const g = act.guard;
+            currentRoom.guards.splice(act.guardIndex, 1);
+            currentRoom.sleepers.push({ id: g.id, x: g.x, y: g.y });
+            gameState.cqcCount++;
+            gameState.score += 150;
+            if (AUDIO) {
+                AUDIO.playSFX('cqc');
+                AUDIO.playGuardBark('stunned');
+            }
+            if (GFX) GFX.spawnShockwave3D(GFX.toWorldX(g.x), GFX.toWorldZ(g.y), 6, 0x10b981);
+            addFloatingText(g.x, g.y - 16, 'CQC KO! +150', '#34d399');
+            showToast('🥋 CENTINELA NEUTRALIZADO CON CQC SILENCIOSO', '#10b981');
+        } else if (act.type === 'sabotage') {
+            openSabotageModal(act.node);
+        } else if (act.type === 'terminal') {
+            openTerminalModal(act.term, false);
+        } else if (act.type === 'beacon') {
+            openTerminalModal(act.beacon, true);
+        } else if (act.type === 'boss_strike') {
+            executeBossCriticalStrike();
+        }
+    }
+    window.triggerSmartAction = triggerSmartAction;
+
+    // -------------------------------------------------------------------------
+    // SABOTAJE FÍSICO 3D EN VIVO (MODAL DE INYECCIÓN DE OPERADORES JAVA)
+    // -------------------------------------------------------------------------
+    let activeSabotageNode = null;
+    let activeSabotageData = null;
+
+    function openSabotageModal(node) {
+        const sData = sabotajesList.find(s => s.id === node.sabotageId);
+        if (!sData) return;
+        activeSabotageNode = node;
+        activeSabotageData = sData;
+        gameState.paused = true;
+
+        document.getElementById('sab-title').textContent = sData.title;
+        document.getElementById('sab-desc').textContent = sData.prompt;
+        document.getElementById('sab-code').innerHTML = sData.codeTemplate.replace(
+            '[[ INYECTAR ]]',
+            '<span class="token-slot">[[ INYECTAR ]]</span>'
+        );
+
+        const fb = document.getElementById('sab-feedback');
+        fb.style.display = 'none';
+
+        const optsEl = document.getElementById('sab-options');
+        optsEl.innerHTML = '';
+        sData.options.forEach((optText, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.textContent = `Token [${idx + 1}]:  ${optText}`;
+            btn.onclick = () => submitSabotageToken(idx, btn);
+            optsEl.appendChild(btn);
+        });
+
+        document.getElementById('sabotage-modal').classList.add('active');
+    }
+
+    function submitSabotageToken(selectedIndex, btnEl) {
+        if (!activeSabotageData || !activeSabotageNode) return;
+        const fb = document.getElementById('sab-feedback');
+        fb.style.display = 'block';
+
+        if (selectedIndex === activeSabotageData.answer) {
+            btnEl.classList.add('correct');
+            activeSabotageNode._used = true;
+            activeSabotageData.triggered = true;
+            gameState.sabotagesTriggered++;
+            gameState.score += 300;
+
+            fb.style.background = 'rgba(16, 185, 129, 0.2)';
+            fb.style.border = '1px solid #10b981';
+            fb.style.color = '#a7f3d0';
+            fb.innerHTML = `<strong>¡INYECCIÓN EXITOSA!</strong> ${activeSabotageData.explanation}`;
+
+            // Ejecutar física 3D de la Grúa o Torreta sobre los guardias en el radio de impacto
+            if (GFX) GFX.triggerSabotage3DFX(activeSabotageNode.sabotageId);
+            if (AUDIO) AUDIO.playSFX('crane_drop');
+            gameState.screenShake = 1.4;
+
+            let stunnedCount = 0;
+            if (currentRoom && currentRoom.guards) {
+                for (let i = currentRoom.guards.length - 1; i >= 0; i--) {
+                    const g = currentRoom.guards[i];
+                    const d = Math.hypot(g.x - activeSabotageNode.hazardX, g.y - activeSabotageNode.hazardY);
+                    if (d <= (activeSabotageNode.hazardRadius + 25)) {
+                        currentRoom.guards.splice(i, 1);
+                        currentRoom.sleepers.push({ id: g.id, x: g.x, y: g.y });
+                        stunnedCount++;
+                    }
+                }
+            }
+
+            setTimeout(() => {
+                closeSabotageModal();
+                showToast(`💥 SABOTAJE 3D EJECUTADO: ${stunnedCount > 0 ? stunnedCount + ' centinela(s) neutralizado(s)' : 'Zona despejada'} (+300 PTS)`, '#38bdf8');
+            }, 950);
+        } else {
+            btnEl.classList.add('wrong');
+            if (AUDIO) AUDIO.playSFX('hack_fail');
+            fb.style.background = 'rgba(239, 68, 68, 0.2)';
+            fb.style.border = '1px solid #ef4444';
+            fb.style.color = '#fecaca';
+            fb.textContent = 'Error de sintaxis en el actuador: probá con otro operador Java.';
+        }
+    }
+    window.submitSabotageToken = submitSabotageToken;
+
+    function closeSabotageModal() {
+        document.getElementById('sabotage-modal').classList.remove('active');
+        gameState.paused = false;
+    }
+    window.closeSabotageModal = closeSabotageModal;
+
+    // -------------------------------------------------------------------------
+    // TERMINALES CURRICULARES + BALIZAS DE BOSS + ARRAY VAULT
+    // -------------------------------------------------------------------------
+    let activeTerminalObj = null;
+    let isBossBeaconHack = false;
+
+    function openTerminalModal(termObj, isBeacon) {
+        if (!termObj) return;
+        // Verificar dependencia requiresTerminal
+        if (!isBeacon && termObj.requiresTerminal) {
+            const reqT = hackTerminals.find(t => t.id === termObj.requiresTerminal);
+            if (reqT && !reqT.unlocked) {
+                showToast(`🔒 REQUIERE DESBLOQUEAR PRIMERO: ${reqT.title}`, '#f59e0b');
+                return;
+            }
+        }
+
+        activeTerminalObj = termObj;
+        isBossBeaconHack = !!isBeacon;
+        gameState.paused = true;
+
+        document.getElementById('term-tag').textContent = isBeacon
+            ? '⚡ BALIZA DE SOBRECARGA DEL BOSS // VULNERABILIDAD'
+            : `💻 TERMINAL DE SEGURIDAD // NIVEL ${currentLevel.id}`;
+        document.getElementById('term-title').textContent = termObj.title;
+        document.getElementById('term-code').textContent = termObj.code || '';
+        document.getElementById('term-question').textContent = termObj.question || '';
+
+        const hintBox = document.getElementById('term-hint-box');
+        hintBox.style.display = 'none';
+        hintBox.textContent = termObj.hint || termObj.explanation || 'Analizá la traza paso a paso.';
+
+        const fb = document.getElementById('term-feedback');
+        fb.style.display = 'none';
+
+        const optsEl = document.getElementById('term-options');
+        optsEl.innerHTML = '';
+        (termObj.options || []).forEach((optText, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.textContent = optText;
+            btn.onclick = () => submitTerminalOption(idx, btn);
+            optsEl.appendChild(btn);
+        });
+
+        // Mostrar minijuego interactivo Array Vault en la Terminal 1 de la Misión 3
+        const vaultPanel = document.getElementById('array-vault-panel');
+        if (!isBeacon && termObj.id === 'T3_1') {
+            vaultPanel.style.display = 'block';
+            renderArrayVaultMinigame();
+        } else {
+            vaultPanel.style.display = 'none';
+        }
+
+        document.getElementById('terminal-modal').classList.add('active');
+    }
+
+    function renderArrayVaultMinigame() {
+        const container = document.getElementById('array-vault-cells');
+        container.innerHTML = '';
+        const vals = [18, 75, 40, 92, 64];
+        const clicked = new Set();
+        vals.forEach((v, idx) => {
+            const b = document.createElement('button');
+            b.className = 'hud-btn';
+            b.innerHTML = `<code>v[${idx}] = ${v}</code>`;
+            b.onclick = () => {
+                if (v > 50) {
+                    clicked.add(idx);
+                    b.classList.add('active');
+                    if (clicked.size === 3) {
+                        completeActiveTerminal('¡Bypass de Array Vault completado seleccionando los índices [1], [3] y [4]!');
+                    }
+                } else {
+                    if (AUDIO) AUDIO.playSFX('hack_fail');
+                    b.style.borderColor = '#ef4444';
+                }
+            };
+            container.appendChild(b);
+        });
+    }
+
+    window.showTerminalHint = function () {
+        const hb = document.getElementById('term-hint-box');
+        if (hb) hb.style.display = 'block';
+    };
+
+    function submitTerminalOption(idx, btnEl) {
+        if (!activeTerminalObj) return;
+        const fb = document.getElementById('term-feedback');
+        fb.style.display = 'block';
+
+        if (idx === activeTerminalObj.answer) {
+            if (btnEl) btnEl.classList.add('correct');
+            completeActiveTerminal(activeTerminalObj.explanation);
+        } else {
+            if (btnEl) btnEl.classList.add('wrong');
+            if (AUDIO) AUDIO.playSFX('hack_fail');
+            fb.style.background = 'rgba(239, 68, 68, 0.22)';
+            fb.style.border = '1px solid #ef4444';
+            fb.style.color = '#fecaca';
+            fb.textContent = 'Respuesta incorrecta. Revisá la pista de cátedra o el código fuente.';
+            gameState.player.hp = Math.max(15, gameState.player.hp - 10);
+            updateTopHUD();
+        }
+    }
+    window.submitTerminalOption = submitTerminalOption;
+
+    function completeActiveTerminal(explanationText) {
+        if (!activeTerminalObj) return;
+        const fb = document.getElementById('term-feedback');
+        fb.style.display = 'block';
+        fb.style.background = 'rgba(16, 185, 129, 0.22)';
+        fb.style.border = '1px solid #10b981';
+        fb.style.color = '#a7f3d0';
+        fb.innerHTML = `<strong>¡ACCESO CONCEDIDO!</strong> ${explanationText || ''}`;
+
+        if (AUDIO) AUDIO.playSFX('hack_ok');
+        gameState.score += 250;
+
+        if (isBossBeaconHack) {
+            activeTerminalObj.completed = true;
+            if (gameState.boss) {
+                gameState.boss.state = 'stunned';
+                gameState.boss.stunTimer = 9.5;
+            }
+            setTimeout(() => {
+                closeTerminalModal();
+                showToast('🔥 ¡ESCUDO DEL BOSS CAÍDO! Acercate a su reactor rojo y presioná [E]', '#ef4444');
+            }, 850);
+        } else {
+            activeTerminalObj.unlocked = true;
+            if (activeTerminalObj.grantsKeycard && activeTerminalObj.grantsKeycard > gameState.player.keycard) {
+                gameState.player.keycard = activeTerminalObj.grantsKeycard;
+            }
+            updateTopHUD();
+            setTimeout(() => {
+                closeTerminalModal();
+                showToast(`🔓 ${activeTerminalObj.explanation || 'TERMINAL DESBLOQUEADA'}`, '#10b981');
+            }, 850);
+        }
+    }
+
+    function closeTerminalModal() {
+        document.getElementById('terminal-modal').classList.remove('active');
+        gameState.paused = false;
+    }
+    window.closeTerminalModal = closeTerminalModal;
+
+    // -------------------------------------------------------------------------
+    // COMBATE DE BOSSES 3D (GOLPE CRÍTICO Y FASES)
+    // -------------------------------------------------------------------------
+    function executeBossCriticalStrike() {
+        const b = gameState.boss;
+        if (!b || b.state !== 'stunned') return;
+
+        b.hp = Math.max(0, b.hp - 34);
+        b.state = 'shielded';
+        b.stunTimer = 0;
+        gameState.score += 500;
+        gameState.screenShake = 1.8;
+
+        if (AUDIO) AUDIO.playSFX('boss_hit');
+        if (GFX) GFX.spawnShockwave3D(GFX.toWorldX(b.x), GFX.toWorldZ(b.y), 18, 0xef4444);
+        addFloatingText(b.x, b.y - 25, '-34% REACTOR CRIT!', '#ef4444');
+
+        // Avanzar a la siguiente baliza de esquina
+        const nextIdx = arenaBeacons.findIndex(bc => !bc.completed);
+        activeBeaconIdx = nextIdx >= 0 ? nextIdx : 0;
+
+        if (b.hp <= 0) {
+            handleBossDefeated();
+        } else {
+            showToast(`💥 ¡IMPACTO CRÍTICO AL REACTOR! HP del Boss al ${b.hp}%`, '#fbbf24');
+        }
+    }
+
+    function handleBossDefeated() {
+        if (AUDIO) AUDIO.playSFX('victory');
+        gameState.paused = true;
+
+        const isFinal = gameState.levelIdx >= LEVELS.length - 1;
+        document.getElementById('end-tag').textContent = isFinal ? '🏆 CAMPAÑA COMPLETADA // BIG BOSS JVM' : `OPERACIÓN 0${currentLevel.id} SUPERADA`;
+        document.getElementById('end-title').textContent = `${currentLevel.bossName} DESTRUIDO`;
+        document.getElementById('end-desc').textContent = isFinal
+            ? 'Derrotaste a Metal Gear JVM-REX Prime y salvaste el Mainframe de la UTN Santa Fe. Dominaste las Unidades 1 a 5 de SAO.'
+            : `Neutralizaste a ${currentLevel.bossName}. El enlace hacia la siguiente operación táctica está despejado.`;
+        document.getElementById('end-stats').innerHTML = `
+            <div>PUNTAJE TÁCTICO: <strong style="color:var(--cyan);">${gameState.score} PTS</strong></div>
+            <div>SABOTAJES 3D EN VIVO: <strong style="color:var(--emerald-bright);">${gameState.sabotagesTriggered}</strong> // DERRIBOS CQC: <strong>${gameState.cqcCount}</strong></div>
+        `;
+        document.getElementById('btn-end-action').textContent = isFinal ? 'JUGAR DE NUEVO DESDE OP-01' : `AVANZAR A OPERACIÓN 0${currentLevel.id + 1} ▶`;
+        document.getElementById('end-modal').classList.add('active');
+    }
+
+    window.handleEndPrimaryAction = function () {
+        document.getElementById('end-modal').classList.remove('active');
+        if (gameState.levelIdx < LEVELS.length - 1) {
+            startCampaign(gameState.levelIdx + 1);
+        } else {
+            startCampaign(0);
+        }
+    };
+
+    // -------------------------------------------------------------------------
+    // HOLO-CODEC Y SELECTOR DE OPERACIONES
+    // -------------------------------------------------------------------------
+    let activeCodecLines = [];
+    let activeCodecIdx = 0;
+
+    function openCodecSequence(scriptKey) {
+        const seq = CODEC_SCRIPTS[scriptKey] || CODEC_SCRIPTS.intro || [];
+        if (!seq.length) return;
+        activeCodecLines = seq;
+        activeCodecIdx = 0;
+        gameState.paused = true;
+        if (AUDIO) AUDIO.playRadioSquelch(true);
+        renderCodecContactButtons();
+        renderCurrentCodecLine();
+        document.getElementById('codec-modal').classList.add('active');
+    }
+    window.openCodecSequence = openCodecSequence;
+
+    function openCodecModal() {
+        const key = currentLevel ? (`boss_briefing_${currentLevel.id}`) : 'intro';
+        openCodecSequence(currentRoom && currentRoom.hasBoss ? key : 'intro');
+    }
+    window.openCodecModal = openCodecModal;
+
+    function renderCodecContactButtons() {
+        const bar = document.getElementById('codec-contacts-bar');
+        if (!bar) return;
+        bar.innerHTML = '';
+        CODEC_CONTACTS.forEach(c => {
+            const btn = document.createElement('button');
+            btn.className = 'hud-btn';
+            btn.innerHTML = `<span style="color:${c.color};">●</span> ${c.freq} ${c.name}`;
+            btn.onclick = () => {
+                activeCodecLines = [
+                    { speaker: c.name, text: `[${c.role}] Recordá que en esta operación evaluamos: ${currentLevel ? currentLevel.topics : 'Compilación, control de flujo y arreglos'}. Usá [V] para ver conexiones ocultas en 3D.` }
+                ];
+                activeCodecIdx = 0;
+                renderCurrentCodecLine();
+            };
+            bar.appendChild(btn);
+        });
+    }
+
+    function renderCurrentCodecLine() {
+        const line = activeCodecLines[activeCodecIdx];
+        if (!line) return;
+        document.getElementById('codec-left-svg').innerHTML = getPortraitSVG(line.speaker);
+        document.getElementById('codec-left-name').textContent = line.speaker;
+        document.getElementById('codec-right-svg').innerHTML = getPortraitSVG('SOLID BYTE');
+        document.getElementById('codec-dialogue-box').textContent = line.text;
+
+        if (AUDIO) {
+            for (let i = 0; i < Math.min(12, line.text.length); i++) {
+                setTimeout(() => AUDIO.playVoiceBlip(line.speaker, line.text.charCodeAt(i)), i * 45);
+            }
+        }
+    }
+
+    window.nextCodecLine = function () {
+        activeCodecIdx++;
+        if (activeCodecIdx >= activeCodecLines.length) {
+            closeCodecModal();
+        } else {
+            renderCurrentCodecLine();
+        }
+    };
+
+    function closeCodecModal() {
+        if (AUDIO) AUDIO.playRadioSquelch(false);
+        document.getElementById('codec-modal').classList.remove('active');
+        gameState.paused = false;
+    }
+    window.closeCodecModal = closeCodecModal;
+
+    function openMissionModal() {
+        gameState.paused = true;
+        const list = document.getElementById('mission-list-container');
+        list.innerHTML = '';
+        LEVELS.forEach((lv, i) => {
+            const card = document.createElement('div');
+            card.className = 'op-card';
+            card.innerHTML = `
+                <div style="font-family:var(--font-mono);font-size:11px;color:${lv.themeColor};">${lv.code} // ${lv.subtitle}</div>
+                <div style="font-size:16px;font-weight:700;margin:3px 0;">${lv.name}</div>
+                <div style="font-size:12px;color:var(--text-dim);">Boss 3D: <strong>${lv.bossName}</strong> — ${lv.topics}</div>
+            `;
+            card.onclick = () => {
+                closeMissionModal();
+                startCampaign(i);
+            };
+            list.appendChild(card);
+        });
+        document.getElementById('mission-modal').classList.add('active');
+    }
+    window.openMissionModal = openMissionModal;
+
+    function closeMissionModal() {
+        document.getElementById('mission-modal').classList.remove('active');
+        gameState.paused = false;
+    }
+    window.closeMissionModal = closeMissionModal;
+
+    function closeAllModals() {
+        document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('active'));
+        gameState.paused = false;
+    }
+
+    // -------------------------------------------------------------------------
+    // ACTUALIZACIÓN DE LÓGICA DE JUEGO (60 FPS)
+    // -------------------------------------------------------------------------
+    function updateGame(dt) {
+        if (!gameState.running || gameState.paused || !currentRoom) return;
+
+        const p = gameState.player;
+        if (gameState.screenShake > 0) gameState.screenShake = Math.max(0, gameState.screenShake - dt * 3.5);
+        if (gameState.empTimer > 0) gameState.empTimer = Math.max(0, gameState.empTimer - dt);
+        if (p.dashTimer > 0) p.dashTimer = Math.max(0, p.dashTimer - dt);
+        if (p.dashCooldown > 0) p.dashCooldown = Math.max(0, p.dashCooldown - dt);
+        if (p.invulnTimer > 0) p.invulnTimer = Math.max(0, p.invulnTimer - dt);
+
+        // 1. Movimiento 360° + Dash Táctico
+        let dx = 0, dy = 0;
+        if (keys['KeyW'] || keys['ArrowUp']) dy -= 1;
+        if (keys['KeyS'] || keys['ArrowDown']) dy += 1;
+        if (keys['KeyA'] || keys['ArrowLeft']) dx -= 1;
+        if (keys['KeyD'] || keys['ArrowRight']) dx += 1;
+
+        const isMoving = (dx !== 0 || dy !== 0);
+        if (isMoving) {
+            const len = Math.hypot(dx, dy);
+            dx /= len;
+            dy /= len;
+            p.dir = Math.atan2(dy, dx);
+
+            const dashMult = p.dashTimer > 0 ? 2.85 : (p.inBox ? 0.55 : 1.0);
+            const step = p.speed * dashMult * (dt * 60);
+
+            if (canMoveTo(p.x + dx * step, p.y, p.radius)) p.x += dx * step;
+            if (canMoveTo(p.x, p.y + dy * step, p.radius)) p.y += dy * step;
+
+            if (p.dashTimer > 0 && Math.random() < 0.45 && GFX) {
+                GFX.spawnDashGhost3D(p.x, p.y, p.dir);
+            }
+        }
+
+        // Calcular Camo Index según cobertura / caja
+        let nearCover = false;
+        for (const w of (currentRoom.walls || [])) {
+            if (w.kind === 'perimeter') continue;
+            if (circleRectCollide(p.x, p.y, p.radius + 14, w.x, w.y, w.w, w.h)) {
+                nearCover = true;
+                break;
+            }
+        }
+        if (p.inBox && !isMoving) p.camoIndex = 90;
+        else if (nearCover && !isMoving) p.camoIndex = 80;
+        else if (nearCover) p.camoIndex = 65;
+        else if (isMoving) p.camoIndex = 35;
+        else p.camoIndex = 50;
+
+        // 2. Transición por Compuertas 3D entre Sectores
+        if (currentRoom.doors) {
+            const lockdown = currentRoom.hasBoss && gameState.boss && gameState.boss.hp > 0;
+            for (const door of currentRoom.doors) {
+                if (circleRectCollide(p.x, p.y, p.radius + 4, door.x, door.y, door.w, door.h)) {
+                    if (lockdown) {
+                        showToast('🔒 ARENA EN LOCKDOWN HASTA DERROTAR AL BOSS', '#ef4444');
+                    } else if (p.keycard >= door.reqKey) {
+                        enterRoom(door.targetRoom, door.spawnX, door.spawnY);
+                        return;
+                    } else {
+                        showToast(`🔒 REQUIERE KEYCARD NIVEL ${door.reqKey}`, '#f59e0b');
+                    }
+                }
+            }
+        }
+
+        // 3. Piso Matricial 3D en Misión 3 (Sala matrix_center: pisar diagonal f == c)
+        if (currentRoom.hasMatrixFloor && GFX && !gameState.matrixSolved) {
+            const tiles = GFX.getMatrixTiles();
+            let diagCount = 0;
+            tiles.forEach(t => {
+                if (Math.hypot(p.x - t.px, p.y - t.py) <= 24) {
+                    if (t.r === t.c && !t.activated) {
+                        t.activated = true;
+                        t.tileMat.color.setHex(0x10b981);
+                        t.tileMat.emissive.setHex(0x059669);
+                        if (AUDIO) AUDIO.playSFX('matrix_step');
+                        addFloatingText(t.px, t.py - 12, `M[${t.r}][${t.c}] OK!`, '#34d399');
+                    }
+                }
+                if (t.r === t.c && t.activated) diagCount++;
+            });
+            if (diagCount === 3) {
+                gameState.matrixSolved = true;
+                p.maxHp = 150;
+                p.hp = 150;
+                p.empCount += 1;
+                gameState.score += 400;
+                if (AUDIO) AUDIO.playSFX('hack_ok');
+                showToast('🟩 ¡DIAGONAL PRINCIPAL (f == c) ACTIVADA! Blindaje sobrecargado a 150 HP +1 EMP', '#10b981');
+            }
+        }
+
+        // 4. Recolección de Café Expreso UTN (+50 HP)
+        if (currentRoom.items) {
+            currentRoom.items.forEach(it => {
+                if (!it.taken && circleRectCollide(p.x, p.y, p.radius + 6, it.x, it.y, it.w, it.h)) {
+                    it.taken = true;
+                    p.hp = Math.min(p.maxHp, p.hp + (it.heal || 50));
+                    if (AUDIO) AUDIO.playSFX('heal');
+                    addFloatingText(p.x, p.y - 15, '+50 HP EXPRESO UTN', '#34d399');
+                    showToast(`☕ ${it.name} RECOLECTADO`, '#10b981');
+                }
+            });
+        }
+
+        // 5. Colisión con Barreras Láser 3D
+        if (currentRoom.lasers && gameState.empTimer <= 0 && p.invulnTimer <= 0) {
+            currentRoom.lasers.forEach(ls => {
+                const term = hackTerminals.find(t => t.id === ls.terminalId);
+                if (term && term.unlocked) return;
+                if (lineIntersectsRect(ls.x1, ls.y1, ls.x2, ls.y2, p.x - p.radius, p.y - p.radius, p.radius * 2, p.radius * 2)) {
+                    p.hp = Math.max(0, p.hp - 18);
+                    p.invulnTimer = 0.75;
+                    p.x -= Math.cos(p.dir) * 20;
+                    p.y -= Math.sin(p.dir) * 20;
+                    gameState.screenShake = 1.0;
+                    if (AUDIO) AUDIO.playSFX('laser_hit');
+                    showToast('⚠️ BARRERA LÁSER ACTIVA: Hackeá su terminal o usá Visor [V] para ver el cable', '#ef4444');
+                }
+            });
+        }
+
+        // 6. Patrullas 2D Multi-Waypoint de Centinelas + Disparo en Alerta
+        if (currentRoom.guards && gameState.empTimer <= 0) {
+            currentRoom.guards.forEach(g => {
+                if (g._bubble) {
+                    g._bubble.timer -= dt;
+                    if (g._bubble.timer <= 0) g._bubble = null;
+                }
+
+                // Determinar destino actual (investigación de sonido o waypoint 2D)
+                let targetX = g.x, targetY = g.y;
+                if (g.investigateTimer > 0) {
+                    g.investigateTimer -= dt;
+                    targetX = g.investigateX;
+                    targetY = g.investigateY;
+                } else if (g.waypoints && g.waypoints.length > 0) {
+                    const wp = g.waypoints[g.wpIdx % g.waypoints.length];
+                    targetX = wp.x;
+                    targetY = wp.y;
+                    const distWp = Math.hypot(targetX - g.x, targetY - g.y);
+                    if (distWp < 6) {
+                        g.waitTimer = (g.waitTimer || 0) + dt;
+                        // Escaneo sinusoidal en la esquina
+                        g.angle += Math.sin(performance.now() * 0.005) * 0.025;
+                        if (g.waitTimer >= (wp.wait || 0.9)) {
+                            g.waitTimer = 0;
+                            g.wpIdx = (g.wpIdx + 1) % g.waypoints.length;
+                        }
+                        targetX = g.x;
+                        targetY = g.y;
+                    }
+                }
+
+                const gx = targetX - g.x;
+                const gy = targetY - g.y;
+                const gDist = Math.hypot(gx, gy);
+                if (gDist > 2) {
+                    const desiredAngle = Math.atan2(gy, gx);
+                    let diff = desiredAngle - g.angle;
+                    while (diff > Math.PI) diff -= Math.PI * 2;
+                    while (diff < -Math.PI) diff += Math.PI * 2;
+                    g.angle += diff * Math.min(1, dt * 8);
+
+                    const spd = g.speed * (gameState.alertState === 'alert' ? 1.35 : 1.0) * (dt * 60);
+                    g.x += (gx / gDist) * spd;
+                    g.y += (gy / gDist) * spd;
+                }
+
+                // Detección visual dentro del cono 3D
+                const distToPlayer = Math.hypot(p.x - g.x, p.y - g.y);
+                const effViewDist = g.viewDist * (p.inBox && !isMoving ? 0.25 : (1 - (p.camoIndex - 35) * 0.006));
+                if (distToPlayer <= effViewDist) {
+                    const angToPlayer = Math.atan2(p.y - g.y, p.x - g.x);
+                    let angDiff = Math.abs(angToPlayer - g.angle);
+                    while (angDiff > Math.PI) angDiff = Math.abs(angDiff - Math.PI * 2);
+                    if (angDiff <= g.fov / 2 && hasLineOfSight(g.x, g.y, p.x, p.y)) {
+                        if (gameState.alertState !== 'alert') {
+                            gameState.alertState = 'alert';
+                            gameState.alertTimer = 8.0;
+                            g._bubble = { ch: '!', color: '#ef4444', timer: 2.5 };
+                            if (AUDIO) {
+                                AUDIO.playSFX('alert');
+                                AUDIO.playGuardBark('spotted');
+                                AUDIO.setMusicTheme('alert');
+                            }
+                            showToast('🚨 ¡ALERTA ROJA! Los centinelas abrieron fuego de plasma', '#ef4444');
+                        } else {
+                            gameState.alertTimer = Math.max(gameState.alertTimer, 4.5);
+                        }
+                    }
+                }
+
+                // En estado de Alerta, el centinela apunta y dispara proyectiles de plasma 3D
+                if (gameState.alertState === 'alert' && hasLineOfSight(g.x, g.y, p.x, p.y)) {
+                    g.angle = Math.atan2(p.y - g.y, p.x - g.x);
+                    g.shootCooldown = (g.shootCooldown || 0) - dt;
+                    if (g.shootCooldown <= 0) {
+                        g.shootCooldown = 1.25;
+                        const ang = Math.atan2(p.y - g.y, p.x - g.x);
+                        gameState.guardProjectiles.push({
+                            x: g.x + Math.cos(ang) * 16,
+                            y: g.y + Math.sin(ang) * 16,
+                            vx: Math.cos(ang) * 5.2,
+                            vy: Math.sin(ang) * 5.2,
+                            dmg: 12,
+                            colorHex: 0xff3b30
+                        });
+                    }
+                }
+            });
+        }
+
+        // 7. Cámaras de Seguridad con barrido angular
+        if (currentRoom.cameras && gameState.empTimer <= 0) {
+            const nowSec = performance.now() * 0.001;
+            currentRoom.cameras.forEach(cam => {
+                cam.angle = cam.baseAngle + Math.sin(nowSec * (cam.speed || 1.1)) * (cam.sweepRange || 0.65);
+                const dist = Math.hypot(p.x - cam.x, p.y - cam.y);
+                if (dist <= (cam.viewDist || 150) && !(p.inBox && !isMoving)) {
+                    let diff = Math.abs(Math.atan2(p.y - cam.y, p.x - cam.x) - cam.angle);
+                    while (diff > Math.PI) diff = Math.abs(diff - Math.PI * 2);
+                    if (diff <= (cam.fov || 0.55) / 2 && hasLineOfSight(cam.x, cam.y, p.x, p.y)) {
+                        if (gameState.alertState !== 'alert') {
+                            gameState.alertState = 'alert';
+                            gameState.alertTimer = 7.0;
+                            if (AUDIO) AUDIO.playSFX('alert');
+                            showToast('📹 DETECTADO POR CÁMARA DE SEGURIDAD', '#ef4444');
+                        }
+                    }
+                }
+            });
+        }
+
+        // Reducir temporizador de Alerta
+        if (gameState.alertState === 'alert') {
+            gameState.alertTimer -= dt;
+            if (gameState.alertTimer <= 0) {
+                gameState.alertState = 'normal';
+                if (AUDIO && !currentRoom.hasBoss) AUDIO.setMusicTheme('stealth');
+            }
+        }
+
+        // 8. Actualizar Proyectiles de Guardias
+        for (let i = gameState.guardProjectiles.length - 1; i >= 0; i--) {
+            const pr = gameState.guardProjectiles[i];
+            pr.x += pr.vx * (dt * 60);
+            pr.y += pr.vy * (dt * 60);
+            if (!canMoveTo(pr.x, pr.y, 3)) {
+                gameState.guardProjectiles.splice(i, 1);
+                continue;
+            }
+            if (p.invulnTimer <= 0 && Math.hypot(pr.x - p.x, pr.y - p.y) <= p.radius + 5) {
+                p.hp = Math.max(0, p.hp - (pr.dmg || 12));
+                p.invulnTimer = 0.45;
+                gameState.screenShake = 0.7;
+                gameState.guardProjectiles.splice(i, 1);
+                if (AUDIO) AUDIO.playSFX('laser_hit');
+            }
+        }
+
+        // 9. Actualizar IA del Boss 3D (Vulcan / Cyber Olympo / Metal Gear REX)
+        if (currentRoom.hasBoss && gameState.boss && gameState.boss.hp > 0) {
+            updateBossAI(dt);
+        }
+
+        // Verificar derrota de Solid Byte
+        if (p.hp <= 0) {
+            gameState.paused = true;
+            document.getElementById('end-tag').textContent = '⚠️ SEÑAL VITAL PERDIDA // TIME PARADOX';
+            document.getElementById('end-title').textContent = '¡SOLID BYTE CAÍDO EN ACCIÓN!';
+            document.getElementById('end-desc').textContent = 'CORONEL CAMPBELL: "¡Byte? ¡Respondé, Solid Byte! Usá el Dash [ESPACIO] y las coberturas 3D para evitar el fuego directo."';
+            document.getElementById('end-stats').textContent = `SECTOR: ${currentRoom.title}`;
+            document.getElementById('btn-end-action').textContent = 'REINTENTAR OPERACIÓN';
+            document.getElementById('end-modal').classList.add('active');
+        }
+
+        updateContextPromptUI();
+        updateTopHUD();
+    }
+
+    function updateBossAI(dt) {
+        const b = gameState.boss;
+        const p = gameState.player;
+
+        if (b.state === 'stunned') {
+            b.stunTimer -= dt;
+            b.elevation = Math.max(0, (b.elevation || 0) - dt * 120);
+            b.laserSweeping = false;
+            if (b.stunTimer <= 0) {
+                b.state = 'shielded';
+            }
+        } else {
+            // Movimiento vertical de patrulla del Boss
+            b.y += b.vy * (dt * 60);
+            if (b.y < 105 || b.y > 345) b.vy *= -1;
+
+            // Comportamiento específico por Boss 3D
+            if (b.type === 'olympo') {
+                // Salto mecánico con retícula 3D en el piso
+                b.leapProgress = (b.leapProgress || 0) + dt * 0.45;
+                if (b.leapProgress >= 1.0 && !b.leapTarget) {
+                    b.leapTarget = { x: p.x, y: p.y };
+                }
+                if (b.leapTarget) {
+                    b.elevation = Math.sin(Math.min(1, (b.leapProgress - 1.0) * 1.4) * Math.PI) * 95;
+                    if (b.leapProgress >= 1.7) {
+                        if (GFX) GFX.spawnShockwave3D(GFX.toWorldX(b.leapTarget.x), GFX.toWorldZ(b.leapTarget.y), 14, 0xff2a2a);
+                        if (p.invulnTimer <= 0 && Math.hypot(p.x - b.leapTarget.x, p.y - b.leapTarget.y) <= 68) {
+                            p.hp = Math.max(0, p.hp - 22);
+                            p.invulnTimer = 0.7;
+                            gameState.screenShake = 1.4;
+                        }
+                        b.leapProgress = 0;
+                        b.leapTarget = null;
+                        b.elevation = 0;
+                    }
+                }
+            } else if (b.type === 'rex') {
+                // Barrido de Railgun Láser 3D periódico
+                const cycle = (performance.now() * 0.001) % 7.0;
+                if (cycle > 4.2 && cycle < 6.2) {
+                    b.laserSweeping = true;
+                    b.laserAngle = Math.PI + Math.sin(cycle * 3.0) * 0.52;
+                    // Daño si el rayo toca al jugador
+                    const angToP = Math.atan2(p.y - b.y, p.x - b.x);
+                    if (p.invulnTimer <= 0 && Math.abs(angToP - b.laserAngle) < 0.12) {
+                        p.hp = Math.max(0, p.hp - 18);
+                        p.invulnTimer = 0.6;
+                    }
+                } else {
+                    b.laserSweeping = false;
+                }
+            }
+
+            // Disparo de abanico de proyectiles 3D
+            b.shotTimer -= dt;
+            if (b.shotTimer <= 0) {
+                b.shotTimer = 1.9;
+                const baseAng = Math.atan2(p.y - b.y, p.x - b.x);
+                [-0.22, 0, 0.22].forEach(offset => {
+                    const a = baseAng + offset;
+                    gameState.bossProjectiles.push({
+                        x: b.x - 30,
+                        y: b.y,
+                        vx: Math.cos(a) * 4.4,
+                        vy: Math.sin(a) * 4.4,
+                        dmg: 14,
+                        colorHex: 0xf59e0b
+                    });
+                });
+            }
+        }
+
+        // Actualizar proyectiles del Boss
+        for (let i = gameState.bossProjectiles.length - 1; i >= 0; i--) {
+            const pr = gameState.bossProjectiles[i];
+            pr.x += pr.vx * (dt * 60);
+            pr.y += pr.vy * (dt * 60);
+            if (!canMoveTo(pr.x, pr.y, 4)) {
+                gameState.bossProjectiles.splice(i, 1);
+                continue;
+            }
+            if (p.invulnTimer <= 0 && Math.hypot(pr.x - p.x, pr.y - p.y) <= p.radius + 6) {
+                p.hp = Math.max(0, p.hp - pr.dmg);
+                p.invulnTimer = 0.5;
+                gameState.screenShake = 0.8;
+                gameState.bossProjectiles.splice(i, 1);
+                if (AUDIO) AUDIO.playSFX('laser_hit');
+            }
+        }
+
+        // Actualizar UI del Boss
+        document.getElementById('boss-hp-label').textContent = `${b.hp}%`;
+        document.getElementById('boss-hp-fill').style.width = `${b.hp}%`;
+        const stEl = document.getElementById('boss-shield-status');
+        if (b.state === 'stunned') {
+            stEl.textContent = `🔥 ¡REACTOR EXPUESTO (${b.stunTimer.toFixed(1)}s)! ACERCATE Y PRESIONÁ [E]`;
+            stEl.style.color = '#fca5a5';
+        } else {
+            const actB = arenaBeacons[activeBeaconIdx];
+            stEl.textContent = actB ? `ESCUDO ACTIVO // HACKEÁ ${actB.title} CON [E]` : 'ESCUDO ACTIVO';
+            stEl.style.color = '#fbbf24';
+        }
+    }
+
+    function updateContextPromptUI() {
+        const promptEl = document.getElementById('context-prompt');
+        const act = getAvailableSmartAction();
+        if (act) {
+            promptEl.textContent = act.label;
+            promptEl.style.display = 'inline-flex';
+        } else {
+            promptEl.style.display = 'none';
+        }
+    }
+
+    function updateTopHUD() {
+        const p = gameState.player;
+        document.getElementById('hp-text').textContent = `${Math.round(p.hp)}%`;
+        document.getElementById('hp-fill').style.width = `${Math.min(100, (p.hp / 100) * 100)}%`;
+        document.getElementById('camo-text').textContent = `${p.camoIndex}%`;
+        document.getElementById('keycard-text').textContent = `LV.${p.keycard}`;
+        document.getElementById('emp-count').textContent = p.empCount;
+
+        const pill = document.getElementById('alert-pill');
+        const label = document.getElementById('alert-label');
+        pill.className = '';
+        if (gameState.empTimer > 0) {
+            label.textContent = `EMP JAM (${gameState.empTimer.toFixed(1)}s)`;
+        } else if (gameState.alertState === 'alert') {
+            pill.classList.add('alert');
+            label.textContent = `ALERTA ${gameState.alertTimer.toFixed(1)}s`;
+        } else {
+            label.textContent = 'INFILTRACIÓN';
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // RENDERIZADO DEL HUD 2D SUPERPUESTO Y MINI-RADAR SOLITON
+    // -------------------------------------------------------------------------
+    function renderHudOverlay(dt) {
+        hudCtx.clearRect(0, 0, 800, 450);
+        if (!currentRoom) return;
+
+        // Etiquetas flotantes de daño / recompensas
+        for (let i = gameState.floatingTexts.length - 1; i >= 0; i--) {
+            const ft = gameState.floatingTexts[i];
+            ft.life -= dt;
+            ft.y -= dt * 24;
+            if (ft.life <= 0) {
+                gameState.floatingTexts.splice(i, 1);
+                continue;
+            }
+            hudCtx.save();
+            hudCtx.font = '700 13px "Fira Code", monospace';
+            hudCtx.fillStyle = ft.color;
+            hudCtx.textAlign = 'center';
+            hudCtx.fillText(ft.text, ft.x, ft.y);
+            hudCtx.restore();
+        }
+
+        // Si el Visor Bytecode [V] está activo, mostrar telemetría táctica en pantalla
+        if (gameState.visorActive) {
+            hudCtx.save();
+            hudCtx.font = '700 11px "Fira Code", monospace';
+            hudCtx.fillStyle = '#38bdf8';
+            hudCtx.fillText('VISOR BYTECODE 3D // ESCANEO DE CABLES Y SABOTAJES ACTIVO', 22, 430);
+            (currentRoom.sabotageNodes || []).forEach(sn => {
+                hudCtx.strokeStyle = 'rgba(56, 189, 248, 0.7)';
+                hudCtx.setLineDash([5, 5]);
+                hudCtx.beginPath();
+                hudCtx.arc(sn.hazardX, sn.hazardY, 32, 0, Math.PI * 2);
+                hudCtx.stroke();
+                hudCtx.fillText(sn.hazardType === 'crane' ? 'ZONA DE IMPACTO GRÚA 3D' : 'PULSO TORRETA EMP 3D', sn.hazardX - 65, sn.hazardY - 38);
+            });
+            hudCtx.restore();
+        }
+
+        // Easter Egg de Psycho Mantis ("HIDEO / SINTONÍA MENTAL")
+        if (gameState.mantisTimer > 0) {
+            gameState.mantisTimer -= dt;
+            hudCtx.save();
+            hudCtx.fillStyle = 'rgba(10, 4, 24, 0.42)';
+            hudCtx.fillRect(0, 0, 800, 450);
+            hudCtx.font = '700 18px "Fira Code", monospace';
+            hudCtx.fillStyle = '#4ade80';
+            hudCtx.fillText('HIDEO // PSYCHO MANTIS CANAL 01', 28, 42);
+            hudCtx.restore();
+        }
+    }
+
+    function renderSolitonRadar() {
+        const w = radarCanvas.width;
+        const h = radarCanvas.height;
+        radarCtx.fillStyle = '#030914';
+        radarCtx.fillRect(0, 0, w, h);
+
+        if (!currentRoom) return;
+
+        const statusEl = document.getElementById('radar-status');
+        if (gameState.alertState === 'alert') {
+            statusEl.textContent = 'JAMMED';
+            statusEl.style.color = '#ef4444';
+            // Ruido electrónico de interferencia en Alerta
+            for (let i = 0; i < 45; i++) {
+                radarCtx.fillStyle = i % 2 === 0 ? 'rgba(239,68,68,0.45)' : 'rgba(56,189,248,0.25)';
+                radarCtx.fillRect(Math.random() * w, Math.random() * h, 14, 2);
+            }
+            radarCtx.font = '700 11px "Fira Code", monospace';
+            radarCtx.fillStyle = '#ef4444';
+            radarCtx.textAlign = 'center';
+            radarCtx.fillText('JAMMING // ALERT', w / 2, h / 2 + 4);
+            return;
+        }
+
+        statusEl.textContent = 'ONLINE';
+        statusEl.style.color = '#34d399';
+
+        const sx = w / 800;
+        const sy = h / 450;
+
+        // Muros en el radar
+        radarCtx.fillStyle = '#1e3a5f';
+        (currentRoom.walls || []).forEach(wall => {
+            radarCtx.fillRect(wall.x * sx, wall.y * sy, wall.w * sx, wall.h * sy);
+        });
+
+        // Puertas
+        (currentRoom.doors || []).forEach(d => {
+            radarCtx.fillStyle = gameState.player.keycard >= d.reqKey ? '#10b981' : '#f59e0b';
+            radarCtx.fillRect(d.x * sx, d.y * sy, Math.max(3, d.w * sx), Math.max(3, d.h * sy));
+        });
+
+        // Terminales
+        radarCtx.fillStyle = '#fbbf24';
+        (currentRoom.terminals || []).forEach(t => {
+            radarCtx.fillRect(t.x * sx, t.y * sy, 5, 5);
+        });
+
+        // Nodos de Sabotaje
+        radarCtx.fillStyle = '#38bdf8';
+        (currentRoom.sabotageNodes || []).forEach(sn => {
+            if (!sn._used) radarCtx.fillRect(sn.x * sx, sn.y * sy, 5, 5);
+        });
+
+        // Centinelas y conos de visión en el radar
+        (currentRoom.guards || []).forEach(g => {
+            radarCtx.save();
+            radarCtx.translate(g.x * sx, g.y * sy);
+            radarCtx.fillStyle = 'rgba(239, 68, 68, 0.25)';
+            radarCtx.beginPath();
+            radarCtx.moveTo(0, 0);
+            radarCtx.arc(0, 0, g.viewDist * sx, g.angle - g.fov / 2, g.angle + g.fov / 2);
+            radarCtx.closePath();
+            radarCtx.fill();
+
+            radarCtx.fillStyle = '#ef4444';
+            radarCtx.beginPath();
+            radarCtx.arc(0, 0, 3, 0, Math.PI * 2);
+            radarCtx.fill();
+            radarCtx.restore();
+        });
+
+        // Jugador (Solid Byte)
+        radarCtx.fillStyle = '#34d399';
+        radarCtx.beginPath();
+        radarCtx.arc(gameState.player.x * sx, gameState.player.y * sy, 3.5, 0, Math.PI * 2);
+        radarCtx.fill();
+    }
+
+    // -------------------------------------------------------------------------
+    // LOOP PRINCIPAL DE ANIMACIÓN (3D + 2D HUD)
+    // -------------------------------------------------------------------------
+    let lastTime = performance.now();
+    // Iniciar pre-visualización 3D de fondo para la portada Hero
+    currentLevel = cloneDeep(LEVELS[0]);
+    roomMap = currentLevel.rooms;
+    currentRoom = roomMap[currentLevel.startRoom];
+    if (GFX && currentRoom) {
+        GFX.buildRoom3D(currentRoom, currentLevel, [], [], gameState);
+    }
+
+    // Soporte de parámetros URL o Hash para inspección directa (?autostart=1 o #autostart=1&op=0&room=dock&visor=1)
+    try {
+        const rawQuery = window.location.search || window.location.hash.replace(/^#/, '');
+        const params = new URLSearchParams(rawQuery);
+        if (params.get('autostart') === '1') {
+            const opIdx = parseInt(params.get('op') || '0', 10);
+            startCampaign(opIdx);
+            const rId = params.get('room');
+            if (rId && roomMap[rId]) {
+                enterRoom(rId, 160, 225);
+                closeCodecModal();
+            }
+            if (params.get('visor') === '1') {
+                toggleCyberVisor();
+            }
+            if (params.get('sabotage') === '1' && currentRoom && currentRoom.sabotageNodes && currentRoom.sabotageNodes[0]) {
+                openSabotageModal(currentRoom.sabotageNodes[0]);
+            }
+        }
+    } catch (e) {}
+
+    function masterLoop(now) {
+        const dt = Math.min(0.05, (now - lastTime) / 1000);
+        lastTime = now;
+
+        updateGame(dt);
+        if (GFX) {
+            GFX.renderFrame3D(gameState, currentRoom, hackTerminals, arenaBeacons, activeBeaconIdx, dt);
+        }
+        renderHudOverlay(dt);
+        renderSolitonRadar();
+
+        requestAnimationFrame(masterLoop);
+    }
+    requestAnimationFrame(masterLoop);
+})();
+</script>
+</body>
+</html>
