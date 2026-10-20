@@ -116,7 +116,7 @@
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 1px;
-    z-index: 1000;
+    z-index: 5;
 }
 
 .branding-footer span {
@@ -335,4 +335,26 @@
         bottom: 20px !important;
         left: 20px !important;
     }
+}
+
+/* Reglas de Ocultamiento Automático del Branding Footer */
+.reveal-viewport.hide-footer .branding-footer,
+.reveal-viewport.no-footer .branding-footer,
+body.hide-footer .branding-footer,
+body.no-footer .branding-footer,
+html.hide-footer .branding-footer,
+html.no-footer .branding-footer,
+body:has(.reveal .slides section.present[data-state="hide-footer"]) .branding-footer,
+body:has(.reveal .slides section.present.hide-footer) .branding-footer,
+body:has(.reveal .slides section.present pre.code-compact) .branding-footer,
+.reveal-viewport:has(.slides section.present pre.code-compact) .branding-footer {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.reveal pre.code-compact table.hljs-ln td {
+    padding: 1px 0 !important;
+    line-height: 1.25 !important;
 }

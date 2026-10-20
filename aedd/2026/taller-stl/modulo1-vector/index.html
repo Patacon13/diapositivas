@@ -110,6 +110,19 @@
             transition: opacity 0.2s ease, background 0.2s ease;
         }
 
+        
+        /* Ocultar footer en diapositivas hide-footer o code-compact */
+        .reveal-viewport.hide-footer .branding-footer,
+        body.hide-footer .branding-footer,
+        html.hide-footer .branding-footer,
+        body:has(.reveal .slides section.present[data-state*="hide-footer"]) .branding-footer,
+        body:has(.reveal .slides section.present pre.code-compact) .branding-footer,
+        .reveal-viewport:has(.slides section.present pre.code-compact) .branding-footer {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+  
         .branding-footer {
             position: fixed !important;
             bottom: 22px;
@@ -118,7 +131,7 @@
             font-weight: 600;
             font-size: 13px;
             letter-spacing: 1px;
-            z-index: 9999;
+            z-index: 5;
             pointer-events: none;
         }
         .branding-footer span { color: var(--utn-gold); }
@@ -206,7 +219,7 @@
             <!-- ============================================================== -->
             <!-- SLIDE 1: PORTADA INSTITUCIONAL AEDD -->
             <!-- ============================================================== -->
-            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)" data-state="hide-footer">
                 <div style="display: inline-block; background: rgba(255,193,7,0.15); color: var(--utn-gold); border: 1px solid rgba(255,193,7,0.4); padding: 6px 18px; border-radius: 999px; font-size: 15px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px;">
                     Taller de Estructuras Dinámicas (STL) • Módulo 1
                 </div>
@@ -225,7 +238,7 @@
             <!-- ============================================================== -->
             <!-- SLIDE 2: CONCEPTO DE VECTOR VS ARRAY -->
             <!-- ============================================================== -->
-            <section data-background-color="#FFFFFF">
+            <section data-background-color="#FFFFFF" data-state="hide-footer">
                 <h2 class="slide-title">¿Qué es <code>std::vector</code>?</h2>
                 <div class="content-area">
                     <div class="two-column">
@@ -520,7 +533,7 @@ for (const auto &amp;fila : matriz) {
             <!-- ============================================================== -->
             <section>
                 <!-- 9.A: Código con resaltado progresivo para el video -->
-                <section data-background-color="#F8FAFC">
+                <section data-background-color="#F8FAFC" data-state="hide-footer">
                     <h2 class="slide-title">Resolución Paso a Paso: La Mediana</h2>
                     <div class="content-area">
                         <pre class="code-compact"><code class="cpp" data-trim data-noescape data-line-numbers="1-9|11-15|17|19-22|24-26">

@@ -112,6 +112,19 @@
             transition: opacity 0.2s ease, background 0.2s ease;
         }
 
+        
+        /* Ocultar footer en diapositivas hide-footer o code-compact */
+        .reveal-viewport.hide-footer .branding-footer,
+        body.hide-footer .branding-footer,
+        html.hide-footer .branding-footer,
+        body:has(.reveal .slides section.present[data-state*="hide-footer"]) .branding-footer,
+        body:has(.reveal .slides section.present pre.code-compact) .branding-footer,
+        .reveal-viewport:has(.slides section.present pre.code-compact) .branding-footer {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+  
         .branding-footer {
             position: fixed !important;
             bottom: 22px;
@@ -120,7 +133,7 @@
             font-weight: 600;
             font-size: 13px;
             letter-spacing: 1px;
-            z-index: 9999;
+            z-index: 5;
             pointer-events: none;
         }
         .branding-footer span { color: var(--utn-gold); }

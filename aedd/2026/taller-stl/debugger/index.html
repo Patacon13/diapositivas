@@ -267,21 +267,32 @@
 
         .code-line {
             display: flex;
-            padding: 1px 16px 1px 0;
+            align-items: center;
+            padding: 2px 16px 2px 0;
             border-left: 4px solid transparent;
             transition: background 0.15s ease;
+            min-width: max-content;
         }
         .code-line.active-line {
             background: rgba(255, 193, 7, 0.18);
             border-left-color: var(--utn-gold);
         }
         .line-num {
-            width: 38px;
+            width: 36px;
+            min-width: 36px;
+            max-width: 36px;
+            flex-shrink: 0;
             text-align: right;
-            padding-right: 12px;
-            color: #475569;
+            padding-right: 14px;
+            color: #64748B;
             user-select: none;
             font-size: 12px;
+            box-sizing: border-box;
+        }
+        .line-text {
+            white-space: pre;
+            color: #E2E8F0;
+            flex-grow: 1;
         }
         .code-line.active-line .line-num {
             color: var(--utn-gold);
@@ -1220,10 +1231,7 @@
             // Render code lines
             const codeHtml = sc.code.map((line, i) => {
                 const isActive = (i + 1) === step.line;
-                return `<div class="code-line ${isActive ? 'active-line' : ''}">
-                    <span class="line-num">${i + 1}</span>
-                    <span class="line-text">${escapeHtml(line)}</span>
-                </div>`;
+                return `<div class="code-line ${isActive ? 'active-line' : ''}"><span class="line-num">${i + 1}</span><span class="line-text">${escapeHtml(line)}</span></div>`;
             }).join('');
             document.getElementById('code-view').innerHTML = codeHtml;
 
