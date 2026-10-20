@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AEDD - Taller STL (Módulo 2): std::map - UTN FRSF</title>
+
+    <!-- Estilos Base Reveal.js (4 niveles hacia dist/) -->
+    <link rel="stylesheet" href="../../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../../dist/plugin/highlight/monokai.css" />
+
+    <!-- Tema AEDD (Extiende utn-core.css) -->
+    <link rel="stylesheet" href="../../../../dist/theme/aedd.css" />
+
+    <!-- Tipografías Oficiales e Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --danger-red: #EF4444;
+            --warning-amber: #F59E0B;
+            --success-green: #10B981;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 19.5px; color: var(--text-main); line-height: 1.45; text-align: left; }
+
+        .slide-title {
+            font-size: 38px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 16px !important; border-left: 10px solid var(--utn-gold);
+            padding-left: 18px; text-transform: uppercase !important; letter-spacing: -1px;
+            text-align: left; width: 100%;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; width: 100%; align-items: stretch; }
+
+        .tile {
+            background: var(--bg-neutral); padding: 16px 18px; border-radius: 14px;
+            border: 1px solid #E2E8F0; border-bottom: 4px solid transparent;
+            transition: all 0.25s ease; text-align: left;
+        }
+        .tile:hover { transform: translateY(-3px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
+        .tile h3 { font-size: 17.5px; color: var(--utn-blue); margin-bottom: 5px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .tile p { font-size: 15px; color: var(--text-light); margin: 0; line-height: 1.4; }
+
+        .concept-card {
+            background: white; padding: 15px 20px; border-radius: 14px; border: 1px solid #E2E8F0;
+            border-left: 7px solid var(--utn-gold); box-shadow: 0 6px 20px rgba(0,0,0,0.04); text-align: left;
+        }
+        .concept-card h3 {
+            color: var(--utn-blue); font-size: 18.5px; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;
+        }
+
+        /* Arquitectura Anti-Fantasmeo en Resaltado de Código */
+        .reveal pre {
+            position: relative !important;
+            background: #272822 !important;
+            padding: 0 !important;
+            border-radius: 12px;
+            margin: 0;
+            border-left: 6px solid var(--utn-gold);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .reveal pre code {
+            display: block !important;
+            padding: 13px 16px !important;
+            background: #272822 !important;
+            font-family: 'Fira Code', monospace;
+            font-size: 14.5px !important;
+            line-height: 1.42 !important;
+            box-sizing: border-box !important;
+            width: 100%;
+        }
+
+        .reveal .hljs:not(:first-child).fragment {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            padding: 13px 16px !important;
+            background: #272822 !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+
+        .reveal .hljs.has-highlights tr:not(.highlight-line) {
+            opacity: 0.35 !important;
+            transition: opacity 0.2s ease;
+        }
+
+        .reveal .hljs.has-highlights tr.highlight-line {
+            opacity: 1 !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            transition: opacity 0.2s ease, background 0.2s ease;
+        }
+
+        .branding-footer {
+            position: fixed !important;
+            bottom: 22px;
+            left: 35px;
+            color: #94A3B8;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 1px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .branding-footer span { color: var(--utn-gold); }
+
+        .hub-nav-pill {
+            position: fixed;
+            top: 20px;
+            right: 28px;
+            z-index: 9999;
+            background: rgba(0, 43, 91, 0.9);
+            color: #FFFFFF !important;
+            text-decoration: none;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12.5px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+        }
+        .hub-nav-pill:hover {
+            background: var(--utn-blue);
+            transform: translateY(-2px);
+            border-color: var(--utn-gold);
+        }
+        .hub-nav-pill i { color: var(--utn-gold); }
+
+        /* Diagrama visual de Map (Pares Clave -> Valor) */
+        .map-visual-grid {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 14px 0;
+            padding: 16px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            flex-wrap: wrap;
+        }
+        .kv-card {
+            background: white;
+            border: 2px solid var(--utn-blue);
+            border-radius: 12px;
+            overflow: hidden;
+            min-width: 155px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+        }
+        .kv-key {
+            background: var(--utn-blue);
+            color: var(--utn-gold);
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 6px 12px;
+            text-align: center;
+        }
+        .kv-val {
+            color: var(--text-main);
+            font-family: 'Fira Code', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 10px 12px;
+            text-align: center;
+            background: #FEFCE8;
+        }
+        .kv-sub {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: var(--text-light);
+            display: block;
+            font-weight: 500;
+        }
+
+        .nav-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .nav-cta-btn:hover { transform: translateY(-3px); }
+
+        @media (max-aspect-ratio: 1/1), (max-width: 768px) {
+            .two-column { grid-template-columns: 1fr; gap: 14px; }
+            .slide-title { font-size: 28px !important; margin-bottom: 12px !important; }
+            .reveal p, .reveal li { font-size: 16.5px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón Persistente de Retorno al Hub -->
+    <a href="../index.html" class="hub-nav-pill" title="Volver al Hub del Taller STL">
+        <i class="fa-solid fa-table-cells-large"></i> <span>Hub Taller STL</span>
+    </a>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 1: PORTADA INSTITUCIONAL AEDD -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div style="display: inline-block; background: rgba(255,193,7,0.15); color: var(--utn-gold); border: 1px solid rgba(255,193,7,0.4); padding: 6px 18px; border-radius: 999px; font-size: 15px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px;">
+                    Taller de Estructuras Dinámicas (STL) • Módulo 2
+                </div>
+                <h1 style="color: white; font-size: 62px; line-height: 1.06; margin-bottom: 18px;">
+                    <code>std::map</code><br>
+                    <span style="color: var(--utn-gold); font-weight: 300; font-size: 42px;">Diccionarios y Pares Clave → Valor</span>
+                </h1>
+                <p style="color: rgba(255,255,255,0.75); margin-top: 30px; text-align: center; font-size: 21px;">
+                    Docente: <strong>Tomás Assenza</strong>
+                </p>
+                <p style="color: rgba(255,255,255,0.4); margin-top: 8px; text-align: center; font-size: 15px; letter-spacing: 2px;">
+                    Algoritmos y Estructuras de Datos • UTN - Facultad Regional Santa Fe
+                </p>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 2: CONCEPTO DE MAP -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">¿Qué es <code>std::map</code>? Del Índice a la Clave</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div class="concept-card" style="border-left-color: var(--utn-blue);">
+                            <h3><i class="fa-solid fa-key"></i> Conceptos Generales</h3>
+                            <p style="font-size: 15.5px; margin-bottom: 7px;">• El acceso sigue siendo mediante <code>[]</code>, pero se cambia el concepto de <strong>índice numérico</strong> por <strong>clave</strong>.</p>
+                            <p style="font-size: 15.5px; margin-bottom: 7px;">• A cada clave existente en un mapa le corresponde un único <strong>valor asociado</strong>.</p>
+                            <p style="font-size: 15.5px; margin: 0;">• Las claves <strong>no necesitan ser valores consecutivos</strong> y pueden ser de <strong>cualquier tipo</strong> (<code>string</code>, <code>int</code>, <code>char</code>).</p>
+                        </div>
+                        <div class="concept-card" style="border-left-color: var(--utn-gold);">
+                            <h3><i class="fa-solid fa-arrow-down-a-z"></i> Orden Automático</h3>
+                            <p style="font-size: 15.5px; margin-bottom: 7px;">• El mapa mantiene sus elementos <strong>automáticamente ordenados por sus claves</strong> de forma lexicográfica (o de menor a mayor).</p>
+                            <p style="font-size: 15.5px; margin-bottom: 7px;">• Cada acceso o inserción en <code>map</code> cuesta <code>O(log N)</code>.</p>
+                            <p style="font-size: 15.5px; margin: 0;">• Si no necesitamos orden, existe <code>unordered_map</code> que opera en <code>O(1)</code> promedio mediante hashing.</p>
+                        </div>
+                    </div>
+
+                    <!-- Representación esquemática de pares clave-valor -->
+                    <div class="map-visual-grid">
+                        <div class="kv-card">
+                            <div class="kv-key">.first: "algoritmos"</div>
+                            <div class="kv-val">12 <span class="kv-sub">.second (valor)</span></div>
+                        </div>
+                        <div class="kv-card">
+                            <div class="kv-key">.first: "c++"</div>
+                            <div class="kv-val">45 <span class="kv-sub">.second (valor)</span></div>
+                        </div>
+                        <div class="kv-card">
+                            <div class="kv-key">.first: "stl"</div>
+                            <div class="kv-val">28 <span class="kv-sub">.second (valor)</span></div>
+                        </div>
+                        <div class="kv-card">
+                            <div class="kv-key">.first: "utn"</div>
+                            <div class="kv-val">99 <span class="kv-sub">.second (valor)</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 3: DECLARACIÓN, INICIALIZACIÓN Y ACCESO -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Declaración, Inicialización y Acceso</h2>
+                <div class="content-area">
+                    <p style="font-size: 16.5px; margin-bottom: 10px;">
+                        Incluimos la cabecera: <code>#include &lt;map&gt;</code>
+                    </p>
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-3|5-10|12-15">
+// 1. DECLARACION
+// map&lt;tipoDeDatoClave, tipoDeDatoValor&gt; nombreDelMapa;
+map&lt;string, int&gt; nombreDelMapa; // Mapa con 0 elementos
+
+// 2. INICIALIZACION CON PARES {clave, valor}
+map&lt;string, int&gt; edades {
+    {"Ana", 20},
+    {"Bruno", 22},
+    {"Carla", 19}
+}; // Mapa con 3 pares clave-valor (ordenados por clave)
+
+// 3. ACCESO Y MODIFICACION DE ELEMENTOS
+edades["Bruno"] = 23; // Modifica el valor asociado a "Bruno"
+edades["Diego"] = 21; // Como "Diego" no existia, el mapa aumenta en 1
+                      // su tamaño y asocia el valor 21 a la clave "Diego".
+                    </code></pre>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 4: FUNCIONES INTEGRADAS -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Funciones Integradas de <code>std::map</code></h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-2|4-6|8-10|12-14">
+map&lt;int, int&gt; mapa1 { {1, 10}, {2, 20}, {3, 30} };
+map&lt;int, int&gt; mapa2 { {4, 40}, {5, 50}, {6, 60} };
+
+// empty() y size():
+cout &lt;&lt; mapa1.empty(); // Imprime 0 (false)
+cout &lt;&lt; mapa1.size();  // Imprime 3
+
+// Intercambiar contenidos de dos mapas:
+mapa1.swap(mapa2);
+// mapa1 pasa a tener los pares de mapa2 y viceversa
+
+// Consultar si una clave existe sin crearla:
+cout &lt;&lt; mapa1.count(4);  // Devuelve 1 (existe)
+cout &lt;&lt; mapa1.count(99); // Devuelve 0 (no existe)
+                            </code></pre>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 14px; justify-content: center;">
+                            <div class="concept-card" style="border-left-color: var(--danger-red);">
+                                <h3 style="color: var(--danger-red);"><i class="fa-solid fa-triangle-exclamation"></i> Detalle clave sobre <code>[]</code> vs <code>count()</code></h3>
+                                <p style="font-size: 15.5px; margin: 0;">
+                                    Si hacés <code>if (mapa["hola"] == 0)</code> para ver si una clave existe, el operador <code>[]</code> <strong>crea automáticamente la clave <code>"hola"</code> con valor <code>0</code></strong> y agranda el mapa.
+                                </p>
+                            </div>
+                            <div class="concept-card" style="border-left-color: var(--success-green);">
+                                <h3 style="color: var(--success-green);"><i class="fa-solid fa-circle-check"></i> Buena práctica</h3>
+                                <p style="font-size: 15.5px; margin: 0;">
+                                    Para verificar si una clave existe sin insertarla, usá siempre <strong><code>if (mapa.count(clave))</code></strong> (que devuelve <code>1</code> si está o <code>0</code> si no está).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 5: COMPARACIÓN Y RECORRIDO DE MAPAS -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Comparación y Recorrido de Mapas</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <h3 style="font-size: 17px; color: var(--utn-blue); margin-bottom: 6px;">1. Comparación Puntual vs Total</h3>
+                            <pre><code class="cpp" data-trim data-noescape>
+// Comparar el valor de una clave puntual
+// contra el valor de otra:
+if (mapa1["clave1"] == mapa2[5]) {
+    // Compara solo los valores devueltos por []
+}
+
+// Comparar dos mapas del mismo tipo completo:
+if (mapa1 == mapa2) {
+    // True si tienen igual tamaño y coinciden
+    // todos sus pares (clave, valor)
+}
+                            </code></pre>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 17px; color: var(--utn-blue); margin-bottom: 6px;">2. Recorrido por Elementos (<code>pair</code> / <code>auto</code>)</h3>
+                            <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-11">
+// Forma explicita con pair&lt;Clave, Valor&gt;:
+for (pair&lt;string, int&gt; elemento : mapa1) {
+    cout &lt;&lt; "clave: " &lt;&lt; elemento.first
+         &lt;&lt; " valor: " &lt;&lt; elemento.second &lt;&lt; endl;
+}
+
+// Forma abreviada con auto (recomendada):
+for (const auto &amp;elemento : mapa1) {
+    cout &lt;&lt; "clave: " &lt;&lt; elemento.first
+         &lt;&lt; " valor: " &lt;&lt; elemento.second &lt;&lt; endl;
+}
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 6: PROBLEMA DE APLICACIÓN - TENDENCIAS DE TWITTER -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <div class="inciso-header">
+                    <span class="inciso-badge"><i class="fa-brands fa-x-twitter" style="font-size: 20px;"></i></span>
+                    <h2 class="slide-title" style="margin-bottom: 0 !important;">Ejemplo de Aplicación: Tendencias</h2>
+                    <span class="points-badge">Práctica Map</span>
+                </div>
+                <div class="content-area">
+                    <div class="texto-enunciado" style="margin-bottom: 16px;">
+                        <p>
+                            Twitter es una red social que permite a los usuarios enviar mensajes públicos de hasta 240 caracteres. Generalmente dentro de la red se generan <strong>"tendencias"</strong> gracias a un análisis que hace la plataforma sobre la cantidad de ocurrencias de una palabra durante un período determinado.
+                        </p>
+                        <p>
+                            Como sos un ingeniero en sistemas de la UTN - FRSF (y, obviamente, un apasionado de los Algoritmos y Estructuras de Datos), decidiste trabajar ahí. Para iniciar, te solicitaron que generes un sistema que reciba un número <strong>N de palabras</strong> (con repetidas entre ellas), y un número <strong>M de consultas</strong>. Para cada consulta, deberás indicar cuántas apariciones tiene cada palabra.
+                        </p>
+                    </div>
+
+                    <div class="concept-card fragment" style="border-left-color: var(--success-green); background: #ECFDF5;">
+                        <h3 style="color: #065F46;"><i class="fa-solid fa-wand-magic-sparkles"></i> Antes de resolver, simplificamos el problema:</h3>
+                        <p style="font-size: 18px; color: #065F46; font-weight: 600; margin: 0;">
+                            "Para un conjunto de N palabras, contar la frecuencia de cada una. Luego, responder M consultas con la frecuencia de la palabra correspondiente."
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 7: RESOLUCIÓN PASO A PASO + LABORATORIO ONECOMPILER -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 7.A: Resolución paso a paso -->
+                <section data-background-color="#F8FAFC">
+                    <h2 class="slide-title">Resolución Paso a Paso: Frecuencia de Palabras</h2>
+                    <div class="content-area">
+                        <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-10|12-16|18-22">
+#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+int main() {
+    map&lt;string, int&gt; frecuencias;
+    int n, m;
+    string palabra;
+
+    cin &gt;&gt; n;
+    for (int i = 0; i &lt; n; i++) {
+        cin &gt;&gt; palabra;
+        frecuencias[palabra]++;
+    }
+
+    cin &gt;&gt; m;
+    for (int i = 0; i &lt; m; i++) {
+        cin &gt;&gt; palabra;
+        cout &lt;&lt; frecuencias[palabra] &lt;&lt; endl;
+    }
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 7.B: Compilador Interactivo OneCompiler -->
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title" style="font-size: 28px !important; margin-bottom: 10px !important;">Laboratorio en Vivo: Tendencias con <code>std::map</code></h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler - C++ Sandbox (Ejecutá o modificá las consultas)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-1', cppCodeTwitter, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 8: CIERRE DEL MÓDULO 2 -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2 style="font-size: 56px !important; margin-bottom: 12px;">¡Fin del Módulo 2!</h2>
+                    <p style="font-size: 20px !important; letter-spacing: 1px; margin-bottom: 35px;">
+                        Ya sabés asociar claves a valores y contar frecuencias con <code>std::map</code>. Pasemos a conjuntos sin repetidos con <code>std::set</code>.
+                    </p>
+                    <div style="display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;">
+                        <a href="../modulo1-vector/index.html" class="nav-cta-btn" style="background: rgba(255,255,255,0.08); color: #CBD5E1; border: 1px solid rgba(255,255,255,0.2);">
+                            <i class="fa-solid fa-arrow-left"></i> <span>Módulo 1: std::vector</span>
+                        </a>
+                        <a href="../index.html" class="nav-cta-btn" style="background: rgba(255,255,255,0.14); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                            <i class="fa-solid fa-house"></i> <span>Volver al Hub</span>
+                        </a>
+                        <a href="../modulo3-set/index.html" class="nav-cta-btn" style="background: var(--utn-gold); color: var(--utn-blue);">
+                            <span>Ir al Módulo 3: std::set</span> <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+
+    <script src="../../../../dist/reveal.js"></script>
+    <script src="../../../../dist/plugin/notes.js"></script>
+    <script src="../../../../dist/plugin/highlight.js"></script>
+
+    <script>
+        const cppCodeTwitter = `#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    map<string, int> frecuencias;
+    int n, m;
+    string palabra;
+
+    if (cin >> n) {
+        for (int i = 0; i < n; i++) {
+            cin >> palabra;
+            frecuencias[palabra]++;
+        }
+        cin >> m;
+        for (int i = 0; i < m; i++) {
+            cin >> palabra;
+            cout << palabra << ": " << frecuencias[palabra] << endl;
+        }
+    } else {
+        // Caso de demostracion automatico si STDIN esta vacio
+        vector<string> palabras = {"utn", "stl", "aedd", "utn", "codigo", "utn", "stl"};
+        for (const string &p : palabras) {
+            frecuencias[p]++;
+        }
+
+        cout << "=== Conteo de Tendencias (N = 7 palabras) ===" << endl;
+        vector<string> consultas = {"utn", "stl", "java"};
+        for (const string &q : consultas) {
+            cout << "Consulta '" << q << "' -> " << frecuencias[q] << " apariciones" << endl;
+        }
+    }
+
+    return 0;
+}`;
+
+        // =========================================================================
+        // REGLA CRÍTICA DE ORDEN DE EJECUCIÓN (Anti-Blank-Slide en Móviles/Vertical)
+        // =========================================================================
+        const isMobilePortrait = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
+        if (isMobilePortrait) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({ width: newSize.width, height: newSize.height });
+        });
+
+        function sendCode(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        function checkCompilerSlides(slide) {
+            if (!slide) return;
+            if (slide.id === 'slide-compiler-1') {
+                sendCodeWithRetries('oc-editor-1', cppCodeTwitter, 'cpp', 'main.cpp');
+            }
+        }
+
+        Reveal.on('slidechanged', event => {
+            checkCompilerSlides(event.currentSlide);
+        });
+
+        Reveal.on('ready', event => {
+            checkCompilerSlides(Reveal.getCurrentSlide());
+        });
+    </script>
+</body>
+</html>

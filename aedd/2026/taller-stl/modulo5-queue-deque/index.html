@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AEDD - Taller STL (Módulo 5): queue y deque - UTN FRSF</title>
+
+    <!-- Estilos Base Reveal.js (4 niveles hacia dist/) -->
+    <link rel="stylesheet" href="../../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../../dist/plugin/highlight/monokai.css" />
+
+    <!-- Tema AEDD (Extiende utn-core.css) -->
+    <link rel="stylesheet" href="../../../../dist/theme/aedd.css" />
+
+    <!-- Tipografías Oficiales e Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --danger-red: #EF4444;
+            --warning-amber: #F59E0B;
+            --success-green: #10B981;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 19.5px; color: var(--text-main); line-height: 1.45; text-align: left; }
+
+        .slide-title {
+            font-size: 38px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 16px !important; border-left: 10px solid var(--utn-gold);
+            padding-left: 18px; text-transform: uppercase !important; letter-spacing: -1px;
+            text-align: left; width: 100%;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; width: 100%; align-items: stretch; }
+
+        .concept-card {
+            background: white; padding: 15px 20px; border-radius: 14px; border: 1px solid #E2E8F0;
+            border-left: 7px solid var(--utn-gold); box-shadow: 0 6px 20px rgba(0,0,0,0.04); text-align: left;
+        }
+        .concept-card h3 {
+            color: var(--utn-blue); font-size: 18.5px; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;
+        }
+
+        /* Arquitectura Anti-Fantasmeo en Resaltado de Código */
+        .reveal pre {
+            position: relative !important;
+            background: #272822 !important;
+            padding: 0 !important;
+            border-radius: 12px;
+            margin: 0;
+            border-left: 6px solid var(--utn-gold);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .reveal pre code {
+            display: block !important;
+            padding: 13px 16px !important;
+            background: #272822 !important;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px !important;
+            line-height: 1.4 !important;
+            box-sizing: border-box !important;
+            width: 100%;
+        }
+
+        .reveal .hljs:not(:first-child).fragment {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            padding: 13px 16px !important;
+            background: #272822 !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+
+        .reveal .hljs.has-highlights tr:not(.highlight-line) {
+            opacity: 0.35 !important;
+            transition: opacity 0.2s ease;
+        }
+
+        .reveal .hljs.has-highlights tr.highlight-line {
+            opacity: 1 !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            transition: opacity 0.2s ease, background 0.2s ease;
+        }
+
+        .branding-footer {
+            position: fixed !important;
+            bottom: 22px;
+            left: 35px;
+            color: #94A3B8;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 1px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .branding-footer span { color: var(--utn-gold); }
+
+        .hub-nav-pill {
+            position: fixed;
+            top: 20px;
+            right: 28px;
+            z-index: 9999;
+            background: rgba(0, 43, 91, 0.9);
+            color: #FFFFFF !important;
+            text-decoration: none;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12.5px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+        }
+        .hub-nav-pill:hover {
+            background: var(--utn-blue);
+            transform: translateY(-2px);
+            border-color: var(--utn-gold);
+        }
+        .hub-nav-pill i { color: var(--utn-gold); }
+
+        /* Diagramas visuales de Queue y Deque */
+        .pipe-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 14px;
+            padding: 16px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            flex-wrap: wrap;
+        }
+        .pipe-tube {
+            display: flex;
+            gap: 8px;
+            padding: 8px 14px;
+            border-top: 4px solid var(--utn-blue);
+            border-bottom: 4px solid var(--utn-blue);
+            background: white;
+        }
+        .pipe-cell {
+            font-family: 'Fira Code', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 2px solid #CBD5E1;
+            background: #F1F5F9;
+            color: var(--text-main);
+        }
+        .pipe-cell.front-cell {
+            border-color: var(--success-green);
+            background: #ECFDF5;
+            color: #065F46;
+        }
+        .pipe-cell.back-cell {
+            border-color: var(--utn-gold);
+            background: #FEFCE8;
+            color: var(--utn-blue);
+        }
+        .pipe-op {
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: #EFF6FF;
+            color: var(--utn-blue);
+            border: 1px solid #BFDBFE;
+        }
+
+        .nav-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .nav-cta-btn:hover { transform: translateY(-3px); }
+
+        @media (max-aspect-ratio: 1/1), (max-width: 768px) {
+            .two-column { grid-template-columns: 1fr; gap: 14px; }
+            .slide-title { font-size: 28px !important; margin-bottom: 12px !important; }
+            .reveal p, .reveal li { font-size: 16.5px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón Persistente de Retorno al Hub -->
+    <a href="../index.html" class="hub-nav-pill" title="Volver al Hub del Taller STL">
+        <i class="fa-solid fa-table-cells-large"></i> <span>Hub Taller STL</span>
+    </a>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 1: PORTADA INSTITUCIONAL AEDD -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div style="display: inline-block; background: rgba(255,193,7,0.15); color: var(--utn-gold); border: 1px solid rgba(255,193,7,0.4); padding: 6px 18px; border-radius: 999px; font-size: 15px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px;">
+                    Taller de Estructuras Dinámicas (STL) • Módulo 5
+                </div>
+                <h1 style="color: white; font-size: 56px; line-height: 1.08; margin-bottom: 18px;">
+                    Colas: <code>queue</code> y <code>deque</code><br>
+                    <span style="color: var(--utn-gold); font-weight: 300; font-size: 40px;">FIFO, Prioridad y Colas Doblemente Enlazadas</span>
+                </h1>
+                <p style="color: rgba(255,255,255,0.75); margin-top: 30px; text-align: center; font-size: 21px;">
+                    Docente: <strong>Tomás Assenza</strong>
+                </p>
+                <p style="color: rgba(255,255,255,0.4); margin-top: 8px; text-align: center; font-size: 15px; letter-spacing: 2px;">
+                    Algoritmos y Estructuras de Datos • UTN - Facultad Regional Santa Fe
+                </p>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 2: CONCEPTO DE COLA (FIFO) -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">¿Qué es una Cola (<code>std::queue</code>)?</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div class="concept-card" style="border-left-color: var(--utn-blue);">
+                            <h3><i class="fa-solid fa-people-line"></i> Estructura FIFO (First In, First Out)</h3>
+                            <p style="font-size: 15.5px; margin: 0;">
+                                Los elementos se agregan al <strong>final de la cola</strong> y se remueven del <strong>frente</strong>. El primero en llegar es el primero en ser atendido (como la fila del supermercado o de la parada de colectivo).
+                            </p>
+                        </div>
+                        <div class="concept-card" style="border-left-color: var(--utn-gold);">
+                            <h3><i class="fa-solid fa-eye"></i> Puntos de Acceso</h3>
+                            <p style="font-size: 15.5px; margin: 0;">
+                                En <code>std::queue</code> solo se puede acceder al <strong>primer elemento</strong> (<code>front()</code>) y al <strong>último elemento</strong> (<code>back()</code>). No tiene operador <code>[]</code> ni iteradores.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="pipe-diagram">
+                        <span class="pipe-op" style="background: #FEF2F2; color: #991B1B; border-color: #FECACA;">
+                            <i class="fa-solid fa-arrow-left"></i> Sale por el frente: <code>pop()</code>
+                        </span>
+                        <div class="pipe-tube">
+                            <div class="pipe-cell front-cell">7 (front)</div>
+                            <div class="pipe-cell">3</div>
+                            <div class="pipe-cell">10</div>
+                            <div class="pipe-cell back-cell">9 (back)</div>
+                        </div>
+                        <span class="pipe-op">
+                            Entra por atrás: <code>push(x)</code> <i class="fa-solid fa-arrow-left"></i>
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 3: OPERACIONES DE QUEUE Y PRIORITY_QUEUE -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Definición y Operaciones de <code>queue</code></h2>
+                <div class="content-area">
+                    <p style="font-size: 16px; margin-bottom: 8px;">
+                        Cabecera: <code>#include &lt;queue&gt;</code> (incluye tanto <code>queue</code> como <code>priority_queue</code>).
+                    </p>
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-8|10-12|14-19">
+// 1. DEFINICION DE COLA NORMAL Y COLAS DE PRIORIDAD
+queue&lt;int&gt; cola; // Cola FIFO estandar
+priority_queue&lt;int&gt; maxCola; // Cola de prioridad: top() da siempre el MAYOR
+priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; minCola; // top() da el MENOR
+
+// 2. ACCEDER AL ELEMENTO (en std::queue)
+cola.front(); // Devuelve el primer elemento de la fila
+cola.back();  // Aunque no es estricto de colas, tambien permite ver el ultimo
+
+// 3. INSERTAR Y ELIMINAR
+cola.push(elemento); // Encola al final
+cola.pop();          // Desencola el elemento del frente
+
+// 4. REVISAR SI LA COLA ESTA VACIA
+if (cola.empty()) {
+    // Esta vacia
+} else {
+    // No esta vacia
+}
+                    </code></pre>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 4: PROBLEMA 1 - EL COLECTIVERO MISTERIOSO -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <div class="inciso-header">
+                    <span class="inciso-badge"><i class="fa-solid fa-bus" style="font-size: 20px;"></i></span>
+                    <h2 class="slide-title" style="margin-bottom: 0 !important;">Ejemplo 1: El Colectivero Misterioso</h2>
+                    <span class="points-badge">Práctica Queue</span>
+                </div>
+                <div class="content-area">
+                    <div class="texto-enunciado" style="margin-bottom: 14px;">
+                        <p>
+                            Imaginá que tenés una fila de personas en una parada de bondi. Cada uno tiene un número de entrada al bondi (porque el colectivero se puso estricto y ahora cada uno saca su numerito).
+                        </p>
+                        <p>
+                            La cosa es que cuando llega el bondi, cada persona sube en el orden en que sacó el número, pero <strong>solo si su número es múltiplo de tres</strong> (porque el colectivero también está medio loco y le pinta hacer eso). Los que no, se tienen que quedar esperando al próximo bondi. ¡Clásico quilombo en la parada!
+                        </p>
+                    </div>
+
+                    <div class="concept-card fragment" style="border-left-color: var(--success-green); background: #ECFDF5;">
+                        <h3 style="color: #065F46;"><i class="fa-solid fa-wand-magic-sparkles"></i> Simplificamos el problema:</h3>
+                        <p style="font-size: 18px; color: #065F46; font-weight: 600; margin: 0;">
+                            "Ante una serie de ingresos en una cola, indicar en orden de llegada cuáles suben (múltiplos de 3) y cuáles esperan."
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 5: RESOLUCIÓN QUEUE + LABORATORIO ONECOMPILER -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 5.A: Resolución paso a paso -->
+                <section data-background-color="#F8FAFC">
+                    <h2 class="slide-title">Resolución: El Colectivero Misterioso</h2>
+                    <div class="content-area">
+                        <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-14|16-24">
+void coleMisterioso(queue&lt;int&gt; &amp;numeros) {
+    cout &lt;&lt; "Suben: ";
+    while (!numeros.empty()) {
+        int num = numeros.front();
+        numeros.pop();
+
+        if (num % 3 == 0) {
+            cout &lt;&lt; num &lt;&lt; " ";
+        } else {
+            cout &lt;&lt; "(espera " &lt;&lt; num &lt;&lt; ") ";
+        }
+    }
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    queue&lt;int&gt; filaBondi;
+    for (int n : {7, 3, 10, 9, 2, 15}) {
+        filaBondi.push(n);
+    }
+
+    coleMisterioso(filaBondi);
+    return 0;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 5.B: Compilador Interactivo OneCompiler -->
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title" style="font-size: 28px !important; margin-bottom: 10px !important;">Laboratorio en Vivo: Parada de Bondi con <code>std::queue</code></h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler - C++ Sandbox (Ejecutá la simulación FIFO)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-1', cppCodeQueue, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 6: COLAS DOBLEMENTE ENLAZADAS (DEQUE) -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Colas Dobles: <code>std::deque</code></h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div class="concept-card" style="border-left-color: var(--utn-blue);">
+                            <h3><i class="fa-solid fa-arrows-left-right"></i> Doble Extremo en <code>O(1)</code></h3>
+                            <p style="font-size: 15.5px; margin: 0;">
+                                A diferencia de <code>queue</code> y <code>vector</code>, una <code>deque</code> (Double-Ended Queue) permite <strong>agregar y sacar elementos tanto del principio como del final</strong> en tiempo constante.
+                            </p>
+                        </div>
+                        <div class="concept-card" style="border-left-color: var(--utn-gold);">
+                            <h3><i class="fa-solid fa-table-cells"></i> Acceso Aleatorio Completo</h3>
+                            <p style="font-size: 15.5px; margin: 0;">
+                                Además de operar por ambas puntas, <strong>permite acceder a cualquier elemento</strong> usando corchetes <code>d[indice]</code> e iteradores, igual que un <code>vector</code>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="pipe-diagram">
+                        <span class="pipe-op">
+                            <code>push_front</code> / <code>pop_front</code> <i class="fa-solid fa-arrows-left-right"></i>
+                        </span>
+                        <div class="pipe-tube">
+                            <div class="pipe-cell front-cell">d[0] (front)</div>
+                            <div class="pipe-cell">d[1]</div>
+                            <div class="pipe-cell">d[2]</div>
+                            <div class="pipe-cell back-cell">d[3] (back)</div>
+                        </div>
+                        <span class="pipe-op">
+                            <i class="fa-solid fa-arrows-left-right"></i> <code>push_back</code> / <code>pop_back</code>
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 7: OPERACIONES DE DEQUE -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Operaciones de <code>std::deque</code></h2>
+                <div class="content-area">
+                    <p style="font-size: 16px; margin-bottom: 8px;">
+                        Cabecera: <code>#include &lt;deque&gt;</code>
+                    </p>
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-2|4-6|8-11|13-15|17-20">
+// 1. DEFINICION
+deque&lt;string&gt; d;
+
+// 2. INSERTAR AL PRINCIPIO O AL FINAL
+d.push_back("final");     // Agrega al final de la deque
+d.push_front("primero");  // Agrega adelante de todo
+
+// 3. ACCEDER A CUALQUIER ELEMENTO
+cout &lt;&lt; d[0] &lt;&lt; endl;      // Acceso por indice
+cout &lt;&lt; d.front() &lt;&lt; endl; // Primer elemento
+cout &lt;&lt; d.back() &lt;&lt; endl;  // Ultimo elemento
+
+// 4. ELIMINAR DEL PRINCIPIO O DEL FINAL
+d.pop_front(); // Elimina el primer elemento
+d.pop_back();  // Elimina el ultimo elemento
+
+// 5. CONSULTAR ESTADO
+if (!d.empty()) {
+    cout &lt;&lt; "Cantidad: " &lt;&lt; d.size() &lt;&lt; endl;
+}
+                    </code></pre>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 8: PROBLEMA 2 - CENTRO DE MONITOREO DE EVENTOS (CME) -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <div class="inciso-header">
+                    <span class="inciso-badge"><i class="fa-solid fa-shield-halved" style="font-size: 20px;"></i></span>
+                    <h2 class="slide-title" style="margin-bottom: 0 !important;">Ejemplo 2: Centro de Monitoreo (CME)</h2>
+                    <span class="points-badge">Práctica Deque</span>
+                </div>
+                <div class="content-area">
+                    <div class="texto-enunciado" style="margin-bottom: 12px;">
+                        <p>
+                            En el Centro de Monitoreo de Eventos (CME), Franco es el operador encargado de gestionar las alertas de seguridad en tiempo real para la ciudad. En el turno nocturno los eventos se multiplican y necesita manejar solo los más recientes, descartando los viejos:
+                        </p>
+                        <p style="margin-bottom: 4px;">• Cada vez que llegue un <strong>evento nuevo</strong>, debe agregarse adelante para visualizarlo de inmediato.</p>
+                        <p style="margin-bottom: 4px;">• Si el sistema excede la capacidad máxima de eventos recientes, los <strong>eventos más antiguos</strong> deben eliminarse automáticamente del final.</p>
+                        <p style="margin: 0;">• La lista debe mostrarse del más reciente al menos reciente.</p>
+                    </div>
+
+                    <div class="concept-card fragment" style="border-left-color: var(--success-green); background: #ECFDF5;">
+                        <h3 style="color: #065F46;"><i class="fa-solid fa-wand-magic-sparkles"></i> Simplificamos el problema:</h3>
+                        <p style="font-size: 17.5px; color: #065F46; font-weight: 600; margin: 0;">
+                            "Crear una cola doblemente enlazada que agregue eventos al frente (<code>push_front</code>), elimine los antiguos por detrás (<code>pop_back</code>) y los muestre en orden."
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 9: RESOLUCIÓN DEQUE + LABORATORIO ONECOMPILER -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 9.A: Resolución paso a paso -->
+                <section data-background-color="#F8FAFC">
+                    <h2 class="slide-title">Resolución: Centro de Monitoreo (CME)</h2>
+                    <div class="content-area">
+                        <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-3|5-9|11-16|18-28">
+void agregarEvento(deque&lt;string&gt; &amp;eventos, const string &amp;evento) {
+    eventos.push_front(evento);
+}
+
+void limpiarEventosViejos(deque&lt;string&gt; &amp;eventos, unsigned maxEventos) {
+    while (eventos.size() &gt; maxEventos) {
+        eventos.pop_back();
+    }
+}
+
+void mostrarEventos(const deque&lt;string&gt; &amp;eventos) {
+    cout &lt;&lt; "Eventos recientes:" &lt;&lt; endl;
+    for (const auto &amp;evento : eventos) {
+        cout &lt;&lt; "- " &lt;&lt; evento &lt;&lt; endl;
+    }
+}
+
+int main() {
+    deque&lt;string&gt; eventos;
+    agregarEvento(eventos, "Usuario inicio sesion");
+    agregarEvento(eventos, "Usuario cambio configuracion");
+    agregarEvento(eventos, "Nuevo mensaje recibido");
+    agregarEvento(eventos, "Archivo descargado");
+
+    limpiarEventosViejos(eventos, 3);
+    mostrarEventos(eventos);
+    return 0;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 9.B: Compilador Interactivo OneCompiler -->
+                <section id="slide-compiler-2">
+                    <h2 class="slide-title" style="font-size: 28px !important; margin-bottom: 10px !important;">Laboratorio en Vivo: Historial CME con <code>std::deque</code></h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler - C++ Sandbox (Probá cambiar la capacidad máxima)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-2', cppCodeDeque, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 10: CÓMO SEGUIR APRENDIENDO Y CIERRE DEL TALLER -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2 style="font-size: 46px !important; margin-bottom: 14px;">¡Felicitaciones por completar el Taller STL!</h2>
+                    <p style="font-size: 18px !important; color: #CBD5E1; margin-bottom: 22px;">
+                        ¿Cómo seguir practicando programación competitiva y estructuras de datos?
+                    </p>
+
+                    <div class="two-column" style="max-width: 980px; margin: 0 auto 26px auto; text-align: left;">
+                        <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); padding: 16px 20px; border-radius: 14px;">
+                            <h3 style="color: var(--utn-gold); font-size: 18px; margin-bottom: 8px;"><i class="fa-solid fa-book-open"></i> Bibliografía y Jueces Online</h3>
+                            <p style="color: #E2E8F0; font-size: 14.5px; margin-bottom: 6px;">• Libro gratuito: <strong>Competitive Programmer's Handbook</strong> (<code>cses.fi/book/book.pdf</code>).</p>
+                            <p style="color: #E2E8F0; font-size: 14.5px; margin: 0;">• Resolviendo problemas en jueces en línea: <strong>Codeforces, CSES, Beecrowd y LeetCode</strong>.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); padding: 16px 20px; border-radius: 14px;">
+                            <h3 style="color: var(--utn-gold); font-size: 18px; margin-bottom: 8px;"><i class="fa-solid fa-comments"></i> Contacto y Consultas</h3>
+                            <p style="color: #E2E8F0; font-size: 14.5px; margin: 0;">• Docente: <strong>Tomás Assenza</strong> (<code>tassenza@frsf.utn.edu.ar</code> o por mensaje privado de Teams).</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;">
+                        <a href="../modulo4-stack/index.html" class="nav-cta-btn" style="background: rgba(255,255,255,0.08); color: #CBD5E1; border: 1px solid rgba(255,255,255,0.2);">
+                            <i class="fa-solid fa-arrow-left"></i> <span>Módulo 4: std::stack</span>
+                        </a>
+                        <a href="../index.html" class="nav-cta-btn" style="background: rgba(255,255,255,0.14); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                            <i class="fa-solid fa-house"></i> <span>Volver al Hub</span>
+                        </a>
+                        <a href="../debugger/index.html" class="nav-cta-btn" style="background: var(--utn-gold); color: var(--utn-blue);">
+                            <i class="fa-solid fa-microchip"></i> <span>Abrir Visualizador / Debugger STL</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+
+    <script src="../../../../dist/reveal.js"></script>
+    <script src="../../../../dist/plugin/notes.js"></script>
+    <script src="../../../../dist/plugin/highlight.js"></script>
+
+    <script>
+        const cppCodeQueue = `#include <iostream>
+#include <queue>
+
+using namespace std;
+
+void coleMisterioso(queue<int> &numeros) {
+    cout << "Suben: ";
+    while (!numeros.empty()) {
+        int num = numeros.front();
+        numeros.pop();
+
+        if (num % 3 == 0) {
+            cout << num << " ";
+        } else {
+            cout << "(espera " << num << ") ";
+        }
+    }
+    cout << endl;
+}
+
+int main() {
+    queue<int> filaBondi;
+
+    filaBondi.push(7);
+    filaBondi.push(3);
+    filaBondi.push(10);
+    filaBondi.push(9);
+    filaBondi.push(2);
+    filaBondi.push(15);
+
+    coleMisterioso(filaBondi);
+
+    return 0;
+}`;
+
+        const cppCodeDeque = `#include <iostream>
+#include <deque>
+#include <string>
+
+using namespace std;
+
+void agregarEvento(deque<string> &eventos, const string &evento) {
+    eventos.push_front(evento);
+}
+
+void limpiarEventosViejos(deque<string> &eventos, unsigned maxEventos) {
+    while (eventos.size() > maxEventos) {
+        eventos.pop_back();
+    }
+}
+
+void mostrarEventos(const deque<string> &eventos) {
+    cout << "Eventos recientes (" << eventos.size() << "):" << endl;
+    for (const auto &evento : eventos) {
+        cout << "- " << evento << endl;
+    }
+}
+
+int main() {
+    deque<string> eventos;
+    agregarEvento(eventos, "1. Usuario inicio sesion");
+    agregarEvento(eventos, "2. Usuario cambio configuracion");
+    agregarEvento(eventos, "3. Nuevo mensaje recibido");
+    agregarEvento(eventos, "4. Archivo descargado");
+
+    limpiarEventosViejos(eventos, 3);
+
+    mostrarEventos(eventos);
+    return 0;
+}`;
+
+        // =========================================================================
+        // REGLA CRÍTICA DE ORDEN DE EJECUCIÓN (Anti-Blank-Slide en Móviles/Vertical)
+        // =========================================================================
+        const isMobilePortrait = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
+        if (isMobilePortrait) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({ width: newSize.width, height: newSize.height });
+        });
+
+        function sendCode(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        function checkCompilerSlides(slide) {
+            if (!slide) return;
+            if (slide.id === 'slide-compiler-1') {
+                sendCodeWithRetries('oc-editor-1', cppCodeQueue, 'cpp', 'main.cpp');
+            }
+            if (slide.id === 'slide-compiler-2') {
+                sendCodeWithRetries('oc-editor-2', cppCodeDeque, 'cpp', 'main.cpp');
+            }
+        }
+
+        Reveal.on('slidechanged', event => {
+            checkCompilerSlides(event.currentSlide);
+        });
+
+        Reveal.on('ready', event => {
+            checkCompilerSlides(Reveal.getCurrentSlide());
+        });
+    </script>
+</body>
+</html>

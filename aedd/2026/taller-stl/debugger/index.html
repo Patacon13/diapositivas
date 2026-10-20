@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualizador y Debugger STL - AEDD | UTN FRSF</title>
+
+    <!-- Tipografías e Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-dark: #0F172A;
+            --panel-bg: #1E293B;
+            --panel-border: #334155;
+            --code-bg: #141619;
+            --text-light: #F8FAFC;
+            --text-muted: #94A3B8;
+            --success: #10B981;
+            --danger: #EF4444;
+            --info: #38BDF8;
+            --purple: #A855F7;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Topbar */
+        .topbar {
+            background: #090E17;
+            border-bottom: 1px solid var(--panel-border);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        .back-btn:hover {
+            background: var(--utn-blue);
+            border-color: var(--utn-gold);
+        }
+        .back-btn i { color: var(--utn-gold); }
+
+        .brand-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand-title span.gold { color: var(--utn-gold); }
+
+        /* Mode Switcher */
+        .mode-tabs {
+            display: flex;
+            background: #1E293B;
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--panel-border);
+            gap: 4px;
+        }
+
+        .mode-tab {
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 9px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        .mode-tab.active {
+            background: var(--utn-gold);
+            color: #0F172A;
+        }
+
+        /* Scenario Selector Bar */
+        .selector-bar {
+            background: #152033;
+            border-bottom: 1px solid var(--panel-border);
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow-x: auto;
+        }
+
+        .selector-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            margin-right: 4px;
+        }
+
+        .chip-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #CBD5E1;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-family: 'Fira Code', monospace;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .chip-btn:hover {
+            border-color: var(--utn-gold);
+            color: white;
+        }
+        .chip-btn.active {
+            background: rgba(255, 193, 7, 0.18);
+            border-color: var(--utn-gold);
+            color: var(--utn-gold);
+        }
+
+        /* Main Workspace Grid */
+        .workspace {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 470px 1fr;
+            gap: 18px;
+            padding: 18px 24px;
+            max-width: 1600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .panel-header {
+            background: rgba(15, 23, 42, 0.65);
+            border-bottom: 1px solid var(--panel-border);
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: #E2E8F0;
+        }
+        .panel-header i { color: var(--utn-gold); margin-right: 6px; }
+
+        /* Debugger Controls */
+        .controls-bar {
+            background: #0F172A;
+            border-bottom: 1px solid var(--panel-border);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .ctrl-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .ctrl-btn {
+            background: #1E293B;
+            border: 1px solid #475569;
+            color: var(--text-light);
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+        .ctrl-btn:hover:not(:disabled) {
+            background: #334155;
+            border-color: var(--utn-gold);
+        }
+        .ctrl-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .ctrl-btn.primary {
+            background: var(--utn-gold);
+            color: #0F172A;
+            border-color: var(--utn-gold);
+        }
+        .ctrl-btn.primary:hover:not(:disabled) {
+            background: #F59E0B;
+        }
+
+        .step-badge {
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            color: var(--utn-gold);
+            background: rgba(255, 193, 7, 0.12);
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        /* Code Viewer */
+        .code-container {
+            background: var(--code-bg);
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 13.2px;
+            line-height: 1.55;
+        }
+
+        .code-line {
+            display: flex;
+            padding: 1px 16px 1px 0;
+            border-left: 4px solid transparent;
+            transition: background 0.15s ease;
+        }
+        .code-line.active-line {
+            background: rgba(255, 193, 7, 0.18);
+            border-left-color: var(--utn-gold);
+        }
+        .line-num {
+            width: 38px;
+            text-align: right;
+            padding-right: 12px;
+            color: #475569;
+            user-select: none;
+            font-size: 12px;
+        }
+        .code-line.active-line .line-num {
+            color: var(--utn-gold);
+            font-weight: 700;
+        }
+        .line-text {
+            white-space: pre;
+            color: #E2E8F0;
+        }
+
+        /* Explanation Banner */
+        .explain-banner {
+            background: rgba(56, 189, 248, 0.1);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+            padding: 14px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .explain-banner i {
+            color: var(--info);
+            font-size: 18px;
+            margin-top: 2px;
+        }
+        .explain-text {
+            font-size: 14.5px;
+            line-height: 1.45;
+            color: #F1F5F9;
+        }
+        .explain-text code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(15, 23, 42, 0.7);
+            color: var(--utn-gold);
+            padding: 2px 6px;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        /* Memory Canvas */
+        .memory-stage {
+            flex: 1;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 290px;
+            background: radial-gradient(circle at center, #1E293B 0%, #0F172A 100%);
+            position: relative;
+        }
+
+        .container-tag {
+            position: absolute;
+            top: 14px;
+            left: 18px;
+            font-family: 'Fira Code', monospace;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            background: rgba(15, 23, 42, 0.8);
+            padding: 5px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .complexity-tag {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.12);
+            padding: 5px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+
+        /* Visual Elements for Containers */
+        .cells-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-end;
+            margin-top: 16px;
+        }
+
+        .mem-cell {
+            background: #0F172A;
+            border: 2px solid #475569;
+            border-radius: 12px;
+            min-width: 74px;
+            padding: 10px 12px;
+            text-align: center;
+            position: relative;
+            transition: all 0.25s ease;
+        }
+        .mem-cell.highlight {
+            border-color: var(--utn-gold);
+            background: rgba(255, 193, 7, 0.15);
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.2);
+        }
+        .mem-cell.success {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.16);
+        }
+        .mem-cell.danger {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.16);
+        }
+        .cell-idx {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: block;
+        }
+        .cell-val {
+            font-family: 'Fira Code', monospace;
+            font-size: 19px;
+            font-weight: 700;
+            color: white;
+        }
+        .cell-ptr {
+            margin-top: 6px;
+            display: inline-block;
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: #0F172A;
+            background: var(--utn-gold);
+            padding: 2px 7px;
+            border-radius: 999px;
+        }
+
+        /* Map Cards */
+        .map-cards {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 14px;
+        }
+        .map-node {
+            background: #0F172A;
+            border: 2px solid #38BDF8;
+            border-radius: 12px;
+            min-width: 130px;
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+        .map-node.highlight {
+            border-color: var(--utn-gold);
+            transform: scale(1.06);
+            box-shadow: 0 8px 22px rgba(255, 193, 7, 0.25);
+        }
+        .map-node-key {
+            background: #0284C7;
+            color: white;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 6px 10px;
+            text-align: center;
+        }
+        .map-node.highlight .map-node-key {
+            background: var(--utn-gold);
+            color: #0F172A;
+        }
+        .map-node-val {
+            padding: 10px;
+            text-align: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        /* Stack Well */
+        .stack-bucket {
+            width: 210px;
+            min-height: 190px;
+            border-left: 4px solid #64748B;
+            border-right: 4px solid #64748B;
+            border-bottom: 6px solid #64748B;
+            border-radius: 0 0 14px 14px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 8px;
+            background: rgba(15, 23, 42, 0.6);
+            margin-top: 14px;
+        }
+        .stack-plate {
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #1E293B;
+            border: 2px solid #475569;
+            font-family: 'Fira Code', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+            color: #CBD5E1;
+        }
+        .stack-plate.top-plate {
+            border-color: var(--utn-gold);
+            background: rgba(255, 193, 7, 0.18);
+            color: var(--utn-gold);
+        }
+
+        /* Bottom Info Strip (Watch + Console) */
+        .bottom-strip {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 1px solid var(--panel-border);
+            background: #0F172A;
+            min-height: 145px;
+        }
+        .strip-box {
+            padding: 12px 16px;
+            border-right: 1px solid var(--panel-border);
+        }
+        .strip-box:last-child { border-right: none; }
+        .strip-title {
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .watch-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .watch-pill {
+            background: #1E293B;
+            border: 1px solid #334155;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 12.5px;
+        }
+        .watch-pill span.k { color: #94A3B8; }
+        .watch-pill span.v { color: var(--utn-gold); font-weight: 700; }
+
+        .console-out {
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            color: var(--success);
+            background: #090D16;
+            border: 1px solid #1E293B;
+            border-radius: 8px;
+            padding: 8px 12px;
+            min-height: 76px;
+            white-space: pre-wrap;
+        }
+
+        /* Sandbox Controls Panel */
+        .sandbox-controls {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .input-row {
+            display: flex;
+            gap: 8px;
+        }
+        .sb-input {
+            flex: 1;
+            background: #0F172A;
+            border: 1px solid #475569;
+            color: white;
+            padding: 9px 12px;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 13.5px;
+        }
+        .sb-ops-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        @media (max-width: 1024px) {
+            .workspace { grid-template-columns: 1fr; }
+            .bottom-strip { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra Superior -->
+    <header class="topbar">
+        <div class="brand-group">
+            <a href="../index.html" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i> Volver al Hub STL
+            </a>
+            <div class="brand-title">
+                <i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i>
+                <span>Visualizador &amp; Debugger <span class="gold">C++ STL</span></span>
+            </div>
+        </div>
+
+        <div class="mode-tabs">
+            <button id="tab-guided" class="mode-tab active" onclick="switchMode('guided')">
+                <i class="fa-solid fa-bug-slash"></i> Problemas del Taller (Paso a Paso)
+            </button>
+            <button id="tab-sandbox" class="mode-tab" onclick="switchMode('sandbox')">
+                <i class="fa-solid fa-flask"></i> Sandbox Libre (Probador Manual)
+            </button>
+        </div>
+    </header>
+
+    <!-- Selector de Escenarios (Modo Guiado) -->
+    <nav id="guided-bar" class="selector-bar">
+        <span class="selector-label">Módulo a depurar:</span>
+        <button class="chip-btn active" onclick="loadScenario('iteradores', this)">M0: lower_bound / upper_bound</button>
+        <button class="chip-btn" onclick="loadScenario('vector', this)">M1: vector + sort (Mediana)</button>
+        <button class="chip-btn" onclick="loadScenario('map', this)">M2: map (Tendencias Twitter)</button>
+        <button class="chip-btn" onclick="loadScenario('set', this)">M3: set (Lista de Valentina)</button>
+        <button class="chip-btn" onclick="loadScenario('stack', this)">M4: stack (Fórmulas de Ayelén)</button>
+        <button class="chip-btn" onclick="loadScenario('deque', this)">M5: deque (Monitoreo CME)</button>
+    </nav>
+
+    <!-- Selector de Estructura (Modo Sandbox) -->
+    <nav id="sandbox-bar" class="selector-bar" style="display: none;">
+        <span class="selector-label">Estructura en Memoria:</span>
+        <button class="chip-btn active" onclick="initSandbox('vector', this)">std::vector&lt;int&gt;</button>
+        <button class="chip-btn" onclick="initSandbox('set', this)">std::set&lt;int&gt;</button>
+        <button class="chip-btn" onclick="initSandbox('map', this)">std::map&lt;string, int&gt;</button>
+        <button class="chip-btn" onclick="initSandbox('stack', this)">std::stack&lt;int&gt;</button>
+        <button class="chip-btn" onclick="initSandbox('queue', this)">std::queue&lt;int&gt;</button>
+        <button class="chip-btn" onclick="initSandbox('deque', this)">std::deque&lt;int&gt;</button>
+    </nav>
+
+    <!-- Área Principal -->
+    <main class="workspace">
+
+        <!-- Panel Izquierdo: Código C++ o Controles Sandbox -->
+        <section class="panel">
+            <div class="panel-header">
+                <span id="left-panel-title"><i class="fa-solid fa-code"></i> Código C++ en Ejecución</span>
+                <span id="step-counter" class="step-badge">Paso 1 / 1</span>
+            </div>
+
+            <!-- Barra de reproducción (Modo Guiado) -->
+            <div id="guided-controls" class="controls-bar">
+                <div class="ctrl-group">
+                    <button class="ctrl-btn" onclick="resetStep()" title="Reiniciar al paso 1">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                    <button id="btn-prev" class="ctrl-btn" onclick="prevStep()">
+                        <i class="fa-solid fa-backward-step"></i> Anterior
+                    </button>
+                    <button id="btn-play" class="ctrl-btn primary" onclick="togglePlay()">
+                        <i class="fa-solid fa-play"></i> Auto
+                    </button>
+                    <button id="btn-next" class="ctrl-btn" onclick="nextStep()">
+                        Siguiente <i class="fa-solid fa-forward-step"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Visor de Código C++ -->
+            <div id="code-view" class="code-container"></div>
+
+            <!-- Controles Interactivos (Modo Sandbox) -->
+            <div id="sandbox-view" class="sandbox-controls" style="display: none;">
+                <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.4;">
+                    Ingresá un valor y ejecutá métodos reales de la STL para observar cómo muta la estructura en memoria y qué complejidad tiene cada operación:
+                </p>
+                <div class="input-row">
+                    <input id="sb-val" type="text" class="sb-input" value="42" placeholder="Valor o Clave (ej: 42 o utn)" />
+                </div>
+                <div id="sb-buttons" class="sb-ops-grid"></div>
+                <div style="margin-top: 8px;">
+                    <span class="strip-title"><i class="fa-solid fa-terminal"></i> Historial de Instrucciones C++</span>
+                    <div id="sb-log" class="console-out" style="min-height: 170px; color: #E2E8F0;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Panel Derecho: Estado de la Memoria + Variables + Consola -->
+        <section class="panel">
+            <div class="panel-header">
+                <span><i class="fa-solid fa-memory"></i> Estado Interno del Contenedor STL</span>
+                <span id="structure-subtitle" style="font-family: 'Fira Code', monospace; font-size: 12px; color: var(--utn-gold);"></span>
+            </div>
+
+            <div class="explain-banner">
+                <i class="fa-solid fa-circle-info"></i>
+                <div id="explain-box" class="explain-text"></div>
+            </div>
+
+            <div class="memory-stage">
+                <span id="container-label" class="container-tag"></span>
+                <span id="complexity-label" class="complexity-tag"></span>
+                <div id="visual-canvas" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
+            </div>
+
+            <div class="bottom-strip">
+                <div class="strip-box">
+                    <div class="strip-title"><i class="fa-solid fa-magnifying-glass-chart"></i> Variables &amp; Retornos (Watch)</div>
+                    <div id="watch-box" class="watch-grid"></div>
+                </div>
+                <div class="strip-box">
+                    <div class="strip-title"><i class="fa-solid fa-terminal"></i> Salida Estándar (cout)</div>
+                    <div id="console-box" class="console-out"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // =====================================================================
+        // BASE DE DATOS DE ESCENARIOS PASO A PASO (LOS 6 MÓDULOS DEL TALLER)
+        // =====================================================================
+        const SCENARIOS = {
+            iteradores: {
+                title: "set<int> s = {1, 4, 6, 7, 8}",
+                complexity: "Búsqueda en árbol: O(log N)",
+                code: [
+                    "set<int> s = {1, 4, 6, 7, 8};",
+                    "auto it = s.lower_bound(5);",
+                    "auto it2 = s.upper_bound(5);",
+                    "auto it3 = s.lower_bound(6);",
+                    "auto it4 = s.upper_bound(6);",
+                    "cout << *it << \" \" << *it3 << \" \" << *it4;"
+                ],
+                steps: [
+                    {
+                        line: 1,
+                        explain: "Inicializamos el conjunto ordenado <code>s</code> con 5 elementos.",
+                        type: "cells",
+                        items: [{idx:"0", val:1}, {idx:"1", val:4}, {idx:"2", val:6}, {idx:"3", val:7}, {idx:"4", val:8}],
+                        watch: { "s.size()": 5 },
+                        cout: ""
+                    },
+                    {
+                        line: 2,
+                        explain: "<code>s.lower_bound(5)</code> busca el primer elemento <strong>mayor o igual a 5</strong>. Como el 5 no está, apunta al <code>6</code>.",
+                        type: "cells",
+                        items: [{idx:"0", val:1}, {idx:"1", val:4}, {idx:"2", val:6, highlight:true, ptr:"it (>=5)"}, {idx:"3", val:7}, {idx:"4", val:8}],
+                        watch: { "x": 5, "*it": 6 },
+                        cout: ""
+                    },
+                    {
+                        line: 3,
+                        explain: "<code>s.upper_bound(5)</code> busca el primer elemento <strong>estrictamente mayor a 5</strong>. También apunta al <code>6</code>.",
+                        type: "cells",
+                        items: [{idx:"0", val:1}, {idx:"1", val:4}, {idx:"2", val:6, highlight:true, ptr:"it, it2 (>5)"}, {idx:"3", val:7}, {idx:"4", val:8}],
+                        watch: { "x": 5, "*it": 6, "*it2": 6 },
+                        cout: ""
+                    },
+                    {
+                        line: 4,
+                        explain: "<code>s.lower_bound(6)</code> busca el primer elemento <strong>mayor o igual a 6</strong>. Como el 6 sí está en el set, apunta al propio <code>6</code>.",
+                        type: "cells",
+                        items: [{idx:"0", val:1}, {idx:"1", val:4}, {idx:"2", val:6, highlight:true, ptr:"it3 (>=6)"}, {idx:"3", val:7}, {idx:"4", val:8}],
+                        watch: { "x": 6, "*it3": 6 },
+                        cout: ""
+                    },
+                    {
+                        line: 5,
+                        explain: "<code>s.upper_bound(6)</code> busca el primer elemento <strong>estrictamente mayor a 6</strong>. Salta al <code>7</code>.",
+                        type: "cells",
+                        items: [{idx:"0", val:1}, {idx:"1", val:4}, {idx:"2", val:6, ptr:"it3"}, {idx:"3", val:7, highlight:true, ptr:"it4 (>6)"}, {idx:"4", val:8}],
+                        watch: { "x": 6, "*it3": 6, "*it4": 7 },
+                        cout: ""
+                    },
+                    {
+                        line: 6,
+                        explain: "Desreferenciamos los iteradores con el operador <code>*</code> para imprimir los valores apuntados.",
+                        type: "cells",
+                        items: [{idx:"0", val:1}, {idx:"1", val:4}, {idx:"2", val:6, success:true, ptr:"*it3 = 6"}, {idx:"3", val:7, success:true, ptr:"*it4 = 7"}, {idx:"4", val:8}],
+                        watch: { "*it": 6, "*it3": 6, "*it4": 7 },
+                        cout: "6 6 7"
+                    }
+                ]
+            },
+            vector: {
+                title: "vector<int> mediciones",
+                complexity: "sort(): O(N log N) | Acceso []: O(1)",
+                code: [
+                    "vector<int> mediciones;",
+                    "mediciones.push_back(25);",
+                    "mediciones.push_back(10);",
+                    "mediciones.push_back(30);",
+                    "mediciones.push_back(15);",
+                    "sort(mediciones.begin(), mediciones.end());",
+                    "int mitad = mediciones.size() / 2;",
+                    "double mediana = (mediciones[mitad-1] + mediciones[mitad]) / 2.0;",
+                    "cout << \"Mediana: \" << mediana << endl;"
+                ],
+                steps: [
+                    {
+                        line: 1,
+                        explain: "Declaramos <code>vector&lt;int&gt; mediciones</code> vacío en memoria (tamaño 0).",
+                        type: "cells",
+                        items: [],
+                        watch: { "size()": 0 },
+                        cout: ""
+                    },
+                    {
+                        line: 2,
+                        explain: "<code>push_back(25)</code> inserta el 25 al final en <code>mediciones[0]</code>.",
+                        type: "cells",
+                        items: [{idx:"[0]", val:25, highlight:true}],
+                        watch: { "size()": 1, "mediciones[0]": 25 },
+                        cout: ""
+                    },
+                    {
+                        line: 3,
+                        explain: "<code>push_back(10)</code> agrega el 10 al final en <code>mediciones[1]</code>.",
+                        type: "cells",
+                        items: [{idx:"[0]", val:25}, {idx:"[1]", val:10, highlight:true}],
+                        watch: { "size()": 2, "mediciones[1]": 10 },
+                        cout: ""
+                    },
+                    {
+                        line: 4,
+                        explain: "<code>push_back(30)</code> agrega el 30 al final en <code>mediciones[2]</code>.",
+                        type: "cells",
+                        items: [{idx:"[0]", val:25}, {idx:"[1]", val:10}, {idx:"[2]", val:30, highlight:true}],
+                        watch: { "size()": 3, "mediciones[2]": 30 },
+                        cout: ""
+                    },
+                    {
+                        line: 5,
+                        explain: "<code>push_back(15)</code> agrega el 15 al final en <code>mediciones[3]</code>. Tenemos N = 4 mediciones desordenadas.",
+                        type: "cells",
+                        items: [{idx:"[0]", val:25}, {idx:"[1]", val:10}, {idx:"[2]", val:30}, {idx:"[3]", val:15, highlight:true}],
+                        watch: { "size()": 4, "mediciones[3]": 15 },
+                        cout: ""
+                    },
+                    {
+                        line: 6,
+                        explain: "<code>sort(mediciones.begin(), mediciones.end())</code> ordena todo el vector de menor a mayor en <code>O(N log N)</code>.",
+                        type: "cells",
+                        items: [{idx:"[0]", val:10, highlight:true}, {idx:"[1]", val:15, highlight:true}, {idx:"[2]", val:25, highlight:true}, {idx:"[3]", val:30, highlight:true}],
+                        watch: { "size()": 4, "ordenado": "true" },
+                        cout: ""
+                    },
+                    {
+                        line: 7,
+                        explain: "Calculamos el índice de la mitad: <code>mitad = 4 / 2 = 2</code>.",
+                        type: "cells",
+                        items: [{idx:"[0]", val:10}, {idx:"[1]", val:15, ptr:"mitad-1"}, {idx:"[2]", val:25, highlight:true, ptr:"mitad (idx 2)"}, {idx:"[3]", val:30}],
+                        watch: { "size()": 4, "mitad": 2 },
+                        cout: ""
+                    },
+                    {
+                        line: 8,
+                        explain: "Como N = 4 es par, promediamos los dos valores centrales: <code>mediciones[1]</code> (15) y <code>mediciones[2]</code> (25) dividiendo por <code>2.0</code>.",
+                        type: "cells",
+                        items: [{idx:"[0]", val:10}, {idx:"[1]", val:15, success:true, ptr:"mitad-1"}, {idx:"[2]", val:25, success:true, ptr:"mitad"}, {idx:"[3]", val:30}],
+                        watch: { "mitad": 2, "mediana": "20.0" },
+                        cout: ""
+                    },
+                    {
+                        line: 9,
+                        explain: "Imprimimos el resultado final por pantalla mediante <code>cout</code>.",
+                        type: "cells",
+                        items: [{idx:"[0]", val:10}, {idx:"[1]", val:15, success:true}, {idx:"[2]", val:25, success:true}, {idx:"[3]", val:30}],
+                        watch: { "mediana": "20.0" },
+                        cout: "Mediana: 20\n"
+                    }
+                ]
+            },
+            map: {
+                title: "map<string, int> frecuencias",
+                complexity: "Acceso / Inserción []: O(log N)",
+                code: [
+                    "map<string, int> frecuencias;",
+                    "frecuencias[\"utn\"]++;",
+                    "frecuencias[\"stl\"]++;",
+                    "frecuencias[\"utn\"]++;",
+                    "frecuencias[\"aedd\"]++;",
+                    "cout << \"utn: \" << frecuencias[\"utn\"] << endl;",
+                    "cout << \"java: \" << frecuencias.count(\"java\") << endl;"
+                ],
+                steps: [
+                    {
+                        line: 1,
+                        explain: "Declaramos <code>map&lt;string, int&gt; frecuencias</code> vacío en memoria.",
+                        type: "map",
+                        items: [],
+                        watch: { "size()": 0 },
+                        cout: ""
+                    },
+                    {
+                        line: 2,
+                        explain: "La clave <code>\"utn\"</code> no existía: se crea con valor por defecto <code>0</code> e inmediatamente <code>++</code> la incrementa a <code>1</code>.",
+                        type: "map",
+                        items: [{key:"\"utn\"", val:1, highlight:true}],
+                        watch: { "size()": 1, "frecuencias[\"utn\"]": 1 },
+                        cout: ""
+                    },
+                    {
+                        line: 3,
+                        explain: "Se inserta la clave <code>\"stl\"</code> con valor <code>1</code>. El mapa ordena automáticamente las claves en orden alfabético.",
+                        type: "map",
+                        items: [{key:"\"stl\"", val:1, highlight:true}, {key:"\"utn\"", val:1}],
+                        watch: { "size()": 2, "frecuencias[\"stl\"]": 1 },
+                        cout: ""
+                    },
+                    {
+                        line: 4,
+                        explain: "Como <code>\"utn\"</code> ya existe en el mapa, accedemos a su valor y lo incrementamos a <code>2</code>.",
+                        type: "map",
+                        items: [{key:"\"stl\"", val:1}, {key:"\"utn\"", val:2, highlight:true}],
+                        watch: { "size()": 2, "frecuencias[\"utn\"]": 2 },
+                        cout: ""
+                    },
+                    {
+                        line: 5,
+                        explain: "Se inserta <code>\"aedd\"</code> con valor 1 y se ubica automáticamente al principio por orden lexicográfico.",
+                        type: "map",
+                        items: [{key:"\"aedd\"", val:1, highlight:true}, {key:"\"stl\"", val:1}, {key:"\"utn\"", val:2}],
+                        watch: { "size()": 3, "frecuencias[\"aedd\"]": 1 },
+                        cout: ""
+                    },
+                    {
+                        line: 6,
+                        explain: "Consultamos el valor de la clave <code>\"utn\"</code> con <code>frecuencias[\"utn\"]</code> (que vale 2) y lo imprimimos por pantalla.",
+                        type: "map",
+                        items: [{key:"\"aedd\"", val:1}, {key:"\"stl\"", val:1}, {key:"\"utn\"", val:2, success:true}],
+                        watch: { "size()": 3, "frecuencias[\"utn\"]": 2 },
+                        cout: "utn: 2\n"
+                    },
+                    {
+                        line: 7,
+                        explain: "Usamos <code>frecuencias.count(\"java\")</code> para consultar sin crear una clave fantasma. Devuelve <code>0</code>.",
+                        type: "map",
+                        items: [{key:"\"aedd\"", val:1}, {key:"\"stl\"", val:1}, {key:"\"utn\"", val:2}],
+                        watch: { "size()": 3, "count(\"java\")": 0 },
+                        cout: "utn: 2\njava: 0\n"
+                    }
+                ]
+            },
+            set: {
+                title: "set<string> items",
+                complexity: "insert(): O(log N) | Sin duplicados",
+                code: [
+                    "set<string> items;",
+                    "items.insert(\"pan\");",
+                    "items.insert(\"agua\");",
+                    "items.insert(\"pan\"); // Duplicado",
+                    "items.insert(\"cafe\");",
+                    "for (const string &x : items) cout << x << \" \";"
+                ],
+                steps: [
+                    {
+                        line: 1,
+                        explain: "Declaramos <code>set&lt;string&gt; items</code> vacío en memoria.",
+                        type: "cells",
+                        items: [],
+                        watch: { "items.size()": 0 },
+                        cout: ""
+                    },
+                    {
+                        line: 2,
+                        explain: "Insertamos <code>\"pan\"</code> en el conjunto en <code>O(log N)</code>.",
+                        type: "cells",
+                        items: [{idx:"set", val:"\"pan\"", highlight:true}],
+                        watch: { "items.size()": 1 },
+                        cout: ""
+                    },
+                    {
+                        line: 3,
+                        explain: "Insertamos <code>\"agua\"</code>. El <code>set</code> reordena los elementos alfabéticamente (<code>\"agua\" &lt; \"pan\"</code>).",
+                        type: "cells",
+                        items: [{idx:"set", val:"\"agua\"", highlight:true}, {idx:"set", val:"\"pan\""}],
+                        watch: { "items.size()": 2 },
+                        cout: ""
+                    },
+                    {
+                        line: 4,
+                        explain: "Intentamos insertar <code>\"pan\"</code> de nuevo. Como <code>std::set</code> no admite repetidos, la inserción se ignora y el tamaño sigue en 2.",
+                        type: "cells",
+                        items: [{idx:"set", val:"\"agua\""}, {idx:"duplicado ignorado", val:"\"pan\"", danger:true}],
+                        watch: { "items.size()": 2 },
+                        cout: ""
+                    },
+                    {
+                        line: 5,
+                        explain: "Insertamos <code>\"cafe\"</code>, que se ubica automáticamente entre <code>\"agua\"</code> y <code>\"pan\"</code>.",
+                        type: "cells",
+                        items: [{idx:"set", val:"\"agua\""}, {idx:"set", val:"\"cafe\"", highlight:true}, {idx:"set", val:"\"pan\""}],
+                        watch: { "items.size()": 3 },
+                        cout: ""
+                    },
+                    {
+                        line: 6,
+                        explain: "Al recorrer el <code>set</code> con range-for, los elementos salen limpios y en orden alfabético.",
+                        type: "cells",
+                        items: [{idx:"1°", val:"\"agua\"", success:true}, {idx:"2°", val:"\"cafe\"", success:true}, {idx:"3°", val:"\"pan\"", success:true}],
+                        watch: { "items.size()": 3 },
+                        cout: "agua cafe pan "
+                    }
+                ]
+            },
+            stack: {
+                title: "stack<char> abiertos (LIFO)",
+                complexity: "push / top / pop: O(1)",
+                code: [
+                    "stack<char> abiertos;",
+                    "abiertos.push('(');",
+                    "abiertos.push('[');",
+                    "abiertos.push('{');",
+                    "abiertos.pop(); // Llega '}': coincide con top() '{'",
+                    "abiertos.pop(); // Llega ']': coincide con top() '['",
+                    "abiertos.pop(); // Llega ')': coincide con top() '('",
+                    "cout << boolalpha << abiertos.empty();"
+                ],
+                steps: [
+                    {
+                        line: 1,
+                        explain: "Declaramos <code>stack&lt;char&gt; abiertos</code> vacía en memoria (size 0).",
+                        type: "stack",
+                        items: [],
+                        watch: { "size()": 0, "empty()": "true" },
+                        cout: ""
+                    },
+                    {
+                        line: 2,
+                        explain: "Leemos <code>'('</code> y lo apilamos en el tope con <code>push('(')</code>.",
+                        type: "stack",
+                        items: ["'('"],
+                        watch: { "simbolo": "'('", "top()": "'('", "size()": 1 },
+                        cout: ""
+                    },
+                    {
+                        line: 3,
+                        explain: "Leemos <code>'['</code> y se apila arriba de <code>'('</code>. Ahora el único elemento visible es <code>'['</code>.",
+                        type: "stack",
+                        items: ["'('", "'['"],
+                        watch: { "simbolo": "'['", "top()": "'['", "size()": 2 },
+                        cout: ""
+                    },
+                    {
+                        line: 4,
+                        explain: "Leemos <code>'{'</code> y pasa a ser el nuevo tope de la pila.",
+                        type: "stack",
+                        items: ["'('", "'['", "'{'"],
+                        watch: { "simbolo": "'{'", "top()": "'{'", "size()": 3 },
+                        cout: ""
+                    },
+                    {
+                        line: 5,
+                        explain: "Llega el cierre <code>'}'</code>. Verificamos que el tope sea <code>'{'</code> y ejecutamos <code>pop()</code>.",
+                        type: "stack",
+                        items: ["'('", "'['"],
+                        watch: { "cierre": "'}'", "top()": "'['", "size()": 2 },
+                        cout: ""
+                    },
+                    {
+                        line: 6,
+                        explain: "Llega <code>']'</code>. Coincide con <code>top() == '['</code>, así que desapilamos con <code>pop()</code>.",
+                        type: "stack",
+                        items: ["'('"],
+                        watch: { "cierre": "']'", "top()": "'('", "size()": 1 },
+                        cout: ""
+                    },
+                    {
+                        line: 7,
+                        explain: "Llega <code>')'</code>. Coincide con <code>top() == '('</code>, así que desapilamos con <code>pop()</code>.",
+                        type: "stack",
+                        items: [],
+                        watch: { "cierre": "')'", "size()": 0, "empty()": "true" },
+                        cout: ""
+                    },
+                    {
+                        line: 8,
+                        explain: "Tras desapilar el último símbolo, <code>abiertos.empty()</code> devuelve <code>true</code>: ¡la fórmula está bien formada!",
+                        type: "stack",
+                        items: [],
+                        watch: { "empty()": "true", "size()": 0 },
+                        cout: "true"
+                    }
+                ]
+            },
+            deque: {
+                title: "deque<string> eventos (CME)",
+                complexity: "push_front / pop_back: O(1)",
+                code: [
+                    "deque<string> eventos;",
+                    "eventos.push_front(\"1. Login\");",
+                    "eventos.push_front(\"2. Config\");",
+                    "eventos.push_front(\"3. Mensaje\");",
+                    "eventos.push_front(\"4. Descarga\");",
+                    "eventos.pop_back(); // Supera maxEventos (3): descarta el mas antiguo",
+                    "for (const auto &e : eventos) cout << e << endl;"
+                ],
+                steps: [
+                    {
+                        line: 1,
+                        explain: "Declaramos <code>deque&lt;string&gt; eventos</code> vacía en memoria.",
+                        type: "cells",
+                        items: [],
+                        watch: { "size()": 0 },
+                        cout: ""
+                    },
+                    {
+                        line: 2,
+                        explain: "Ingresa el primer evento con <code>push_front(\"1. Login\")</code> en <code>O(1)</code>.",
+                        type: "cells",
+                        items: [{idx:"d[0] (front/back)", val:"\"1. Login\"", highlight:true}],
+                        watch: { "size()": 1, "front()": "\"1. Login\"" },
+                        cout: ""
+                    },
+                    {
+                        line: 3,
+                        explain: "Ingresa un evento más reciente adelante de todo con <code>push_front(\"2. Config\")</code>.",
+                        type: "cells",
+                        items: [{idx:"d[0] (front)", val:"\"2. Config\"", highlight:true}, {idx:"d[1] (back)", val:"\"1. Login\""}],
+                        watch: { "size()": 2, "front()": "\"2. Config\"" },
+                        cout: ""
+                    },
+                    {
+                        line: 4,
+                        explain: "Ingresa otro evento al frente con <code>push_front(\"3. Mensaje\")</code>.",
+                        type: "cells",
+                        items: [
+                            {idx:"d[0] (front)", val:"\"3. Mensaje\"", highlight:true},
+                            {idx:"d[1]", val:"\"2. Config\""},
+                            {idx:"d[2] (back)", val:"\"1. Login\""}
+                        ],
+                        watch: { "size()": 3, "front()": "\"3. Mensaje\"" },
+                        cout: ""
+                    },
+                    {
+                        line: 5,
+                        explain: "Llega <code>\"4. Descarga\"</code> al frente. La deque tiene 4 elementos (superando el límite de 3).",
+                        type: "cells",
+                        items: [
+                            {idx:"d[0] (front)", val:"\"4. Descarga\"", highlight:true},
+                            {idx:"d[1]", val:"\"3. Mensaje\""},
+                            {idx:"d[2]", val:"\"2. Config\""},
+                            {idx:"d[3] (back)", val:"\"1. Login\"", danger:true, ptr:"Antiguo"}
+                        ],
+                        watch: { "size()": 4, "maxEventos": 3 },
+                        cout: ""
+                    },
+                    {
+                        line: 6,
+                        explain: "<code>eventos.pop_back()</code> descarta del final el evento más viejo (<code>\"1. Login\"</code>) en tiempo <code>O(1)</code>.",
+                        type: "cells",
+                        items: [
+                            {idx:"d[0] (front)", val:"\"4. Descarga\"", success:true},
+                            {idx:"d[1]", val:"\"3. Mensaje\"", success:true},
+                            {idx:"d[2] (back)", val:"\"2. Config\"", success:true}
+                        ],
+                        watch: { "size()": 3, "descartado": "\"1. Login\"" },
+                        cout: ""
+                    },
+                    {
+                        line: 7,
+                        explain: "El bucle <code>range-for</code> recorre los eventos del más reciente al más antiguo e imprime cada uno.",
+                        type: "cells",
+                        items: [
+                            {idx:"d[0]", val:"\"4. Descarga\"", success:true},
+                            {idx:"d[1]", val:"\"3. Mensaje\"", success:true},
+                            {idx:"d[2]", val:"\"2. Config\"", success:true}
+                        ],
+                        watch: { "size()": 3 },
+                        cout: "4. Descarga\n3. Mensaje\n2. Config\n"
+                    }
+                ]
+            }
+        };
+
+        let currentMode = 'guided';
+        let currentScenarioKey = 'iteradores';
+        let currentStepIdx = 0;
+        let playTimer = null;
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        function switchMode(mode) {
+            stopPlay();
+            currentMode = mode;
+            document.getElementById('tab-guided').classList.toggle('active', mode === 'guided');
+            document.getElementById('tab-sandbox').classList.toggle('active', mode === 'sandbox');
+
+            document.getElementById('guided-bar').style.display = mode === 'guided' ? 'flex' : 'none';
+            document.getElementById('sandbox-bar').style.display = mode === 'sandbox' ? 'flex' : 'none';
+            document.getElementById('guided-controls').style.display = mode === 'guided' ? 'flex' : 'none';
+            document.getElementById('code-view').style.display = mode === 'guided' ? 'block' : 'none';
+            document.getElementById('sandbox-view').style.display = mode === 'sandbox' ? 'flex' : 'none';
+            document.getElementById('step-counter').style.display = mode === 'guided' ? 'inline-block' : 'none';
+
+            if (mode === 'guided') {
+                document.getElementById('left-panel-title').innerHTML = '<i class="fa-solid fa-code"></i> Código C++ en Ejecución';
+                renderGuidedScenario();
+            } else {
+                document.getElementById('left-panel-title').innerHTML = '<i class="fa-solid fa-sliders"></i> Operaciones Manuales STL';
+                initSandbox(sandboxType, document.querySelector('#sandbox-bar .chip-btn.active'));
+            }
+        }
+
+        function loadScenario(key, btnEl) {
+            stopPlay();
+            currentScenarioKey = key;
+            currentStepIdx = 0;
+            if (btnEl) {
+                document.querySelectorAll('#guided-bar .chip-btn').forEach(b => b.classList.remove('active'));
+                btnEl.classList.add('active');
+            }
+            renderGuidedScenario();
+        }
+
+        function renderGuidedScenario() {
+            const sc = SCENARIOS[currentScenarioKey];
+            const step = sc.steps[currentStepIdx];
+
+            document.getElementById('step-counter').textContent = `Paso ${currentStepIdx + 1} / ${sc.steps.length}`;
+            document.getElementById('structure-subtitle').textContent = sc.title;
+            document.getElementById('container-label').textContent = sc.title;
+            document.getElementById('complexity-label').textContent = sc.complexity;
+            document.getElementById('explain-box').innerHTML = step.explain;
+
+            // Render code lines
+            const codeHtml = sc.code.map((line, i) => {
+                const isActive = (i + 1) === step.line;
+                return `<div class="code-line ${isActive ? 'active-line' : ''}">
+                    <span class="line-num">${i + 1}</span>
+                    <span class="line-text">${escapeHtml(line)}</span>
+                </div>`;
+            }).join('');
+            document.getElementById('code-view').innerHTML = codeHtml;
+
+            // Render buttons state
+            document.getElementById('btn-prev').disabled = (currentStepIdx === 0);
+            document.getElementById('btn-next').disabled = (currentStepIdx === sc.steps.length - 1);
+
+            renderVisualCanvas(step.type, step.items);
+            renderWatchAndConsole(step.watch, step.cout);
+        }
+
+        function renderVisualCanvas(type, items) {
+            const canvas = document.getElementById('visual-canvas');
+            if (!items || items.length === 0) {
+                canvas.innerHTML = `<div style="padding: 36px; border: 2px dashed #475569; border-radius: 14px; color: #94A3B8; font-family: 'Fira Code', monospace;">
+                    [ Contenedor vacío: empty() == true, size() == 0 ]
+                </div>`;
+                return;
+            }
+
+            if (type === 'cells') {
+                canvas.innerHTML = `<div class="cells-row">` + items.map(it => {
+                    const cls = it.highlight ? 'highlight' : (it.success ? 'success' : (it.danger ? 'danger' : ''));
+                    const ptrHtml = it.ptr ? `<span class="cell-ptr">${escapeHtml(it.ptr)}</span>` : '';
+                    return `<div class="mem-cell ${cls}">
+                        <span class="cell-idx">${escapeHtml(it.idx)}</span>
+                        <div class="cell-val">${escapeHtml(it.val)}</div>
+                        ${ptrHtml}
+                    </div>`;
+                }).join('') + `</div>`;
+            } else if (type === 'map') {
+                canvas.innerHTML = `<div class="map-cards">` + items.map(it => {
+                    const cls = it.highlight ? 'highlight' : '';
+                    return `<div class="map-node ${cls}">
+                        <div class="map-node-key">.first: ${escapeHtml(it.key)}</div>
+                        <div class="map-node-val">${escapeHtml(it.val)}</div>
+                    </div>`;
+                }).join('') + `</div>`;
+            } else if (type === 'stack') {
+                canvas.innerHTML = `<div class="stack-bucket">` + items.map((val, idx) => {
+                    const isTop = idx === items.length - 1;
+                    return `<div class="stack-plate ${isTop ? 'top-plate' : ''}">
+                        ${escapeHtml(val)} ${isTop ? ' &larr; top()' : ''}
+                    </div>`;
+                }).join('') + `</div>`;
+            }
+        }
+
+        function renderWatchAndConsole(watchObj, coutStr) {
+            const watchBox = document.getElementById('watch-box');
+            const entries = Object.entries(watchObj || {});
+            watchBox.innerHTML = entries.map(([k, v]) =>
+                `<div class="watch-pill"><span class="k">${escapeHtml(k)}:</span> <span class="v">${escapeHtml(v)}</span></div>`
+            ).join('');
+
+            document.getElementById('console-box').textContent = coutStr || "// Sin salida en pantalla todavía";
+        }
+
+        function nextStep() {
+            const sc = SCENARIOS[currentScenarioKey];
+            if (currentStepIdx < sc.steps.length - 1) {
+                currentStepIdx++;
+                renderGuidedScenario();
+            } else {
+                stopPlay();
+            }
+        }
+
+        function prevStep() {
+            if (currentStepIdx > 0) {
+                currentStepIdx--;
+                renderGuidedScenario();
+            }
+        }
+
+        function resetStep() {
+            stopPlay();
+            currentStepIdx = 0;
+            renderGuidedScenario();
+        }
+
+        function togglePlay() {
+            if (playTimer) {
+                stopPlay();
+            } else {
+                const sc = SCENARIOS[currentScenarioKey];
+                if (currentStepIdx >= sc.steps.length - 1) {
+                    currentStepIdx = 0;
+                    renderGuidedScenario();
+                }
+                document.getElementById('btn-play').innerHTML = '<i class="fa-solid fa-pause"></i> Pausa';
+                playTimer = setInterval(() => {
+                    const s = SCENARIOS[currentScenarioKey];
+                    if (currentStepIdx < s.steps.length - 1) {
+                        currentStepIdx++;
+                        renderGuidedScenario();
+                    } else {
+                        stopPlay();
+                    }
+                }, 1500);
+            }
+        }
+
+        function stopPlay() {
+            if (playTimer) {
+                clearInterval(playTimer);
+                playTimer = null;
+            }
+            const btn = document.getElementById('btn-play');
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-play"></i> Auto';
+        }
+
+        // =====================================================================
+        // MODO SANDBOX INTERACTIVO (PROBADOR MANUAL DE ESTRUCTURAS)
+        // =====================================================================
+        let sandboxType = 'vector';
+        let sbData = [];
+        let sbMap = {};
+        let sbHistory = [];
+
+        function initSandbox(type, btnEl) {
+            sandboxType = type;
+            sbHistory = [];
+            if (btnEl) {
+                document.querySelectorAll('#sandbox-bar .chip-btn').forEach(b => b.classList.remove('active'));
+                btnEl.classList.add('active');
+            }
+
+            const inputEl = document.getElementById('sb-val');
+            if (type === 'map') {
+                sbMap = { "aedd": 2, "stl": 5, "utn": 3 };
+                inputEl.value = "utn";
+            } else if (type === 'set') {
+                sbData = [10, 20, 35, 50];
+                inputEl.value = "25";
+            } else {
+                sbData = [10, 25, 40];
+                inputEl.value = "55";
+            }
+
+            renderSandboxButtons();
+            updateSandboxView("Estructura inicializada en memoria.", "O(1)");
+        }
+
+        function renderSandboxButtons() {
+            const box = document.getElementById('sb-buttons');
+            const ops = {
+                vector: [
+                    { label: "push_back(x)", fn: "sbPushBack()" },
+                    { label: "pop_back()", fn: "sbPopBack()" },
+                    { label: "sort(begin, end)", fn: "sbSort()" },
+                    { label: "clear()", fn: "sbClear()" }
+                ],
+                set: [
+                    { label: "insert(x)", fn: "sbSetInsert()" },
+                    { label: "erase(x)", fn: "sbSetErase()" },
+                    { label: "lower_bound(x)", fn: "sbSetLower()" },
+                    { label: "count(x)", fn: "sbSetCount()" }
+                ],
+                map: [
+                    { label: "mapa[clave]++", fn: "sbMapInc()" },
+                    { label: "mapa.count(clave)", fn: "sbMapCount()" },
+                    { label: "mapa.erase(clave)", fn: "sbMapErase()" },
+                    { label: "clear()", fn: "sbMapClear()" }
+                ],
+                stack: [
+                    { label: "push(x)", fn: "sbPushBack()" },
+                    { label: "pop()", fn: "sbPopBack()" },
+                    { label: "top()", fn: "sbTop()" },
+                    { label: "clear()", fn: "sbClear()" }
+                ],
+                queue: [
+                    { label: "push(x)", fn: "sbPushBack()" },
+                    { label: "pop() [frente]", fn: "sbPopFront()" },
+                    { label: "front()", fn: "sbFront()" },
+                    { label: "clear()", fn: "sbClear()" }
+                ],
+                deque: [
+                    { label: "push_front(x)", fn: "sbPushFront()" },
+                    { label: "push_back(x)", fn: "sbPushBack()" },
+                    { label: "pop_front()", fn: "sbPopFront()" },
+                    { label: "pop_back()", fn: "sbPopBack()" }
+                ]
+            };
+
+            box.innerHTML = (ops[sandboxType] || []).map(op =>
+                `<button class="ctrl-btn" style="justify-content:center; padding: 10px;" onclick="${op.fn}">
+                    <code>${op.label}</code>
+                </button>`
+            ).join('');
+        }
+
+        function getInputVal(asNum = true) {
+            const raw = document.getElementById('sb-val').value.trim();
+            if (!asNum) return raw || "clave";
+            const n = parseInt(raw, 10);
+            return isNaN(n) ? 0 : n;
+        }
+
+        function logSb(cmd) {
+            sbHistory.unshift(cmd);
+            if (sbHistory.length > 8) sbHistory.pop();
+            document.getElementById('sb-log').textContent = sbHistory.join('\n');
+        }
+
+        function sbPushBack() {
+            const v = getInputVal(true);
+            sbData.push(v);
+            const method = (sandboxType === 'stack' || sandboxType === 'queue') ? 'push' : 'push_back';
+            logSb(`contenedor.${method}(${v}); // O(1)`);
+            updateSandboxView(`Se ejecutó <code>${method}(${v})</code>.`, "Complejidad: O(1)", sbData.length - 1);
+        }
+
+        function sbPushFront() {
+            const v = getInputVal(true);
+            sbData.unshift(v);
+            logSb(`d.push_front(${v}); // O(1)`);
+            updateSandboxView(`Se insertó <code>${v}</code> al frente con <code>push_front</code>.`, "Complejidad: O(1)", 0);
+        }
+
+        function sbPopBack() {
+            if (sbData.length === 0) {
+                updateSandboxView("¡Cuidado! El contenedor está vacío, no se puede hacer <code>pop</code>.", "Error prevenido");
+                return;
+            }
+            const removed = sbData.pop();
+            const method = sandboxType === 'stack' ? 'pop' : 'pop_back';
+            logSb(`contenedor.${method}(); // Removio ${removed}`);
+            updateSandboxView(`Se eliminó <code>${removed}</code> mediante <code>${method}()</code>.`, "Complejidad: O(1)");
+        }
+
+        function sbPopFront() {
+            if (sbData.length === 0) {
+                updateSandboxView("¡Cuidado! La cola está vacía, no se puede hacer <code>pop</code>.", "Error prevenido");
+                return;
+            }
+            const removed = sbData.shift();
+            const method = sandboxType === 'queue' ? 'pop' : 'pop_front';
+            logSb(`contenedor.${method}(); // Salio del frente: ${removed}`);
+            updateSandboxView(`Salió del frente el elemento <code>${removed}</code> con <code>${method}()</code>.`, "Complejidad: O(1)");
+        }
+
+        function sbSort() {
+            sbData.sort((a, b) => a - b);
+            logSb(`sort(v.begin(), v.end()); // O(N log N)`);
+            updateSandboxView(`Vector ordenado de menor a mayor con <code>std::sort</code>.`, "Complejidad: O(N log N)");
+        }
+
+        function sbClear() {
+            sbData = [];
+            logSb(`contenedor = {}; // Vaciado`);
+            updateSandboxView(`Contenedor vaciado.`, "Complejidad: O(N)");
+        }
+
+        function sbTop() {
+            if (sbData.length === 0) return;
+            const topVal = sbData[sbData.length - 1];
+            logSb(`cout << pila.top(); // ${topVal}`);
+            updateSandboxView(`<code>pila.top()</code> devuelve <code>${topVal}</code> sin sacarlo.`, "Complejidad: O(1)", sbData.length - 1);
+        }
+
+        function sbFront() {
+            if (sbData.length === 0) return;
+            logSb(`cout << cola.front(); // ${sbData[0]}`);
+            updateSandboxView(`<code>cola.front()</code> devuelve el primero de la fila: <code>${sbData[0]}</code>.`, "Complejidad: O(1)", 0);
+        }
+
+        function sbSetInsert() {
+            const v = getInputVal(true);
+            if (sbData.includes(v)) {
+                logSb(`s.insert(${v}); // Ignorado (ya existe)`);
+                updateSandboxView(`El valor <code>${v}</code> ya existe en el <code>set</code>: se ignora sin duplicar.`, "Complejidad: O(log N)", sbData.indexOf(v));
+                return;
+            }
+            sbData.push(v);
+            sbData.sort((a, b) => a - b);
+            logSb(`s.insert(${v}); // O(log N)`);
+            updateSandboxView(`Se insertó <code>${v}</code> manteniendo el orden automático del <code>set</code>.`, "Complejidad: O(log N)", sbData.indexOf(v));
+        }
+
+        function sbSetErase() {
+            const v = getInputVal(true);
+            const idx = sbData.indexOf(v);
+            if (idx === -1) {
+                logSb(`s.erase(${v}); // No estaba`);
+                updateSandboxView(`El elemento <code>${v}</code> no pertenecía al conjunto.`, "Complejidad: O(log N)");
+                return;
+            }
+            sbData.splice(idx, 1);
+            logSb(`s.erase(${v}); // Eliminado`);
+            updateSandboxView(`Se eliminó <code>${v}</code> del conjunto.`, "Complejidad: O(log N)");
+        }
+
+        function sbSetLower() {
+            const v = getInputVal(true);
+            const idx = sbData.findIndex(x => x >= v);
+            if (idx === -1) {
+                logSb(`s.lower_bound(${v}); // == s.end()`);
+                updateSandboxView(`Ningún elemento es mayor o igual a <code>${v}</code>. Retorna <code>s.end()</code>.`, "Complejidad: O(log N)");
+            } else {
+                logSb(`*s.lower_bound(${v}) -> ${sbData[idx]}`);
+                updateSandboxView(`<code>lower_bound(${v})</code> apunta a <code>${sbData[idx]}</code> (primer elemento &ge; ${v}).`, "Complejidad: O(log N)", idx);
+            }
+        }
+
+        function sbSetCount() {
+            const v = getInputVal(true);
+            const exists = sbData.includes(v) ? 1 : 0;
+            logSb(`s.count(${v}) -> ${exists}`);
+            updateSandboxView(`<code>s.count(${v})</code> devuelve <code>${exists}</code>.`, "Complejidad: O(log N)", sbData.indexOf(v));
+        }
+
+        function sbMapInc() {
+            const k = getInputVal(false);
+            sbMap[k] = (sbMap[k] || 0) + 1;
+            logSb(`mapa["${k}"]++; // Ahora vale ${sbMap[k]}`);
+            updateSandboxView(`Se incrementó <code>mapa["${k}"]</code> a <code>${sbMap[k]}</code>.`, "Complejidad: O(log N)", k);
+        }
+
+        function sbMapCount() {
+            const k = getInputVal(false);
+            const c = Object.prototype.hasOwnProperty.call(sbMap, k) ? 1 : 0;
+            logSb(`mapa.count("${k}") -> ${c} (sin crear clave)`);
+            updateSandboxView(`<code>mapa.count("${k}")</code> devuelve <code>${c}</code> sin alterar el mapa.`, "Complejidad: O(log N)", k);
+        }
+
+        function sbMapErase() {
+            const k = getInputVal(false);
+            delete sbMap[k];
+            logSb(`mapa.erase("${k}");`);
+            updateSandboxView(`Se eliminó la clave <code>"${k}"</code> del mapa.`, "Complejidad: O(log N)");
+        }
+
+        function sbMapClear() {
+            sbMap = {};
+            logSb(`mapa.clear();`);
+            updateSandboxView(`Mapa vaciado por completo.`, "Complejidad: O(N)");
+        }
+
+        function updateSandboxView(explainHtml, complexityText, highlightTarget = null) {
+            document.getElementById('structure-subtitle').textContent = `Sandbox: std::${sandboxType}`;
+            document.getElementById('container-label').textContent = `std::${sandboxType}`;
+            document.getElementById('complexity-label').textContent = complexityText;
+            document.getElementById('explain-box').innerHTML = explainHtml;
+
+            if (sandboxType === 'map') {
+                const sortedKeys = Object.keys(sbMap).sort();
+                const items = sortedKeys.map(k => ({
+                    key: `"${k}"`,
+                    val: sbMap[k],
+                    highlight: k === highlightTarget
+                }));
+                renderVisualCanvas('map', items);
+                renderWatchAndConsole({ "size()": sortedKeys.length, "empty()": sortedKeys.length === 0 }, sbHistory[0] || "");
+            } else if (sandboxType === 'stack') {
+                renderVisualCanvas('stack', sbData);
+                renderWatchAndConsole({
+                    "size()": sbData.length,
+                    "empty()": sbData.length === 0,
+                    "top()": sbData.length ? sbData[sbData.length - 1] : "N/A"
+                }, sbHistory[0] || "");
+            } else {
+                const items = sbData.map((v, i) => {
+                    let label = `[${i}]`;
+                    if (sandboxType === 'set') label = `set`;
+                    if (sandboxType === 'queue' || sandboxType === 'deque') {
+                        if (i === 0 && i === sbData.length - 1) label = "front / back";
+                        else if (i === 0) label = "front()";
+                        else if (i === sbData.length - 1) label = "back()";
+                    }
+                    return {
+                        idx: label,
+                        val: v,
+                        highlight: i === highlightTarget
+                    };
+                });
+                renderVisualCanvas('cells', items);
+                renderWatchAndConsole({ "size()": sbData.length, "empty()": sbData.length === 0 }, sbHistory[0] || "");
+            }
+        }
+
+        // Inicializar al cargar
+        renderGuidedScenario();
+    </script>
+</body>
+</html>

@@ -11,9 +11,13 @@ Este archivo define las directrices arquitectónicas, de maquetación y de contr
 - **Plantillas base listas para duplicar**:
   - `deploy/templates/template-tuti.html` $\rightarrow$ Para nuevas clases de SAO o PBA.
   - `deploy/templates/template-aedd.html` $\rightarrow$ Para nuevas clases de AEDD.
-- **Evitar solapamiento con el Footer**:
-  - El footer institucional `.branding-footer` (`TUTI / UTN SANTA FE` o `AEDD / UTN SANTA FE`) se fija a `bottom: 30px`.
+- **Ubicación Canónica y Evitar Solapamiento del Footer**:
+  - El footer institucional `.branding-footer` (`TUTI / UTN SANTA FE` o `AEDD / UTN SANTA FE`) se declara **UNA SOLA VEZ por archivo**, fuera de `.reveal` y `.slides`, inmediatamente antes de `</body>`, fijado con `position: fixed !important; bottom: 24px; left: 35px; z-index: 9999; pointer-events: none;`. **PROHIBIDO** colocarlo dentro de los `<section>`.
   - La altura útil del contenido de cualquier diapositiva no debe superar los **~520px** dentro del canvas estándar (720px) para evitar colisiones visuales.
+- **Arquitectura Anti-Fantasmeo en Bloques de Código**:
+  - El padding se aplica siempre al `code` (`padding: 16px 20px`), NUNCA al `<pre>` (`padding: 0 !important; position: relative !important`). Esto evita que los fragmentos duplicados por `data-line-numbers="1-5|7-13"` se desfacen y generen texto fantasma borroso al avanzar de paso.
+- **Cero Notación Math/LaTeX (`$ ... $`) en HTML Nativo**:
+  - En diapositivas y hubs sin MathJax/KaTeX, escribir siempre texto directo (`O(1)`, `O(N log N)`, `N`, `>= x`), evitando los signos de dólar que se imprimen literalmente.
 - **Evitar mensajes redundantes de navegación**:
   - No incluir carteles, banners ni bloques `.puesta-en-comun` con instrucciones del tipo *"Presioná Flecha Abajo..."*. Reveal.js ya provee flechas direccionales e indicadores de progreso nativos; estos banners saturan la altura útil y generan colisiones con el pie institucional.
 

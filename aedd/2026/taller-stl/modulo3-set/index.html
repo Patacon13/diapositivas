@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AEDD - Taller STL (Módulo 3): std::set - UTN FRSF</title>
+
+    <!-- Estilos Base Reveal.js (4 niveles hacia dist/) -->
+    <link rel="stylesheet" href="../../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../../dist/plugin/highlight/monokai.css" />
+
+    <!-- Tema AEDD (Extiende utn-core.css) -->
+    <link rel="stylesheet" href="../../../../dist/theme/aedd.css" />
+
+    <!-- Tipografías Oficiales e Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --danger-red: #EF4444;
+            --warning-amber: #F59E0B;
+            --success-green: #10B981;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 19.5px; color: var(--text-main); line-height: 1.45; text-align: left; }
+
+        .slide-title {
+            font-size: 38px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 16px !important; border-left: 10px solid var(--utn-gold);
+            padding-left: 18px; text-transform: uppercase !important; letter-spacing: -1px;
+            text-align: left; width: 100%;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; width: 100%; align-items: stretch; }
+        .four-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; }
+
+        .tile {
+            background: var(--bg-neutral); padding: 14px 16px; border-radius: 14px;
+            border: 1px solid #E2E8F0; border-bottom: 4px solid transparent;
+            transition: all 0.25s ease; text-align: left;
+        }
+        .tile:hover { transform: translateY(-3px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
+        .tile h3 { font-size: 17px; color: var(--utn-blue); margin-bottom: 5px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .tile p { font-size: 14.5px; color: var(--text-light); margin: 0; line-height: 1.38; }
+
+        .concept-card {
+            background: white; padding: 15px 20px; border-radius: 14px; border: 1px solid #E2E8F0;
+            border-left: 7px solid var(--utn-gold); box-shadow: 0 6px 20px rgba(0,0,0,0.04); text-align: left;
+        }
+        .concept-card h3 {
+            color: var(--utn-blue); font-size: 18.5px; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;
+        }
+
+        /* Arquitectura Anti-Fantasmeo en Resaltado de Código */
+        .reveal pre {
+            position: relative !important;
+            background: #272822 !important;
+            padding: 0 !important;
+            border-radius: 12px;
+            margin: 0;
+            border-left: 6px solid var(--utn-gold);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .reveal pre code {
+            display: block !important;
+            padding: 13px 16px !important;
+            background: #272822 !important;
+            font-family: 'Fira Code', monospace;
+            font-size: 14.5px !important;
+            line-height: 1.42 !important;
+            box-sizing: border-box !important;
+            width: 100%;
+        }
+
+        .reveal .hljs:not(:first-child).fragment {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            padding: 13px 16px !important;
+            background: #272822 !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+
+        .reveal .hljs.has-highlights tr:not(.highlight-line) {
+            opacity: 0.35 !important;
+            transition: opacity 0.2s ease;
+        }
+
+        .reveal .hljs.has-highlights tr.highlight-line {
+            opacity: 1 !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            transition: opacity 0.2s ease, background 0.2s ease;
+        }
+
+        .branding-footer {
+            position: fixed !important;
+            bottom: 22px;
+            left: 35px;
+            color: #94A3B8;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 1px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .branding-footer span { color: var(--utn-gold); }
+
+        .hub-nav-pill {
+            position: fixed;
+            top: 20px;
+            right: 28px;
+            z-index: 9999;
+            background: rgba(0, 43, 91, 0.9);
+            color: #FFFFFF !important;
+            text-decoration: none;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12.5px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+        }
+        .hub-nav-pill:hover {
+            background: var(--utn-blue);
+            transform: translateY(-2px);
+            border-color: var(--utn-gold);
+        }
+        .hub-nav-pill i { color: var(--utn-gold); }
+
+        /* Diagrama visual de Set (Deduplicación y orden) */
+        .set-pipeline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 14px;
+            padding: 14px 18px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            flex-wrap: wrap;
+        }
+        .pill-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .item-pill {
+            font-family: 'Fira Code', monospace;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 7px 14px;
+            border-radius: 999px;
+            background: white;
+            border: 2px solid #94A3B8;
+            color: var(--text-main);
+        }
+        .item-pill.dup {
+            border-color: var(--danger-red);
+            background: #FEF2F2;
+            color: #991B1B;
+            text-decoration: line-through;
+        }
+        .item-pill.sorted {
+            border-color: var(--utn-blue);
+            background: #EFF6FF;
+            color: var(--utn-blue);
+        }
+
+        .nav-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .nav-cta-btn:hover { transform: translateY(-3px); }
+
+        @media (max-aspect-ratio: 1/1), (max-width: 768px) {
+            .two-column, .four-grid { grid-template-columns: 1fr; gap: 12px; }
+            .slide-title { font-size: 28px !important; margin-bottom: 12px !important; }
+            .reveal p, .reveal li { font-size: 16.5px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón Persistente de Retorno al Hub -->
+    <a href="../index.html" class="hub-nav-pill" title="Volver al Hub del Taller STL">
+        <i class="fa-solid fa-table-cells-large"></i> <span>Hub Taller STL</span>
+    </a>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 1: PORTADA INSTITUCIONAL AEDD -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div style="display: inline-block; background: rgba(255,193,7,0.15); color: var(--utn-gold); border: 1px solid rgba(255,193,7,0.4); padding: 6px 18px; border-radius: 999px; font-size: 15px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px;">
+                    Taller de Estructuras Dinámicas (STL) • Módulo 3
+                </div>
+                <h1 style="color: white; font-size: 62px; line-height: 1.06; margin-bottom: 18px;">
+                    <code>std::set</code><br>
+                    <span style="color: var(--utn-gold); font-weight: 300; font-size: 42px;">Conjuntos Ordenados y Sin Duplicados</span>
+                </h1>
+                <p style="color: rgba(255,255,255,0.75); margin-top: 30px; text-align: center; font-size: 21px;">
+                    Docente: <strong>Tomás Assenza</strong>
+                </p>
+                <p style="color: rgba(255,255,255,0.4); margin-top: 8px; text-align: center; font-size: 15px; letter-spacing: 2px;">
+                    Algoritmos y Estructuras de Datos • UTN - Facultad Regional Santa Fe
+                </p>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 2: CONCEPTO DE SET -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">¿Qué es <code>std::set</code>? Conceptos Generales</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div class="concept-card" style="border-left-color: var(--danger-red);">
+                            <h3 style="color: var(--danger-red);"><i class="fa-solid fa-ban"></i> Sin Acceso Aleatorio</h3>
+                            <p style="font-size: 15.5px; margin-bottom: 8px;">• <strong>No podemos acceder de forma aleatoria</strong>: está prohibido el uso de corchetes <code>miSet[i]</code>.</p>
+                            <p style="font-size: 15.5px; margin: 0;">• Para consultar o recorrer sus elementos usamos iteradores o un bucle por rango (<code>for (auto x : miSet)</code>).</p>
+                        </div>
+                        <div class="concept-card" style="border-left-color: var(--utn-blue);">
+                            <h3><i class="fa-solid fa-filter"></i> Ordenado y Sin Repetidos</h3>
+                            <p style="font-size: 15.5px; margin-bottom: 8px;">• Es un conjunto <strong>automáticamente ordenado</strong> de elementos de un mismo tipo.</p>
+                            <p style="font-size: 15.5px; margin: 0;">• <strong>Todos los elementos son distintos</strong>: si intentás insertar un valor que ya existe, el <code>set</code> simplemente lo ignora.</p>
+                        </div>
+                    </div>
+
+                    <!-- Representación visual de entrada vs set -->
+                    <div class="set-pipeline">
+                        <div>
+                            <span style="font-size: 12px; font-weight: 700; color: var(--text-light); text-transform: uppercase; display: block; margin-bottom: 5px;">Ingresos con insert():</span>
+                            <div class="pill-group">
+                                <span class="item-pill">"pan"</span>
+                                <span class="item-pill">"agua"</span>
+                                <span class="item-pill dup">"pan"</span>
+                                <span class="item-pill">"café"</span>
+                                <span class="item-pill dup">"agua"</span>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right-long" style="font-size: 24px; color: var(--utn-gold);"></i>
+                        <div>
+                            <span style="font-size: 12px; font-weight: 700; color: var(--utn-blue); text-transform: uppercase; display: block; margin-bottom: 5px;">Estado interno del set&lt;string&gt;:</span>
+                            <div class="pill-group">
+                                <span class="item-pill sorted">"agua"</span>
+                                <span class="item-pill sorted">"café"</span>
+                                <span class="item-pill sorted">"pan"</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 3: LAS 4 VARIANTES DE CONJUNTOS EN STL -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Las 4 Variantes de Conjuntos en la STL</h2>
+                <div class="content-area">
+                    <div class="four-grid">
+                        <div class="tile" style="border-left: 5px solid var(--utn-blue);">
+                            <h3><i class="fa-solid fa-check-double" style="color: var(--utn-blue);"></i> 1. <code>set&lt;T&gt;</code></h3>
+                            <p>Elementos <strong>ordenados</strong> automáticamente y <strong>sin repetidos</strong>. Inserción, búsqueda y borrado en <code>O(log N)</code>.</p>
+                        </div>
+                        <div class="tile" style="border-left: 5px solid var(--utn-gold);">
+                            <h3><i class="fa-solid fa-bolt" style="color: #D97706;"></i> 2. <code>unordered_set&lt;T&gt;</code></h3>
+                            <p>Funciona igual (<strong>sin repetidos</strong>), pero los elementos <strong>no están ordenados</strong>. Opera en <code>O(1)</code> promedio.</p>
+                        </div>
+                        <div class="tile" style="border-left: 5px solid var(--success-green);">
+                            <h3><i class="fa-solid fa-layer-group" style="color: var(--success-green);"></i> 3. <code>multiset&lt;T&gt;</code></h3>
+                            <p>Mantiene los elementos <strong>ordenados</strong>, pero <strong>permite múltiples claves iguales</strong> (admite repetidos) en <code>O(log N)</code>.</p>
+                        </div>
+                        <div class="tile" style="border-left: 5px solid #8B5CF6;">
+                            <h3><i class="fa-solid fa-gauge-high" style="color: #8B5CF6;"></i> 4. <code>unordered_multiset&lt;T&gt;</code></h3>
+                            <p>Permite repetidos y <strong>no mantiene orden</strong>. Permite inserción, búsqueda y eliminación en <code>O(1)</code> promedio.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 4: DECLARACIÓN, INICIALIZACIÓN Y OPERACIONES -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Declaración, Inicialización e Inserción</h2>
+                <div class="content-area">
+                    <p style="font-size: 16px; margin-bottom: 8px;">
+                        Cabeceras: <code>#include &lt;set&gt;</code> (para <code>set</code> y <code>multiset</code>) o <code>#include &lt;unordered_set&gt;</code>.
+                    </p>
+                    <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-10|12-16">
+// 1. DECLARACION DE LAS VARIANTES
+set&lt;int&gt; nombreDelSet;                               // Ordenado, sin repetidos
+unordered_set&lt;int&gt; nombreDelUnorderedSet;            // No ordenado, sin repetidos
+multiset&lt;int&gt; nombreDelMultiset;                     // Ordenado, permite repetidos
+unordered_multiset&lt;int&gt; nombreDelUnorderedMultiset;  // No ordenado, permite repetidos
+
+// 2. INICIALIZACION DIRECTA
+set&lt;int&gt; miSet {8, 3, 5, 3, 1};
+// Los elementos se ordenan automaticamente y se eliminan los repetidos:
+// miSet queda como {1, 3, 5, 8}
+
+// 3. AGREGAR Y CONSULTAR ELEMENTOS
+miSet.insert(4);    // Inserta el 4 y reordena el set -> {1, 3, 4, 5, 8}
+miSet.erase(3);     // Elimina el valor 3 del conjunto
+miSet.count(5);     // Devuelve 1 si el 5 pertenece al set, o 0 si no esta
+miSet.size();       // Devuelve la cantidad de elementos unicos
+                    </code></pre>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 5: COMPARACIÓN, RECORRIDO Y ACLARACIÓN GENERAL -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Comparación y Recorrido de <code>std::set</code></h2>
+                <div class="content-area">
+                    <div class="two-column" style="margin-bottom: 16px;">
+                        <div>
+                            <h3 style="font-size: 17px; color: var(--utn-blue); margin-bottom: 6px;">1. Comparación del Set Completo</h3>
+                            <pre><code class="cpp" data-trim data-noescape>
+if (set1 == set2) {
+    // True si tienen el mismo tamaño y todos
+    // los elementos de set1 son iguales
+    // lexicograficamente a los de set2
+}
+                            </code></pre>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 17px; color: var(--utn-blue); margin-bottom: 6px;">2. Recorrido por Elementos</h3>
+                            <pre><code class="cpp" data-trim data-noescape>
+for (string elemento : miSet) {
+    cout &lt;&lt; elemento &lt;&lt; " ";
+}
+// Si es una estructura (struct), accedemos
+// a sus atributos antes de imprimir.
+                            </code></pre>
+                        </div>
+                    </div>
+
+                    <div class="concept-card" style="border-left-color: var(--utn-blue);">
+                        <h3><i class="fa-solid fa-circle-info"></i> Aclaración general sobre contenedores STL</h3>
+                        <p style="font-size: 15.5px; margin: 0;">
+                            En todas las estructuras dinámicas vistas (<code>vector</code>, <code>map</code>, <code>set</code>), el valor por defecto si no hay una asignación explícita es <strong><code>0</code></strong> (o cadena vacía <code>""</code> en <code>string</code>). A diferencia de los arreglos estáticos de C, <strong>los elementos no contienen basura por defecto</strong>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 6: PROBLEMA DE APLICACIÓN - LISTA DE COMPRAS DE VALENTINA -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <div class="inciso-header">
+                    <span class="inciso-badge"><i class="fa-solid fa-cart-shopping" style="font-size: 19px;"></i></span>
+                    <h2 class="slide-title" style="margin-bottom: 0 !important;">Ejemplo de Aplicación: Lista de Compras</h2>
+                    <span class="points-badge">Beecrowd 2729</span>
+                </div>
+                <div class="content-area">
+                    <div class="texto-enunciado" style="margin-bottom: 14px;">
+                        <p>
+                            Valentina es una mujer muy dedicada que trabaja hasta tarde todos los días. Para ahorrar tiempo, ella escribe todos los ítems de supermercado al mismo tiempo que los recuerda en una aplicación móvil.
+                        </p>
+                        <p>
+                            El problema es que esta aplicación no elimina los ítems duplicados y, como Valentina es distraída, frecuentemente anota el mismo ítem más de una vez y la lista se hace demasiado larga. Tu trabajo consta en mejorar esa aplicación: escribir un programa que <strong>excluya ítems duplicados</strong> de la lista de compras y <strong>los ordene en orden alfabético</strong>. La entrada consta de un número <strong>N</strong> (cantidad de ítems), seguida de N ítems separados por un espacio.
+                        </p>
+                    </div>
+
+                    <div class="concept-card fragment" style="border-left-color: var(--success-green); background: #ECFDF5;">
+                        <h3 style="color: #065F46;"><i class="fa-solid fa-wand-magic-sparkles"></i> Antes de resolver, simplificamos el problema:</h3>
+                        <p style="font-size: 18px; color: #065F46; font-weight: 600; margin: 0;">
+                            "Leer un número N de palabras y mostrarlas en pantalla sin repetidos y en orden alfabético."
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 7: RESOLUCIÓN PASO A PASO + LABORATORIO ONECOMPILER -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 7.A: Resolución paso a paso -->
+                <section data-background-color="#F8FAFC">
+                    <h2 class="slide-title">Resolución Paso a Paso: Lista de Valentina</h2>
+                    <div class="content-area">
+                        <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-10|12-16|18-20">
+#include &lt;iostream&gt;
+#include &lt;set&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+int main() {
+    set&lt;string&gt; items;
+    int n;
+    string palabra;
+
+    cin &gt;&gt; n;
+    for (int i = 0; i &lt; n; i++) {
+        cin &gt;&gt; palabra;
+        items.insert(palabra);
+    }
+
+    for (const string &amp;elemento : items)
+        cout &lt;&lt; elemento &lt;&lt; " ";
+    cout &lt;&lt; endl;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 7.B: Compilador Interactivo OneCompiler -->
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title" style="font-size: 28px !important; margin-bottom: 10px !important;">Laboratorio en Vivo: Lista sin Duplicados con <code>std::set</code></h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler - C++ Sandbox (Probá agregar ítems repetidos)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-1', cppCodeSet, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 8: CIERRE DEL MÓDULO 3 -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2 style="font-size: 56px !important; margin-bottom: 12px;">¡Fin del Módulo 3!</h2>
+                    <p style="font-size: 20px !important; letter-spacing: 1px; margin-bottom: 35px;">
+                        Con esto dominás <code>vector</code>, <code>map</code> y <code>set</code>. Ahora pasamos a los adaptadores de secuencia: empezamos por <code>std::stack</code>.
+                    </p>
+                    <div style="display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;">
+                        <a href="../modulo2-map/index.html" class="nav-cta-btn" style="background: rgba(255,255,255,0.08); color: #CBD5E1; border: 1px solid rgba(255,255,255,0.2);">
+                            <i class="fa-solid fa-arrow-left"></i> <span>Módulo 2: std::map</span>
+                        </a>
+                        <a href="../index.html" class="nav-cta-btn" style="background: rgba(255,255,255,0.14); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                            <i class="fa-solid fa-house"></i> <span>Volver al Hub</span>
+                        </a>
+                        <a href="../modulo4-stack/index.html" class="nav-cta-btn" style="background: var(--utn-gold); color: var(--utn-blue);">
+                            <span>Ir al Módulo 4: std::stack</span> <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+
+    <script src="../../../../dist/reveal.js"></script>
+    <script src="../../../../dist/plugin/notes.js"></script>
+    <script src="../../../../dist/plugin/highlight.js"></script>
+
+    <script>
+        const cppCodeSet = `#include <iostream>
+#include <set>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    set<string> items;
+    int n;
+    string palabra;
+
+    if (cin >> n) {
+        for (int i = 0; i < n; i++) {
+            cin >> palabra;
+            items.insert(palabra);
+        }
+    } else {
+        // Caso de demostracion automatico si STDIN esta vacio
+        vector<string> anotados = {
+            "naranjas", "leche", "pan", "leche", "arroz", "naranjas", "cafe"
+        };
+        cout << "Anote " << anotados.size() << " items (con repetidos)." << endl;
+        for (const string &item : anotados) {
+            items.insert(item);
+        }
+    }
+
+    cout << "Lista limpia y ordenada (" << items.size() << " unicos):" << endl;
+    for (const string &elemento : items) {
+        cout << "- " << elemento << endl;
+    }
+
+    return 0;
+}`;
+
+        // =========================================================================
+        // REGLA CRÍTICA DE ORDEN DE EJECUCIÓN (Anti-Blank-Slide en Móviles/Vertical)
+        // =========================================================================
+        const isMobilePortrait = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
+        if (isMobilePortrait) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({ width: newSize.width, height: newSize.height });
+        });
+
+        function sendCode(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        function checkCompilerSlides(slide) {
+            if (!slide) return;
+            if (slide.id === 'slide-compiler-1') {
+                sendCodeWithRetries('oc-editor-1', cppCodeSet, 'cpp', 'main.cpp');
+            }
+        }
+
+        Reveal.on('slidechanged', event => {
+            checkCompilerSlides(event.currentSlide);
+        });
+
+        Reveal.on('ready', event => {
+            checkCompilerSlides(Reveal.getCurrentSlide());
+        });
+    </script>
+</body>
+</html>

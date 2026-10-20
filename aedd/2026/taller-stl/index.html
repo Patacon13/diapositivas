@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AEDD - Taller de Estructuras Dinámicas (STL C++) | UTN FRSF</title>
+
+    <!-- Tipografías Oficiales & Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-blue-dark: #001B3A;
+            --utn-gold: #FFC107;
+            --utn-gold-dark: #D97706;
+            --accent-blue: #0284C7;
+            --accent-cyan: #38BDF8;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --bg-page: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --danger-red: #EF4444;
+            --success-green: #10B981;
+            --purple-accent: #8B5CF6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Encabezado Institucional Compacto */
+        header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 12px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge img {
+            height: 30px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .brand-titles {
+            border-left: 2px solid #E2E8F0;
+            padding-left: 12px;
+        }
+
+        .brand-titles h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            line-height: 1.2;
+        }
+
+        .brand-titles span {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--utn-gold-dark);
+            letter-spacing: 0.5px;
+        }
+
+        .header-pills {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .unit-pill {
+            background: #FEF3C7;
+            color: #92400E;
+            padding: 5px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid #FDE68A;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cpp-pill {
+            background: var(--utn-blue);
+            color: #FFFFFF;
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 700;
+            font-family: 'Fira Code', monospace;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Hero Banner Oscuro Estilo AEDD */
+        .hero-wrapper {
+            background: radial-gradient(circle at 50% 30%, #1E293B 0%, #0F172A 100%);
+            border-bottom: 4px solid var(--utn-gold);
+            padding: 28px 20px;
+            margin-bottom: 22px;
+            color: white;
+        }
+
+        .hero-banner {
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 193, 7, 0.14);
+            color: var(--utn-gold);
+            border: 1px solid rgba(255, 193, 7, 0.35);
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .hero-banner h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            color: #FFFFFF;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-banner h1 span {
+            color: var(--utn-gold);
+        }
+
+        .hero-banner p {
+            font-size: 14.5px;
+            color: #CBD5E1;
+            max-width: 820px;
+            margin: 0 auto 16px auto;
+            line-height: 1.5;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .stat-chip {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #E2E8F0;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .stat-chip i {
+            color: var(--utn-gold);
+        }
+
+        /* Encabezados de Sección */
+        .section-header {
+            max-width: 1280px;
+            margin: 10px auto 14px auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 15.5px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-header .section-line {
+            flex-grow: 1;
+            height: 1px;
+            background: #CBD5E1;
+        }
+
+        .section-header .badge-count {
+            background: #EFF6FF;
+            color: var(--utn-blue);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 999px;
+            border: 1px solid #BFDBFE;
+        }
+
+        /* Grid de Módulos (3 columnas x 2 filas para los 6 módulos) */
+        .modules-grid {
+            max-width: 1280px;
+            margin: 0 auto 26px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .portal-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 28px rgba(0, 43, 91, 0.09);
+            border-color: #93C5FD;
+        }
+
+        .card-accent-bar {
+            height: 5px;
+            width: 100%;
+        }
+
+        .bar-slate  { background: linear-gradient(90deg, #334155, #64748B); }
+        .bar-blue   { background: linear-gradient(90deg, var(--utn-blue), var(--accent-cyan)); }
+        .bar-gold   { background: linear-gradient(90deg, var(--utn-gold), #F59E0B); }
+        .bar-green  { background: linear-gradient(90deg, #10B981, #059669); }
+        .bar-purple { background: linear-gradient(90deg, #8B5CF6, #C084FC); }
+        .bar-red    { background: linear-gradient(90deg, #EF4444, #F97316); }
+
+        .card-content {
+            padding: 18px 20px 14px 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .module-tag {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding: 3px 9px;
+            border-radius: 6px;
+            background: #F1F5F9;
+            color: var(--utn-blue);
+        }
+
+        .complexity-badge {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: #FEF3C7;
+            color: #92400E;
+            border: 1px solid #FDE68A;
+        }
+
+        .card-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 3px;
+        }
+
+        .card-icon {
+            font-size: 22px;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .portal-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            line-height: 1.2;
+        }
+
+        .card-subtitle {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .card-description {
+            font-size: 12.5px;
+            color: var(--text-light);
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+
+        .topics-list {
+            list-style: none;
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px dashed #E2E8F0;
+            margin-bottom: 10px;
+        }
+
+        .topics-list li {
+            font-size: 12px;
+            color: var(--text-main);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.35;
+        }
+
+        .topics-list li i {
+            color: var(--accent-blue);
+            font-size: 10.5px;
+            margin-top: 3px;
+            margin-right: 7px;
+            flex-shrink: 0;
+        }
+
+        .topics-list code {
+            font-family: 'Fira Code', monospace;
+            background: #F1F5F9;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #0F172A;
+            border: 1px solid #E2E8F0;
+        }
+
+        /* Caja de Problema Práctico dentro de la Card */
+        .practice-pill {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-left: 4px solid var(--utn-gold);
+            border-radius: 8px;
+            padding: 7px 10px;
+            font-size: 11.5px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .practice-pill i {
+            color: var(--utn-gold-dark);
+            font-size: 13px;
+        }
+
+        .practice-pill strong {
+            color: var(--utn-blue);
+        }
+
+        /* Footer de la Card con DOBLE BOTÓN (Video + Diapositivas) */
+        .card-footer {
+            padding: 12px 18px 16px 18px;
+            background: #F8FAFC;
+            border-top: 1px solid #F1F5F9;
+            display: grid;
+            grid-template-columns: 1fr 1.15fr;
+            gap: 10px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            width: 100%;
+            padding: 9px 12px;
+            border-radius: 10px;
+            font-size: 12.5px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .btn-video {
+            background: #FFF1F2;
+            color: #BE123C;
+            border: 1px solid #FECDD3;
+        }
+
+        .btn-video:hover {
+            background: #E11D48;
+            color: #FFFFFF;
+            border-color: #E11D48;
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25);
+        }
+
+        .btn-slides {
+            background: var(--utn-blue);
+            color: #FFFFFF;
+        }
+
+        .btn-slides:hover {
+            background: var(--utn-blue-dark);
+            box-shadow: 0 4px 12px rgba(0, 43, 91, 0.25);
+        }
+
+        .btn-slides.pending {
+            background: #E2E8F0;
+            color: #475569;
+        }
+
+        .btn-slides.pending:hover {
+            background: #CBD5E1;
+            box-shadow: none;
+        }
+
+        /* Sección Especial: Debugger & Recursos Extra */
+        .tools-grid {
+            max-width: 1280px;
+            margin: 0 auto 24px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .debugger-banner {
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+            border-top: 5px solid #10B981;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            transition: all 0.25s ease;
+            overflow: hidden;
+        }
+
+        .debugger-banner:hover {
+            border-top-color: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.12);
+        }
+
+        .debugger-main-content {
+            padding: 20px 22px 16px 22px;
+        }
+
+        .debugger-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .debugger-badge-pill {
+            background: #ECFDF5;
+            color: #065F46;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 999px;
+            border: 1px solid #A7F3D0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .debugger-type-tag {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-light);
+            background: #F8FAFC;
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .debugger-title-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .debugger-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #ECFDF5;
+            color: #059669;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            border: 1px solid #A7F3D0;
+        }
+
+        .debugger-title-group h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18.5px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .debugger-title-group span {
+            font-size: 12px;
+            color: var(--accent-blue);
+            font-weight: 600;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .debugger-desc {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .debugger-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .debugger-tags span {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            background: #F1F5F9;
+            color: var(--utn-blue);
+            border: 1px solid #E2E8F0;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .debugger-footer-bar {
+            padding: 12px 22px;
+            background: #F8FAFC;
+            border-top: 1px solid #F1F5F9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .debugger-footer-hint {
+            font-size: 12px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-debugger {
+            background: #10B981;
+            color: white;
+            padding: 9px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 12.5px;
+            text-decoration: none;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        .btn-debugger:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+        }
+
+        .resources-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .doc-card {
+            background: white;
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+            padding: 13px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+        }
+
+        .doc-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .doc-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .doc-icon-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .doc-details h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--utn-blue);
+        }
+
+        .doc-details p {
+            font-size: 11.5px;
+            color: var(--text-light);
+        }
+
+        .doc-btn {
+            padding: 7px 14px;
+            font-size: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Cheat-Sheet Rápido: ¿Qué Estructura Elijo? */
+        .cheatsheet-box {
+            max-width: 1280px;
+            margin: 0 auto 24px auto;
+            padding: 0 20px;
+        }
+
+        .cheatsheet-table-wrap {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .cheatsheet-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12.5px;
+        }
+
+        .cheatsheet-table th {
+            background: var(--utn-blue);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            text-align: left;
+            padding: 11px 16px;
+            font-size: 12.5px;
+        }
+
+        .cheatsheet-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #F1F5F9;
+            color: var(--text-main);
+        }
+
+        .cheatsheet-table tr:nth-child(even) {
+            background: #F8FAFC;
+        }
+
+        .cheatsheet-table code {
+            font-family: 'Fira Code', monospace;
+            font-size: 11.5px;
+            background: #EFF6FF;
+            color: var(--utn-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* Sección Docente */
+        .staff-section {
+            max-width: 1280px;
+            margin: 0 auto 22px auto;
+            padding: 12px 24px;
+            background: #FFFFFF;
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 12.5px;
+        }
+
+        .staff-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .staff-group h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--utn-gold);
+            padding-bottom: 2px;
+        }
+
+        /* Footer Institucional */
+        footer {
+            background: var(--utn-blue);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        footer span {
+            color: var(--utn-gold);
+            font-weight: 700;
+        }
+
+        /* =====================================================================
+           MODAL "MODO CINE" PARA VIDEOS DE YOUTUBE
+           ===================================================================== */
+        .video-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .video-modal-backdrop.active {
+            display: flex;
+        }
+
+        .video-modal {
+            background: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 18px;
+            width: 100%;
+            max-width: 960px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            animation: modalPop 0.2s ease-out;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.96); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .video-modal-header {
+            padding: 14px 20px;
+            background: #1E293B;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .video-modal-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .video-modal-title span {
+            background: var(--utn-gold);
+            color: var(--utn-blue);
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+        }
+
+        .modal-close-btn {
+            background: rgba(255,255,255,0.08);
+            color: #CBD5E1;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .modal-close-btn:hover {
+            background: #EF4444;
+            color: white;
+        }
+
+        .video-frame-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #090D16;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-frame-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-placeholder {
+            text-align: center;
+            padding: 35px;
+            max-width: 560px;
+            color: #CBD5E1;
+        }
+
+        .video-placeholder .yt-icon {
+            font-size: 54px;
+            color: #E11D48;
+            margin-bottom: 12px;
+        }
+
+        .video-placeholder h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .video-placeholder p {
+            font-size: 13.5px;
+            color: #94A3B8;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .video-placeholder code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(255,255,255,0.08);
+            color: var(--utn-gold);
+            padding: 3px 7px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .video-modal-footer {
+            padding: 12px 20px;
+            background: #1E293B;
+            border-top: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .module-switcher {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .switcher-pill {
+            background: rgba(255,255,255,0.07);
+            color: #CBD5E1;
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 5px 10px;
+            border-radius: 7px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .switcher-pill:hover, .switcher-pill.active {
+            background: var(--utn-gold);
+            color: var(--utn-blue);
+            border-color: var(--utn-gold);
+        }
+
+        .modal-goto-slides {
+            background: var(--accent-blue);
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .modal-goto-slides:hover {
+            background: #0369A1;
+        }
+
+        @media (max-width: 1024px) {
+            .modules-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            .debugger-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .cheatsheet-table th:nth-child(4),
+            .cheatsheet-table td:nth-child(4) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Encabezado Institucional -->
+    <header>
+        <div class="header-container">
+            <div class="brand-badge">
+                <img src="../../../dist/utnsantafe.png" alt="UTN Santa Fe">
+                <div class="brand-titles">
+                    <h2>AEDD / UTN SANTA FE</h2>
+                    <span>Ingeniería en Sistemas de Información • Algoritmos y Estructuras de Datos</span>
+                </div>
+            </div>
+            <div class="header-pills">
+                <div class="cpp-pill">
+                    <i class="fa-solid fa-terminal"></i> C++ STL
+                </div>
+                <div class="unit-pill">
+                    <i class="fa-solid fa-layer-group"></i> TALLER DE ESTRUCTURAS DINÁMICAS
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Banner -->
+        <div class="hero-wrapper">
+            <section class="hero-banner">
+                <div class="hero-kicker">
+                    <i class="fa-solid fa-bolt"></i> Hub Interactivo Asincrónico • Cápsulas de Video + Práctica en Vivo
+                </div>
+                <h1>Taller de Estructuras Dinámicas <span>(Librería STL)</span></h1>
+                <p>
+                    Dominá los contenedores dinámicos y algoritmos de la Standard Template Library de C++. Cada módulo combina una cápsula explicativa en video, diapositivas interactivas paso a paso y un laboratorio C++ embebido para resolver problemas de programación competitiva y entrevistas técnicas.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat-chip"><i class="fa-solid fa-cubes"></i> <strong>6 Módulos</strong> Temáticos</div>
+                    <div class="stat-chip"><i class="fa-brands fa-youtube"></i> <strong>Videos Cortos</strong> On-Demand</div>
+                    <div class="stat-chip"><i class="fa-solid fa-code"></i> <strong>OneCompiler C++</strong> Integrado</div>
+                    <div class="stat-chip"><i class="fa-solid fa-trophy"></i> Enfoque <strong>Prog. Competitiva</strong></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- SECCIÓN 1: MÓDULOS DEL TALLER (VIDEO + DIAPOSITIVAS) -->
+        <div class="section-header">
+            <h2><i class="fa-solid fa-chalkboard-user" style="color: var(--accent-blue);"></i> Módulos del Taller (Cápsulas de Video &amp; Diapositivas)</h2>
+            <div class="section-line"></div>
+            <span class="badge-count">6 Módulos</span>
+        </div>
+
+        <section class="modules-grid">
+
+            <!-- MÓDULO 0: INTRO + AUTO + ITERADORES -->
+            <div class="portal-card">
+                <div>
+                    <div class="card-accent-bar bar-slate"></div>
+                    <div class="card-content">
+                        <div class="card-top-row">
+                            <span class="module-tag">Módulo 0 • Base</span>
+                            <span class="complexity-badge">O(1) / O(log N)</span>
+                        </div>
+                        <div class="card-title-row">
+                            <div class="card-icon" style="background: #F1F5F9; color: #334155;">
+                                <i class="fa-solid fa-compass"></i>
+                            </div>
+                            <div>
+                                <h3>Intro, <code>auto</code> e Iteradores</h3>
+                                <span class="card-subtitle">Fundamentos de la STL y Punteros Lógicos</span>
+                            </div>
+                        </div>
+                        <p class="card-description">
+                            ¿Por qué estudiar estructuras dinámicas? Inferencia de tipos con <code>auto</code> y navegación universal de contenedores mediante iteradores y búsquedas binarias.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span>STL en programación competitiva (ICPC), entrevistas e I+D</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Inferencia de tipos con <code>auto</code> y legibilidad de código</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Iteradores: <code>begin()</code>, <code>end()</code>, <code>rbegin()</code>, <code>rend()</code> y <code>*it</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Búsqueda con <code>find(x)</code>, <code>lower_bound(x)</code> y <code>upper_bound(x)</code></span></li>
+                        </ul>
+                        <div class="practice-pill">
+                            <i class="fa-solid fa-flask"></i>
+                            <span><strong>Laboratorio:</strong> Radares de cota inferior/superior en tiempo real</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="action-btn btn-video" onclick="openVideoModal('modulo0')">
+                        <i class="fa-brands fa-youtube"></i> <span>Ver Video</span>
+                    </button>
+                    <a href="modulo0-intro-iteradores/index.html" class="action-btn btn-slides">
+                        <span>Diapositivas</span> <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- MÓDULO 1: VECTOR & ALGORITHM -->
+            <div class="portal-card">
+                <div>
+                    <div class="card-accent-bar bar-blue"></div>
+                    <div class="card-content">
+                        <div class="card-top-row">
+                            <span class="module-tag">Módulo 1 • Secuencial</span>
+                            <span class="complexity-badge">Acceso O(1)</span>
+                        </div>
+                        <div class="card-title-row">
+                            <div class="card-icon" style="background: #EFF6FF; color: var(--utn-blue);">
+                                <i class="fa-solid fa-arrows-left-right-to-line"></i>
+                            </div>
+                            <div>
+                                <h3><code>std::vector</code> &amp; Sort</h3>
+                                <span class="card-subtitle">Arreglos Dinámicos, Matrices y &lt;algorithm&gt;</span>
+                            </div>
+                        </div>
+                        <p class="card-description">
+                            El contenedor más versátil de C++. Arreglos que crecen en tiempo de ejecución, ordenamiento personalizado de <code>struct</code> y matrices dinámicas.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span>Tamaño físico = lógico dinámico: <code>push_back()</code>, <code>pop_back()</code>, <code>resize()</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Acceso <code>v[i]</code>, <code>front()</code>, <code>back()</code>, <code>insert()</code>, <code>clear()</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span><code>sort()</code> ascendente, <code>greater&lt;int&gt;()</code> y comparador de <code>struct</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span><code>*max_element</code>, <code>*min_element</code> y matrices <code>vector&lt;vector&lt;T&gt;&gt;</code></span></li>
+                        </ul>
+                        <div class="practice-pill">
+                            <i class="fa-solid fa-trophy"></i>
+                            <span><strong>Práctica:</strong> Cálculo de la Mediana de N mediciones</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="action-btn btn-video" onclick="openVideoModal('modulo1')">
+                        <i class="fa-brands fa-youtube"></i> <span>Ver Video</span>
+                    </button>
+                    <a href="modulo1-vector/index.html" class="action-btn btn-slides">
+                        <span>Diapositivas</span> <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- MÓDULO 2: MAP -->
+            <div class="portal-card">
+                <div>
+                    <div class="card-accent-bar bar-gold"></div>
+                    <div class="card-content">
+                        <div class="card-top-row">
+                            <span class="module-tag">Módulo 2 • Asociativo</span>
+                            <span class="complexity-badge">O(log N) / O(1)</span>
+                        </div>
+                        <div class="card-title-row">
+                            <div class="card-icon" style="background: #FEF3C7; color: #B45309;">
+                                <i class="fa-solid fa-key"></i>
+                            </div>
+                            <div>
+                                <h3><code>std::map</code></h3>
+                                <span class="card-subtitle">Diccionarios Clave → Valor</span>
+                            </div>
+                        </div>
+                        <p class="card-description">
+                            Reemplazá el índice numérico por una clave de cualquier tipo (<code>string</code>, <code>char</code>, <code>int</code>). Orden lexicográfico automático de claves.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span>Asociación clave-valor mediante <code>mapa[clave] = valor</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Claves no consecutivas y ordenadas automáticamente</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Verificación de existencia sin insertar con <code>mapa.count(clave)</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Recorrido con <code>pair&lt;K,V&gt;</code> / <code>auto</code> (<code>.first</code> y <code>.second</code>)</span></li>
+                        </ul>
+                        <div class="practice-pill">
+                            <i class="fa-brands fa-x-twitter"></i>
+                            <span><strong>Práctica:</strong> Tendencias de Twitter (Frecuencia y M consultas)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="action-btn btn-video" onclick="openVideoModal('modulo2')">
+                        <i class="fa-brands fa-youtube"></i> <span>Ver Video</span>
+                    </button>
+                    <a href="modulo2-map/index.html" class="action-btn btn-slides">
+                        <span>Diapositivas</span> <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- MÓDULO 3: SET -->
+            <div class="portal-card">
+                <div>
+                    <div class="card-accent-bar bar-green"></div>
+                    <div class="card-content">
+                        <div class="card-top-row">
+                            <span class="module-tag">Módulo 3 • Asociativo</span>
+                            <span class="complexity-badge">O(log N) / O(1)</span>
+                        </div>
+                        <div class="card-title-row">
+                            <div class="card-icon" style="background: #DCFCE7; color: #059669;">
+                                <i class="fa-solid fa-filter"></i>
+                            </div>
+                            <div>
+                                <h3><code>std::set</code> &amp; Variantes</h3>
+                                <span class="card-subtitle">Conjuntos Ordenados, Unordered y Multiset</span>
+                            </div>
+                        </div>
+                        <p class="card-description">
+                            Colecciones que mantienen sus elementos automáticamente ordenados y sin duplicados, más sus variantes hash y multi-clave.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span>Inserción y deduplicación automática con <code>miSet.insert(x)</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Prohibición del operador <code>[]</code> y recorrido por elementos</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Variantes: <code>unordered_set</code>, <code>multiset</code> y <code>unordered_multiset</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Cuándo elegir O(log N) ordenado vs O(1) con tabla de hash</span></li>
+                        </ul>
+                        <div class="practice-pill">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <span><strong>Práctica:</strong> Lista de Compras de Valentina (Beecrowd 2729)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="action-btn btn-video" onclick="openVideoModal('modulo3')">
+                        <i class="fa-brands fa-youtube"></i> <span>Ver Video</span>
+                    </button>
+                    <a href="modulo3-set/index.html" class="action-btn btn-slides">
+                        <span>Diapositivas</span> <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- MÓDULO 4: STACK -->
+            <div class="portal-card">
+                <div>
+                    <div class="card-accent-bar bar-purple"></div>
+                    <div class="card-content">
+                        <div class="card-top-row">
+                            <span class="module-tag">Módulo 4 • Adaptador</span>
+                            <span class="complexity-badge">Tope O(1)</span>
+                        </div>
+                        <div class="card-title-row">
+                            <div class="card-icon" style="background: #F3E8FF; color: #7C3AED;">
+                                <i class="fa-solid fa-layer-group"></i>
+                            </div>
+                            <div>
+                                <h3><code>std::stack</code> (Pilas)</h3>
+                                <span class="card-subtitle">Estructura LIFO (Last-In, First-Out)</span>
+                            </div>
+                        </div>
+                        <p class="card-description">
+                            Estructura donde solo es posible acceder al elemento en el tope, tanto para añadirlo como para consultarlo o eliminarlo.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span>Principio LIFO: el último en entrar es el primero en salir</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Restricción estricta: acceso exclusivo mediante <code>pila.top()</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Primitivas en O(1): <code>push(x)</code>, <code>pop()</code> y <code>empty()</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Patrón clásico de emparejamiento y anidamiento de símbolos</span></li>
+                        </ul>
+                        <div class="practice-pill">
+                            <i class="fa-solid fa-square-root-variable"></i>
+                            <span><strong>Práctica:</strong> Fórmulas Bien Formadas de Ayelén <code>(([[{}]]))</code></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="action-btn btn-video" onclick="openVideoModal('modulo4')">
+                        <i class="fa-brands fa-youtube"></i> <span>Ver Video</span>
+                    </button>
+                    <a href="modulo4-stack/index.html" class="action-btn btn-slides">
+                        <span>Diapositivas</span> <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- MÓDULO 5: QUEUE & DEQUE -->
+            <div class="portal-card">
+                <div>
+                    <div class="card-accent-bar bar-red"></div>
+                    <div class="card-content">
+                        <div class="card-top-row">
+                            <span class="module-tag">Módulo 5 • Colas y Bicolas</span>
+                            <span class="complexity-badge">Extremos O(1)</span>
+                        </div>
+                        <div class="card-title-row">
+                            <div class="card-icon" style="background: #FFEDD5; color: #EA580C;">
+                                <i class="fa-solid fa-people-arrows"></i>
+                            </div>
+                            <div>
+                                <h3><code>queue</code> &amp; <code>deque</code></h3>
+                                <span class="card-subtitle">Colas FIFO, Priority Queue y Doble Extremo</span>
+                            </div>
+                        </div>
+                        <p class="card-description">
+                            Colas FIFO tradicionales, colas de prioridad (heaps) y colas doblemente terminadas que permiten operar en ambos extremos e indexar.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span><code>queue</code> (FIFO): <code>push()</code>, <code>front()</code>, <code>back()</code> y <code>pop()</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span><code>priority_queue</code> de máximo y de mínimo con <code>greater&lt;int&gt;</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span><code>deque</code>: <code>push_front()</code>, <code>push_back()</code>, <code>pop_front()</code>, <code>pop_back()</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Ventana deslizante de eventos recientes con descarte automático</span></li>
+                        </ul>
+                        <div class="practice-pill">
+                            <i class="fa-solid fa-bus"></i>
+                            <span><strong>Prácticas:</strong> Colectivero Misterioso + Centro de Monitoreo CME</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="action-btn btn-video" onclick="openVideoModal('modulo5')">
+                        <i class="fa-brands fa-youtube"></i> <span>Ver Video</span>
+                    </button>
+                    <a href="modulo5-queue-deque/index.html" class="action-btn btn-slides">
+                        <span>Diapositivas</span> <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SECCIÓN 2: VISUALIZADOR / DEBUGGER INTERACTIVO & RECURSOS -->
+        <div class="section-header">
+            <h2><i class="fa-solid fa-microchip" style="color: #10B981;"></i> Laboratorio Visual &amp; Bibliografía Recomendada</h2>
+            <div class="section-line"></div>
+            <span class="badge-count">Herramientas Extra</span>
+        </div>
+
+        <section class="tools-grid">
+            <!-- CARD DEL DEBUGGER VISUALIZADOR STL -->
+            <div class="debugger-banner">
+                <div class="debugger-main-content">
+                    <div class="debugger-header-row">
+                        <span class="debugger-badge-pill">
+                            <i class="fa-solid fa-flask-vial"></i> Laboratorio Interactivo
+                        </span>
+                        <span class="debugger-type-tag">C++ Memory Sandbox</span>
+                    </div>
+
+                    <div class="debugger-title-group">
+                        <div class="debugger-icon-box">
+                            <i class="fa-solid fa-microchip"></i>
+                        </div>
+                        <div>
+                            <h3>Visualizador &amp; Debugger STL</h3>
+                            <span>Animación en memoria y depuración paso a paso</span>
+                        </div>
+                    </div>
+
+                    <p class="debugger-desc">
+                        Inspeccioná en tiempo real cómo se comportan en memoria <code>vector</code>, <code>map</code>, <code>set</code>, <code>stack</code>, <code>queue</code> y <code>deque</code>. Ejecutá línea por línea los problemas del taller o probá métodos en el sandbox libre.
+                    </p>
+
+                    <div class="debugger-tags">
+                        <span>push_back / pop</span>
+                        <span>Iteradores en vivo</span>
+                        <span>Árbol / Clave-Valor</span>
+                        <span>LIFO vs FIFO</span>
+                    </div>
+                </div>
+
+                <div class="debugger-footer-bar">
+                    <div class="debugger-footer-hint">
+                        <i class="fa-solid fa-circle-check" style="color: #10B981;"></i>
+                        <span>Los 6 módulos + modo libre</span>
+                    </div>
+                    <a href="debugger/index.html" class="btn-debugger">
+                        <span>Abrir Debugger STL</span> <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- STACK DE RECURSOS EXTERNOS -->
+            <div class="resources-stack">
+                <div class="doc-card">
+                    <div class="doc-info">
+                        <div class="doc-icon-badge" style="background: #E0F2FE; color: #0284C7;">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h4>Competitive Programmer's Handbook</h4>
+                            <p>Antti Laaksonen (CSES) • Capítulos 4: Data Structures &amp; Iterators</p>
+                        </div>
+                    </div>
+                    <a href="https://cses.fi/book/book.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn" style="background: #0284C7; color: white;">
+                        <span>PDF</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-info">
+                        <div class="doc-icon-badge" style="background: #EDE9FE; color: #6D28D9;">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h4>Referencia Oficial C++ (cppreference)</h4>
+                            <p>Documentación técnica completa de contenedores y complejidades</p>
+                        </div>
+                    </div>
+                    <a href="https://en.cppreference.com/w/cpp/container" target="_blank" rel="noopener noreferrer" class="doc-btn" style="background: #6D28D9; color: white;">
+                        <span>Abrir</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: CHEAT-SHEET RÁPIDO DE ELECCIÓN DE ESTRUCTURA -->
+        <div class="section-header">
+            <h2><i class="fa-solid fa-compass-drafting" style="color: var(--utn-gold-dark);"></i> Guía Rápida: ¿Qué Contenedor STL Uso en mi Problema?</h2>
+            <div class="section-line"></div>
+            <span class="badge-count">Cheat-Sheet</span>
+        </div>
+
+        <section class="cheatsheet-box">
+            <div class="cheatsheet-table-wrap">
+                <table class="cheatsheet-table">
+                    <thead>
+                        <tr>
+                            <th>Necesidad en el Problema</th>
+                            <th>Estructura Recomendada</th>
+                            <th>Operaciones Clave</th>
+                            <th>Complejidad Típica</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Arreglo dinámico, ordenar datos o acceder por posición <code>i</code></td>
+                            <td><code>vector&lt;T&gt;</code></td>
+                            <td><code>push_back(x)</code>, <code>v[i]</code>, <code>sort(v.begin(), v.end())</code></td>
+                            <td>Acceso O(1) • Sort O(N log N)</td>
+                        </tr>
+                        <tr>
+                            <td>Contar frecuencias o asociar una clave (ej. <code>string</code>) a un valor</td>
+                            <td><code>map&lt;K, V&gt;</code> / <code>unordered_map</code></td>
+                            <td><code>m[clave]++</code>, <code>m.count(clave)</code></td>
+                            <td>O(log N) ordenado • O(1) prom. hash</td>
+                        </tr>
+                        <tr>
+                            <td>Guardar elementos <strong>sin repetidos</strong> y saber rápido si uno existe</td>
+                            <td><code>set&lt;T&gt;</code> / <code>unordered_set</code></td>
+                            <td><code>s.insert(x)</code>, <code>s.find(x)</code>, <code>s.lower_bound(x)</code></td>
+                            <td>O(log N) ordenado • O(1) prom. hash</td>
+                        </tr>
+                        <tr>
+                            <td>Procesar el último elemento ingresado o validar anidamientos (paréntesis)</td>
+                            <td><code>stack&lt;T&gt;</code></td>
+                            <td><code>push(x)</code>, <code>top()</code>, <code>pop()</code></td>
+                            <td>O(1) en tope</td>
+                        </tr>
+                        <tr>
+                            <td>Simular una fila por orden de llegada (FIFO)</td>
+                            <td><code>queue&lt;T&gt;</code></td>
+                            <td><code>push(x)</code>, <code>front()</code>, <code>pop()</code></td>
+                            <td>O(1) en extremos</td>
+                        </tr>
+                        <tr>
+                            <td>Insertar y borrar tanto al principio como al final (ventana deslizante)</td>
+                            <td><code>deque&lt;T&gt;</code></td>
+                            <td><code>push_front(x)</code>, <code>push_back(x)</code>, <code>pop_back()</code>, <code>d[i]</code></td>
+                            <td>O(1) en ambos extremos e índice</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Información Docente -->
+        <section class="staff-section">
+            <div class="staff-group">
+                <h4>Docente a cargo del Taller</h4>
+                <span><strong>Tomás Assenza</strong> (tassenza@frsf.utn.edu.ar)</span>
+            </div>
+            <div class="staff-group">
+                <h4>Cátedra</h4>
+                <span>Algoritmos y Estructuras de Datos (AEDD) — UTN Facultad Regional Santa Fe</span>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Institucional -->
+    <footer>
+        AEDD / UTN <span>SANTA FE</span> — Taller de Estructuras Dinámicas (Librería STL en C++)
+    </footer>
+
+    <!-- =====================================================================
+         MODAL "MODO CINE" PARA VIDEOS DE YOUTUBE
+         ===================================================================== -->
+    <div id="videoModalBackdrop" class="video-modal-backdrop" onclick="handleBackdropClick(event)">
+        <div class="video-modal">
+            <div class="video-modal-header">
+                <div class="video-modal-title">
+                    <span id="modalModuleTag">MÓDULO 1</span>
+                    <div id="modalModuleTitle">std::vector y &lt;algorithm&gt;</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeVideoModal()" title="Cerrar (Esc)">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="videoFrameContainer" class="video-frame-container">
+                <!-- Se inyecta dinámicamente el iframe de YouTube o el placeholder -->
+            </div>
+
+            <div class="video-modal-footer">
+                <div class="module-switcher">
+                    <button class="switcher-pill" data-mod="modulo0" onclick="openVideoModal('modulo0')">M0: Intro &amp; Iteradores</button>
+                    <button class="switcher-pill" data-mod="modulo1" onclick="openVideoModal('modulo1')">M1: Vector</button>
+                    <button class="switcher-pill" data-mod="modulo2" onclick="openVideoModal('modulo2')">M2: Map</button>
+                    <button class="switcher-pill" data-mod="modulo3" onclick="openVideoModal('modulo3')">M3: Set</button>
+                    <button class="switcher-pill" data-mod="modulo4" onclick="openVideoModal('modulo4')">M4: Stack</button>
+                    <button class="switcher-pill" data-mod="modulo5" onclick="openVideoModal('modulo5')">M5: Queue &amp; Deque</button>
+                </div>
+                <a id="modalSlidesLink" href="modulo1-vector/index.html" class="modal-goto-slides">
+                    <span>Abrir Diapositivas de este Tema</span> <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =====================================================================
+        // CONFIGURACIÓN DE VIDEOS DE YOUTUBE POR MÓDULO
+        // Pegá acá el ID de YouTube (ej: "dQw4w9WgXcQ") o el link completo
+        // de YouTube (ej: "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+        // a medida que vayas grabando cada cápsula.
+        // =====================================================================
+        const VIDEOS_YOUTUBE = {
+            modulo0: "", // Video Módulo 0: Intro, auto e Iteradores
+            modulo1: "", // Video Módulo 1: std::vector y <algorithm>
+            modulo2: "", // Video Módulo 2: std::map
+            modulo3: "", // Video Módulo 3: std::set
+            modulo4: "", // Video Módulo 4: std::stack
+            modulo5: ""  // Video Módulo 5: std::queue y std::deque
+        };
+
+        const MODULES_META = {
+            modulo0: {
+                tag: "MÓDULO 0",
+                title: "Intro a la STL, auto e Iteradores",
+                slidesUrl: "modulo0-intro-iteradores/index.html",
+                summary: "Por qué usar estructuras dinámicas, inferencia con auto, punteros lógicos (begin/end) y búsquedas O(log N) con lower_bound y upper_bound."
+            },
+            modulo1: {
+                tag: "MÓDULO 1",
+                title: "std::vector, Matrices Dinámicas y <algorithm>",
+                slidesUrl: "modulo1-vector/index.html",
+                summary: "Arreglos dinámicos, push_back, resize, sort con comparadores propios para structs y resolución del problema de la Mediana."
+            },
+            modulo2: {
+                tag: "MÓDULO 2",
+                title: "std::map y Diccionarios Clave-Valor",
+                slidesUrl: "modulo2-map/index.html",
+                summary: "Indexación por claves de cualquier tipo, orden lexicográfico automático, función count() y problema de Tendencias de Twitter."
+            },
+            modulo3: {
+                tag: "MÓDULO 3",
+                title: "std::set, unordered_set y multiset",
+                slidesUrl: "modulo3-set/index.html",
+                summary: "Conjuntos ordenados sin repetidos, variantes basadas en hash y resolución de la Lista de Compras de Valentina (Beecrowd 2729)."
+            },
+            modulo4: {
+                tag: "MÓDULO 4",
+                title: "std::stack (Pilas LIFO)",
+                slidesUrl: "modulo4-stack/index.html",
+                summary: "Principio Last-In First-Out, acceso exclusivo al tope y validación de fórmulas matemáticas con paréntesis balanceados."
+            },
+            modulo5: {
+                tag: "MÓDULO 5",
+                title: "std::queue, priority_queue y std::deque",
+                slidesUrl: "modulo5-queue-deque/index.html",
+                summary: "Colas FIFO, colas de prioridad y bicolas de doble extremo aplicadas al Colectivero Misterioso y al Centro de Monitoreo."
+            }
+        };
+
+        function extractYouTubeId(input) {
+            if (!input || !input.trim()) return "";
+            const trimmed = input.trim();
+            // Si ya es un ID de 11 caracteres
+            if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) return trimmed;
+            // Si pegaron URL completa de youtube.com o youtu.be
+            const match = trimmed.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+            return match ? match[1] : trimmed;
+        }
+
+        function openVideoModal(moduleKey) {
+            const meta = MODULES_META[moduleKey];
+            if (!meta) return;
+
+            document.getElementById('modalModuleTag').textContent = meta.tag;
+            document.getElementById('modalModuleTitle').textContent = meta.title;
+            document.getElementById('modalSlidesLink').href = meta.slidesUrl;
+
+            document.querySelectorAll('.switcher-pill').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mod === moduleKey);
+            });
+
+            const ytId = extractYouTubeId(VIDEOS_YOUTUBE[moduleKey]);
+            const container = document.getElementById('videoFrameContainer');
+
+            if (ytId) {
+                container.innerHTML = `
+                    <iframe
+                        src="https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0"
+                        title="${meta.title}"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="video-placeholder">
+                        <div class="yt-icon"><i class="fa-brands fa-youtube"></i></div>
+                        <h4>Cápsula de Video: ${meta.title}</h4>
+                        <p>${meta.summary}</p>
+                        <p style="font-size: 12px; color: #64748B;">
+                            Cuando subas el video a YouTube, pegá el link o ID en <code>VIDEOS_YOUTUBE.${moduleKey}</code> dentro de este archivo para que se reproduzca automáticamente acá.
+                        </p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('videoModalBackdrop').classList.add('active');
+        }
+
+        function closeVideoModal() {
+            const backdrop = document.getElementById('videoModalBackdrop');
+            const container = document.getElementById('videoFrameContainer');
+            backdrop.classList.remove('active');
+            container.innerHTML = ''; // Detiene la reproducción del iframe al cerrar
+        }
+
+        function handleBackdropClick(e) {
+            if (e.target.id === 'videoModalBackdrop') {
+                closeVideoModal();
+            }
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeVideoModal();
+        });
+    </script>
+</body>
+</html>

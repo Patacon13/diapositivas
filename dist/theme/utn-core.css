@@ -125,9 +125,10 @@
 
 /* Bloques de Código */
 .reveal pre {
+    position: relative;
     background: #272822;
     color: #f8f8f2;
-    padding: 16px 20px;
+    padding: 0;
     border-radius: 14px;
     font-family: 'Fira Code', monospace;
     font-size: 19px;
@@ -136,17 +137,43 @@
     box-shadow: 0 15px 40px rgba(0,0,0,0.25);
     width: 100%;
     box-sizing: border-box;
+    overflow: hidden;
     font-variant-ligatures: none;
     font-feature-settings: "liga" 0, "calt" 0;
 }
 
 .reveal pre code {
+    display: block;
     font-family: 'Fira Code', monospace;
     font-variant-ligatures: none;
     font-feature-settings: "liga" 0, "calt" 0;
-    background: transparent;
-    padding: 0;
+    background: #272822;
+    padding: 16px 20px;
     line-height: 1.4;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.reveal .hljs:not(:first-child).fragment {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 16px 20px;
+    background: #272822 !important;
+    box-sizing: border-box;
+}
+
+.reveal .hljs.has-highlights tr:not(.highlight-line) {
+    opacity: 0.35;
+    transition: opacity 0.2s ease;
+}
+
+.reveal .hljs.has-highlights tr.highlight-line {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.08) !important;
+    transition: opacity 0.2s ease, background 0.2s ease;
 }
 
 /* Números de Línea en Código (.hljs-ln) - Reset estricto para evitar colisión con tablas */

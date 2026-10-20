@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AEDD - Taller STL (Módulo 0): Intro, auto e Iteradores - UTN FRSF</title>
+
+    <!-- Estilos Base Reveal.js (4 niveles hacia dist/) -->
+    <link rel="stylesheet" href="../../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../../dist/plugin/highlight/monokai.css" />
+
+    <!-- Tema AEDD (Extiende utn-core.css) -->
+    <link rel="stylesheet" href="../../../../dist/theme/aedd.css" />
+
+    <!-- Tipografías Oficiales e Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --danger-red: #EF4444;
+            --warning-amber: #F59E0B;
+            --success-green: #10B981;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 20px; color: var(--text-main); line-height: 1.45; text-align: left; }
+
+        .slide-title {
+            font-size: 38px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 18px !important; border-left: 10px solid var(--utn-gold);
+            padding-left: 18px; text-transform: uppercase !important; letter-spacing: -1px;
+            text-align: left; width: 100%;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; align-items: stretch; }
+
+        .tile {
+            background: var(--bg-neutral); padding: 18px 20px; border-radius: 14px;
+            border: 1px solid #E2E8F0; border-bottom: 4px solid transparent;
+            transition: all 0.25s ease; text-align: left;
+        }
+        .tile:hover { transform: translateY(-3px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
+        .tile h3 { font-size: 18px; color: var(--utn-blue); margin-bottom: 6px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .tile p { font-size: 15.5px; color: var(--text-light); margin: 0; line-height: 1.4; }
+
+        .concept-card {
+            background: white; padding: 16px 20px; border-radius: 14px; border: 1px solid #E2E8F0;
+            border-left: 7px solid var(--utn-gold); box-shadow: 0 6px 20px rgba(0,0,0,0.04); text-align: left;
+        }
+        .concept-card h3 {
+            color: var(--utn-blue); font-size: 19px; margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
+        }
+
+        .reveal pre {
+            position: relative !important;
+            background: #272822 !important;
+            padding: 0 !important;
+            border-radius: 12px;
+            margin: 0;
+            border-left: 6px solid var(--utn-gold);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .reveal pre code {
+            display: block !important;
+            padding: 14px 18px !important;
+            background: #272822 !important;
+            font-family: 'Fira Code', monospace;
+            font-size: 15px !important;
+            line-height: 1.42 !important;
+            box-sizing: border-box !important;
+            width: 100%;
+        }
+
+        .reveal .hljs:not(:first-child).fragment {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            padding: 14px 18px !important;
+            background: #272822 !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+
+        .reveal .hljs.has-highlights tr:not(.highlight-line) {
+            opacity: 0.35 !important;
+            transition: opacity 0.2s ease;
+        }
+
+        .reveal .hljs.has-highlights tr.highlight-line {
+            opacity: 1 !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            transition: opacity 0.2s ease, background 0.2s ease;
+        }
+
+        .branding-footer {
+            position: fixed !important;
+            bottom: 22px;
+            left: 35px;
+            color: #94A3B8;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 1px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .branding-footer span { color: var(--utn-gold); }
+
+        /* Botón flotante para volver al Hub */
+        .hub-nav-pill {
+            position: fixed;
+            top: 20px;
+            right: 28px;
+            z-index: 9999;
+            background: rgba(0, 43, 91, 0.9);
+            color: #FFFFFF !important;
+            text-decoration: none;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12.5px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+        }
+        .hub-nav-pill:hover {
+            background: var(--utn-blue);
+            transform: translateY(-2px);
+            border-color: var(--utn-gold);
+        }
+        .hub-nav-pill i { color: var(--utn-gold); }
+
+        .badge-pill {
+            display: inline-block; padding: 3px 10px; border-radius: 20px;
+            font-size: 12.5px; font-weight: 600; font-family: 'Fira Code', monospace;
+        }
+        .badge-pill.blue { background: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD; }
+        .badge-pill.amber { background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
+        .badge-pill.green { background: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0; }
+        .badge-pill.red { background: #FEE2E2; color: #B91C1C; border: 1px solid #FECACA; }
+
+        /* Diagrama visual de iteradores */
+        .iter-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 10px;
+            margin: 18px 0 28px 0;
+            padding: 20px;
+            background: #F8FAFC;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+        }
+        .iter-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .iter-pointer {
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 9px;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .ptr-begin { background: #DCFCE7; color: #15803D; border: 1px solid #86EFAC; }
+        .ptr-end   { background: #FEE2E2; color: #B91C1C; border: 1px solid #FCA5A5; }
+        .ptr-rbegin { background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
+        .iter-box {
+            width: 68px;
+            height: 62px;
+            border-radius: 10px;
+            border: 2px solid var(--utn-blue);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            position: relative;
+        }
+        .iter-box.past-end {
+            border-style: dashed;
+            border-color: #EF4444;
+            background: #FEF2F2;
+            color: #EF4444;
+            font-size: 14px;
+        }
+
+        .nav-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .nav-cta-btn:hover { transform: translateY(-3px); }
+
+        @media (max-aspect-ratio: 1/1), (max-width: 768px) {
+            .two-column { grid-template-columns: 1fr; gap: 14px; }
+            .slide-title { font-size: 28px !important; margin-bottom: 12px !important; }
+            .reveal p, .reveal li { font-size: 17px; }
+            .reveal pre { font-size: 12.5px; padding: 10px; }
+            .iter-diagram { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón Persistente de Retorno al Hub -->
+    <a href="../index.html" class="hub-nav-pill" title="Volver al Hub del Taller STL">
+        <i class="fa-solid fa-table-cells-large"></i> <span>Hub Taller STL</span>
+    </a>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 1: PORTADA INSTITUCIONAL AEDD -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div style="display: inline-block; background: rgba(255,193,7,0.15); color: var(--utn-gold); border: 1px solid rgba(255,193,7,0.4); padding: 6px 18px; border-radius: 999px; font-size: 15px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px;">
+                    Taller de Estructuras Dinámicas (STL) • Módulo 0
+                </div>
+                <h1 style="color: white; font-size: 58px; line-height: 1.08; margin-bottom: 18px;">
+                    Fundamentos de la STL:<br>
+                    <span style="color: var(--utn-gold); font-weight: 300; font-size: 44px;">¿Por qué STL?, <code>auto</code> e Iteradores</span>
+                </h1>
+                <p style="color: rgba(255,255,255,0.75); margin-top: 30px; text-align: center; font-size: 21px;">
+                    Docente: <strong>Tomás Assenza</strong>
+                </p>
+                <p style="color: rgba(255,255,255,0.4); margin-top: 8px; text-align: center; font-size: 15px; letter-spacing: 2px;">
+                    Algoritmos y Estructuras de Datos • UTN - Facultad Regional Santa Fe
+                </p>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 2: CITAS CLÁSICAS -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Dos Frases antes de Arrancar</h2>
+                <div class="content-area">
+                    <div class="concept-card" style="margin-bottom: 18px; border-left-color: var(--utn-blue);">
+                        <p style="font-size: 21px; font-style: italic; color: var(--utn-blue); margin-bottom: 6px;">
+                            "There are only two hard things in Computer Science: cache invalidation and naming things."
+                        </p>
+                        <p style="font-size: 15px; color: var(--text-light); font-weight: 700; margin: 0;">— Phil Karlton</p>
+                    </div>
+
+                    <div class="concept-card" style="border-left-color: var(--utn-gold);">
+                        <p style="font-size: 21px; font-style: italic; color: var(--text-main); margin-bottom: 6px;">
+                            "The best way to prepare [to be a programmer] is to write programs, and to study great programs that other people have written."
+                        </p>
+                        <p style="font-size: 15px; color: var(--text-light); font-weight: 700; margin: 0;">— Bill Gates</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 3: ¿POR QUÉ ESTUDIAR ESTRUCTURAS DINÁMICAS? -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">¿Por Qué Estudiar Estructuras Dinámicas (STL)?</h2>
+                <div class="content-area">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%;">
+                        <div class="tile fragment">
+                            <h3><i class="fa-solid fa-trophy" style="color: #D97706;"></i> 1. Competencias de Programación</h3>
+                            <p>En torneos como <strong>ICPC</strong>, Codeforces o LeetCode no hay tiempo para programar un árbol balanceado o un Quicksort desde cero: la STL te los da optimizados en 1 línea.</p>
+                        </div>
+                        <div class="tile fragment">
+                            <h3><i class="fa-solid fa-briefcase" style="color: #0284C7;"></i> 2. Entrevistas Laborales</h3>
+                            <p>Las entrevistas técnicas (Google, Meta, Mercado Libre) evalúan si sabés elegir entre un arreglo, un diccionario (`map`) o un conjunto (`set`) para bajar la complejidad.</p>
+                        </div>
+                        <div class="tile fragment">
+                            <h3><i class="fa-solid fa-flask" style="color: #10B981;"></i> 3. Investigación y Desarrollo (I+D)</h3>
+                            <p>En proyectos académicos y de ingeniería en la UTN necesitás estructuras que crezcan dinámicamente según el volumen real de datos de entrada.</p>
+                        </div>
+                        <div class="tile fragment">
+                            <h3><i class="fa-solid fa-wand-magic-sparkles" style="color: #8B5CF6;"></i> 4. Funciones Pre-armadas y Seguras</h3>
+                            <p>En todas las estructuras de la STL, los elementos sin asignación se inicializan por defecto en <code>0</code> (o vacíos). No contienen basura de memoria.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 4: LA PALABRA CLAVE AUTO -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">La Palabra Clave <code>auto</code> (C++11)</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <div class="concept-card" style="margin-bottom: 14px;">
+                                <h3><i class="fa-solid fa-bolt" style="color: var(--utn-gold);"></i> ¿Qué hace <code>auto</code>?</h3>
+                                <p style="font-size: 16px; margin: 0;">
+                                    Le indica al compilador que <strong>infiera automáticamente el tipo de dato</strong> de la variable a partir del valor con el que se inicializa.
+                                </p>
+                            </div>
+                            <div class="tile" style="margin-bottom: 12px;">
+                                <h3><i class="fa-solid fa-glasses" style="color: var(--utn-blue);"></i> Vital en la STL</h3>
+                                <p>En estructuras anidadas o iteradores, evita escribir tipos kilométricos como <code>map&lt;char, int&gt;::iterator</code> y mejora muchísimo la legibilidad.</p>
+                            </div>
+                            <div class="tile" style="border-left: 4px solid var(--danger-red);">
+                                <p style="font-size: 14px; color: var(--text-main);">
+                                    <strong>Nota al margen:</strong> <code>auto y = "Hola";</code> infiere <code>const char*</code> (arreglo de chars). Si querés un <code>std::string</code>, inicializalo a partir de un <code>string</code>.
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-12|14-18">
+auto x = 5; // int
+auto y = "Soy una cadena de caracteres";
+cout &lt;&lt; x &lt;&lt; endl;
+cout &lt;&lt; y &lt;&lt; endl;
+
+map&lt;char, int&gt; m = {{'a', 1}, {'b', 2}, {'c', 3}};
+
+// Recorrido explicito con pair:
+for (pair&lt;char, int&gt; thisPair : m) {
+    cout &lt;&lt; thisPair.first &lt;&lt; ": "
+         &lt;&lt; thisPair.second &lt;&lt; endl;
+}
+
+// Recorrido limpio con auto:
+for (auto thisPair : m) {
+    cout &lt;&lt; thisPair.first &lt;&lt; ": "
+         &lt;&lt; thisPair.second &lt;&lt; endl;
+}
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 5: ITERADORES - CONCEPTO VISUAL -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Iteradores: El "Puntero" de la STL</h2>
+                <div class="content-area">
+                    <p style="font-size: 18px; margin-bottom: 8px;">
+                        Un <strong>iterador</strong> es una variable que apunta a un elemento dentro de una estructura de datos y nos permite recorrerla ("iterarla"):
+                    </p>
+
+                    <!-- Diagrama visual de begin(), end(), rbegin(), rend() -->
+                    <div class="iter-diagram">
+                        <div class="iter-slot">
+                            <div class="iter-pointer ptr-end">rend() <i class="fa-solid fa-arrow-down"></i></div>
+                            <div class="iter-box past-end">antes</div>
+                        </div>
+                        <div class="iter-slot">
+                            <div class="iter-pointer ptr-begin">begin() <i class="fa-solid fa-arrow-down"></i></div>
+                            <div class="iter-box">1</div>
+                        </div>
+                        <div class="iter-slot">
+                            <div class="iter-pointer" style="visibility: hidden;">.</div>
+                            <div class="iter-box">4</div>
+                        </div>
+                        <div class="iter-slot">
+                            <div class="iter-pointer" style="visibility: hidden;">.</div>
+                            <div class="iter-box">5</div>
+                        </div>
+                        <div class="iter-slot">
+                            <div class="iter-pointer" style="visibility: hidden;">.</div>
+                            <div class="iter-box">6</div>
+                        </div>
+                        <div class="iter-slot">
+                            <div class="iter-pointer ptr-rbegin">rbegin() <i class="fa-solid fa-arrow-down"></i></div>
+                            <div class="iter-box">8</div>
+                        </div>
+                        <div class="iter-slot">
+                            <div class="iter-pointer ptr-end">end() <i class="fa-solid fa-arrow-down"></i></div>
+                            <div class="iter-box past-end">fin</div>
+                        </div>
+                    </div>
+
+                    <div class="two-column" style="gap: 16px;">
+                        <div class="concept-card" style="border-left-color: var(--success-green);">
+                            <p style="font-size: 15.5px; margin: 0;">
+                                <strong><code>begin()</code></strong> apunta al <strong>primer elemento real</strong> de la estructura.<br>
+                                <strong><code>rbegin()</code></strong> apunta al <strong>último elemento real</strong> (recorrido inverso).
+                            </p>
+                        </div>
+                        <div class="concept-card" style="border-left-color: var(--danger-red);">
+                            <p style="font-size: 15.5px; margin: 0;">
+                                <strong>¡Cuidado! <code>end()</code></strong> apunta una posición <strong>después del último elemento</strong>. Sirve como marca de fin: nunca hagas <code>*estructura.end()</code>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 6: DECLARACIÓN Y MOVIMIENTO DE ITERADORES -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Uso y Navegación con Iteradores</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <p style="font-size: 16px; font-weight: 700; color: var(--utn-blue); margin-bottom: 6px;">1. Declaración Clásica vs <code>auto</code>:</p>
+                            <pre style="margin-bottom: 14px;"><code class="cpp" data-trim data-noescape>
+// Declaracion explicita:
+set&lt;int&gt;::iterator it = miSet.begin();
+set&lt;int&gt;::reverse_iterator rit = miSet.rbegin();
+
+// Con auto (mucho mas comodo!):
+auto it = miSet.begin();
+                            </code></pre>
+
+                            <p style="font-size: 16px; font-weight: 700; color: var(--utn-blue); margin-bottom: 6px;">2. Recorridos con <code>for</code> y <code>while</code>:</p>
+                            <pre><code class="cpp" data-trim data-noescape>
+for (auto it = miSet.begin(); it != miSet.end(); it++) {
+    cout &lt;&lt; *it &lt;&lt; " ";
+}
+
+auto it = miSet.begin();
+while (it != miSet.end() &amp;&amp; *it &lt; 6) {
+    it++;
+}
+                            </code></pre>
+                        </div>
+                        <div>
+                            <p style="font-size: 16px; font-weight: 700; color: var(--utn-blue); margin-bottom: 6px;">3. Desreferenciación (<code>*it</code>), avance y retroceso:</p>
+                            <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-2|4-5|7-9|11-13">
+set&lt;int&gt; miSet = {1, 4, 5, 6, 8};
+auto it = miSet.begin();
+
+// Acceso al valor apuntado con *:
+cout &lt;&lt; *it &lt;&lt; endl; // Imprime 1
+
+// Avanzar al siguiente elemento:
+it++;
+cout &lt;&lt; *it &lt;&lt; endl; // Imprime 4
+
+// Retroceder al elemento anterior:
+it--;
+cout &lt;&lt; *it &lt;&lt; endl; // Imprime 1
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 7: FIND, LOWER_BOUND Y UPPER_BOUND + COMPILADOR -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 7.A: Teoría y Ejemplo -->
+                <section data-background-color="#F8FAFC">
+                    <h2 class="slide-title">Búsqueda Rápida: <code>find</code>, <code>lower_bound</code> y <code>upper_bound</code></h2>
+                    <div class="content-area">
+                        <div class="two-column">
+                            <div>
+                                <div class="tile" style="margin-bottom: 12px;">
+                                    <span class="badge-pill blue" style="margin-bottom: 6px;">s.find(x)</span>
+                                    <p style="font-size: 15px;">Busca <code>x</code> en el contenedor. Si no existe, devuelve exactamente <code>s.end()</code>.</p>
+                                </div>
+                                <div class="tile" style="margin-bottom: 12px;">
+                                    <span class="badge-pill green" style="margin-bottom: 6px;">s.lower_bound(x)</span>
+                                    <p style="font-size: 15px;">Retorna un iterador al primer elemento <strong>mayor o igual a <code>x</code></strong> (&ge; x).</p>
+                                </div>
+                                <div class="tile">
+                                    <span class="badge-pill amber" style="margin-bottom: 6px;">s.upper_bound(x)</span>
+                                    <p style="font-size: 15px;">Retorna un iterador al primer elemento <strong>estrictamente mayor a <code>x</code></strong> (&gt; x).</p>
+                                </div>
+                            </div>
+                            <div>
+                                <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-6|8-9|11-12">
+set&lt;int&gt; s = {1, 4, 6, 7, 8};
+
+auto it = s.find(5);
+if (it == s.end()) {
+    // 5 no esta en la estructura
+}
+
+auto it1 = s.lower_bound(5); // *it1 vale 6 (>= 5)
+auto it2 = s.upper_bound(5); // *it2 vale 6 (> 5)
+
+auto it3 = s.lower_bound(6); // *it3 vale 6 (>= 6)
+auto it4 = s.upper_bound(6); // *it4 vale 7 (> 6)
+                                </code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7.B: Laboratorio OneCompiler -->
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title" style="font-size: 28px !important; margin-bottom: 10px !important;">Laboratorio en Vivo: <code>auto</code> e Iteradores</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler - Probá lower_bound y upper_bound</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-1', cppCodeIteradores, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 8: CIERRE DEL MÓDULO 0 Y PASO AL MÓDULO 1 -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2 style="font-size: 56px !important; margin-bottom: 12px;">¡Fin del Módulo 0!</h2>
+                    <p style="font-size: 20px !important; letter-spacing: 1px; margin-bottom: 35px;">
+                        Ya tenés las herramientas base (<code>auto</code> e iteradores). Pasemos al primer contenedor estrella.
+                    </p>
+                    <div style="display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;">
+                        <a href="../index.html" class="nav-cta-btn" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.25);">
+                            <i class="fa-solid fa-house"></i> <span>Volver al Hub</span>
+                        </a>
+                        <a href="../modulo1-vector/index.html" class="nav-cta-btn" style="background: var(--utn-gold); color: var(--utn-blue);">
+                            <span>Ir al Módulo 1: std::vector</span> <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+
+    <script src="../../../../dist/reveal.js"></script>
+    <script src="../../../../dist/plugin/notes.js"></script>
+    <script src="../../../../dist/plugin/highlight.js"></script>
+
+    <script>
+        const cppCodeIteradores = `#include <iostream>
+#include <set>
+#include <map>
+
+using namespace std;
+
+int main() {
+    // 1. Recorrido limpio de un map usando auto
+    map<char, int> m = {{'a', 1}, {'b', 2}, {'c', 3}};
+    cout << "=== Recorrido de map con auto ===" << endl;
+    for (auto thisPair : m) {
+        cout << thisPair.first << " -> " << thisPair.second << endl;
+    }
+
+    // 2. Navegacion y busquedas en un set con iteradores
+    set<int> s = {1, 4, 6, 7, 8};
+    cout << "\\n=== Iteradores en set {1, 4, 6, 7, 8} ===" << endl;
+
+    auto it = s.begin();
+    cout << "Primer elemento (*begin): " << *it << endl;
+    it++;
+    cout << "Segundo elemento (it++): " << *it << endl;
+
+    cout << "lower_bound(5) [>= 5]: " << *s.lower_bound(5) << endl;
+    cout << "lower_bound(6) [>= 6]: " << *s.lower_bound(6) << endl;
+    cout << "upper_bound(6) [> 6]:  " << *s.upper_bound(6) << endl;
+
+    return 0;
+}`;
+
+        // =========================================================================
+        // REGLA CRÍTICA DE ORDEN DE EJECUCIÓN (Anti-Blank-Slide en Móviles/Vertical)
+        // =========================================================================
+        const isMobilePortrait = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
+        if (isMobilePortrait) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({ width: newSize.width, height: newSize.height });
+        });
+
+        function sendCode(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        function checkCompilerSlides(slide) {
+            if (!slide) return;
+            if (slide.id === 'slide-compiler-1') {
+                sendCodeWithRetries('oc-editor-1', cppCodeIteradores, 'cpp', 'main.cpp');
+            }
+        }
+
+        Reveal.on('slidechanged', event => {
+            checkCompilerSlides(event.currentSlide);
+        });
+
+        Reveal.on('ready', event => {
+            checkCompilerSlides(Reveal.getCurrentSlide());
+        });
+    </script>
+</body>
+</html>

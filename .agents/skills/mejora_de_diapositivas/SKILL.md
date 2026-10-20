@@ -250,3 +250,29 @@ Antes de dar por finalizada la creación o refactorización de presentaciones, d
     - **Profundidad de assets compartidos (`dist/`)**:
       - Clases dentro de unidades (`sao/2026/unidad2/clase1/`): `../../../../dist/`
       - Clases directas o hubs de unidad (`aedd/2026/clase8/`, `sao/2026/unidad2/index.html`): `../../../dist/`
+
+20. **Arquitectura Anti-Fantasmeo en Resaltado de Código (`data-line-numbers="1-5|7-13"`)**:
+    - `RevealHighlight` clona el elemento `<code>` como un hijo `.fragment` dentro de `<pre class="code-wrapper">` para cada paso delimitado por pipes (`|`).
+    - **Error crítico**: Si el contenedor `<pre>` tiene `padding` (ej: `16px 20px`), el primer `<code>` se dibuja en el flujo normal a partir de `(20px, 16px)`, mientras que el clon (con `position: absolute; top: 0; left: 0;`) se posiciona en el borde superior izquierdo `(0, 0)`. Si además `code` tiene fondo transparente, ambos textos se renderizan al mismo tiempo desfasados por ~16px, provocando un efecto de texto fantasma borroso / doble imagen al avanzar.
+    - **Regla estricta de CSS**:
+      - El contenedor `<pre>` debe tener **`padding: 0 !important; position: relative !important; overflow: hidden !important;`**.
+      - El padding se aplica **exclusivamente al `code`**: `padding: 14px 18px !important; display: block; box-sizing: border-box; background: #272822 !important;`.
+      - Los fragmentos clonados `.reveal .hljs:not(:first-child).fragment` deben heredar exactamente: `position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; padding: 14px 18px !important; background: #272822 !important; box-sizing: border-box !important;`.
+      - De este modo, al pulsar flecha derecha para avanzar de paso, el texto no se desplaza ni 1 solo píxel: la capa activa cubre limpiamente a la anterior con fondo sólido, las líneas destacadas se muestran al 100% de opacidad y las inactivas se atenúan suavemente al 35% de opacidad sin fantasmeos.
+
+21. **Ubicación Canónica de `.branding-footer` (Cero duplicación dentro de `<section>`)**:
+    - **PROHIBIDO** colocar `<div class="branding-footer">` dentro de los `<section>`. Debido a que Reveal aplica transformaciones 2D/3D (`translate`, `scale`) a cada slide, cualquier pie con `position: fixed` o `absolute` dentro de una diapositiva se descoloca hacia el centro de la pantalla y se colapsa con el texto.
+    - El footer institucional debe declararse **una sola vez por presentación**, fuera de `.reveal` y `.slides`, ubicado inmediatamente antes del cierre de `</body>`:
+      ```html
+      <!-- Branding footer persistente en todas las diapositivas -->
+      <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+      ```
+    - Estilar siempre con `position: fixed !important; bottom: 24px; left: 35px; z-index: 9999; pointer-events: none;`.
+
+22. **Prohibición de Notación LaTeX (`$ ... $`) en HTML Nativo**:
+    - A menos que se incluya y configure explícitamente el plugin de MathJax/KaTeX, escribir `$O(1)$`, `$N$` o `$\ge x$` hace que el navegador imprima los símbolos de pesos literales (`$O(1)$`, `$N$`), ensuciando la lectura.
+    - Usar tipografía limpia directa: `O(1)`, `O(N log N)`, `N`, `&ge;` / `≥`, `&gt;` / `>`.
+
+23. **Tono Didáctico Natural vs. Frases de Plantilla Artificial ("Cero Clichés de IA")**:
+    - Desterrar expresiones vacías o de relleno que delatan generación automática: *"Regla de oro"*, *"En conclusión"*, *"En el fascinante mundo de..."*, *"Es crucial recordar que..."*.
+    - Redactar con el tono docente directo y técnico de la cátedra: *"Aclaración importante"*, *"Detalle a tener en cuenta"*, *"En STL los elementos se inicializan por defecto en 0..."*.
