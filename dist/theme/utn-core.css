@@ -148,10 +148,17 @@
     font-variant-ligatures: none;
     font-feature-settings: "liga" 0, "calt" 0;
     background: #272822;
-    padding: 16px 20px;
-    line-height: 1.4;
+    padding: 14px 18px;
+    line-height: 1.35;
     box-sizing: border-box;
     width: 100%;
+    max-height: none !important;
+}
+
+.reveal .two-column pre code {
+    font-size: 15px !important;
+    line-height: 1.28 !important;
+    padding: 10px 14px !important;
 }
 
 .reveal .hljs:not(:first-child).fragment {

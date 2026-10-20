@@ -1,0 +1,84 @@
+[
+  {
+    "name": "Hub Taller STL",
+    "url": "http://localhost:8080/aedd/2026/taller-stl/index.html",
+    "issues": [],
+    "screenshots": [
+      "hub_desktop.png",
+      "hub_mobile.png"
+    ]
+  },
+  {
+    "name": "Módulo 0 (Intro e Iteradores)",
+    "url": "http://localhost:8080/aedd/2026/taller-stl/modulo0-intro-iteradores/index.html",
+    "totalSlides": 9,
+    "issues": [],
+    "screenshots": [
+      "Módulo 0 (Intro e Iteradores)_slide_00.png"
+    ]
+  },
+  {
+    "name": "Módulo 1 (Vector)",
+    "url": "http://localhost:8080/aedd/2026/taller-stl/modulo1-vector/index.html",
+    "totalSlides": 11,
+    "issues": [],
+    "screenshots": [
+      "Módulo 1 (Vector)_slide_00.png"
+    ]
+  },
+  {
+    "name": "Módulo 2 (Map)",
+    "url": "http://localhost:8080/aedd/2026/taller-stl/modulo2-map/index.html",
+    "totalSlides": 9,
+    "issues": [],
+    "screenshots": [
+      "Módulo 2 (Map)_slide_00.png"
+    ]
+  },
+  {
+    "name": "Módulo 3 (Set)",
+    "url": "http://localhost:8080/aedd/2026/taller-stl/modulo3-set/index.html",
+    "totalSlides": 9,
+    "issues": [],
+    "screenshots": [
+      "Módulo 3 (Set)_slide_00.png"
+    ]
+  },
+  {
+    "name": "Módulo 4 (Stack)",
+    "url": "http://localhost:8080/aedd/2026/taller-stl/modulo4-stack/index.html",
+    "totalSlides": 9,
+    "issues": [],
+    "screenshots": [
+      "Módulo 4 (Stack)_slide_00.png"
+    ]
+  },
+  {
+    "name": "Módulo 5 (Queue y Deque)",
+    "url": "http://localhost:8080/aedd/2026/taller-stl/modulo5-queue-deque/index.html",
+    "totalSlides": 12,
+    "issues": [],
+    "screenshots": [
+      "Módulo 5 (Queue y Deque)_slide_00.png"
+    ]
+  },
+  {
+    "name": "Debugger Interactivo STL",
+    "url": "http://localhost:8080/aedd/2026/taller-stl/debugger/index.html",
+    "issues": [],
+    "screenshots": [
+      "debugger_vector_init.png",
+      "debugger_vector_step2.png",
+      "debugger_map_init.png",
+      "debugger_map_step2.png",
+      "debugger_set_init.png",
+      "debugger_set_step2.png",
+      "debugger_stack_init.png",
+      "debugger_stack_step2.png",
+      "debugger_deque_init.png",
+      "debugger_deque_step2.png",
+      "debugger_iteradores_init.png",
+      "debugger_iteradores_step2.png"
+    ]
+  }
+]

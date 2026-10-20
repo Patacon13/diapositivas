@@ -345,11 +345,14 @@ if (cola.empty()) {
             <!-- SLIDE 5: RESOLUCIÓN QUEUE + LABORATORIO ONECOMPILER -->
             <!-- ============================================================== -->
             <section>
-                <!-- 5.A: Resolución paso a paso -->
+                <!-- 5.A: Resolución en dos columnas -->
                 <section data-background-color="#F8FAFC">
                     <h2 class="slide-title">Resolución: El Colectivero Misterioso</h2>
                     <div class="content-area">
-                        <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-14|16-24">
+                        <div class="two-column">
+                            <div class="tile" style="padding: 14px 16px;">
+                                <h3 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 8px;"><i class="fa-solid fa-bus"></i> 1. Función Despachadora FIFO</h3>
+                                <pre><code class="cpp" data-trim data-noescape>
 void coleMisterioso(queue&lt;int&gt; &amp;numeros) {
     cout &lt;&lt; "Suben: ";
     while (!numeros.empty()) {
@@ -364,7 +367,12 @@ void coleMisterioso(queue&lt;int&gt; &amp;numeros) {
     }
     cout &lt;&lt; endl;
 }
+                                </code></pre>
+                            </div>
 
+                            <div class="tile" style="padding: 14px 16px;">
+                                <h3 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 8px;"><i class="fa-solid fa-play"></i> 2. Carga y Ejecución (main)</h3>
+                                <pre><code class="cpp" data-trim data-noescape>
 int main() {
     queue&lt;int&gt; filaBondi;
     for (int n : {7, 3, 10, 9, 2, 15}) {
@@ -374,7 +382,9 @@ int main() {
     coleMisterioso(filaBondi);
     return 0;
 }
-                        </code></pre>
+                                </code></pre>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -495,40 +505,49 @@ if (!d.empty()) {
             <!-- SLIDE 9: RESOLUCIÓN DEQUE + LABORATORIO ONECOMPILER -->
             <!-- ============================================================== -->
             <section>
-                <!-- 9.A: Resolución paso a paso -->
+                <!-- 9.A: Resolución en dos columnas -->
                 <section data-background-color="#F8FAFC">
                     <h2 class="slide-title">Resolución: Centro de Monitoreo (CME)</h2>
                     <div class="content-area">
-                        <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-3|5-9|11-16|18-28">
-void agregarEvento(deque&lt;string&gt; &amp;eventos, const string &amp;evento) {
-    eventos.push_front(evento);
+                        <div class="two-column">
+                            <div class="tile" style="padding: 14px 16px;">
+                                <h3 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 8px;"><i class="fa-solid fa-gears"></i> 1. Operaciones con deque</h3>
+                                <pre><code class="cpp" data-trim data-noescape>
+void agregarEvento(deque&lt;string&gt; &amp;ev, const string &amp;e) {
+    ev.push_front(e);
 }
 
-void limpiarEventosViejos(deque&lt;string&gt; &amp;eventos, unsigned maxEventos) {
-    while (eventos.size() &gt; maxEventos) {
-        eventos.pop_back();
+void limpiarEventos(deque&lt;string&gt; &amp;ev, unsigned maxEv) {
+    while (ev.size() &gt; maxEv) {
+        ev.pop_back();
     }
 }
 
-void mostrarEventos(const deque&lt;string&gt; &amp;eventos) {
-    cout &lt;&lt; "Eventos recientes:" &lt;&lt; endl;
-    for (const auto &amp;evento : eventos) {
-        cout &lt;&lt; "- " &lt;&lt; evento &lt;&lt; endl;
+void mostrarEventos(const deque&lt;string&gt; &amp;ev) {
+    for (const auto &amp;e : ev) {
+        cout &lt;&lt; "- " &lt;&lt; e &lt;&lt; endl;
     }
 }
+                                </code></pre>
+                            </div>
 
+                            <div class="tile" style="padding: 14px 16px;">
+                                <h3 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 8px;"><i class="fa-solid fa-play"></i> 2. Flujo Principal (main)</h3>
+                                <pre><code class="cpp" data-trim data-noescape>
 int main() {
     deque&lt;string&gt; eventos;
-    agregarEvento(eventos, "Usuario inicio sesion");
-    agregarEvento(eventos, "Usuario cambio configuracion");
-    agregarEvento(eventos, "Nuevo mensaje recibido");
-    agregarEvento(eventos, "Archivo descargado");
+    agregarEvento(eventos, "Inicio de sesion");
+    agregarEvento(eventos, "Cambio de config");
+    agregarEvento(eventos, "Mensaje recibido");
+    agregarEvento(eventos, "Archivo bajado");
 
-    limpiarEventosViejos(eventos, 3);
+    limpiarEventos(eventos, 3);
     mostrarEventos(eventos);
     return 0;
 }
-                        </code></pre>
+                                </code></pre>
+                            </div>
+                        </div>
                     </div>
                 </section>
 

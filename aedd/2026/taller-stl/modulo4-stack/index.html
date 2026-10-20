@@ -378,11 +378,14 @@ while (!letras.empty()) {
             <!-- SLIDE 6: RESOLUCIÓN PASO A PASO + LABORATORIO ONECOMPILER -->
             <!-- ============================================================== -->
             <section>
-                <!-- 6.A: Resolución paso a paso (Enfoque del taller) -->
+                <!-- 6.A: Resolución paso a paso en dos columnas -->
                 <section data-background-color="#FFFFFF">
                     <h2 class="slide-title">Resolución Paso a Paso: Paréntesis Balanceados</h2>
                     <div class="content-area">
-                        <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-9|11-13|15-19|21-23">
+                        <div class="two-column">
+                            <div class="tile" style="padding: 14px 16px;">
+                                <h3 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 8px;"><i class="fa-solid fa-layer-group"></i> 1. Lectura y Apilado</h3>
+                                <pre><code class="cpp" data-trim data-noescape>
 #include &lt;iostream&gt;
 #include &lt;stack&gt;
 #include &lt;string&gt;
@@ -394,12 +397,22 @@ int main() {
     int contadorParentesis = 0;
 
     cin &gt;&gt; formula;
-    for (auto thisSymbol : formula)
+    for (auto thisSymbol : formula) {
         pila.push(thisSymbol);
+    }
+                                </code></pre>
+                            </div>
 
-    while (!pila.empty() and contadorParentesis &gt;= 0) {
-        if (pila.top() == ')') contadorParentesis++;
-        else if (pila.top() == '(') contadorParentesis--;
+                            <div class="tile" style="padding: 14px 16px;">
+                                <h3 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 8px;"><i class="fa-solid fa-check-double"></i> 2. Verificación de Balance</h3>
+                                <pre><code class="cpp" data-trim data-noescape>
+    while (!pila.empty() &amp;&amp; 
+           contadorParentesis &gt;= 0) {
+        if (pila.top() == ')') {
+            contadorParentesis++;
+        } else if (pila.top() == '(') {
+            contadorParentesis--;
+        }
         pila.pop();
     }
 
@@ -407,7 +420,9 @@ int main() {
     cout &lt;&lt; boolalpha &lt;&lt; respuesta &lt;&lt; endl;
     return 0;
 }
-                        </code></pre>
+                                </code></pre>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
