@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>SAO - Unidad 5 | Clase 2: Inserción, Eliminación & Corrimientos</title>
+
+    <!-- Reveal.js & Plugins CSS -->
+    <link rel="stylesheet" href="../../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../../dist/plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/tuti.css" />
+
+    <!-- Tipografías Oficiales & Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Títulos de Diapositiva */
+        .slide-title {
+            font-size: 36px !important;
+            font-weight: 800 !important;
+            color: var(--utn-blue) !important;
+            margin-bottom: 20px !important;
+            border-left: 8px solid var(--utn-gold);
+            padding-left: 18px;
+            text-transform: uppercase !important;
+            letter-spacing: -0.5px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .slide-subtitle {
+            color: var(--cyan-accent);
+            font-weight: 700;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* Footer Institucional Fijo Global */
+        .branding-footer {
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 35px !important;
+            color: #94A3B8 !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            letter-spacing: 1px !important;
+            z-index: 9999 !important;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
+        .branding-footer span {
+            color: var(--utn-gold) !important;
+        }
+
+        @media (max-aspect-ratio: 1/1), (max-width: 768px) {
+            .hero-container { flex-direction: column !important; padding: 15px !important; }
+            .hero-image { height: 180px !important; min-height: 180px !important; width: 100% !important; margin-bottom: 12px !important; }
+            .hero-text { padding-left: 0 !important; text-align: center !important; }
+            .hero-title { font-size: 32px !important; text-align: center !important; margin-bottom: 10px !important; }
+            .staff-list { margin-bottom: 10px !important; }
+            .staff-list h4 { text-align: center !important; font-size: 17px !important; margin-bottom: 4px !important; }
+            .staff-list ul { display: inline-block !important; text-align: left !important; }
+            .staff-list li { font-size: 15px !important; margin-bottom: 3px !important; }
+
+            .slide-title { font-size: 26px !important; margin-bottom: 14px !important; border-left-width: 6px !important; padding-left: 12px !important; }
+            .reveal p, .reveal li { font-size: 15px !important; }
+            .branding-footer { bottom: 10px !important; left: 15px !important; font-size: 11px !important; }
+        }
+
+        /* Tarjetas Conceptuales */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            width: 100%;
+        }
+
+        .concept-card {
+            background: #FFFFFF;
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+            padding: 20px 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-icon-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .concept-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            margin-bottom: 6px;
+        }
+
+        .concept-card p {
+            font-size: 13.5px;
+            color: var(--text-light);
+            line-height: 1.45;
+            margin-bottom: 0;
+        }
+
+        /* Cuadros Callout Estandarizados */
+        .callout-box {
+            display: flex;
+            align-items: flex-start !important;
+            text-align: left !important;
+            gap: 14px;
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            border-left: 5px solid var(--cyan-accent);
+            border-radius: 10px;
+            padding: 13px 16px;
+            margin-top: 14px;
+        }
+
+        .callout-box i {
+            color: var(--cyan-accent);
+            font-size: 20px;
+            margin-top: 3px !important;
+            flex-shrink: 0;
+        }
+
+        .callout-box strong {
+            display: block;
+            margin-bottom: 2px;
+            color: var(--utn-blue);
+            font-size: 14.5px;
+        }
+
+        .callout-box p strong {
+            display: inline !important;
+            color: inherit !important;
+            font-size: inherit !important;
+        }
+
+        .callout-box p {
+            margin: 0 !important;
+            text-align: left !important;
+            font-size: 13.5px !important;
+            line-height: 1.4 !important;
+            color: var(--text-main);
+        }
+
+        /* Badges de Código */
+        .code-badge {
+            font-family: 'Fira Code', monospace;
+            background: #F1F5F9;
+            color: #0284C7;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            white-space: nowrap !important;
+            display: inline-block;
+        }
+
+        /* Ventana del Compilador OneCompiler */
+        .compiler-window {
+            width: 100%;
+            height: 520px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid #334155;
+            background: #1E293B;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .compiler-window .header {
+            background: #0F172A;
+            padding: 10px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .compiler-window .header span {
+            color: #94A3B8;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .compiler-window .header button {
+            background: #334155;
+            color: #F8FAFC;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .compiler-window .header button:hover {
+            background: #475569;
+        }
+
+        .compiler-window iframe {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Diagrama de Memoria con Tope */
+        .tope-vector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 16px 0 12px 0;
+            padding: 16px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+        }
+
+        .ram-cell-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .ram-index {
+            font-family: 'Fira Code', monospace;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #0284C7;
+            background: #E0F2FE;
+            padding: 2px 7px;
+            border-radius: 5px;
+        }
+
+        .ram-cell {
+            width: 80px;
+            height: 60px;
+            background: #FFFFFF;
+            border: 2px solid #002B5B;
+            border-radius: 9px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+        }
+
+        .cell-empty {
+            border: 2px dashed #94A3B8;
+            background: #F1F5F9;
+        }
+
+        .cell-empty .ram-value {
+            color: #94A3B8;
+            font-size: 16px;
+        }
+
+        .ram-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 19px;
+            font-weight: 700;
+            color: #002B5B;
+        }
+
+        .ram-badge-tope {
+            background: #EF4444;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Tabla comparativa */
+        .reveal table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #E2E8F0;
+            margin: 10px 0;
+        }
+
+        .reveal table th {
+            background: #002B5B;
+            color: white;
+            padding: 9px 12px;
+            text-align: left;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .reveal table td {
+            padding: 9px 12px;
+            border-bottom: 1px solid #E2E8F0;
+            color: var(--text-main);
+        }
+
+        .reveal table tr:nth-child(even) {
+            background-color: #F8FAFC;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- =========================================================================
+                 SLIDE 1: PORTADA INSTITUCIONAL TUTI (Hero Split)
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title" style="text-align: left; font-size: 44px !important; margin-bottom: 12px !important;">SISTEMA DE AUTOMATIZACIÓN DE OFICINAS</h1>
+                        <h3 style="font-size: 22px; color: var(--cyan-accent); font-weight: 600; margin-bottom: 24px; text-align: left;">Unidad #5 - Estructuras de Datos (Clase 2: Inserción, Eliminación &amp; Corrimientos)</h3>
+                        
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 2: CAPACIDAD FÍSICA VS. TAMAÑO LÓGICO (TOPE)
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">EL DILEMA ESTÁTICO: <span class="slide-subtitle">Capacidad Física vs. Lógica</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 10px;">
+                        En un arreglo estático, la reserva en RAM es fija (<code class="code-badge">length</code>). Para simular una colección dinámica introducimos la variable de control <code class="code-badge">tope</code>:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+                        
+                        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; border-top: 4px solid var(--utn-blue);">
+                            <h4 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 6px;"><i class="fa-solid fa-hard-drive"></i> Tamaño Físico (<code class="code-badge">arreglo.length</code>)</h4>
+                            <p style="font-size: 13px; color: var(--text-light); line-height: 1.45; margin: 0;">
+                                Cantidad total de casilleros reservados en la memoria del sistema. No se puede modificar una vez creado. Marca el límite de desbordamiento (<em>Overflow</em>).
+                            </p>
+                        </div>
+
+                        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; border-top: 4px solid #EF4444;">
+                            <h4 style="font-size: 16px; color: #B91C1C; margin-bottom: 6px;"><i class="fa-solid fa-arrow-down-short-wide"></i> Tamaño Lógico (<code class="code-badge">tope</code>)</h4>
+                            <p style="font-size: 13px; color: var(--text-light); line-height: 1.45; margin: 0;">
+                                Cantidad real de elementos válidos actualmente cargados. Indica el próximo casillero libre disponible para insertar.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Representación Visual -->
+                    <div class="tope-vector">
+                        <div class="ram-cell-group">
+                            <span class="ram-index">idx 0</span>
+                            <div class="ram-cell"><span class="ram-value">65</span></div>
+                            <span style="font-size: 11px; color: #10B981; font-weight: 600;">Ocupado</span>
+                        </div>
+                        <div class="ram-cell-group">
+                            <span class="ram-index">idx 1</span>
+                            <div class="ram-cell"><span class="ram-value">22</span></div>
+                            <span style="font-size: 11px; color: #10B981; font-weight: 600;">Ocupado</span>
+                        </div>
+                        <div class="ram-cell-group">
+                            <span class="ram-index">idx 2</span>
+                            <div class="ram-cell"><span class="ram-value">14</span></div>
+                            <span style="font-size: 11px; color: #10B981; font-weight: 600;">Ocupado</span>
+                        </div>
+                        <div class="ram-cell-group">
+                            <span class="ram-index" style="background: #FEE2E2; color: #EF4444;">idx 3</span>
+                            <div class="ram-cell cell-empty"><span class="ram-value">?</span></div>
+                            <span class="ram-badge-tope">&larr; tope = 3</span>
+                        </div>
+                        <div class="ram-cell-group">
+                            <span class="ram-index">idx 4</span>
+                            <div class="ram-cell cell-empty"><span class="ram-value">?</span></div>
+                            <span style="font-size: 11px; color: #94A3B8;">Libre</span>
+                        </div>
+                    </div>
+
+                    <div class="callout-box" style="margin-top: 6px;">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <div>
+                            <strong>Condición de desbordamiento (Overflow)</strong>
+                            <p>Antes de insertar cualquier nuevo elemento, siempre debemos verificar <code class="code-badge">if (tope &lt; arreglo.length)</code>. Si <code class="code-badge">tope == arreglo.length</code>, el arreglo está lleno y no admite más datos.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 3: INSERCIÓN AL FINAL VS. INSERCIÓN AL INICIO
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">INSERCIÓN EN VECTORES: <span class="slide-subtitle">Al Final vs. Al Inicio</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 10px;">
+                        La posición donde se inserta el nuevo dato determina la complejidad temporal del algoritmo:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+                        
+                        <!-- Inserción al Final -->
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: #38BDF8; display: flex; justify-content: space-between;">
+                                <span>1. Inserción al Final (al Tope)</span>
+                                <span style="background: #0284C7; color: white; padding: 1px 7px; border-radius: 4px; font-size: 11px;">O(1) Inmediato</span>
+                            </div>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px;">public static boolean insertarFinal(int[] arr, int valor) {
+    if (tope &lt; arr.length) {
+        arr[tope] = valor;
+        tope++;
+        return true;
+    }
+    return false; // Vector lleno
+}</code></pre>
+                            <p style="padding: 10px 14px; margin: 0; font-size: 12px; color: #94A3B8; background: #0F172A;">
+                                Directo: se guarda en la celda <code class="code-badge">tope</code> sin desplazar ningún elemento existente.
+                            </p>
+                        </div>
+
+                        <!-- Inserción al Inicio -->
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: #F59E0B; display: flex; justify-content: space-between;">
+                                <span>2. Inserción al Inicio (en 0)</span>
+                                <span style="background: #D97706; color: white; padding: 1px 7px; border-radius: 4px; font-size: 11px;">O(N) Corrimiento</span>
+                            </div>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px;">public static boolean insertarInicio(int[] arr, int valor) {
+    if (tope &gt;= arr.length) return false;
+    
+    // Corrimiento a la derecha (descendente)
+    for (int i = tope; i &gt; 0; i--) {
+        arr[i] = arr[i - 1];
+    }
+    arr[0] = valor;
+    tope++;
+    return true;
+}</code></pre>
+                            <p style="padding: 10px 14px; margin: 0; font-size: 12px; color: #94A3B8; background: #0F172A;">
+                                Requiere "hacer espacio": empuja todos los datos una posición a la derecha.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="callout-box" style="margin-top: 14px;">
+                        <i class="fa-solid fa-arrows-left-right"></i>
+                        <div>
+                            <strong>Sentido del bucle para hacer espacio</strong>
+                            <p>El bucle de corrimiento a la derecha DEBE ser obligatoriamente <strong>descendente</strong> (<code class="code-badge">i = tope; i &gt; 0; i--</code>). Si se recorre hacia adelante, el primer valor se copia sobre el segundo y se destruye toda la información.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 4: DIAGRAMA VISUAL DEL CORRIMIENTO A LA DERECHA
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">MECÁNICA VISUAL: <span class="slide-subtitle">Corrimiento a la Derecha</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 8px;">
+                        Paso a paso para insertar el valor <code class="code-badge">99</code> en la posición <code class="code-badge">0</code> de un vector con <code class="code-badge">tope = 3</code>:
+                    </p>
+
+                    <!-- Estado inicial -->
+                    <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 16px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-size: 13px; font-weight: 700; color: var(--utn-blue); width: 140px;">1. Estado Inicial</span>
+                        <div style="display: flex; gap: 8px; font-family: 'Fira Code', monospace; font-size: 14px;">
+                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[0]: 10</span>
+                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[1]: 20</span>
+                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[2]: 30</span>
+                            <span style="background: #F1F5F9; color: #94A3B8; padding: 4px 10px; border-radius: 6px;">[3]: ? (tope)</span>
+                        </div>
+                    </div>
+
+                    <!-- Paso 1 -->
+                    <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 16px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-size: 13px; font-weight: 700; color: #D97706; width: 140px;">2. i = 3 &rarr; arr[3]=arr[2]</span>
+                        <div style="display: flex; gap: 8px; font-family: 'Fira Code', monospace; font-size: 14px;">
+                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[0]: 10</span>
+                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[1]: 20</span>
+                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 10px; border-radius: 6px;">[2]: 30</span>
+                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 10px; border-radius: 6px; border: 2px solid #F59E0B;">[3]: 30 &larr; copia</span>
+                        </div>
+                    </div>
+
+                    <!-- Paso 2 -->
+                    <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 16px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-size: 13px; font-weight: 700; color: #D97706; width: 140px;">3. i = 2 &rarr; arr[2]=arr[1]</span>
+                        <div style="display: flex; gap: 8px; font-family: 'Fira Code', monospace; font-size: 14px;">
+                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[0]: 10</span>
+                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 10px; border-radius: 6px;">[1]: 20</span>
+                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 10px; border-radius: 6px; border: 2px solid #F59E0B;">[2]: 20 &larr; copia</span>
+                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[3]: 30</span>
+                        </div>
+                    </div>
+
+                    <!-- Inserción final -->
+                    <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 10px; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-size: 13px; font-weight: 700; color: #15803D; width: 140px;">4. Inserción arr[0] = 99</span>
+                        <div style="display: flex; gap: 8px; font-family: 'Fira Code', monospace; font-size: 14px;">
+                            <span style="background: #DCFCE7; color: #166534; padding: 4px 10px; border-radius: 6px; font-weight: 700; border: 2px solid #22C55E;">[0]: 99 (nuevo)</span>
+                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[1]: 10</span>
+                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[2]: 20</span>
+                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[3]: 30</span>
+                        </div>
+                    </div>
+
+                    <div class="callout-box" style="margin-top: 10px;">
+                        <i class="fa-solid fa-check"></i>
+                        <div>
+                            <strong>Resultado exitoso</strong>
+                            <p>Actualizamos <code class="code-badge">tope = 4</code>. Todos los datos preservaron su integridad sin pérdida ni duplicaciones.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 5: PRÁCTICA GUIADA 1: INSERCIÓN CONDICIONADA (PROBLEMA 7)
+                 ========================================================================= -->
+            <section>
+                <section>
+                    <h2 class="slide-title">PRÁCTICA GUIADA 1: <span class="slide-subtitle">Inserción de Múltiplos (Prob. 7)</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 15px; color: #475569; margin-bottom: 10px;">
+                            <strong>Problema:</strong> Insertar un elemento con valor <code class="code-badge">X + 1</code> inmediatamente detrás de cada elemento que sea múltiplo de 100 (<code class="code-badge">X % 100 == 0</code>). Retornar la cantidad de elementos insertados.
+                        </p>
+
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 12px;">
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13px;">public static int insertarDetrasDeMultiplos(int[] arr, int cantActual) {
+    int insertados = 0;
+    for (int i = 0; i &lt; cantActual; i++) {
+        if (arr[i] != 0 && arr[i] % 100 == 0) {
+            // Abrimos espacio desde cantActual hacia la derecha
+            for (int k = cantActual; k &gt; i + 1; k--) {
+                arr[k] = arr[k - 1];
+            }
+            arr[i + 1] = arr[i] + 1; // Insertamos X + 1
+            cantActual++;
+            insertados++;
+            i++; // ¡CLAVE! Saltamos el elemento recién insertado
+        }
+    }
+    return insertados;
+}</code></pre>
+                        </div>
+
+                        <div class="callout-box">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <div>
+                                <strong>¡Cuidado con el bucle infinito! El salto de índice (<code class="code-badge">i++</code>)</strong>
+                                <p>Si insertamos el nuevo valor en <code class="code-badge">i + 1</code> y no avanzamos <code class="code-badge">i++</code>, en la siguiente iteración el ciclo podría evaluar el nuevo elemento insertado si este cumpliera la condición, produciendo un ciclo descontrolado.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VERTICAL SLIDE: ONECOMPILER INSERCIÓN MÚLTIPLOS -->
+                <section id="slide-compiler-multiplos" data-background-color="#0F172A">
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Inserción Condicionada (Problema 7)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-multiplos', codeMultiplos, 'java', 'Main.java')">
+                                <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
+                            </button>
+                        </div>
+                        <iframe id="oc-editor-multiplos" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 6: ELIMINACIÓN: AL FINAL VS. AL INICIO
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">ELIMINACIÓN EN VECTORES: <span class="slide-subtitle">Al Final vs. Al Inicio</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
+                        Al borrar un dato, el objetivo es mantener la <strong>contigüidad de la memoria</strong> sin dejar "huecos vacíos" intermedios:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+                        
+                        <!-- Eliminación al Final -->
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: #38BDF8; display: flex; justify-content: space-between;">
+                                <span>1. Eliminación al Final</span>
+                                <span style="background: #0284C7; color: white; padding: 1px 7px; border-radius: 4px; font-size: 11px;">O(1) Inmediato</span>
+                            </div>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px;">public static boolean eliminarFinal(int[] arr) {
+    if (tope &gt; 0) {
+        tope--; // Eliminación lógica
+        return true;
+    }
+    return false; // Vector vacío (Underflow)
+}</code></pre>
+                            <p style="padding: 10px 14px; margin: 0; font-size: 12px; color: #94A3B8; background: #0F172A;">
+                                Instantáneo: decrementar <code class="code-badge">tope--</code> ignora el último dato sin borrar físicamente la RAM.
+                            </p>
+                        </div>
+
+                        <!-- Eliminación al Inicio -->
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: #EF4444; display: flex; justify-content: space-between;">
+                                <span>2. Eliminación al Inicio (en 0)</span>
+                                <span style="background: #DC2626; color: white; padding: 1px 7px; border-radius: 4px; font-size: 11px;">O(N) Compactación</span>
+                            </div>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px;">public static boolean eliminarInicio(int[] arr) {
+    if (tope &lt;= 0) return false;
+    
+    // Corrimiento hacia la izquierda (ascendente)
+    for (int i = 0; i &lt; tope - 1; i++) {
+        arr[i] = arr[i + 1];
+    }
+    tope--;
+    return true;
+}</code></pre>
+                            <p style="padding: 10px 14px; margin: 0; font-size: 12px; color: #94A3B8; background: #0F172A;">
+                                Compactación: cada elemento subsiguiente sobreescribe a su vecino izquierdo.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="callout-box" style="margin-top: 14px;">
+                        <i class="fa-solid fa-circle-nodes"></i>
+                        <div>
+                            <strong>Bucle ascendente para compactar</strong>
+                            <p>Al eliminar, recorremos de forma <strong>ascendente</strong> (<code class="code-badge">i = pos; i &lt; tope - 1; i++</code>). Traemos los datos de la derecha hacia la izquierda, pisando el elemento eliminado y cerrando el hueco.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 7: PRÁCTICA GUIADA 2: ELIMINACIÓN DE REPETIDOS (PROBLEMA 8)
+                 ========================================================================= -->
+            <section>
+                <section>
+                    <h2 class="slide-title">PRÁCTICA GUIADA 2: <span class="slide-subtitle">Eliminación In Situ (Prob. 8)</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 15px; color: #475569; margin-bottom: 10px;">
+                            <strong>Problema:</strong> Dado un vector <strong>ordenado</strong>, eliminar todos los elementos repetidos *in situ* (sin crear un arreglo auxiliar) y retornar la cantidad de elementos pares eliminados.
+                        </p>
+
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 12px;">
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13px;">public static int eliminarRepetidos(int[] arr, int tope) {
+    int paresEliminados = 0;
+    int i = 0;
+    while (i &lt; tope - 1) {
+        if (arr[i] == arr[i + 1]) { // Encontramos un duplicado
+            if (arr[i] % 2 == 0) paresEliminados++;
+            
+            // Compactamos a la izquierda sobreescribiendo arr[i+1]
+            for (int k = i + 1; k &lt; tope - 1; k++) {
+                arr[k] = arr[k + 1];
+            }
+            tope--; // ¡NO incrementamos i! Podría haber otro repetido
+        } else {
+            i++; // Solo avanzamos si no hubo eliminación
+        }
+    }
+    return paresEliminados;
+}</code></pre>
+                        </div>
+
+                        <div class="callout-box">
+                            <i class="fa-solid fa-code-compare"></i>
+                            <div>
+                                <strong>¿Por qué usar while en lugar de for?</strong>
+                                <p>Si el arreglo tiene <code class="code-badge">{ 2, 2, 2, 5 }</code> y borramos el segundo <code class="code-badge">2</code>, el tercer <code class="code-badge">2</code> cae en la posición actual. Si avanzáramos ciegamente el índice, ese tercer <code class="code-badge">2</code> quedaría sin evaluar.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VERTICAL SLIDE: ONECOMPILER ELIMINACIÓN REPETIDOS -->
+                <section id="slide-compiler-repetidos" data-background-color="#0F172A">
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Eliminación In Situ de Repetidos (Problema 8)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-repetidos', codeRepetidos, 'java', 'Main.java')">
+                                <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
+                            </button>
+                        </div>
+                        <iframe id="oc-editor-repetidos" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 8: MATRIZ DE COMPLEJIDAD Y RENDIMIENTO
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">ANÁLISIS TEMPORAL: <span class="slide-subtitle">Resumen Big-O en Arreglos</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
+                        Comportamiento algorítmico según la posición y la naturaleza de la operación:
+                    </p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Operación</th>
+                                <th>Posición</th>
+                                <th>Complejidad</th>
+                                <th>Justificación Mecánica</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Acceso / Modificación</strong></td>
+                                <td>Cualquier índice</td>
+                                <td><span style="color: #10B981; font-weight: 700;">O(1)</span></td>
+                                <td>Cálculo aritmético de puntero directo en RAM.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Inserción</strong></td>
+                                <td>Al final (tope)</td>
+                                <td><span style="color: #10B981; font-weight: 700;">O(1)</span></td>
+                                <td>Asignación inmediata en la casilla libre de <code class="code-badge">tope</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Inserción</strong></td>
+                                <td>Al inicio o medio</td>
+                                <td><span style="color: #EF4444; font-weight: 700;">O(N)</span></td>
+                                <td>Requiere desplazar hasta N elementos a la derecha.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Eliminación</strong></td>
+                                <td>Al final (tope)</td>
+                                <td><span style="color: #10B981; font-weight: 700;">O(1)</span></td>
+                                <td>Basta con decrementar el contador <code class="code-badge">tope--</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Eliminación</strong></td>
+                                <td>Al inicio o medio</td>
+                                <td><span style="color: #EF4444; font-weight: 700;">O(N)</span></td>
+                                <td>Requiere desplazar todos los elementos a la izquierda.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout-box" style="margin-top: 14px;">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <div>
+                            <strong>Conclusión Arquitectónica</strong>
+                            <p>Los arreglos estáticos son insuperables en acceso por índice y operaciones al tope O(1), pero penalizan con corrimientos O(N) las inserciones y borrados en posiciones intermedias.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 9: CIERRE CANÓNICO TUTI
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title" style="font-size: 48px !important; text-align: left; margin-bottom: 10px !important;">¿PREGUNTAS?</h1>
+                        <h3 style="font-size: 20px; color: var(--text-main); font-weight: 600; margin-bottom: 15px; text-align: left;">Espacio de consultas y dudas</h3>
+                        <p style="font-size: 16px; color: var(--text-light); text-align: left; margin-bottom: 20px;">¡Muchas gracias por su atención!</p>
+                        
+                        <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+                            <a href="../index.html" style="background: var(--utn-blue); color: white; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-house"></i> Portal Unidad 5
+                            </a>
+                            <a href="../clase3/index.html" style="background: var(--cyan-accent); color: white; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                                Ir a Clase 3 <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">TUTI / UTN <span>SANTA FE</span></div>
+
+    <!-- Scripts de Reveal.js y Plugins -->
+    <script src="../../../../dist/reveal.js"></script>
+    <script src="../../../../dist/plugin/highlight.js"></script>
+    <script src="../../../../dist/plugin/notes.js"></script>
+
+    <script>
+        // =========================================================================
+        // Script Anti-Blank-Slide para Móviles y Pantallas Verticales
+        // =========================================================================
+        const isMobileOrVertical = window.innerWidth < 768 || window.innerHeight > window.innerWidth;
+        if (isMobileOrVertical) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            const slidesContainer = document.querySelector('.slides');
+            document.querySelectorAll('.slides > section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                slidesContainer.insertBefore(sec, parent);
+            });
+            document.querySelectorAll('.slides > section').forEach(sec => {
+                if (sec.children.length === 0) {
+                    sec.remove();
+                }
+            });
+        }
+
+        // =========================================================================
+        // Canvas Adaptativo
+        // =========================================================================
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let size = getCanvasSize();
+            Reveal.configure({
+                width: size.width,
+                height: size.height
+            });
+        });
+
+        // =========================================================================
+        // Códigos para OneCompiler
+        // =========================================================================
+        const codeMultiplos = `import java.util.Arrays;
+
+public class Main {
+    // Problema 7: Insertar valor + 1 tras cada múltiplo de 100
+    public static int insertarDetrasDeMultiplos(int[] arr, int cantInicial) {
+        int tope = cantInicial;
+        int insertados = 0;
+
+        for (int i = 0; i < tope; i++) {
+            if (arr[i] != 0 && arr[i] % 100 == 0) {
+                // Hacemos espacio a la derecha
+                for (int k = tope; k > i + 1; k--) {
+                    arr[k] = arr[k - 1];
+                }
+                arr[i + 1] = arr[i] + 1;
+                tope++;
+                insertados++;
+                i++; // Saltamos el elemento insertado para no evaluarlo
+            }
+        }
+        return insertados;
+    }
+
+    public static void main(String[] args) {
+        // Reservamos un arreglo con capacidad física suficiente (20)
+        int[] datos = new int[20];
+        int[] inicial = { 0, 20, 2500, 12, 300 };
+        for (int i = 0; i < inicial.length; i++) {
+            datos[i] = inicial[i];
+        }
+        int tope = inicial.length;
+
+        System.out.println("ANTES:   " + Arrays.toString(Arrays.copyOf(datos, tope)));
+        
+        int agregados = insertarDetrasDeMultiplos(datos, tope);
+        tope += agregados;
+
+        System.out.println("DESPUÉS: " + Arrays.toString(Arrays.copyOf(datos, tope)));
+        System.out.println("Cantidad de elementos insertados: " + agregados);
+    }
+}`;
+
+        const codeRepetidos = `import java.util.Arrays;
+
+public class Main {
+    // Problema 8: Eliminación in situ de repetidos en vector ordenado
+    public static int eliminarRepetidos(int[] arr, int[] topeWrapper) {
+        int tope = topeWrapper[0];
+        int paresEliminados = 0;
+        int i = 0;
+
+        while (i < tope - 1) {
+            if (arr[i] == arr[i + 1]) {
+                if (arr[i] % 2 == 0) {
+                    paresEliminados++;
+                }
+                // Corrimiento hacia la izquierda para compactar
+                for (int k = i + 1; k < tope - 1; k++) {
+                    arr[k] = arr[k + 1];
+                }
+                tope--; // Reducimos el tamaño lógico
+                // No incrementamos i porque el nuevo arr[i+1] podría ser repetido
+            } else {
+                i++;
+            }
+        }
+        topeWrapper[0] = tope;
+        return paresEliminados;
+    }
+
+    public static void main(String[] args) {
+        int[] vector = { 2, 2, 4, 4, 4, 7, 9, 10, 10 };
+        int[] topeWrapper = { vector.length };
+
+        System.out.println("ANTES:   " + Arrays.toString(Arrays.copyOf(vector, topeWrapper[0])));
+
+        int paresBorrados = eliminarRepetidos(vector, topeWrapper);
+
+        System.out.println("DESPUÉS: " + Arrays.toString(Arrays.copyOf(vector, topeWrapper[0])));
+        System.out.println("Cantidad de elementos pares eliminados: " + paresBorrados);
+    }
+}`;
+
+        function sendCode(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        Reveal.on('slidechanged', event => {
+            const slideId = event.currentSlide ? event.currentSlide.id : '';
+            if (slideId === 'slide-compiler-multiplos') {
+                sendCodeWithRetries('oc-editor-multiplos', codeMultiplos, 'java', 'Main.java');
+            } else if (slideId === 'slide-compiler-repetidos') {
+                sendCodeWithRetries('oc-editor-repetidos', codeRepetidos, 'java', 'Main.java');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>SAO - Unidad 5 | Clase 1: Arreglos Unidimensionales (Vectores)</title>
+
+    <!-- Reveal.js & Plugins CSS -->
+    <link rel="stylesheet" href="../../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../../dist/plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/tuti.css" />
+
+    <!-- Tipografías Oficiales & Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Títulos de Diapositiva */
+        .slide-title {
+            font-size: 36px !important;
+            font-weight: 800 !important;
+            color: var(--utn-blue) !important;
+            margin-bottom: 20px !important;
+            border-left: 8px solid var(--utn-gold);
+            padding-left: 18px;
+            text-transform: uppercase !important;
+            letter-spacing: -0.5px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .slide-subtitle {
+            color: var(--cyan-accent);
+            font-weight: 700;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* Footer Institucional Fijo Global */
+        .branding-footer {
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 35px !important;
+            color: #94A3B8 !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            letter-spacing: 1px !important;
+            z-index: 9999 !important;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
+        .branding-footer span {
+            color: var(--utn-gold) !important;
+        }
+
+        @media (max-aspect-ratio: 1/1), (max-width: 768px) {
+            .hero-container { flex-direction: column !important; padding: 15px !important; }
+            .hero-image { height: 180px !important; min-height: 180px !important; width: 100% !important; margin-bottom: 12px !important; }
+            .hero-text { padding-left: 0 !important; text-align: center !important; }
+            .hero-title { font-size: 32px !important; text-align: center !important; margin-bottom: 10px !important; }
+            .staff-list { margin-bottom: 10px !important; }
+            .staff-list h4 { text-align: center !important; font-size: 17px !important; margin-bottom: 4px !important; }
+            .staff-list ul { display: inline-block !important; text-align: left !important; }
+            .staff-list li { font-size: 15px !important; margin-bottom: 3px !important; }
+
+            .slide-title { font-size: 26px !important; margin-bottom: 14px !important; border-left-width: 6px !important; padding-left: 12px !important; }
+            .reveal p, .reveal li { font-size: 15px !important; }
+            .branding-footer { bottom: 10px !important; left: 15px !important; font-size: 11px !important; }
+        }
+
+        /* Tarjetas Conceptuales */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            width: 100%;
+        }
+
+        .concept-card {
+            background: #FFFFFF;
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+            padding: 20px 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-icon-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .concept-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            margin-bottom: 6px;
+        }
+
+        .concept-card p {
+            font-size: 13.5px;
+            color: var(--text-light);
+            line-height: 1.45;
+            margin-bottom: 0;
+        }
+
+        /* Cuadros Callout Estandarizados */
+        .callout-box {
+            display: flex;
+            align-items: flex-start !important;
+            text-align: left !important;
+            gap: 14px;
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            border-left: 5px solid var(--cyan-accent);
+            border-radius: 10px;
+            padding: 13px 16px;
+            margin-top: 14px;
+        }
+
+        .callout-box i {
+            color: var(--cyan-accent);
+            font-size: 20px;
+            margin-top: 3px !important;
+            flex-shrink: 0;
+        }
+
+        .callout-box strong {
+            display: block;
+            margin-bottom: 2px;
+            color: var(--utn-blue);
+            font-size: 14.5px;
+        }
+
+        .callout-box p strong {
+            display: inline !important;
+            color: inherit !important;
+            font-size: inherit !important;
+        }
+
+        .callout-box p {
+            margin: 0 !important;
+            text-align: left !important;
+            font-size: 13.5px !important;
+            line-height: 1.4 !important;
+            color: var(--text-main);
+        }
+
+        /* Badges de Código */
+        .code-badge {
+            font-family: 'Fira Code', monospace;
+            background: #F1F5F9;
+            color: #0284C7;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            white-space: nowrap !important;
+            display: inline-block;
+        }
+
+        /* Ventana del Compilador OneCompiler */
+        .compiler-window {
+            width: 100%;
+            height: 520px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid #334155;
+            background: #1E293B;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .compiler-window .header {
+            background: #0F172A;
+            padding: 10px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .compiler-window .header span {
+            color: #94A3B8;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .compiler-window .header button {
+            background: #334155;
+            color: #F8FAFC;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .compiler-window .header button:hover {
+            background: #475569;
+        }
+
+        .compiler-window iframe {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Diagrama de Memoria del Vector */
+        .ram-vector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0 15px 0;
+            padding: 16px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+        }
+
+        .ram-cell-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ram-index {
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: #0284C7;
+            background: #E0F2FE;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .ram-cell {
+            width: 90px;
+            height: 65px;
+            background: #FFFFFF;
+            border: 2px solid #002B5B;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .ram-cell:hover {
+            transform: translateY(-3px);
+            border-color: #0284C7;
+        }
+
+        .ram-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: #002B5B;
+        }
+
+        .ram-address {
+            font-size: 10px;
+            color: #94A3B8;
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Tabla comparativa */
+        .reveal table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #E2E8F0;
+            margin: 12px 0;
+        }
+
+        .reveal table th {
+            background: #002B5B;
+            color: white;
+            padding: 10px 14px;
+            text-align: left;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 13.5px;
+        }
+
+        .reveal table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #E2E8F0;
+            color: var(--text-main);
+        }
+
+        .reveal table tr:nth-child(even) {
+            background-color: #F8FAFC;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- =========================================================================
+                 SLIDE 1: PORTADA INSTITUCIONAL TUTI (Hero Split)
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title" style="text-align: left; font-size: 44px !important; margin-bottom: 12px !important;">SISTEMA DE AUTOMATIZACIÓN DE OFICINAS</h1>
+                        <h3 style="font-size: 22px; color: var(--cyan-accent); font-weight: 600; margin-bottom: 24px; text-align: left;">Unidad #5 - Estructuras de Datos (Clase 1: Arreglos Unidimensionales y Recorridos)</h3>
+                        
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 2: TIPOS DE DATOS: SIMPLES VS. ESTRUCTURADOS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">ORGANIZACIÓN EN MEMORIA: <span class="slide-subtitle">Simples vs. Estructurados</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 16px; margin-bottom: 14px; color: #475569;">
+                        En programación, los datos se clasifican según su arquitectura física y capacidad de almacenamiento:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        
+                        <!-- Columna 1: Simples -->
+                        <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-top: 4px solid var(--utn-blue); border-radius: 12px; padding: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <i class="fa-solid fa-cube" style="color: var(--utn-blue); font-size: 20px;"></i>
+                                <h3 style="font-size: 17px; color: var(--utn-blue); margin: 0;">Tipos Simples (Atómicos)</h3>
+                            </div>
+                            <p style="font-size: 13.5px; color: var(--text-light); line-height: 1.45; margin-bottom: 10px;">
+                                Ocupan una única casilla fija de memoria. Almacenan un único valor indivisible a la vez.
+                            </p>
+                            <ul style="font-size: 12.5px; color: #334155; line-height: 1.6; list-style: none; padding-left: 0;">
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent); font-size: 11px;"></i> <code class="code-badge">byte</code>, <code class="code-badge">short</code>, <code class="code-badge">int</code>, <code class="code-badge">long</code> (enteros)</li>
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent); font-size: 11px;"></i> <code class="code-badge">float</code>, <code class="code-badge">double</code> (reales)</li>
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent); font-size: 11px;"></i> <code class="code-badge">char</code> (carácter ASCII/Unicode) y <code class="code-badge">boolean</code></li>
+                            </ul>
+                        </div>
+
+                        <!-- Columna 2: Estructurados -->
+                        <div style="background: #F0F9FF; border: 1px solid #BAE6FD; border-top: 4px solid var(--cyan-accent); border-radius: 12px; padding: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <i class="fa-solid fa-boxes-stacked" style="color: var(--cyan-accent); font-size: 20px;"></i>
+                                <h3 style="font-size: 17px; color: var(--utn-blue); margin: 0;">Tipos Estructurados (Colecciones)</h3>
+                            </div>
+                            <p style="font-size: 13.5px; color: var(--text-light); line-height: 1.45; margin-bottom: 10px;">
+                                Agrupan múltiples valores bajo un único identificador. Se subdividen en:
+                            </p>
+                            <ul style="font-size: 12.5px; color: #334155; line-height: 1.6; list-style: none; padding-left: 0;">
+                                <li><i class="fa-solid fa-angle-right" style="color: var(--utn-blue);"></i> <strong>Estáticos</strong>: Arreglos (<code class="code-badge">int[]</code>) y matrices (<code class="code-badge">int[][]</code>). Tamaño fijo en memoria contigua.</li>
+                                <li><i class="fa-solid fa-angle-right" style="color: var(--utn-blue);"></i> <strong>Dinámicos</strong>: Listas enlazadas, colas, pilas, <code class="code-badge">ArrayList</code> y objetos <code class="code-badge">String</code>.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <div>
+                            <strong>Foco pedagógico de la Unidad 5</strong>
+                            <p>Nos enfocaremos en las estructuras estáticas (vectores y matrices). Dominar la gestión de memoria y el desplazamiento de índices es la base algorítmica de toda la computación.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 3: ANATOMÍA DE UN ARREGLO UNIDIMENSIONAL
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">ANATOMÍA DEL VECTOR: <span class="slide-subtitle">Tres Propiedades Clave</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 16px; margin-bottom: 14px; color: #475569;">
+                        Un <strong>arreglo unidimensional</strong> (vector) es una colección finita de datos que cumple rigurosamente con tres pilares fundamentales:
+                    </p>
+
+                    <div class="cards-container">
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-blue);">
+                            <div class="card-icon-box" style="background: #EFF6FF; color: var(--utn-blue);">
+                                <i class="fa-solid fa-shapes"></i>
+                            </div>
+                            <h3>1. Homogéneo</h3>
+                            <p>
+                                Todos los elementos son estrictamente del <strong>mismo tipo de dato</strong>. Un vector de enteros sólo almacena enteros; no se pueden mezclar tipos.
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-gold);">
+                            <div class="card-icon-box" style="background: #FEF3C7; color: #D97706;">
+                                <i class="fa-solid fa-train"></i>
+                            </div>
+                            <h3>2. Contiguo</h3>
+                            <p>
+                                Sus elementos se guardan en <strong>posiciones consecutivas</strong> de la memoria RAM, sin huecos intermedios, calculando direcciones exactas.
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid var(--cyan-accent);">
+                            <div class="card-icon-box" style="background: #E0F2FE; color: var(--cyan-accent);">
+                                <i class="fa-solid fa-hashtag"></i>
+                            </div>
+                            <h3>3. Indexado</h3>
+                            <p>
+                                Cada elemento se accede de manera instantánea O(1) mediante un <strong>índice entero</strong> que inicia obligatoriamente en <code class="code-badge">0</code> hasta <code class="code-badge">N - 1</code>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-microchip"></i>
+                        <div>
+                            <strong>Acceso directo en tiempo constante O(1)</strong>
+                            <p>Como cada casilla mide lo mismo (ej: 4 bytes para <code class="code-badge">int</code>), la computadora calcula <code class="code-badge">dirección = base + (índice × tamaño)</code> instantáneamente sin tener que recorrer los casilleros previos.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 4: DIAGRAMA DE MEMORIA EN HTML/CSS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">MAPA DE MEMORIA: <span class="slide-subtitle">Índices vs. Contenido</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 4px;">
+                        Dado un vector <code class="code-badge">int[] notas = { 70, 85, 90, 60, 75 };</code> de tamaño físico <code class="code-badge">N = 5</code>:
+                    </p>
+
+                    <!-- Diagrama de celdas RAM -->
+                    <div class="ram-vector">
+                        <div class="ram-cell-group">
+                            <span class="ram-index">índice 0</span>
+                            <div class="ram-cell">
+                                <span class="ram-value">70</span>
+                                <span class="ram-address">0x100</span>
+                            </div>
+                        </div>
+
+                        <div class="ram-cell-group">
+                            <span class="ram-index">índice 1</span>
+                            <div class="ram-cell">
+                                <span class="ram-value">85</span>
+                                <span class="ram-address">0x104</span>
+                            </div>
+                        </div>
+
+                        <div class="ram-cell-group">
+                            <span class="ram-index" style="background: #FEF3C7; color: #B45309;">índice 2</span>
+                            <div class="ram-cell" style="border-color: #F59E0B; background: #FFFBEB;">
+                                <span class="ram-value" style="color: #B45309;">90</span>
+                                <span class="ram-address">0x108</span>
+                            </div>
+                        </div>
+
+                        <div class="ram-cell-group">
+                            <span class="ram-index">índice 3</span>
+                            <div class="ram-cell">
+                                <span class="ram-value">60</span>
+                                <span class="ram-address">0x10C</span>
+                            </div>
+                        </div>
+
+                        <div class="ram-cell-group">
+                            <span class="ram-index">índice 4 (N-1)</span>
+                            <div class="ram-cell">
+                                <span class="ram-value">75</span>
+                                <span class="ram-address">0x110</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px 16px;">
+                            <span style="font-size: 12px; font-weight: 700; color: #0284C7; text-transform: uppercase;">Operación de Lectura</span>
+                            <p style="font-size: 13.5px; color: #334155; margin: 4px 0 0 0;">
+                                <code class="code-badge">int x = notas[2];</code> &rarr; Asigna el valor <code class="code-badge">90</code> en <code class="code-badge">x</code>.
+                            </p>
+                        </div>
+                        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px 16px;">
+                            <span style="font-size: 12px; font-weight: 700; color: #D97706; text-transform: uppercase;">Operación de Escritura</span>
+                            <p style="font-size: 13.5px; color: #334155; margin: 4px 0 0 0;">
+                                <code class="code-badge">notas[3] = 95;</code> &rarr; Reemplaza el <code class="code-badge">60</code> por <code class="code-badge">95</code>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="callout-box" style="margin-top: 12px; background: #FEF2F2; border-color: #FECACA; border-left-color: #EF4444;">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #EF4444;"></i>
+                        <div>
+                            <strong style="color: #991B1B;">¡Alerta de Ejecución! ArrayIndexOutOfBoundsException</strong>
+                            <p style="color: #7F1D1D;">Intentar acceder a <code class="code-badge">notas[5]</code> o <code class="code-badge">notas[-1]</code> provocará que la Máquina Virtual Java lance una excepción y detenga el programa de inmediato.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 5: DECLARACIÓN Y CREACIÓN EN JAVA
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">SINTAXIS EN JAVA: <span class="slide-subtitle">Declaración e Instanciación</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
+                        En Java, un vector es un objeto. Su ciclo de vida comprende la declaración y la reserva de memoria con el operador <code class="code-badge">new</code>:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+                        
+                        <!-- Bloque 1 -->
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8;">
+                                // 1. Con operador new (por defecto con ceros)
+                            </div>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 14px 18px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13px;">// Declaración y reserva de 10 enteros
+int[] vector = new int[10];
+
+// Usando una constante de tamaño
+final int TAM = 100;
+double[] mediciones = new double[TAM];
+
+// Tamaño dinámico en tiempo de ejecución
+Scanner sc = new Scanner(System.in);
+int n = sc.nextInt();
+int[] dinamico = new int[n];</code></pre>
+                        </div>
+
+                        <!-- Bloque 2 -->
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8;">
+                                // 2. Inicialización directa con literales
+                            </div>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 14px 18px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13px;">// Se infiere el tamaño físico automáticamente
+int[] pares = { 2, 4, 6, 8, 10 };
+
+// Vector de cadenas de texto
+String[] materias = { "SAO", "PBA", "AEDD" };
+
+// Propiedad que devuelve la longitud del vector
+int cantidad = pares.length; // 5 (¡sin paréntesis!)</code></pre>
+                        </div>
+
+                    </div>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <div>
+                            <strong>Valores por defecto en la reserva</strong>
+                            <p>Al instanciar con <code class="code-badge">new int[N]</code>, Java inicializa automáticamente todas las celdas numéricas en <code class="code-badge">0</code> (o <code class="code-badge">false</code> para booleanos y <code class="code-badge">null</code> para objetos).</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 6: RECORRIDOS: FOR INDEXADO VS. FOR-EACH EXTENDIDO
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">RECORRIDOS: <span class="slide-subtitle">For Clásico vs. For-Each</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 10px;">
+                        Para procesar secuencialmente los elementos de un vector disponemos de dos variantes de bucles:
+                    </p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Estructura</th>
+                                <th style="width: 45%;">Sintaxis Canónica</th>
+                                <th style="width: 30%;">Casos de Uso Ideales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>For Clásico</strong> (Indexado)</td>
+                                <td>
+                                    <code class="code-badge">for (int i = 0; i &lt; arr.length; i++)</code><br>
+                                    <span style="font-size: 12px; color: #64748B;">Permite acceder a <code class="code-badge">i</code> y modificar <code class="code-badge">arr[i]</code></span>
+                                </td>
+                                <td>
+                                    • Modificar elementos<br>
+                                    • Corrimientos y rotaciones<br>
+                                    • Recorridos parciales o inversos
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>For-Each</strong> (Extendido)</td>
+                                <td>
+                                    <code class="code-badge">for (int elem : arr)</code><br>
+                                    <span style="font-size: 12px; color: #64748B;">Recorre cada elemento en modo <em>sólo lectura</em></span>
+                                </td>
+                                <td>
+                                    • Sumatorias y conteo<br>
+                                    • Búsqueda de extremos (mín/máx)<br>
+                                    • Impresión completa en pantalla
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <div>
+                            <strong>Regla de oro: ¿Modificar o Sólo Leer?</strong>
+                            <p>Si necesitás cambiar valores dentro del arreglo o conocer en qué posición exacta estás, utilizá siempre el <code class="code-badge">for</code> clásico. Si sólo vas a consultar o acumular, el <code class="code-badge">for-each</code> es más limpio y previene errores de índice.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 7: PRÁCTICA GUIADA 1: BÚSQUEDA DE MAYOR EN UN RANGO
+                 ========================================================================= -->
+            <section>
+                <section>
+                    <h2 class="slide-title">PRÁCTICA GUIADA 1: <span class="slide-subtitle">Mayor en un Rango</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
+                            <strong>Problema:</strong> Escribir la función <code class="code-badge">int mayor(int[] arreglo, int inf, int sup)</code> que reciba un arreglo y dos índices de cota, retornando el valor más grande dentro del rango acotado <code class="code-badge">[inf, sup]</code>.
+                        </p>
+
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 14px;">
+                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8;">
+                                // Algoritmo con pivote inicial en el extremo inferior
+                            </div>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 14px 18px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13.5px;">public static int mayor(int[] arreglo, int inf, int sup) {
+    // Tomamos como candidato inicial al primer elemento del rango
+    int max = arreglo[inf];
+    
+    // Recorremos desde el siguiente casillero hasta el límite superior
+    for (int i = inf + 1; i &lt;= sup; i++) {
+        if (arreglo[i] &gt; max) {
+            max = arreglo[i];
+        }
+    }
+    return max;
+}</code></pre>
+                        </div>
+
+                        <div class="callout-box">
+                            <i class="fa-solid fa-code"></i>
+                            <div>
+                                <strong>Ejemplo de ejecución</strong>
+                                <p>Para <code class="code-badge">A = {10, 12, 2, 0, 4, 35, 24}</code>: <br>
+                                • <code class="code-badge">mayor(A, 0, 3)</code> &rarr; Retorna <code class="code-badge">12</code> (evalúa {10, 12, 2, 0}).<br>
+                                • <code class="code-badge">mayor(A, 0, 6)</code> &rarr; Retorna <code class="code-badge">35</code>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VERTICAL SLIDE: ONECOMPILER MAYOR -->
+                <section id="slide-compiler-mayor" data-background-color="#0F172A">
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Función mayor(arreglo, inf, sup)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-mayor', codeMayor, 'java', 'Main.java')">
+                                <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
+                            </button>
+                        </div>
+                        <iframe id="oc-editor-mayor" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 8: PRÁCTICA GUIADA 2: TODOS IGUALES (CORTE TEMPRANO)
+                 ========================================================================= -->
+            <section>
+                <section>
+                    <h2 class="slide-title">PRÁCTICA GUIADA 2: <span class="slide-subtitle">Verificar Homogeneidad</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
+                            <strong>Problema:</strong> Escribir el método <code class="code-badge">boolean todos_iguales(int[] vector)</code> que determine si todos los elementos de una colección son idénticos entre sí.
+                        </p>
+
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 14px;">
+                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8;">
+                                // Esquema de búsqueda de contraejemplo con bandera booleana
+                            </div>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 14px 18px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13.5px;">public static boolean todos_iguales(int[] vector) {
+    if (vector == null || vector.length &lt;= 1) {
+        return true; // Un vector vacío o de 1 elemento es homogéneo
+    }
+    
+    // Comparamos cada elemento contra el primero
+    int primero = vector[0];
+    for (int i = 1; i &lt; vector.length; i++) {
+        if (vector[i] != primero) {
+            return false; // Al primer elemento diferente, cortamos
+        }
+    }
+    return true; // Si completó el recorrido sin discrepancias
+}</code></pre>
+                        </div>
+
+                        <div class="callout-box">
+                            <i class="fa-solid fa-bolt"></i>
+                            <div>
+                                <strong>Eficiencia algorítmica: Mejor Caso vs. Peor Caso</strong>
+                                <p>• <strong>Mejor caso O(1)</strong>: El segundo elemento ya es diferente (ej: <code class="code-badge">[1, 9, 1, 1]</code>), el método retorna en la primera vuelta.<br>
+                                • <strong>Peor caso O(N)</strong>: Todos son iguales o la diferencia está al final; requiere recorrer los <code class="code-badge">N</code> elementos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VERTICAL SLIDE: ONECOMPILER TODOS IGUALES -->
+                <section id="slide-compiler-iguales" data-background-color="#0F172A">
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Método todos_iguales(vector)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-iguales', codeIguales, 'java', 'Main.java')">
+                                <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
+                            </button>
+                        </div>
+                        <iframe id="oc-editor-iguales" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 9: PRÁCTICA GUIADA 3: ROTACIÓN DE ELEMENTOS
+                 ========================================================================= -->
+            <section>
+                <section>
+                    <h2 class="slide-title">PRÁCTICA GUIADA 3: <span class="slide-subtitle">Rotación de Vectores</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
+                            <strong>Desafío:</strong> Desplazar circularmente los valores sin perder datos:
+                        </p>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 12px;">
+                            <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px;">
+                                <h4 style="font-size: 14.5px; color: var(--utn-blue); margin-bottom: 6px;"><i class="fa-solid fa-arrow-left"></i> Rotar a la Izquierda</h4>
+                                <p style="font-size: 12.5px; color: #64748B; margin-bottom: 8px;">
+                                    El valor de la posición 0 pasa al último casillero. <br>
+                                    <code class="code-badge">[1, 2, 3, 4] &rarr; [2, 3, 4, 1]</code>
+                                </p>
+                                <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 14px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 11.5px;">int aux = arr[0]; // Salvamos el 1ro
+for (int i = 0; i &lt; arr.length - 1; i++) {
+    arr[i] = arr[i + 1]; // Corremos izq
+}
+arr[arr.length - 1] = aux; // Restauramos</code></pre>
+                            </div>
+
+                            <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px;">
+                                <h4 style="font-size: 14.5px; color: var(--utn-blue); margin-bottom: 6px;"><i class="fa-solid fa-arrow-right"></i> Rotar a la Derecha</h4>
+                                <p style="font-size: 12.5px; color: #64748B; margin-bottom: 8px;">
+                                    El último valor pasa a la posición inicial 0. <br>
+                                    <code class="code-badge">[1, 2, 3, 4] &rarr; [4, 1, 2, 3]</code>
+                                </p>
+                                <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 14px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 11.5px;">int aux = arr[arr.length - 1]; // Salvamos
+for (int i = arr.length - 1; i &gt; 0; i--) {
+    arr[i] = arr[i - 1]; // Corremos der
+}
+arr[0] = aux; // Restauramos</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="callout-box">
+                            <i class="fa-solid fa-lightbulb"></i>
+                            <div>
+                                <strong>La variable auxiliar es imprescindible</strong>
+                                <p>Si intentamos desplazar directamente sin respaldar <code class="code-badge">arr[0]</code> o el último valor, el dato se sobreescribirá y quedará destruido permanentemente.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VERTICAL SLIDE: ONECOMPILER ROTAR -->
+                <section id="slide-compiler-rotar" data-background-color="#0F172A">
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Rotación de Vectores (Izquierda / Derecha)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-rotar', codeRotar, 'java', 'Main.java')">
+                                <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
+                            </button>
+                        </div>
+                        <iframe id="oc-editor-rotar" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 10: CHECKLIST DE CÁTEDRA: BUENAS PRÁCTICAS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">CHECKLIST DE CÁTEDRA: <span class="slide-subtitle">Vectores Seguros</span></h2>
+                <div class="content-area">
+                    <div class="cards-container">
+                        <div class="concept-card" style="border-top: 4px solid #EF4444;">
+                            <div class="card-icon-box" style="background: #FEE2E2; color: #EF4444;">
+                                <i class="fa-solid fa-ban"></i>
+                            </div>
+                            <h3>1. Límites Estrictos</h3>
+                            <p>
+                                El último elemento es siempre <code class="code-badge">length - 1</code>. El error más común es usar <code class="code-badge">i &lt;= length</code> en el bucle, lo que causa desbordamiento.
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-gold);">
+                            <div class="card-icon-box" style="background: #FEF3C7; color: #D97706;">
+                                <i class="fa-solid fa-arrows-split-up-and-left"></i>
+                            </div>
+                            <h3>2. Dirección del Desplazamiento</h3>
+                            <p>
+                                Al mover elementos a la derecha, el recorrido del bucle debe ser <strong>descendente</strong> (<code class="code-badge">i--</code>). Si se recorre hacia adelante, se duplica el primer valor en todas las celdas.
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid #10B981;">
+                            <div class="card-icon-box" style="background: #D1FAE5; color: #10B981;">
+                                <i class="fa-solid fa-copy"></i>
+                            </div>
+                            <h3>3. Copia por Referencia</h3>
+                            <p>
+                                Hacer <code class="code-badge">int[] b = a;</code> <strong>no</strong> crea un nuevo vector; solo copia el puntero en memoria. Modificar <code class="code-badge">b</code> modificará también a <code class="code-badge">a</code>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="callout-box" style="margin-top: 18px;">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <div>
+                            <strong>Pautas para la ejercitación en OmegaUp</strong>
+                            <p>Validá siempre que los arreglos recibidos como parámetro no sean nulos y posean una longitud válida antes de ingresar a los algoritmos de ordenamiento o corrimiento.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 11: CIERRE CANÓNICO TUTI
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title" style="font-size: 48px !important; text-align: left; margin-bottom: 10px !important;">¿PREGUNTAS?</h1>
+                        <h3 style="font-size: 20px; color: var(--text-main); font-weight: 600; margin-bottom: 15px; text-align: left;">Espacio de consultas y dudas</h3>
+                        <p style="font-size: 16px; color: var(--text-light); text-align: left; margin-bottom: 20px;">¡Muchas gracias por su atención!</p>
+                        
+                        <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+                            <a href="../index.html" style="background: var(--utn-blue); color: white; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-house"></i> Portal Unidad 5
+                            </a>
+                            <a href="../clase2/index.html" style="background: var(--cyan-accent); color: white; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                                Ir a Clase 2 <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">TUTI / UTN <span>SANTA FE</span></div>
+
+    <!-- Scripts de Reveal.js y Plugins -->
+    <script src="../../../../dist/reveal.js"></script>
+    <script src="../../../../dist/plugin/highlight.js"></script>
+    <script src="../../../../dist/plugin/notes.js"></script>
+
+    <script>
+        // =========================================================================
+        // Script Anti-Blank-Slide para Móviles y Pantallas Verticales
+        // =========================================================================
+        const isMobileOrVertical = window.innerWidth < 768 || window.innerHeight > window.innerWidth;
+        if (isMobileOrVertical) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            const slidesContainer = document.querySelector('.slides');
+            document.querySelectorAll('.slides > section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                slidesContainer.insertBefore(sec, parent);
+            });
+            document.querySelectorAll('.slides > section').forEach(sec => {
+                if (sec.children.length === 0) {
+                    sec.remove();
+                }
+            });
+        }
+
+        // =========================================================================
+        // Canvas Adaptativo
+        // =========================================================================
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let size = getCanvasSize();
+            Reveal.configure({
+                width: size.width,
+                height: size.height
+            });
+        });
+
+        // =========================================================================
+        // Códigos para OneCompiler
+        // =========================================================================
+        const codeMayor = `import java.util.Arrays;
+
+public class Main {
+    public static int mayor(int[] arreglo, int inf, int sup) {
+        // Validamos cotas
+        if (inf < 0) inf = 0;
+        if (sup >= arreglo.length) sup = arreglo.length - 1;
+        
+        int max = arreglo[inf];
+        for (int i = inf + 1; i <= sup; i++) {
+            if (arreglo[i] > max) {
+                max = arreglo[i];
+            }
+        }
+        return max;
+    }
+
+    public static void main(String[] args) {
+        int[] datos = { 10, 12, 2, 0, 4, 35, 24 };
+        System.out.println("Arreglo completo: " + Arrays.toString(datos));
+
+        // Prueba 1: Rango [0, 3] -> Debe retornar 12
+        int m1 = mayor(datos, 0, 3);
+        System.out.println("Mayor entre índices [0, 3]: " + m1);
+
+        // Prueba 2: Rango [0, 6] -> Debe retornar 35
+        int m2 = mayor(datos, 0, 6);
+        System.out.println("Mayor entre índices [0, 6]: " + m2);
+
+        // Prueba 3: Rango [4, 6] -> Debe retornar 35
+        int m3 = mayor(datos, 4, 6);
+        System.out.println("Mayor entre índices [4, 6]: " + m3);
+    }
+}`;
+
+        const codeIguales = `import java.util.Arrays;
+
+public class Main {
+    public static boolean todos_iguales(int[] vector) {
+        if (vector == null || vector.length <= 1) {
+            return true;
+        }
+        int primero = vector[0];
+        for (int i = 1; i < vector.length; i++) {
+            if (vector[i] != primero) {
+                return false; // Corte temprano al primer contraejemplo
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        int[] v1 = { 6, 6, 6, 6 };
+        int[] v2 = { 6, 6, 1, 6 };
+        int[] v3 = { 0, 90, 1 };
+
+        System.out.println(Arrays.toString(v1) + " -> ¿Todos iguales? " + todos_iguales(v1));
+        System.out.println(Arrays.toString(v2) + " -> ¿Todos iguales? " + todos_iguales(v2));
+        System.out.println(Arrays.toString(v3) + " -> ¿Todos iguales? " + todos_iguales(v3));
+    }
+}`;
+
+        const codeRotar = `import java.util.Arrays;
+
+public class Main {
+    public static void rotarIzquierda(int[] arr) {
+        if (arr == null || arr.length <= 1) return;
+        int aux = arr[0]; // Salvamos el primer valor
+        for (int i = 0; i < arr.length - 1; i++) {
+            arr[i] = arr[i + 1]; // Corrimiento hacia la izquierda
+        }
+        arr[arr.length - 1] = aux; // Restauramos en el último casillero
+    }
+
+    public static void rotarDerecha(int[] arr) {
+        if (arr == null || arr.length <= 1) return;
+        int aux = arr[arr.length - 1]; // Salvamos el último valor
+        for (int i = arr.length - 1; i > 0; i--) {
+            arr[i] = arr[i - 1]; // Corrimiento hacia la derecha
+        }
+        arr[0] = aux; // Restauramos en el primer casillero
+    }
+
+    public static void main(String[] args) {
+        int[] vector1 = { 1, 2, 3, 4 };
+        System.out.println("Original: " + Arrays.toString(vector1));
+        
+        rotarIzquierda(vector1);
+        System.out.println("Tras rotar a la izquierda: " + Arrays.toString(vector1));
+
+        int[] vector2 = { 1, 2, 3, 4 };
+        rotarDerecha(vector2);
+        System.out.println("Tras rotar a la derecha:   " + Arrays.toString(vector2));
+    }
+}`;
+
+        function sendCode(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        Reveal.on('slidechanged', event => {
+            const slideId = event.currentSlide ? event.currentSlide.id : '';
+            if (slideId === 'slide-compiler-mayor') {
+                sendCodeWithRetries('oc-editor-mayor', codeMayor, 'java', 'Main.java');
+            } else if (slideId === 'slide-compiler-iguales') {
+                sendCodeWithRetries('oc-editor-iguales', codeIguales, 'java', 'Main.java');
+            } else if (slideId === 'slide-compiler-rotar') {
+                sendCodeWithRetries('oc-editor-rotar', codeRotar, 'java', 'Main.java');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>SAO - Unidad 5 | Clase 3: Arreglos Bidimensionales (Matrices)</title>
+
+    <!-- Reveal.js & Plugins CSS -->
+    <link rel="stylesheet" href="../../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../../dist/plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/tuti.css" />
+
+    <!-- Tipografías Oficiales & Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Títulos de Diapositiva */
+        .slide-title {
+            font-size: 36px !important;
+            font-weight: 800 !important;
+            color: var(--utn-blue) !important;
+            margin-bottom: 20px !important;
+            border-left: 8px solid var(--utn-gold);
+            padding-left: 18px;
+            text-transform: uppercase !important;
+            letter-spacing: -0.5px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .slide-subtitle {
+            color: var(--cyan-accent);
+            font-weight: 700;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* Footer Institucional Fijo Global */
+        .branding-footer {
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 35px !important;
+            color: #94A3B8 !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            letter-spacing: 1px !important;
+            z-index: 9999 !important;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
+        .branding-footer span {
+            color: var(--utn-gold) !important;
+        }
+
+        @media (max-aspect-ratio: 1/1), (max-width: 768px) {
+            .hero-container { flex-direction: column !important; padding: 15px !important; }
+            .hero-image { height: 180px !important; min-height: 180px !important; width: 100% !important; margin-bottom: 12px !important; }
+            .hero-text { padding-left: 0 !important; text-align: center !important; }
+            .hero-title { font-size: 32px !important; text-align: center !important; margin-bottom: 10px !important; }
+            .staff-list { margin-bottom: 10px !important; }
+            .staff-list h4 { text-align: center !important; font-size: 17px !important; margin-bottom: 4px !important; }
+            .staff-list ul { display: inline-block !important; text-align: left !important; }
+            .staff-list li { font-size: 15px !important; margin-bottom: 3px !important; }
+
+            .slide-title { font-size: 26px !important; margin-bottom: 14px !important; border-left-width: 6px !important; padding-left: 12px !important; }
+            .reveal p, .reveal li { font-size: 15px !important; }
+            .branding-footer { bottom: 10px !important; left: 15px !important; font-size: 11px !important; }
+        }
+
+        /* Tarjetas Conceptuales */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            width: 100%;
+        }
+
+        .concept-card {
+            background: #FFFFFF;
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+            padding: 20px 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-icon-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .concept-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            margin-bottom: 6px;
+        }
+
+        .concept-card p {
+            font-size: 13.5px;
+            color: var(--text-light);
+            line-height: 1.45;
+            margin-bottom: 0;
+        }
+
+        /* Cuadros Callout Estandarizados */
+        .callout-box {
+            display: flex;
+            align-items: flex-start !important;
+            text-align: left !important;
+            gap: 14px;
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            border-left: 5px solid var(--cyan-accent);
+            border-radius: 10px;
+            padding: 13px 16px;
+            margin-top: 14px;
+        }
+
+        .callout-box i {
+            color: var(--cyan-accent);
+            font-size: 20px;
+            margin-top: 3px !important;
+            flex-shrink: 0;
+        }
+
+        .callout-box strong {
+            display: block;
+            margin-bottom: 2px;
+            color: var(--utn-blue);
+            font-size: 14.5px;
+        }
+
+        .callout-box p strong {
+            display: inline !important;
+            color: inherit !important;
+            font-size: inherit !important;
+        }
+
+        .callout-box p {
+            margin: 0 !important;
+            text-align: left !important;
+            font-size: 13.5px !important;
+            line-height: 1.4 !important;
+            color: var(--text-main);
+        }
+
+        /* Badges de Código */
+        .code-badge {
+            font-family: 'Fira Code', monospace;
+            background: #F1F5F9;
+            color: #0284C7;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            white-space: nowrap !important;
+            display: inline-block;
+        }
+
+        /* Ventana del Compilador OneCompiler */
+        .compiler-window {
+            width: 100%;
+            height: 520px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid #334155;
+            background: #1E293B;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .compiler-window .header {
+            background: #0F172A;
+            padding: 10px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .compiler-window .header span {
+            color: #94A3B8;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .compiler-window .header button {
+            background: #334155;
+            color: #F8FAFC;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .compiler-window .header button:hover {
+            background: #475569;
+        }
+
+        .compiler-window iframe {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Diagrama de Matriz en HTML */
+        .matrix-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin: 14px 0 10px 0;
+        }
+
+        .matrix-table {
+            border-collapse: separate;
+            border-spacing: 6px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .matrix-table th {
+            font-size: 12px;
+            color: #0284C7;
+            padding: 4px 8px;
+            text-align: center;
+            background: transparent !important;
+            font-weight: 700;
+        }
+
+        .matrix-cell {
+            width: 58px;
+            height: 48px;
+            background: white;
+            border: 2px solid var(--utn-blue);
+            border-radius: 8px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            transition: transform 0.2s ease;
+        }
+
+        .matrix-cell:hover {
+            transform: scale(1.08);
+            border-color: var(--cyan-accent);
+            background: #F0F9FF;
+        }
+
+        .matrix-label-row {
+            font-size: 12px;
+            font-weight: 700;
+            color: #D97706;
+            padding-right: 8px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- =========================================================================
+                 SLIDE 1: PORTADA INSTITUCIONAL TUTI (Hero Split)
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1509228468518-180dd4864904?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title" style="text-align: left; font-size: 44px !important; margin-bottom: 12px !important;">SISTEMA DE AUTOMATIZACIÓN DE OFICINAS</h1>
+                        <h3 style="font-size: 22px; color: var(--cyan-accent); font-weight: 600; margin-bottom: 24px; text-align: left;">Unidad #5 - Estructuras de Datos (Clase 3: Arreglos Bidimensionales: Matrices y Aplicaciones)</h3>
+                        
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 2: DE VECTORES A MATRICES: EL CONCEPTO BIDIMENSIONAL
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">DE VECTORES A MATRICES: <span class="slide-subtitle">La Dimensión Fila-Columna</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
+                        Un vector representa una fila o columna unidimensional. Al cruzar dos dimensiones independientes obtenemos una <strong>matriz</strong> (arreglo bidimensional):
+                    </p>
+
+                    <div class="cards-container">
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-blue);">
+                            <div class="card-icon-box" style="background: #EFF6FF; color: var(--utn-blue);">
+                                <i class="fa-solid fa-file-excel"></i>
+                            </div>
+                            <h3>Planillas y Sucursales</h3>
+                            <p>
+                                Modelar las ventas de 12 meses (filas) en 4 sucursales distintas (columnas). Cada celda es <code class="code-badge">ventas[mes][sucursal]</code>.
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-gold);">
+                            <div class="card-icon-box" style="background: #FEF3C7; color: #D97706;">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                            <h3>Registro Académico</h3>
+                            <p>
+                                Calificaciones de N alumnos (filas) en 3 materias como SAO, MEL y MSO (columnas) para promedios por estudiante o materia.
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid #10B981;">
+                            <div class="card-icon-box" style="background: #D1FAE5; color: #10B981;">
+                                <i class="fa-solid fa-network-wired"></i>
+                            </div>
+                            <h3>Redes y Servidores</h3>
+                            <p>
+                                Mapear el flujo de datos entre 5 servidores. <code class="code-badge">red[i][j]</code> representa los KB enviados del servidor <code class="code-badge">i</code> al <code class="code-badge">j</code>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <div>
+                            <strong>En Java, una matriz es un "arreglo de arreglos"</strong>
+                            <p>Físicamente, cada fila es un vector independiente en memoria y la matriz almacena referencias a dichos vectores de fila.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 3: DECLARACIÓN Y ACCESO EN JAVA
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">SINTAXIS EN JAVA: <span class="slide-subtitle">Declaración, Creación y Acceso</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
+                        Para declarar e instanciar una matriz se emplean dobles corchetes <code class="code-badge">[filas][columnas]</code>:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+                        
+                        <!-- Sintaxis Básica -->
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8;">
+                                // Declaración y reserva con new
+                            </div>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px;">// Matriz de 3 filas x 4 columnas
+int[][] matriz = new int[3][4];
+
+// Lectura de dimensiones físicas
+int totalFilas = matriz.length;       // 3
+int totalCols  = matriz[0].length;    // 4
+
+// Asignación directa en celda específica
+matriz[0][0] = 15; // Fila 0, Columna 0
+matriz[2][3] = 99; // Fila 2, Columna 3</code></pre>
+                        </div>
+
+                        <!-- Inicialización Literal -->
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8;">
+                                // Inicialización literal (filas delimitadas)
+                            </div>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px;">int[][] tablero = {
+    { 10, 20, 30 }, // Fila 0
+    { 40, 50, 60 }, // Fila 1
+    { 70, 80, 90 }  // Fila 2
+};
+
+// Acceso al centro de la matriz
+int centro = tablero[1][1]; // 50</code></pre>
+                        </div>
+
+                    </div>
+
+                    <div class="callout-box" style="margin-top: 14px;">
+                        <i class="fa-solid fa-code"></i>
+                        <div>
+                            <strong>El orden de los subíndices es sagrado</strong>
+                            <p>Siempre especificamos primero la <strong>fila</strong> y luego la <strong>columna</strong>: <code class="code-badge">matriz[fila][columna]</code>. Invertir el orden causará lecturas erróneas o desbordamientos fuera de rango.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 4: DIAGRAMA DE MATRIZ EN HTML/CSS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">MAPA DE COORDENADAS: <span class="slide-subtitle">Grilla Fila × Columna</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15px; color: #475569; margin-bottom: 6px;">
+                        Representación gráfica de una matriz <code class="code-badge">int[3][4]</code> con sus coordenadas de acceso:
+                    </p>
+
+                    <div class="matrix-container">
+                        <table class="matrix-table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Col 0</th>
+                                    <th>Col 1</th>
+                                    <th>Col 2</th>
+                                    <th>Col 3</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="matrix-label-row">Fila 0</td>
+                                    <td class="matrix-cell">[0][0]</td>
+                                    <td class="matrix-cell">[0][1]</td>
+                                    <td class="matrix-cell" style="border-color: #0284C7; background: #E0F2FE;">[0][2]</td>
+                                    <td class="matrix-cell">[0][3]</td>
+                                </tr>
+                                <tr>
+                                    <td class="matrix-label-row">Fila 1</td>
+                                    <td class="matrix-cell">[1][0]</td>
+                                    <td class="matrix-cell" style="border-color: #F59E0B; background: #FEF3C7; color: #B45309;">[1][1]</td>
+                                    <td class="matrix-cell">[1][2]</td>
+                                    <td class="matrix-cell">[1][3]</td>
+                                </tr>
+                                <tr>
+                                    <td class="matrix-label-row">Fila 2</td>
+                                    <td class="matrix-cell">[2][0]</td>
+                                    <td class="matrix-cell">[2][1]</td>
+                                    <td class="matrix-cell">[2][2]</td>
+                                    <td class="matrix-cell" style="border-color: #10B981; background: #D1FAE5; color: #047857;">[2][3]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 6px;">
+                        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 14px;">
+                            <span style="font-size: 12px; font-weight: 700; color: #0284C7; text-transform: uppercase;">Fila fija (Horizontal)</span>
+                            <p style="font-size: 12.5px; color: #475569; margin: 2px 0 0 0;">
+                                En la fila 0: <code class="code-badge">[0][0]</code>, <code class="code-badge">[0][1]</code>, <code class="code-badge">[0][2]</code>, <code class="code-badge">[0][3]</code>.
+                            </p>
+                        </div>
+                        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 14px;">
+                            <span style="font-size: 12px; font-weight: 700; color: #D97706; text-transform: uppercase;">Columna fija (Vertical)</span>
+                            <p style="font-size: 12.5px; color: #475569; margin: 2px 0 0 0;">
+                                En la columna 1: <code class="code-badge">[0][1]</code>, <code class="code-badge">[1][1]</code>, <code class="code-badge">[2][1]</code>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 5: RECORRIDOS: POR FILAS VS. POR COLUMNAS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">ESQUEMAS DE RECORRIDO: <span class="slide-subtitle">Por Filas vs. Por Columnas</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15px; color: #475569; margin-bottom: 10px;">
+                        El orden de los bucles anidados define cómo se barren los datos de la matriz:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+                        
+                        <!-- Recorrido por Filas -->
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: #38BDF8;">
+                                <i class="fa-solid fa-arrow-right-long"></i> 1. Recorrido por Filas (Horizontal)
+                            </div>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px;">// i fija la fila, j recorre columnas
+for (int i = 0; i &lt; filas; i++) {
+    int sumaFila = 0;
+    for (int j = 0; j &lt; cols; j++) {
+        sumaFila += matriz[i][j];
+    }
+    System.out.println("Fila " + i + ": " + sumaFila);
+}</code></pre>
+                            <p style="padding: 9px 14px; margin: 0; font-size: 11.5px; color: #94A3B8; background: #0F172A;">
+                                <strong>Aplicación:</strong> Total por sucursal, promedio de notas por alumno.
+                            </p>
+                        </div>
+
+                        <!-- Recorrido por Columnas -->
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: #F59E0B;">
+                                <i class="fa-solid fa-arrow-down-long"></i> 2. Recorrido por Columnas (Vertical)
+                            </div>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px;">// j fija la columna, i recorre filas
+for (int j = 0; j &lt; cols; j++) {
+    int sumaCol = 0;
+    for (int i = 0; i &lt; filas; i++) {
+        sumaCol += matriz[i][j];
+    }
+    System.out.println("Columna " + j + ": " + sumaCol);
+}</code></pre>
+                            <p style="padding: 9px 14px; margin: 0; font-size: 11.5px; color: #94A3B8; background: #0F172A;">
+                                <strong>Aplicación:</strong> Ventas de un mes entre sucursales, promedio por materia.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="callout-box" style="margin-top: 12px;">
+                        <i class="fa-solid fa-compass"></i>
+                        <div>
+                            <strong>¿Cuál ciclo debe ir afuera?</strong>
+                            <p>El ciclo exterior es el que se mantiene fijo mientras el interior barre sus elementos. Para procesar alumno por alumno (filas), <code class="code-badge">i</code> va afuera. Para procesar materia por materia (columnas), <code class="code-badge">j</code> va afuera.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 6: PRÁCTICA GUIADA 1: TRÁFICO ENTRE SERVIDORES (5x5)
+                 ========================================================================= -->
+            <section>
+                <section>
+                    <h2 class="slide-title">PRÁCTICA GUIADA 1: <span class="slide-subtitle">Tráfico entre Servidores (5x5)</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 14.5px; color: #475569; margin-bottom: 8px;">
+                            <strong>Problema:</strong> 5 servidores registran tráfico en <code class="code-badge">correo[5][5]</code> (KB enviados de servidor <code class="code-badge">i</code> a <code class="code-badge">j</code>). Obtener: <br>
+                            a) Total enviado por cada servidor (sumatoria por filas).<br>
+                            b) Servidor que envió mayor cantidad total.<br>
+                            c) Servidores que recibieron más de una cota <code class="code-badge">M</code> (sumatoria por columnas).
+                        </p>
+
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 10px;">
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 14px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12px;">// a) y b) Total enviado y servidor máximo (por filas)
+int maxEnvio = -1, servMayor = -1;
+for (int i = 0; i &lt; 5; i++) {
+    int totalEnviado = 0;
+    for (int j = 0; j &lt; 5; j++) { totalEnviado += correo[i][j]; }
+    System.out.println("Servidor " + i + " envió: " + totalEnviado + " KB");
+    if (totalEnviado &gt; maxEnvio) { maxEnvio = totalEnviado; servMayor = i; }
+}
+// c) Servidores con recepción mayor a cota M (por columnas)
+for (int j = 0; j &lt; 5; j++) {
+    int totalRecibido = 0;
+    for (int i = 0; i &lt; 5; i++) { totalRecibido += correo[i][j]; }
+    if (totalRecibido &gt; cotaM) System.out.println("Servidor " + j + " superó la cota");
+}</code></pre>
+                        </div>
+
+                        <div class="callout-box" style="margin-top: 6px;">
+                            <i class="fa-solid fa-server"></i>
+                            <div>
+                                <strong>La diagonal principal: <code class="code-badge">correo[i][i]</code></strong>
+                                <p>Representa tráfico que un servidor se envía a sí mismo (habitualmente 0 o loopback de mantenimiento).</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VERTICAL SLIDE: ONECOMPILER SERVIDORES -->
+                <section id="slide-compiler-servidores" data-background-color="#0F172A">
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Tráfico de Correos entre Servidores (Matriz 5x5)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-servidores', codeServidores, 'java', 'Main.java')">
+                                <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
+                            </button>
+                        </div>
+                        <iframe id="oc-editor-servidores" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 7: PRÁCTICA GUIADA 2: AEROLÍNEAS Y VECTORES PARALELOS
+                 ========================================================================= -->
+            <section>
+                <section>
+                    <h2 class="slide-title">PRÁCTICA GUIADA 2: <span class="slide-subtitle">Matrices &amp; Vectores Paralelos</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 14.5px; color: #475569; margin-bottom: 8px;">
+                            <strong>Problema:</strong> Matriz <code class="code-badge">pasajes[4][50]</code> (4 categorías x 50 destinos) combinada con el vector paralelo <code class="code-badge">String[] localidades = { "Paraná", "Esquel", ... }</code>:
+                        </p>
+
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 10px;">
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 14px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12px;">// Localidad a la que viajó la menor cantidad de pasajeros (por columnas)
+int minPasajeros = Integer.MAX_VALUE;
+int idxMinLocalidad = 0;
+
+for (int col = 0; col &lt; destinos; col++) {
+    int totalLocalidad = 0;
+    for (int cat = 0; cat &lt; categorias; cat++) {
+        totalLocalidad += pasajes[cat][col];
+    }
+    if (totalLocalidad &lt; minPasajeros) {
+        minPasajeros = totalLocalidad;
+        idxMinLocalidad = col; // Guardamos el índice para cruzar con el vector
+    }
+}
+// Cruzamos el índice con el vector paralelo de nombres
+System.out.println("Destino menos visitado: " + localidades[idxMinLocalidad]);</code></pre>
+                        </div>
+
+                        <div class="callout-box" style="margin-top: 6px;">
+                            <i class="fa-solid fa-link"></i>
+                            <div>
+                                <strong>La potencia de los vectores paralelos</strong>
+                                <p>El subíndice de la columna en la matriz (<code class="code-badge">col</code>) se utiliza directamente como índice en el vector de nombres (<code class="code-badge">localidades[col]</code>), vinculando números con entidades del mundo real.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VERTICAL SLIDE: ONECOMPILER AEROLÍNEAS -->
+                <section id="slide-compiler-aerolineas" data-background-color="#0F172A">
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Aerolíneas y Vectores Paralelos</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-aerolineas', codeAerolineas, 'java', 'Main.java')">
+                                <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
+                            </button>
+                        </div>
+                        <iframe id="oc-editor-aerolineas" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 8: MAPA DE DECISIÓN: VECTORES VS. MATRICES
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">MAPA DE DECISIÓN: <span class="slide-subtitle">¿Qué Estructura Elegir?</span></h2>
+                <div class="content-area">
+                    <div class="cards-container">
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-blue);">
+                            <div class="card-icon-box" style="background: #EFF6FF; color: var(--utn-blue);">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                            <h3>Vector Simple 1D</h3>
+                            <p>
+                                Usalo cuando los datos correspondan a una <strong>secuencia lineal</strong> de entidades (ej: lista de notas, secuencia de sensores, cola de espera).
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid var(--cyan-accent);">
+                            <div class="card-icon-box" style="background: #E0F2FE; color: var(--cyan-accent);">
+                                <i class="fa-solid fa-table-cells"></i>
+                            </div>
+                            <h3>Matriz 2D</h3>
+                            <p>
+                                Usala cuando la información dependa de <strong>dos variables ortogonales</strong> (ej: alumno × materia, mes × sucursal, coordenadas de un tablero).
+                            </p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-gold);">
+                            <div class="card-icon-box" style="background: #FEF3C7; color: #D97706;">
+                                <i class="fa-solid fa-arrows-split-up-and-left"></i>
+                            </div>
+                            <h3>Vectores Paralelos</h3>
+                            <p>
+                                Usalos cuando necesites asociar datos de distinto tipo (ej: vector de <code class="code-badge">String</code> con nombres y vector de <code class="code-badge">int</code> con edades) compartiendo el mismo índice.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="callout-box" style="margin-top: 18px;">
+                        <i class="fa-solid fa-flag-checkered"></i>
+                        <div>
+                            <strong>Cierre de la Unidad 5</strong>
+                            <p>Has completado el núcleo de estructuras estáticas en Java. ¡Todo listo para ejercitar en OmegaUp y afrontar los trabajos prácticos de la cátedra!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 9: CIERRE CANÓNICO TUTI
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1509228468518-180dd4864904?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title" style="font-size: 48px !important; text-align: left; margin-bottom: 10px !important;">¿PREGUNTAS?</h1>
+                        <h3 style="font-size: 20px; color: var(--text-main); font-weight: 600; margin-bottom: 15px; text-align: left;">Espacio de consultas y dudas</h3>
+                        <p style="font-size: 16px; color: var(--text-light); text-align: left; margin-bottom: 20px;">¡Muchas gracias por su atención!</p>
+                        
+                        <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+                            <a href="../index.html" style="background: var(--utn-blue); color: white; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-house"></i> Portal Unidad 5
+                            </a>
+                        </div>
+
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">TUTI / UTN <span>SANTA FE</span></div>
+
+    <!-- Scripts de Reveal.js y Plugins -->
+    <script src="../../../../dist/reveal.js"></script>
+    <script src="../../../../dist/plugin/highlight.js"></script>
+    <script src="../../../../dist/plugin/notes.js"></script>
+
+    <script>
+        // =========================================================================
+        // Script Anti-Blank-Slide para Móviles y Pantallas Verticales
+        // =========================================================================
+        const isMobileOrVertical = window.innerWidth < 768 || window.innerHeight > window.innerWidth;
+        if (isMobileOrVertical) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            const slidesContainer = document.querySelector('.slides');
+            document.querySelectorAll('.slides > section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                slidesContainer.insertBefore(sec, parent);
+            });
+            document.querySelectorAll('.slides > section').forEach(sec => {
+                if (sec.children.length === 0) {
+                    sec.remove();
+                }
+            });
+        }
+
+        // =========================================================================
+        // Canvas Adaptativo
+        // =========================================================================
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let size = getCanvasSize();
+            Reveal.configure({
+                width: size.width,
+                height: size.height
+            });
+        });
+
+        // =========================================================================
+        // Códigos para OneCompiler
+        // =========================================================================
+        const codeServidores = `public class Main {
+    public static void main(String[] args) {
+        // Matriz correo de 5x5: correo[i][j] = KB enviados de i a j
+        int[][] correo = {
+            {  0, 120,  45,  80,  15 }, // Servidor 0
+            { 95,   0,  60, 110,  30 }, // Servidor 1
+            { 40,  85,   0,  70,  90 }, // Servidor 2
+            {130,  40,  75,   0,  55 }, // Servidor 3
+            { 20,  65, 140,  90,   0 }  // Servidor 4
+        };
+
+        System.out.println("=== A) TOTAL ENVIADO POR CADA SERVIDOR (FILAS) ===");
+        int maxEnvio = -1;
+        int servMayor = -1;
+
+        for (int i = 0; i < 5; i++) {
+            int totalEnviado = 0;
+            for (int j = 0; j < 5; j++) {
+                totalEnviado += correo[i][j];
+            }
+            System.out.println("Servidor " + i + " envió: " + totalEnviado + " KB");
+            if (totalEnviado > maxEnvio) {
+                maxEnvio = totalEnviado;
+                servMayor = i;
+            }
+        }
+
+        System.out.println("\\n=== B) SERVIDOR QUE MÁS CORREO ENVIÓ ===");
+        System.out.println("Servidor #" + servMayor + " con " + maxEnvio + " KB.");
+
+        System.out.println("\\n=== C) SERVIDORES QUE RECIBIERON MÁS DE 250 KB (COLUMNAS) ===");
+        int cotaM = 250;
+        for (int j = 0; j < 5; j++) {
+            int totalRecibido = 0;
+            for (int i = 0; i < 5; i++) {
+                totalRecibido += correo[i][j];
+            }
+            if (totalRecibido > cotaM) {
+                System.out.println("Servidor #" + j + " superó la cota con " + totalRecibido + " KB recibidos.");
+            }
+        }
+    }
+}`;
+
+        const codeAerolineas = `public class Main {
+    public static void main(String[] args) {
+        // Ejemplo reducido con 4 categorías y 5 destinos turísticos
+        String[] localidades = { "Paraná", "Esquel", "Bariloche", "Ushuaia", "Iguazú" };
+        
+        // pasajes[categoria][destino]
+        int[][] pasajes = {
+            { 33,   0, 125,  47,  86 }, // Categoría 0
+            { 17,  52,  69,  80, 110 }, // Categoría 1
+            { 23,  41,  22,   0,  45 }, // Categoría 2
+            {  0,   0,   0,   0,   0 }  // Categoría 3 (sin pasajes)
+        };
+
+        int categorias = pasajes.length;
+        int destinos = localidades.length;
+
+        System.out.println("=== 1) TOTAL DE PASAJEROS POR LOCALIDAD ===");
+        int minPasajeros = Integer.MAX_VALUE;
+        int idxMenorDestino = 0;
+
+        for (int col = 0; col < destinos; col++) {
+            int totalLoc = 0;
+            for (int fila = 0; fila < categorias; fila++) {
+                totalLoc += pasajes[fila][col];
+            }
+            System.out.println(localidades[col] + ": " + totalLoc + " pasajeros.");
+            if (totalLoc < minPasajeros) {
+                minPasajeros = totalLoc;
+                idxMenorDestino = col;
+            }
+        }
+
+        System.out.println("\\n=== 2) LOCALIDAD CON MENOR CANTIDAD DE PASAJEROS ===");
+        System.out.println(localidades[idxMenorDestino] + " con " + minPasajeros + " pasajeros.");
+
+        System.out.println("\\n=== 3) ¿HAY ALGUNA CATEGORÍA SIN PASAJES VENDIDOS? ===");
+        for (int fila = 0; fila < categorias; fila++) {
+            int totalCat = 0;
+            for (int col = 0; col < destinos; col++) {
+                totalCat += pasajes[fila][col];
+            }
+            if (totalCat == 0) {
+                System.out.println("La Categoría #" + fila + " no vendió ningún pasaje.");
+            }
+        }
+    }
+}`;
+
+        function sendCode(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        Reveal.on('slidechanged', event => {
+            const slideId = event.currentSlide ? event.currentSlide.id : '';
+            if (slideId === 'slide-compiler-servidores') {
+                sendCodeWithRetries('oc-editor-servidores', codeServidores, 'java', 'Main.java');
+            } else if (slideId === 'slide-compiler-aerolineas') {
+                sendCodeWithRetries('oc-editor-aerolineas', codeAerolineas, 'java', 'Main.java');
+            }
+        });
+    </script>
+</body>
+</html>
