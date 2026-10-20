@@ -435,14 +435,11 @@ for (const auto &amp;elemento : mapa1) {
             <!-- SLIDE 7: RESOLUCIÓN PASO A PASO + LABORATORIO ONECOMPILER -->
             <!-- ============================================================== -->
             <section>
-                <!-- 7.A: Resolución estructurada en dos columnas -->
+                <!-- 7.A: Resolución paso a paso -->
                 <section data-background-color="#F8FAFC">
                     <h2 class="slide-title">Resolución Paso a Paso: Frecuencia de Palabras</h2>
                     <div class="content-area">
-                        <div class="two-column">
-                            <div class="tile" style="padding: 14px 16px;">
-                                <h3 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 8px;"><i class="fa-solid fa-cloud-arrow-up"></i> 1. Carga y Conteo</h3>
-                                <pre><code class="cpp" data-trim data-noescape>
+                        <pre class="code-compact"><code class="cpp" data-trim data-noescape data-line-numbers="1-10|12-16|18-22">
 #include &lt;iostream&gt;
 #include &lt;map&gt;
 #include &lt;string&gt;
@@ -459,23 +456,14 @@ int main() {
         cin &gt;&gt; palabra;
         frecuencias[palabra]++;
     }
-                                </code></pre>
-                            </div>
 
-                            <div class="tile" style="padding: 14px 16px;">
-                                <h3 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 8px;"><i class="fa-solid fa-magnifying-glass"></i> 2. Consultas</h3>
-                                <pre><code class="cpp" data-trim data-noescape>
     cin &gt;&gt; m;
     for (int i = 0; i &lt; m; i++) {
         cin &gt;&gt; palabra;
         cout &lt;&lt; frecuencias[palabra] &lt;&lt; endl;
     }
-
-    return 0;
 }
-                                </code></pre>
-                            </div>
-                        </div>
+                        </code></pre>
                     </div>
                 </section>
 

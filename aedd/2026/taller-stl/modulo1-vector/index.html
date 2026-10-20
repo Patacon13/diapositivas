@@ -519,14 +519,11 @@ for (const auto &amp;fila : matriz) {
             <!-- SLIDE 9: RESOLUCIÓN PASO A PASO + LABORATORIO ONECOMPILER -->
             <!-- ============================================================== -->
             <section>
-                <!-- 9.A: Código estructurado en dos columnas -->
+                <!-- 9.A: Código con resaltado progresivo para el video -->
                 <section data-background-color="#F8FAFC">
                     <h2 class="slide-title">Resolución Paso a Paso: La Mediana</h2>
                     <div class="content-area">
-                        <div class="two-column">
-                            <div class="tile" style="padding: 14px 16px;">
-                                <h3 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 8px;"><i class="fa-solid fa-arrow-down-1-9"></i> 1. Carga y Ordenamiento</h3>
-                                <pre><code class="cpp" data-trim data-noescape>
+                        <pre class="code-compact"><code class="cpp" data-trim data-noescape data-line-numbers="1-9|11-15|17|19-22|24-26">
 #include &lt;iostream&gt;
 #include &lt;vector&gt;
 #include &lt;algorithm&gt;
@@ -544,31 +541,17 @@ int main() {
     }
 
     sort(mediciones.begin(), mediciones.end());
-                                </code></pre>
-                            </div>
 
-                            <div class="tile" style="padding: 14px 16px;">
-                                <h3 style="font-size: 16px; color: var(--utn-blue); margin-bottom: 8px;"><i class="fa-solid fa-calculator"></i> 2. Cálculo de Mediana y Salida</h3>
-                                <pre><code class="cpp" data-trim data-noescape>
     cout &lt;&lt; "Mediana: ";
     int mitad = mediciones.size() / 2;
-    if (n % 2 != 0) {
-        cout &lt;&lt; mediciones[mitad] &lt;&lt; endl;
-    } else {
-        cout &lt;&lt; (mediciones[mitad - 1] + 
-                 mediciones[mitad]) / 2.0 &lt;&lt; endl;
-    }
+    if (n % 2 != 0) cout &lt;&lt; mediciones[mitad] &lt;&lt; endl;
+    else cout &lt;&lt; (mediciones[mitad - 1] + mediciones[mitad]) / 2.0 &lt;&lt; endl;
 
     cout &lt;&lt; "Arreglo: ";
-    for (int elemento : mediciones) {
-        cout &lt;&lt; elemento &lt;&lt; " ";
-    }
+    for (int elemento : mediciones) cout &lt;&lt; elemento &lt;&lt; " ";
     cout &lt;&lt; endl;
-    return 0;
 }
-                                </code></pre>
-                            </div>
-                        </div>
+                        </code></pre>
                     </div>
                 </section>
 
