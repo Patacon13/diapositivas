@@ -445,7 +445,7 @@
                             </div>
                             <h3>2. Contiguo</h3>
                             <p>
-                                Sus elementos se guardan en <strong>posiciones consecutivas</strong> de la memoria RAM, sin huecos intermedios, calculando direcciones exactas.
+                                Sus elementos se guardan en <strong>posiciones consecutivas</strong> de la memoria RAM, sin huecos intermedios.
                             </p>
                         </div>
 
@@ -455,7 +455,7 @@
                             </div>
                             <h3>3. Indexado</h3>
                             <p>
-                                Cada elemento se accede de manera instantánea O(1) mediante un <strong>índice entero</strong> que inicia obligatoriamente en <code class="code-badge">0</code> hasta <code class="code-badge">N - 1</code>.
+                                Cada elemento se accede de manera instantánea mediante un <strong>índice entero</strong> que inicia obligatoriamente en <code class="code-badge">0</code> hasta <code class="code-badge">N - 1</code>, siendo <code class="code-badge">N</code> la cantidad total de elementos.
                             </p>
                         </div>
                     </div>
@@ -464,7 +464,7 @@
                         <i class="fa-solid fa-microchip"></i>
                         <div>
                             <strong>Acceso directo en tiempo constante O(1)</strong>
-                            <p>Como cada casilla mide lo mismo (ej: 4 bytes para <code class="code-badge">int</code>), la computadora calcula <code class="code-badge">dirección = base + (índice × tamaño)</code> instantáneamente sin tener que recorrer los casilleros previos.</p>
+                            <p>Como cada casilla mide lo mismo (ej: 4 bytes para <code class="code-badge">int</code>), la computadora calcula <code class="code-badge">dirección = base + (índice × tamaño)</code> instantáneamente sin tener que recorrer los casilleros previos, siendo <code class="code-badge">base</code> la dirección en memoria del primer elemendo (<code class="code-badge">índice 0</code>).</p>
                         </div>
                     </div>
                 </div>
@@ -606,56 +606,75 @@ int cantidad = pares.length; // 5 (¡sin paréntesis!)</code></pre>
             </section>
 
             <!-- =========================================================================
-                 SLIDE 6: RECORRIDOS: FOR INDEXADO VS. FOR-EACH EXTENDIDO
+                 SLIDE 6: ESTRATEGIAS DE RECORRIDO: COMPLETOS VS. PARCIALES
                  ========================================================================= -->
             <section>
-                <h2 class="slide-title">RECORRIDOS: <span class="slide-subtitle">For Clásico vs. For-Each</span></h2>
+                <h2 class="slide-title">RECORRIDOS EN VECTORES: <span class="slide-subtitle">Completos vs. Parciales</span></h2>
                 <div class="content-area">
                     <p style="font-size: 15.5px; color: #475569; margin-bottom: 10px;">
-                        Para procesar secuencialmente los elementos de un vector disponemos de dos variantes de bucles:
+                        La estructura de control adecuada depende de si debemos procesar todo el arreglo o cortar anticipadamente:
                     </p>
 
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 25%;">Estructura</th>
-                                <th style="width: 45%;">Sintaxis Canónica</th>
-                                <th style="width: 30%;">Casos de Uso Ideales</th>
+                                <th style="width: 25%;">Estrategia</th>
+                                <th style="width: 37%;">Casos de Uso Ideales</th>
+                                <th style="width: 38%;">Sintaxis Canónica</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>For Clásico</strong> (Indexado)</td>
                                 <td>
-                                    <code class="code-badge">for (int i = 0; i &lt; arr.length; i++)</code><br>
-                                    <span style="font-size: 12px; color: #64748B;">Permite acceder a <code class="code-badge">i</code> y modificar <code class="code-badge">arr[i]</code></span>
+                                    <strong style="color: var(--utn-blue); font-size: 15px;">Recorrido Completo</strong><br>
+                                    <span style="font-size: 12px; color: #64748B;">(Todos los elementos)</span>
                                 </td>
                                 <td>
-                                    • Modificar elementos<br>
-                                    • Corrimientos y rotaciones<br>
-                                    • Recorridos parciales o inversos
+                                    <strong>Procesar el 100% del vector:</strong><br>
+                                    • Sumatorias, promedios y conteos.<br>
+                                    • Búsqueda de extremos (mínimo / máximo).<br>
+                                    • Modificar celdas o imprimir todo.
+                                </td>
+                                <td>
+                                    <div style="margin-bottom: 6px;">
+                                        <code class="code-badge">for (int i = 0; i &lt; arr.length; i++)</code><br>
+                                        <span style="font-size: 11.5px; color: #64748B;"><strong>For clásico:</strong> cuando necesitás el índice o modificar.</span>
+                                    </div>
+                                    <div>
+                                        <code class="code-badge">for (int elem : arr)</code><br>
+                                        <span style="font-size: 11.5px; color: #64748B;"><strong>For-each:</strong> lectura directa y código más limpio.</span>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
-                                <td><strong>For-Each</strong> (Extendido)</td>
                                 <td>
-                                    <code class="code-badge">for (int elem : arr)</code><br>
-                                    <span style="font-size: 12px; color: #64748B;">Recorre cada elemento en modo <em>sólo lectura</em></span>
+                                    <strong style="color: #D97706; font-size: 15px;">Recorrido Parcial</strong><br>
+                                    <span style="font-size: 12px; color: #64748B;">(Búsqueda con corte)</span>
                                 </td>
                                 <td>
-                                    • Sumatorias y conteo<br>
-                                    • Búsqueda de extremos (mín/máx)<br>
-                                    • Impresión completa en pantalla
+                                    <strong>Detenerse al cumplir un objetivo:</strong><br>
+                                    • Búsqueda de un valor determinado.<br>
+                                    • Verificar si existe un elemento.<br>
+                                    • Validar homogeneidad o condiciones.
+                                </td>
+                                <td>
+                                    <div style="margin-bottom: 4px;">
+                                        <code class="code-badge">int i = 0;</code><br>
+                                        <code class="code-badge">while (i &lt; arr.length &amp;&amp; arr[i] != buscado) {</code><br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<code class="code-badge">i++;</code><br>
+                                        <code class="code-badge">}</code>
+                                    </div>
+                                    <span style="font-size: 11.5px; color: #64748B;">&rarr; <strong>Corte por condición falsa</strong>: frena naturalmente sin recorrer casilleros innecesarios.</span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
 
-                    <div class="callout-box">
-                        <i class="fa-solid fa-shield-halved"></i>
+                    <div class="callout-box" style="border-left-color: #EF4444; background: #FEF2F2; border-color: #FECACA;">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #EF4444;"></i>
                         <div>
-                            <strong>Regla de oro: ¿Modificar o Sólo Leer?</strong>
-                            <p>Si necesitás cambiar valores dentro del arreglo o conocer en qué posición exacta estás, utilizá siempre el <code class="code-badge">for</code> clásico. Si sólo vas a consultar o acumular, el <code class="code-badge">for-each</code> es más limpio y previene errores de índice.</p>
+                            <strong style="color: #991B1B;">Regla de programación estructurada: ¡Prohibido for con break!</strong>
+                            <p style="color: #7F1D1D;">Si la búsqueda puede terminar antes de llegar al final del arreglo, <strong>nunca uses un <code class="code-badge">for</code> con <code class="code-badge">break</code></strong>. En algoritmos estructurados, la detención temprana debe resolverse haciendo que la <strong>condición del <code class="code-badge">while</code> se vuelva falsa</strong>, asegurando un único punto de salida claro y predecible.</p>
                         </div>
                     </div>
                 </div>
@@ -731,20 +750,22 @@ int cantidad = pares.length; // 5 (¡sin paréntesis!)</code></pre>
                             <div style="background: #0F172A; padding: 8px 14px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8;">
                                 // Esquema de búsqueda de contraejemplo con bandera booleana
                             </div>
-                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 14px 18px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13.5px;">public static boolean todos_iguales(int[] vector) {
-    if (vector == null || vector.length &lt;= 1) {
-        return true; // Un vector vacío o de 1 elemento es homogéneo
-    }
-    
-    // Comparamos cada elemento contra el primero
-    int primero = vector[0];
-    for (int i = 1; i &lt; vector.length; i++) {
-        if (vector[i] != primero) {
-            return false; // Al primer elemento diferente, cortamos
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 14px 18px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13.5px;">    public static boolean todosIguales(int[] vector) {
+        boolean respuesta=false;
+        if (vector == null || vector.length <= 1) {
+            respuesta=true; // Un vector vacío o de 1 elemento es homogéneo
+        } else {         // Comparamos cada elemento contra el primero
+            int primero = vector[0], i = 0;
+            while (i < vector.length && primero == vector[i]) {
+                i++;
+            }
+            System.out.println("Cortó en el recorrido número: " + i);
+            if (i == vector.length) {
+                respuesta=true;
+            } 
         }
-    }
-    return true; // Si completó el recorrido sin discrepancias
-}</code></pre>
+        return respuesta;
+    }</code></pre>
                         </div>
 
                         <div class="callout-box">
