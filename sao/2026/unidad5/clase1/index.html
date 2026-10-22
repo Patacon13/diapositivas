@@ -684,18 +684,17 @@ int cantidad = pares.length; // 5 (¡sin paréntesis!)</code></pre>
                  SLIDE 7: PRÁCTICA GUIADA 1: BÚSQUEDA DE MAYOR EN UN RANGO
                  ========================================================================= -->
             <section>
-                <section>
-                    <h2 class="slide-title">PRÁCTICA GUIADA 1: <span class="slide-subtitle">Mayor en un Rango</span></h2>
-                    <div class="content-area">
-                        <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
-                            <strong>Problema:</strong> Escribir la función <code class="code-badge">int mayor(int[] arreglo, int inf, int sup)</code> que reciba un arreglo y dos índices de cota, retornando el valor más grande dentro del rango acotado <code class="code-badge">[inf, sup]</code>.
-                        </p>
+                <h2 class="slide-title">PRÁCTICA GUIADA 1: <span class="slide-subtitle">Mayor en un Rango</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
+                        <strong>Problema:</strong> Escribir la función <code class="code-badge">int mayor(int[] arreglo, int inf, int sup)</code> que reciba un arreglo y dos índices de cota, retornando el valor más grande dentro del rango acotado <code class="code-badge">[inf, sup]</code>.
+                    </p>
 
-                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 14px;">
-                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8;">
-                                // Algoritmo con pivote inicial en el extremo inferior
-                            </div>
-                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 14px 18px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13.5px;">public static int mayor(int[] arreglo, int inf, int sup) {
+                    <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 14px;">
+                        <div style="background: #0F172A; padding: 8px 14px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8;">
+                            // Algoritmo con pivote inicial en el extremo inferior
+                        </div>
+                        <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 14px 18px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13.5px;">public static int mayor(int[] arreglo, int inf, int sup) {
     // Tomamos como candidato inicial al primer elemento del rango
     int max = arreglo[inf];
     
@@ -707,56 +706,41 @@ int cantidad = pares.length; // 5 (¡sin paréntesis!)</code></pre>
     }
     return max;
 }</code></pre>
-                        </div>
+                    </div>
 
-                        <div class="callout-box">
-                            <i class="fa-solid fa-code"></i>
-                            <div>
-                                <strong>Ejemplo de ejecución</strong>
-                                <p>Para <code class="code-badge">A = {10, 12, 2, 0, 4, 35, 24}</code>: <br>
-                                • <code class="code-badge">mayor(A, 0, 3)</code> &rarr; Retorna <code class="code-badge">12</code> (evalúa {10, 12, 2, 0}).<br>
-                                • <code class="code-badge">mayor(A, 0, 6)</code> &rarr; Retorna <code class="code-badge">35</code>.</p>
-                            </div>
+                    <div class="callout-box">
+                        <i class="fa-solid fa-code"></i>
+                        <div>
+                            <strong>Ejemplo de ejecución</strong>
+                            <p>Para <code class="code-badge">A = {10, 12, 2, 0, 4, 35, 24}</code>: <br>
+                            • <code class="code-badge">mayor(A, 0, 3)</code> &rarr; Retorna <code class="code-badge">12</code> (evalúa {10, 12, 2, 0}).<br>
+                            • <code class="code-badge">mayor(A, 0, 6)</code> &rarr; Retorna <code class="code-badge">35</code>.</p>
                         </div>
                     </div>
-                </section>
-
-                <!-- VERTICAL SLIDE: ONECOMPILER MAYOR -->
-                <section id="slide-compiler-mayor" data-background-color="#0F172A">
-                    <div class="compiler-window">
-                        <div class="header">
-                            <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Función mayor(arreglo, inf, sup)</span>
-                            <button onclick="sendCodeWithRetries('oc-editor-mayor', codeMayor, 'java', 'Main.java')">
-                                <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
-                            </button>
-                        </div>
-                        <iframe id="oc-editor-mayor" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
-                    </div>
-                </section>
+                </div>
             </section>
 
             <!-- =========================================================================
                  SLIDE 8: PRÁCTICA GUIADA 2: TODOS IGUALES (CORTE TEMPRANO)
                  ========================================================================= -->
             <section>
-                <section>
-                    <h2 class="slide-title">PRÁCTICA GUIADA 2: <span class="slide-subtitle">Verificar Homogeneidad</span></h2>
-                    <div class="content-area">
-                        <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
-                            <strong>Problema:</strong> Escribir el método <code class="code-badge">boolean todos_iguales(int[] vector)</code> que determine si todos los elementos de una colección son idénticos entre sí.
-                        </p>
+                <h2 class="slide-title">PRÁCTICA GUIADA 2: <span class="slide-subtitle">Verificar Homogeneidad</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
+                        <strong>Problema:</strong> Escribir el método <code class="code-badge">boolean todosIguales(int[] vector)</code> que determine si todos los elementos de una colección son idénticos entre sí.
+                    </p>
 
-                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 14px;">
-                            <div style="background: #0F172A; padding: 8px 14px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8;">
-                                // Esquema de búsqueda de contraejemplo con bandera booleana
-                            </div>
-                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 14px 18px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13.5px;">    public static boolean todosIguales(int[] vector) {
+                    <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 14px;">
+                        <div style="background: #0F172A; padding: 8px 14px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8;">
+                            // Esquema de búsqueda de contraejemplo con bandera booleana
+                        </div>
+                        <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 14px 18px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13.5px;">    public static boolean todosIguales(int[] vector) {
         boolean respuesta=false;
-        if (vector == null || vector.length <= 1) {
+        if (vector == null || vector.length &lt;= 1) {
             respuesta=true; // Un vector vacío o de 1 elemento es homogéneo
         } else {         // Comparamos cada elemento contra el primero
             int primero = vector[0], i = 0;
-            while (i < vector.length && primero == vector[i]) {
+            while (i &lt; vector.length &amp;&amp; primero == vector[i]) {
                 i++;
             }
             System.out.println("Cortó en el recorrido número: " + i);
@@ -766,31 +750,17 @@ int cantidad = pares.length; // 5 (¡sin paréntesis!)</code></pre>
         }
         return respuesta;
     }</code></pre>
-                        </div>
+                    </div>
 
-                        <div class="callout-box">
-                            <i class="fa-solid fa-bolt"></i>
-                            <div>
-                                <strong>Eficiencia algorítmica: Mejor Caso vs. Peor Caso</strong>
-                                <p>• <strong>Mejor caso O(1)</strong>: El segundo elemento ya es diferente (ej: <code class="code-badge">[1, 9, 1, 1]</code>), el método retorna en la primera vuelta.<br>
-                                • <strong>Peor caso O(N)</strong>: Todos son iguales o la diferencia está al final; requiere recorrer los <code class="code-badge">N</code> elementos.</p>
-                            </div>
+                    <div class="callout-box">
+                        <i class="fa-solid fa-bolt"></i>
+                        <div>
+                            <strong>Eficiencia algorítmica: Mejor Caso vs. Peor Caso</strong>
+                            <p>• <strong>Mejor caso O(1)</strong>: El segundo elemento ya es diferente (ej: <code class="code-badge">[1, 9, 1, 1]</code>), el método retorna en la primera vuelta.<br>
+                            • <strong>Peor caso O(N)</strong>: Todos son iguales o la diferencia está al final; requiere recorrer los <code class="code-badge">N</code> elementos.</p>
                         </div>
                     </div>
-                </section>
-
-                <!-- VERTICAL SLIDE: ONECOMPILER TODOS IGUALES -->
-                <section id="slide-compiler-iguales" data-background-color="#0F172A">
-                    <div class="compiler-window">
-                        <div class="header">
-                            <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Método todos_iguales(vector)</span>
-                            <button onclick="sendCodeWithRetries('oc-editor-iguales', codeIguales, 'java', 'Main.java')">
-                                <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
-                            </button>
-                        </div>
-                        <iframe id="oc-editor-iguales" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
-                    </div>
-                </section>
+                </div>
             </section>
 
             <!-- =========================================================================
