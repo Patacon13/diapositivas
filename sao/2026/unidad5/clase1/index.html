@@ -838,64 +838,63 @@ int cantidad = pares.length; // 5 (¡sin paréntesis!)</code></pre>
                  SLIDE 10: PRÁCTICA GUIADA 3: ROTACIÓN DE ELEMENTOS
                  ========================================================================= -->
             <section>
-                <section>
-                    <h2 class="slide-title">PRÁCTICA GUIADA 3: <span class="slide-subtitle">Rotación de Vectores</span></h2>
-                    <div class="content-area">
-                        <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
-                            <strong>Desafío:</strong> Desplazar circularmente los valores sin perder datos:
-                        </p>
+                <h2 class="slide-title">PRÁCTICA GUIADA 3: <span class="slide-subtitle">Rotación de Vectores</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 12px;">
+                        <strong>Desafío:</strong> Desplazar circularmente los valores sin perder datos:
+                    </p>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 12px;">
-                            <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px;">
-                                <h4 style="font-size: 14.5px; color: var(--utn-blue); margin-bottom: 6px;"><i class="fa-solid fa-arrow-left"></i> Rotar a la Izquierda</h4>
-                                <p style="font-size: 12.5px; color: #64748B; margin-bottom: 8px;">
-                                    El valor de la posición 0 pasa al último casillero. <br>
-                                    <code class="code-badge">[1, 2, 3, 4] &rarr; [2, 3, 4, 1]</code>
-                                </p>
-                                <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 14px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 11.5px;">int aux = arr[0]; // Salvamos el 1ro
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 12px;">
+                        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px;">
+                            <h4 style="font-size: 14.5px; color: var(--utn-blue); margin-bottom: 6px;"><i class="fa-solid fa-arrow-left"></i> Rotar a la Izquierda</h4>
+                            <p style="font-size: 12.5px; color: #64748B; margin-bottom: 8px;">
+                                El valor de la posición 0 pasa al último casillero. <br>
+                                <code class="code-badge">[1, 2, 3, 4] &rarr; [2, 3, 4, 1]</code>
+                            </p>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 14px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 11.5px;">int aux = arr[0]; // Salvamos el 1ro
 for (int i = 0; i &lt; arr.length - 1; i++) {
     arr[i] = arr[i + 1]; // Corremos izq
 }
 arr[arr.length - 1] = aux; // Restauramos</code></pre>
-                            </div>
+                        </div>
 
-                            <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px;">
-                                <h4 style="font-size: 14.5px; color: var(--utn-blue); margin-bottom: 6px;"><i class="fa-solid fa-arrow-right"></i> Rotar a la Derecha</h4>
-                                <p style="font-size: 12.5px; color: #64748B; margin-bottom: 8px;">
-                                    El último valor pasa a la posición inicial 0. <br>
-                                    <code class="code-badge">[1, 2, 3, 4] &rarr; [4, 1, 2, 3]</code>
-                                </p>
-                                <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 14px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 11.5px;">int aux = arr[arr.length - 1]; // Salvamos
+                        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px;">
+                            <h4 style="font-size: 14.5px; color: var(--utn-blue); margin-bottom: 6px;"><i class="fa-solid fa-arrow-right"></i> Rotar a la Derecha</h4>
+                            <p style="font-size: 12.5px; color: #64748B; margin-bottom: 8px;">
+                                El último valor pasa a la posición inicial 0. <br>
+                                <code class="code-badge">[1, 2, 3, 4] &rarr; [4, 1, 2, 3]</code>
+                            </p>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 14px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 11.5px;">int aux = arr[arr.length - 1]; // Salvamos
 for (int i = arr.length - 1; i &gt; 0; i--) {
     arr[i] = arr[i - 1]; // Corremos der
 }
 arr[0] = aux; // Restauramos</code></pre>
-                            </div>
-                        </div>
-
-                        <div class="callout-box">
-                            <i class="fa-solid fa-lightbulb"></i>
-                            <div>
-                                <strong>La variable auxiliar es imprescindible</strong>
-                                <p>Si intentamos desplazar directamente sin respaldar <code class="code-badge">arr[0]</code> o el último valor, el dato se sobreescribirá y quedará destruido permanentemente.</p>
-                            </div>
                         </div>
                     </div>
-                </section>
 
-                <!-- VERTICAL SLIDE: ONECOMPILER ROTAR -->
-                <section id="slide-compiler-rotar" data-background-color="#0F172A">
-                    <div class="compiler-window">
-                        <div class="header">
-                            <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Rotación de Vectores (Izquierda / Derecha)</span>
-                            <button onclick="sendCodeWithRetries('oc-editor-rotar', codeRotar, 'java', 'Main.java')">
-                                <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
-                            </button>
+                    <div class="callout-box">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <div>
+                            <strong>La variable auxiliar es imprescindible</strong>
+                            <p>Si intentamos desplazar directamente sin respaldar <code class="code-badge">arr[0]</code> o el último valor, el dato se sobreescribirá y quedará destruido permanentemente.</p>
                         </div>
-                        <iframe id="oc-editor-rotar" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
                     </div>
-                </section>
+                </div>
             </section>
+
+            <!-- VERTICAL SLIDE: ONECOMPILER ROTAR (Deshabilitado temporalmente)
+            <section id="slide-compiler-rotar" data-background-color="#0F172A">
+                <div class="compiler-window">
+                    <div class="header">
+                        <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Rotación de Vectores (Izquierda / Derecha)</span>
+                        <button onclick="sendCodeWithRetries('oc-editor-rotar', codeRotar, 'java', 'Main.java')">
+                            <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
+                        </button>
+                    </div>
+                    <iframe id="oc-editor-rotar" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                </div>
+            </section>
+            -->
 
             <!-- =========================================================================
                  SLIDE 11: CHECKLIST DE CÁTEDRA: BUENAS PRÁCTICAS
@@ -903,7 +902,7 @@ arr[0] = aux; // Restauramos</code></pre>
             <section>
                 <h2 class="slide-title">CHECKLIST DE CÁTEDRA: <span class="slide-subtitle">Vectores Seguros</span></h2>
                 <div class="content-area">
-                    <div class="cards-container">
+                    <div class="cards-container" style="grid-template-columns: 1fr 1fr;">
                         <div class="concept-card" style="border-top: 4px solid #EF4444;">
                             <div class="card-icon-box" style="background: #FEE2E2; color: #EF4444;">
                                 <i class="fa-solid fa-ban"></i>
@@ -921,16 +920,6 @@ arr[0] = aux; // Restauramos</code></pre>
                             <h3>2. Dirección del Desplazamiento</h3>
                             <p>
                                 Al mover elementos a la derecha, el recorrido del bucle debe ser <strong>descendente</strong> (<code class="code-badge">i--</code>). Si se recorre hacia adelante, se duplica el primer valor en todas las celdas.
-                            </p>
-                        </div>
-
-                        <div class="concept-card" style="border-top: 4px solid #10B981;">
-                            <div class="card-icon-box" style="background: #D1FAE5; color: #10B981;">
-                                <i class="fa-solid fa-copy"></i>
-                            </div>
-                            <h3>3. Copia por Referencia</h3>
-                            <p>
-                                Hacer <code class="code-badge">int[] b = a;</code> <strong>no</strong> crea un nuevo vector; solo copia el puntero en memoria. Modificar <code class="code-badge">b</code> modificará también a <code class="code-badge">a</code>.
                             </p>
                         </div>
                     </div>
