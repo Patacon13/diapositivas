@@ -75,6 +75,7 @@
             .staff-list ul { display: inline-block !important; text-align: left !important; }
             .staff-list li { font-size: 15px !important; margin-bottom: 3px !important; }
 
+            .cards-container { grid-template-columns: 1fr !important; gap: 12px !important; }
             .slide-title { font-size: 26px !important; margin-bottom: 14px !important; border-left-width: 6px !important; padding-left: 12px !important; }
             .reveal p, .reveal li { font-size: 15px !important; }
             .branding-footer { bottom: 10px !important; left: 15px !important; font-size: 11px !important; }
@@ -681,7 +682,77 @@ int cantidad = pares.length; // 5 (¡sin paréntesis!)</code></pre>
             </section>
 
             <!-- =========================================================================
-                 SLIDE 7: PRÁCTICA GUIADA 1: BÚSQUEDA DE MAYOR EN UN RANGO
+                 SLIDE 7: CASOS DE ESTUDIO: ¿CICLO EXACTO O NO EXACTO?
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">CASOS DE ESTUDIO: <span class="slide-subtitle">¿Ciclo Exacto o No Exacto?</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15.5px; color: #475569; margin-bottom: 14px;">
+                        Antes de analizar las soluciones, evaluemos cada problema: <strong>¿requiere recorrer una cantidad fija de elementos (exacto) o detenerse ante una condición (no exacto)?</strong>
+                    </p>
+
+                    <div class="cards-container">
+                        <!-- Caso 1 -->
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-blue);">
+                            <div class="card-icon-box" style="background: #EFF6FF; color: var(--utn-blue);">
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                            </div>
+                            <h3>Práctica 1: Mayor en Rango</h3>
+                            <p>
+                                Escribir la función <code class="code-badge">int mayor(int[] arreglo, int inf, int sup)</code> que reciba un arreglo y dos índices de cota, retornando el valor más grande dentro del rango acotado <code class="code-badge">[inf, sup]</code>.
+                            </p>
+                            <div style="margin-top: auto; padding-top: 12px; border-top: 1px dashed #CBD5E1; text-align: center;">
+                                <span style="font-size: 12.5px; font-weight: 700; color: var(--utn-blue); display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                    <i class="fa-regular fa-circle-question" style="color: var(--utn-gold);"></i> ¿Ciclo exacto o no exacto?
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Caso 2 -->
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-gold);">
+                            <div class="card-icon-box" style="background: #FEF3C7; color: #D97706;">
+                                <i class="fa-solid fa-equals"></i>
+                            </div>
+                            <h3>Práctica 2: Verificar Homogeneidad</h3>
+                            <p>
+                                Escribir el método <code class="code-badge">boolean todosIguales(int[] vector)</code> que determine si todos los elementos de una colección son idénticos entre sí.
+                            </p>
+                            <div style="margin-top: auto; padding-top: 12px; border-top: 1px dashed #CBD5E1; text-align: center;">
+                                <span style="font-size: 12.5px; font-weight: 700; color: #D97706; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                    <i class="fa-regular fa-circle-question" style="color: var(--utn-gold);"></i> ¿Ciclo exacto o no exacto?
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Caso 3 -->
+                        <div class="concept-card" style="border-top: 4px solid var(--cyan-accent);">
+                            <div class="card-icon-box" style="background: #E0F2FE; color: var(--cyan-accent);">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                            </div>
+                            <h3>Práctica 3: Rotación de Vectores</h3>
+                            <p>
+                                Desplazar circularmente los valores sin perder datos: rotar hacia la izquierda (<code class="code-badge">[1, 2, 3, 4] &rarr; [2, 3, 4, 1]</code>) y hacia la derecha.
+                            </p>
+                            <div style="margin-top: auto; padding-top: 12px; border-top: 1px dashed #CBD5E1; text-align: center;">
+                                <span style="font-size: 12.5px; font-weight: 700; color: #0284C7; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                    <i class="fa-regular fa-circle-question" style="color: var(--utn-gold);"></i> ¿Ciclo exacto o no exacto?
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout-box" style="margin-top: 14px;">
+                        <i class="fa-solid fa-comments"></i>
+                        <div>
+                            <strong>Debate previo en clase</strong>
+                            <p>¿En cuáles sabemos con certeza cuántas iteraciones se van a ejecutar antes de iniciar el bucle y en cuáles debemos detenernos anticipadamente?</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 8: PRÁCTICA GUIADA 1: BÚSQUEDA DE MAYOR EN UN RANGO
                  ========================================================================= -->
             <section>
                 <h2 class="slide-title">PRÁCTICA GUIADA 1: <span class="slide-subtitle">Mayor en un Rango</span></h2>
@@ -721,7 +792,7 @@ int cantidad = pares.length; // 5 (¡sin paréntesis!)</code></pre>
             </section>
 
             <!-- =========================================================================
-                 SLIDE 8: PRÁCTICA GUIADA 2: TODOS IGUALES (CORTE TEMPRANO)
+                 SLIDE 9: PRÁCTICA GUIADA 2: TODOS IGUALES (CORTE TEMPRANO)
                  ========================================================================= -->
             <section>
                 <h2 class="slide-title">PRÁCTICA GUIADA 2: <span class="slide-subtitle">Verificar Homogeneidad</span></h2>
@@ -764,7 +835,7 @@ int cantidad = pares.length; // 5 (¡sin paréntesis!)</code></pre>
             </section>
 
             <!-- =========================================================================
-                 SLIDE 9: PRÁCTICA GUIADA 3: ROTACIÓN DE ELEMENTOS
+                 SLIDE 10: PRÁCTICA GUIADA 3: ROTACIÓN DE ELEMENTOS
                  ========================================================================= -->
             <section>
                 <section>
@@ -827,7 +898,7 @@ arr[0] = aux; // Restauramos</code></pre>
             </section>
 
             <!-- =========================================================================
-                 SLIDE 10: CHECKLIST DE CÁTEDRA: BUENAS PRÁCTICAS
+                 SLIDE 11: CHECKLIST DE CÁTEDRA: BUENAS PRÁCTICAS
                  ========================================================================= -->
             <section>
                 <h2 class="slide-title">CHECKLIST DE CÁTEDRA: <span class="slide-subtitle">Vectores Seguros</span></h2>
@@ -875,7 +946,7 @@ arr[0] = aux; // Restauramos</code></pre>
             </section>
 
             <!-- =========================================================================
-                 SLIDE 11: CIERRE CANÓNICO TUTI
+                 SLIDE 12: CIERRE CANÓNICO TUTI
                  ========================================================================= -->
             <section data-background-color="#F8FAFC">
                 <div class="hero-container">
@@ -889,7 +960,8 @@ arr[0] = aux; // Restauramos</code></pre>
                             <a href="../index.html" style="background: var(--utn-blue); color: white; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-house"></i> Portal Unidad 5
                             </a>
-                            <a href="../clase2/index.html" style="background: var(--cyan-accent); color: white; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                            <!-- Enlace a Clase 2 deshabilitado temporalmente -->
+                            <a href="../clase2/index.html" style="background: #94A3B8; color: white; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; pointer-events: none; opacity: 0.5; cursor: not-allowed;" aria-disabled="true" tabindex="-1">
                                 Ir a Clase 2 <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </div>
