@@ -510,58 +510,93 @@
                 <h2 class="slide-title">MECÁNICA VISUAL: <span class="slide-subtitle">Corrimiento a la Derecha</span></h2>
                 <div class="content-area">
                     <p style="font-size: 15.5px; color: #475569; margin-bottom: 8px;">
-                        Paso a paso para insertar el valor <code class="code-badge">99</code> en la posición <code class="code-badge">0</code> de un vector con <code class="code-badge">tope = 3</code>:
+                        Paso a paso para insertar el valor <code class="code-badge">99</code> en la posición <code class="code-badge">0</code> de un vector con tamaño físico <code class="code-badge">length = 5</code> y tamaño lógico inicial <code class="code-badge">tope = 3</code>:
                     </p>
 
                     <!-- Estado inicial -->
-                    <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 16px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
-                        <span style="font-size: 13px; font-weight: 700; color: var(--utn-blue); width: 140px;">1. Estado Inicial</span>
-                        <div style="display: flex; gap: 8px; font-family: 'Fira Code', monospace; font-size: 14px;">
-                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[0]: 10</span>
-                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[1]: 20</span>
-                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[2]: 30</span>
-                            <span style="background: #F1F5F9; color: #94A3B8; padding: 4px 10px; border-radius: 6px;">[3]: ? (tope)</span>
+                    <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 16px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-size: 13px; font-weight: 700; color: var(--utn-blue); min-width: 200px; white-space: nowrap;">1. Estado Inicial</span>
+                        <div style="display: flex; gap: 8px; font-family: 'Fira Code', monospace; font-size: 13.5px;">
+                            <span style="background: #E0F2FE; padding: 4px 9px; border-radius: 6px;">[0]: 10</span>
+                            <span style="background: #E0F2FE; padding: 4px 9px; border-radius: 6px;">[1]: 20</span>
+                            <span style="background: #E0F2FE; padding: 4px 9px; border-radius: 6px;">[2]: 30</span>
+                            <span style="background: #F1F5F9; color: #94A3B8; padding: 4px 9px; border-radius: 6px;">[3]: 0</span>
+                            <span style="background: #F1F5F9; color: #94A3B8; padding: 4px 9px; border-radius: 6px;">[4]: 0</span>
                         </div>
                     </div>
 
                     <!-- Paso 1 -->
-                    <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 16px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
-                        <span style="font-size: 13px; font-weight: 700; color: #D97706; width: 140px;">2. i = 3 &rarr; arr[3]=arr[2]</span>
-                        <div style="display: flex; gap: 8px; font-family: 'Fira Code', monospace; font-size: 14px;">
-                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[0]: 10</span>
-                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[1]: 20</span>
-                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 10px; border-radius: 6px;">[2]: 30</span>
-                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 10px; border-radius: 6px; border: 2px solid #F59E0B;">[3]: 30 &larr; copia</span>
+                    <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 16px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-size: 13px; font-weight: 700; color: #D97706; min-width: 200px; white-space: nowrap;">2. i = 3 &rarr; arr[3]=arr[2]</span>
+                        <div style="display: flex; gap: 8px; font-family: 'Fira Code', monospace; font-size: 13.5px;">
+                            <span style="background: #E0F2FE; padding: 4px 9px; border-radius: 6px;">[0]: 10</span>
+                            <span style="background: #E0F2FE; padding: 4px 9px; border-radius: 6px;">[1]: 20</span>
+                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 9px; border-radius: 6px;">[2]: 30</span>
+                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 9px; border-radius: 6px; border: 2px solid #F59E0B;">[3]: 30 &larr; copia</span>
+                            <span style="background: #F1F5F9; color: #94A3B8; padding: 4px 9px; border-radius: 6px;">[4]: 0</span>
                         </div>
                     </div>
 
                     <!-- Paso 2 -->
-                    <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 16px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
-                        <span style="font-size: 13px; font-weight: 700; color: #D97706; width: 140px;">3. i = 2 &rarr; arr[2]=arr[1]</span>
-                        <div style="display: flex; gap: 8px; font-family: 'Fira Code', monospace; font-size: 14px;">
-                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[0]: 10</span>
-                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 10px; border-radius: 6px;">[1]: 20</span>
-                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 10px; border-radius: 6px; border: 2px solid #F59E0B;">[2]: 20 &larr; copia</span>
-                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[3]: 30</span>
+                    <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 16px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-size: 13px; font-weight: 700; color: #D97706; min-width: 200px; white-space: nowrap;">3. i = 2 &rarr; arr[2]=arr[1]</span>
+                        <div style="display: flex; gap: 8px; font-family: 'Fira Code', monospace; font-size: 13.5px;">
+                            <span style="background: #E0F2FE; padding: 4px 9px; border-radius: 6px;">[0]: 10</span>
+                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 9px; border-radius: 6px;">[1]: 20</span>
+                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 9px; border-radius: 6px; border: 2px solid #F59E0B;">[2]: 20 &larr; copia</span>
+                            <span style="background: #E0F2FE; padding: 4px 9px; border-radius: 6px;">[3]: 30</span>
+                            <span style="background: #F1F5F9; color: #94A3B8; padding: 4px 9px; border-radius: 6px;">[4]: 0</span>
+                        </div>
+                    </div>
+
+                    <!-- Paso 3 -->
+                    <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 16px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-size: 13px; font-weight: 700; color: #D97706; min-width: 200px; white-space: nowrap;">4. i = 1 &rarr; arr[1]=arr[0]</span>
+                        <div style="display: flex; gap: 8px; font-family: 'Fira Code', monospace; font-size: 13.5px;">
+                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 9px; border-radius: 6px;">[0]: 10</span>
+                            <span style="background: #FEF3C7; color: #B45309; padding: 4px 9px; border-radius: 6px; border: 2px solid #F59E0B;">[1]: 10 &larr; copia</span>
+                            <span style="background: #E0F2FE; padding: 4px 9px; border-radius: 6px;">[2]: 20</span>
+                            <span style="background: #E0F2FE; padding: 4px 9px; border-radius: 6px;">[3]: 30</span>
+                            <span style="background: #F1F5F9; color: #94A3B8; padding: 4px 9px; border-radius: 6px;">[4]: 0</span>
                         </div>
                     </div>
 
                     <!-- Inserción final -->
-                    <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 10px; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;">
-                        <span style="font-size: 13px; font-weight: 700; color: #15803D; width: 140px;">4. Inserción arr[0] = 99</span>
-                        <div style="display: flex; gap: 8px; font-family: 'Fira Code', monospace; font-size: 14px;">
-                            <span style="background: #DCFCE7; color: #166534; padding: 4px 10px; border-radius: 6px; font-weight: 700; border: 2px solid #22C55E;">[0]: 99 (nuevo)</span>
-                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[1]: 10</span>
-                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[2]: 20</span>
-                            <span style="background: #E0F2FE; padding: 4px 10px; border-radius: 6px;">[3]: 30</span>
+                    <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 10px; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-size: 13px; font-weight: 700; color: #15803D; min-width: 200px; white-space: nowrap;">5. Inserción arr[0] = 99</span>
+                        <div style="display: flex; gap: 8px; font-family: 'Fira Code', monospace; font-size: 13.5px;">
+                            <span style="background: #DCFCE7; color: #166534; padding: 4px 9px; border-radius: 6px; font-weight: 700; border: 2px solid #22C55E;">[0]: 99 (nuevo)</span>
+                            <span style="background: #E0F2FE; padding: 4px 9px; border-radius: 6px;">[1]: 10</span>
+                            <span style="background: #E0F2FE; padding: 4px 9px; border-radius: 6px;">[2]: 20</span>
+                            <span style="background: #E0F2FE; padding: 4px 9px; border-radius: 6px;">[3]: 30</span>
+                            <span style="background: #F1F5F9; color: #94A3B8; padding: 4px 9px; border-radius: 6px;">[4]: 0</span>
                         </div>
                     </div>
 
-                    <div class="callout-box" style="margin-top: 10px;">
+                    <div class="callout-box" style="margin-top: 8px; padding: 7px 14px;">
                         <i class="fa-solid fa-check"></i>
                         <div>
                             <strong>Resultado exitoso</strong>
-                            <p>Actualizamos <code class="code-badge">tope = 4</code>. Todos los datos preservaron su integridad sin pérdida ni duplicaciones.</p>
+                            <p>Actualizamos <code class="code-badge">tope = 4</code> (apunta a la celda libre <code class="code-badge">[4]</code>). Los datos se preservaron íntegros y aún queda capacidad física disponible.</p>
+                        </div>
+                    </div>
+
+                    <div class="callout-box" style="margin-top: 6px; padding: 7px 14px; background: #FFFBEB; border: 1px solid #FDE68A; border-left: 5px solid #D97706;">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #D97706;"></i>
+                        <div>
+                            <strong style="color: #92400E;">Pregunta para la clase</strong>
+                            <p style="color: #78350F;">¿Qué pasa si quisiera agregar dos elementos más al arreglo?</p>
+                        </div>
+                    </div>
+
+                    <div class="callout-box danger fragment" style="margin-top: 6px; padding: 7px 14px; border: 1px solid #FECACA; border-left: 5px solid #EF4444;">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #EF4444;"></i>
+                        <div>
+                            <strong style="color: #991B1B;">¡Alerta de Overflow (Desbordamiento)!</strong>
+                            <p style="color: #7F1D1D;">
+                                El <strong>1°</strong> se ubica en <code class="code-badge">[4]</code> y completa el vector (<code class="code-badge">tope = 5</code>).<br>
+                                El <strong>2°</strong> produce <strong>Overflow</strong>: no hay espacio físico (<code class="code-badge">ArrayIndexOutOfBoundsException</code>).
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -574,12 +609,12 @@
                 <section>
                     <h2 class="slide-title">PRÁCTICA GUIADA 1: <span class="slide-subtitle">Inserción de Múltiplos (Prob. 7)</span></h2>
                     <div class="content-area">
-                        <p style="font-size: 15px; color: #475569; margin-bottom: 10px;">
-                            <strong>Problema:</strong> Insertar un elemento con valor <code class="code-badge">X + 1</code> inmediatamente detrás de cada elemento que sea múltiplo de 100 (<code class="code-badge">X % 100 == 0</code>). Retornar la cantidad de elementos insertados.
+                        <p style="font-size: 14.5px; color: #475569; margin-bottom: 8px; line-height: 1.4;">
+                            <strong>Problema:</strong> Insertar un elemento con valor <code class="code-badge">X + 1</code> inmediatamente detrás de cada elemento que sea múltiplo de 100 (<code class="code-badge">X % 100 == 0</code>). Retornar la cantidad de elementos insertados. <em>(Versión base: asume capacidad física suficiente).</em>
                         </p>
 
-                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 12px;">
-                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13px;">public static int insertarDetrasDeMultiplos(int[] arr, int cantActual) {
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 8px;">
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px; line-height: 1.35;">public static int insertarDetrasDeMultiplos(int[] arr, int cantActual) {
     int insertados = 0;
     for (int i = 0; i &lt; cantActual; i++) {
         if (arr[i] != 0 && arr[i] % 100 == 0) {
@@ -597,11 +632,21 @@
 }</code></pre>
                         </div>
 
-                        <div class="callout-box">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                            <div>
-                                <strong>¡Cuidado con el bucle infinito! El salto de índice (<code class="code-badge">i++</code>)</strong>
-                                <p>Si insertamos el nuevo valor en <code class="code-badge">i + 1</code> y no avanzamos <code class="code-badge">i++</code>, en la siguiente iteración el ciclo podría evaluar el nuevo elemento insertado si este cumpliera la condición, produciendo un ciclo descontrolado.</p>
+                        <div class="two-column" style="gap: 14px; margin-top: 6px; align-items: stretch;">
+                            <div class="callout-box" style="margin-top: 0; padding: 9px 13px; height: 100%; box-sizing: border-box;">
+                                <i class="fa-solid fa-triangle-exclamation" style="font-size: 17px; margin-top: 2px !important;"></i>
+                                <div>
+                                    <strong>¡Ojo con el bucle infinito! (<code class="code-badge">i++</code>)</strong>
+                                    <p>Al insertar en <code class="code-badge">i + 1</code>, se debe avanzar <code class="code-badge">i++</code> para saltar el valor nuevo y no volver a evaluarlo.</p>
+                                </div>
+                            </div>
+
+                            <div class="callout-box warning" style="margin-top: 0; padding: 9px 13px; border: 1px solid #FDE68A; border-left: 5px solid #D97706; height: 100%; box-sizing: border-box;">
+                                <i class="fa-solid fa-laptop-code" style="color: #D97706; font-size: 17px; margin-top: 2px !important;"></i>
+                                <div>
+                                    <strong style="color: #92400E;">Desafío: Control de Límites Físicos</strong>
+                                    <p style="color: #78350F;">Modificar la función considerando la validación de no exceder los límites físicos del arreglo (<code class="code-badge">cantActual &lt; arr.length</code>) antes de desplazar.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -818,7 +863,8 @@
                             <a href="../index.html" style="background: var(--utn-blue); color: white; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-house"></i> Portal Unidad 5
                             </a>
-                            <a href="../clase3/index.html" style="background: var(--cyan-accent); color: white; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                            <!-- Enlace a Clase 3 deshabilitado temporalmente -->
+                            <a href="../clase3/index.html" style="background: #94A3B8; color: white; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; pointer-events: none; opacity: 0.5; cursor: not-allowed;" aria-disabled="true" tabindex="-1">
                                 Ir a Clase 3 <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </div>
@@ -917,6 +963,7 @@
 
 public class Main {
     // Problema 7: Insertar valor + 1 tras cada múltiplo de 100
+    // DESAFÍO: Modificar la función validando que tope < arr.length antes de desplazar para no exceder los límites físicos
     public static int insertarDetrasDeMultiplos(int[] arr, int cantInicial) {
         int tope = cantInicial;
         int insertados = 0;
