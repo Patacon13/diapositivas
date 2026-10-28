@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AEDD - Clase 19: Punteros y Estructuras Dinámicas - UTN FRSF</title>
+
+    <!-- Estilos Base Reveal.js -->
+    <link rel="stylesheet" href="../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../dist/plugin/highlight/monokai.css" />
+
+    <!-- Tema AEDD (Extiende utn-core.css) -->
+    <link rel="stylesheet" href="../../../dist/theme/aedd.css" />
+
+    <!-- Tipografias Oficiales e Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --danger-red: #EF4444;
+            --warning-amber: #F59E0B;
+            --success-green: #10B981;
+            --cyan-accent: #38BDF8;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 20px; color: var(--text-main); line-height: 1.5; text-align: left; }
+
+        .slide-title {
+            font-size: 38px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 18px !important; border-left: 12px solid var(--utn-gold);
+            padding-left: 20px; text-transform: uppercase !important; letter-spacing: -1.2px;
+            text-align: left; width: 100%;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; align-items: stretch; }
+
+        .tile {
+            background: var(--bg-neutral); padding: 18px; border-radius: 14px;
+            border-bottom: 5px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+        }
+        .tile:hover { transform: translateY(-4px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
+        .tile h3 { font-size: 18px; color: var(--utn-blue); margin-bottom: 6px; font-weight: 600; }
+        .tile p { font-size: 15px; color: var(--text-light); margin: 0; line-height: 1.45; }
+
+        .concept-card {
+            background: white; padding: 16px 20px; border-radius: 14px; border: 1px solid #E2E8F0;
+            border-left: 8px solid var(--utn-gold); box-shadow: 0 8px 24px rgba(0,0,0,0.04); text-align: left;
+        }
+        .concept-card h3 {
+            color: var(--utn-blue); font-size: 19px; margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
+        }
+
+        .reveal pre {
+            background: #272822; padding: 0 !important; border-radius: 12px;
+            font-family: 'Fira Code', monospace; margin: 0; position: relative !important;
+            border-left: 6px solid var(--utn-gold); box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            width: 100%; box-sizing: border-box;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+        .reveal code {
+            font-family: 'Fira Code', monospace;
+            padding: 14px 18px;
+            font-size: 13px;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .section-title-layout { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .section-title-layout h2 { font-size: 68px !important; color: var(--utn-gold) !important; font-weight: 700 !important; letter-spacing: -2px; }
+        .section-title-layout p { color: rgba(255,255,255,0.7) !important; font-size: 22px !important; font-weight: 300 !important; letter-spacing: 2px; text-align: center; }
+
+        .branding-footer {
+            position: fixed !important;
+            bottom: 24px;
+            left: 35px;
+            color: #94A3B8;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 1px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .branding-footer span { color: var(--utn-gold); }
+
+        .inciso-badge {
+            display: inline-block; background: var(--utn-gold); color: var(--utn-blue);
+            font-weight: 700; font-size: 22px; width: 42px; height: 42px; line-height: 42px;
+            text-align: center; border-radius: 50%; margin-right: 14px; flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
+        }
+        .inciso-header { display: flex; align-items: center; margin-bottom: 12px; }
+
+        .texto-enunciado {
+            background: white; padding: 16px 22px; border-radius: 12px; border: 1px solid #E2E8F0;
+            border-left: 6px solid var(--utn-blue); margin-bottom: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            text-align: left;
+        }
+        .texto-enunciado p { font-size: 17px; margin: 0 0 8px 0; line-height: 1.5; }
+        .texto-enunciado p:last-child { margin-bottom: 0; }
+
+        /* Diagrama de Punteros en Memoria */
+        .memory-node-chain {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            background: var(--bg-neutral); padding: 16px; border-radius: 14px; margin: 12px 0;
+            border: 1px solid #E2E8F0;
+        }
+        .node-box {
+            background: white; border: 2px solid var(--utn-blue); border-radius: 10px;
+            overflow: hidden; width: 110px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;
+        }
+        .node-box-addr {
+            background: var(--utn-blue); color: white; font-family: 'Fira Code', monospace;
+            font-size: 10px; padding: 3px 0; font-weight: 600;
+        }
+        .node-box-body {
+            display: grid; grid-template-columns: 1fr 1fr; height: 38px;
+        }
+        .node-box-data {
+            border-right: 1px solid #CBD5E1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; font-family: 'Fira Code', monospace;
+            font-weight: 700; font-size: 15px; color: var(--utn-blue);
+        }
+        .node-box-sig {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: #F1F5F9;
+        }
+        .node-sig-dot {
+            width: 10px; height: 10px; border-radius: 50%; background: var(--cyan-accent);
+        }
+        .node-arrow-link {
+            color: var(--cyan-accent); font-size: 20px; font-weight: bold;
+        }
+        .node-null-tag {
+            background: #FEE2E2; border: 1px dashed var(--danger-red); color: var(--danger-red);
+            font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px;
+        }
+
+        /* Compilador Integrado Vertical */
+        .compiler-window {
+            background: #1e1e1e; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 16px 45px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+            height: 520px; display: flex; flex-direction: column; width: 100%;
+        }
+        .compiler-window .header {
+            background: #252526; padding: 8px 14px; font-size: 12px; color: #CCCCCC;
+            display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333333;
+        }
+        .compiler-window .header button {
+            background: rgba(56, 189, 248, 0.2); border: 1px solid var(--cyan-accent); color: var(--cyan-accent);
+            padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600;
+        }
+        .compiler-window iframe { flex: 1; border: none; width: 100%; height: 100%; background: #1e1e1e; }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 1: PORTADA INSTITUCIONAL AEDD (Radial Gradient Dark) -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #002B5B 0%, #051329 100%)">
+                <div style="text-align: center;">
+                    <div style="display: inline-block; background: rgba(255, 193, 7, 0.15); border: 1px solid var(--utn-gold); padding: 5px 16px; border-radius: 20px; margin-bottom: 18px;">
+                        <span style="color: var(--utn-gold); font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">
+                            <i class="fa-solid fa-code-branch"></i> Algoritmos y Estructuras de Datos | 2026
+                        </span>
+                    </div>
+                    <h1 style="color: white; font-size: 60px; line-height: 1.1; margin-bottom: 16px;">
+                        Punteros y Estructuras Dinámicas<br>
+                        <span style="color: var(--utn-gold); font-weight: 400; font-size: 42px;">Listas Simplemente Enlazadas</span>
+                    </h1>
+                    <p style="color: rgba(255,255,255,0.8); margin-top: 24px; text-align: center; font-size: 20px;">
+                        Comisión A — Docentes: Tomás Assenza, Facundo Sanchez, Nicolás Huber
+                    </p>
+                    <p style="color: rgba(255,255,255,0.4); margin-top: 8px; text-align: center; font-size: 14px; letter-spacing: 2px;">
+                        UTN — FACULTAD REGIONAL SANTA FE (INGENIERÍA EN SISTEMAS DE INFORMACIÓN)
+                    </p>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 2: HOJA DE RUTA / AGENDA -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Hoja de Ruta de la Clase</h2>
+                <div class="content-area">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%;">
+                        <div class="tile">
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-location-crosshairs" style="color: var(--utn-gold);"></i> 1. Punteros y Operadores</h3>
+                            <p>Direcciones de memoria RAM, operador de dirección <code>&amp;</code> y operador de indirección <code>*</code>.</p>
+                        </div>
+                        <div class="tile">
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-layer-group" style="color: var(--cyan-accent);"></i> 2. Stack vs Heap</h3>
+                            <p>Gestión dinámica de memoria con <code>new</code> y <code>delete</code>. Prevención de fugas (memory leaks).</p>
+                        </div>
+                        <div class="tile">
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-circle-nodes" style="color: var(--utn-gold);"></i> 3. El Nodo Enlazado</h3>
+                            <p>Estructura autoreferenciada: campo de información + puntero siguiente al próximo nodo.</p>
+                        </div>
+                        <div class="tile">
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-shuffle" style="color: var(--cyan-accent);"></i> 4. Operaciones Primitivas</h3>
+                            <p>Inserción al inicio, inserción al final, recorrido, búsqueda y borrado con reconexión segura.</p>
+                        </div>
+                        <div class="tile" style="border-bottom-color: var(--utn-gold); background: #FFF9E6;">
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i> 5. Pointer Inspector</h3>
+                            <p>Simulador interactivo en vivo para trazar punteros y nodos en el Heap paso a paso.</p>
+                        </div>
+                        <div class="tile">
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-laptop-code" style="color: var(--cyan-accent);"></i> 6. Práctica Guiada</h3>
+                            <p>3 ejercicios integradores de Guía 18 con sandbox OneCompiler listo para ejecutar.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 3: ¿QUÉ ES UN PUNTERO? -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">¿Qué es un Puntero?</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div style="display: flex; flex-direction: column; gap: 14px;">
+                            <div class="concept-card">
+                                <h3><i class="fa-solid fa-cube"></i> Variable Convencional</h3>
+                                <p style="font-size: 16px; margin: 0;">
+                                    Almacena directamente un <strong>valor</strong> específico del tipo de dato declarado (un entero, un caracter, un float).
+                                </p>
+                            </div>
+                            <div class="concept-card" style="border-left-color: var(--cyan-accent);">
+                                <h3><i class="fa-solid fa-arrow-pointer" style="color: var(--cyan-accent);"></i> Variable Puntero</h3>
+                                <p style="font-size: 16px; margin: 0;">
+                                    Almacena una <strong>dirección de memoria RAM</strong> donde reside otro dato u objeto en el sistema.
+                                </p>
+                            </div>
+                            <div class="tile" style="padding: 12px 16px; border-left: 4px solid var(--utn-gold);">
+                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-lightbulb" style="color: var(--utn-gold);"></i> Operadores Clave</h4>
+                                <p style="font-size: 14px; margin: 0;">
+                                    <code>&amp;variable</code>: Obtiene la dirección de memoria de la variable.<br>
+                                    <code>*puntero</code>: Accede al contenido de la celda de memoria apuntada.
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <pre><code class="cpp" data-trim data-noescape>
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int count = 7;
+    int* countPtr = nullptr; // Puntero a entero
+
+    countPtr = &amp;count;       // Guarda direccion de count
+
+    cout &lt;&lt; "Valor de count:      " &lt;&lt; count &lt;&lt; endl;
+    cout &lt;&lt; "Direccion (&amp;count):   " &lt;&lt; &amp;count &lt;&lt; endl;
+    cout &lt;&lt; "Puntero (countPtr):  " &lt;&lt; countPtr &lt;&lt; endl;
+    cout &lt;&lt; "Valor apuntado (*p): " &lt;&lt; *countPtr &lt;&lt; endl;
+
+    *countPtr = 25; // Modifica count indirectamente!
+    cout &lt;&lt; "Nuevo count:         " &lt;&lt; count &lt;&lt; endl;
+
+    return 0;
+}
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 4: MEMORIA STACK VS HEAP -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Memoria Stack vs Heap: new y delete</h2>
+                <div class="content-area">
+                    <div class="two-column" style="gap: 20px;">
+                        <div class="concept-card" style="border-left-color: var(--utn-blue);">
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-layer-group"></i> Memoria Stack (Pila Estática)</h3>
+                            <ul style="font-size: 15px; margin: 8px 0 0 16px; line-height: 1.5;">
+                                <li>Gestionada automáticamente por el compilador.</li>
+                                <li>Aloja variables locales y parámetros de funciones.</li>
+                                <li>Tamaño prefijado en tiempo de compilación.</li>
+                                <li>Se destruye automáticamente al salir del ámbito (scope).</li>
+                            </ul>
+                        </div>
+                        <div class="concept-card" style="border-left-color: var(--cyan-accent);">
+                            <h3 style="color: var(--cyan-accent);"><i class="fa-solid fa-cubes-stacked"></i> Memoria Heap (Montículo Dinámico)</h3>
+                            <ul style="font-size: 15px; margin: 8px 0 0 16px; line-height: 1.5;">
+                                <li>Espacio de memoria libre solicitado en tiempo de ejecución.</li>
+                                <li>Se reserva con el operador <code>new</code> y devuelve la dirección.</li>
+                                <li>Persiste hasta que el programador ejecute <code>delete</code>.</li>
+                                <li>Permite crear listas que crecen o se achican bajo demanda.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <div class="tile" style="padding: 14px 18px; border-left: 6px solid var(--danger-red); background: #FFF5F5;">
+                            <h4 style="font-size: 16px; color: var(--danger-red); margin: 0 0 4px 0;">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Regla de Oro: A cada new le corresponde un delete
+                            </h4>
+                            <p style="font-size: 14.5px; margin: 0; color: #7F1D1D;">
+                                Si perdemos el puntero a un bloque del Heap sin haber hecho <code>delete</code>, esa memoria queda inaccesible hasta que finalice el proceso (<strong>Memory Leak</strong> o fuga de memoria).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 5: ANATOMÍA DE UN NODO -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Anatomía del Nodo Enlazado</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div style="display: flex; flex-direction: column; justify-content: center;">
+                            <pre><code class="cpp" data-trim data-noescape>
+// Definicion de estructura autoreferenciada
+struct Nodo {
+    int dato;        // Campo de informacion
+    Nodo* sig;       // Puntero al siguiente Nodo
+};
+
+// Crear una lista vacia:
+Nodo* cabeza = nullptr; 
+
+// Crear el primer nodo en Heap:
+cabeza = new Nodo;
+cabeza-&gt;dato = 42;
+cabeza-&gt;sig = nullptr;
+                            </code></pre>
+                        </div>
+                        <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+                            <div class="concept-card">
+                                <h3><i class="fa-solid fa-diagram-project"></i> Estructura Autoreferenciada</h3>
+                                <p style="font-size: 15px; margin: 0;">
+                                    El campo <code>sig</code> es un puntero hacia otra variable del mismo tipo <code>Nodo</code>.
+                                </p>
+                            </div>
+                            <div class="memory-node-chain">
+                                <div class="node-box">
+                                    <div class="node-box-addr">0x10A0</div>
+                                    <div class="node-box-body">
+                                        <div class="node-box-data">42</div>
+                                        <div class="node-box-sig"><div class="node-sig-dot"></div></div>
+                                    </div>
+                                </div>
+                                <div class="node-arrow-link"><i class="fa-solid fa-arrow-right"></i></div>
+                                <div class="node-null-tag">nullptr (0x0)</div>
+                            </div>
+                            <p style="font-size: 14px; color: var(--text-light); text-align: center; margin: 0;">
+                                <code>cabeza</code> almacena <code>0x10A0</code>. El último nodo de la lista siempre apunta a <code>nullptr</code>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 6: OPERACIONES I: INSERCIÓN AL INICIO VS AL FINAL -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Inserción: Al Inicio vs Al Final</h2>
+                <div class="content-area">
+                    <div class="two-column" style="gap: 18px;">
+                        <div>
+                            <div class="concept-card" style="margin-bottom: 10px; padding: 12px 16px;">
+                                <h3 style="font-size: 16px;"><i class="fa-solid fa-bolt" style="color: var(--utn-gold);"></i> Inserción al Inicio — O(1)</h3>
+                                <p style="font-size: 13.5px; margin: 0;">Costo constante: solo se reacomodan 2 punteros sin recorrer la lista.</p>
+                            </div>
+                            <pre><code class="cpp" data-trim data-noescape>
+void insertarInicio(Nodo*&amp; cabeza, int valor) {
+    Nodo* nuevo = new Nodo;
+    nuevo-&gt;dato = valor;
+    nuevo-&gt;sig = cabeza; // Enlaza al viejo inicio
+    cabeza = nuevo;      // Nuevo pasa a ser cabeza
+}
+                            </code></pre>
+                        </div>
+                        <div>
+                            <div class="concept-card" style="margin-bottom: 10px; padding: 12px 16px; border-left-color: var(--cyan-accent);">
+                                <h3 style="font-size: 16px; color: var(--cyan-accent);"><i class="fa-solid fa-shoe-prints"></i> Inserción al Final — O(N)</h3>
+                                <p style="font-size: 13.5px; margin: 0;">Costo lineal: requiere recorrer hasta el último nodo (sig == nullptr).</p>
+                            </div>
+                            <pre><code class="cpp" data-trim data-noescape>
+void insertarFinal(Nodo*&amp; cabeza, int valor) {
+    Nodo* nuevo = new Nodo{valor, nullptr};
+    if (cabeza == nullptr) {
+        cabeza = nuevo;
+    } else {
+        Nodo* act = cabeza;
+        while (act-&gt;sig != nullptr) {
+            act = act-&gt;sig;
+        }
+        act-&gt;sig = nuevo;
+    }
+}
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 7: OPERACIONES II: RECORRIDO Y BÚSQUEDA -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Recorrido y Búsqueda en Listas</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <pre><code class="cpp" data-trim data-noescape>
+// Patron canonico de recorrido
+void mostrarLista(Nodo* cabeza) {
+    Nodo* act = cabeza; // Puntero auxiliar
+    while (act != nullptr) {
+        cout &lt;&lt; act-&gt;dato &lt;&lt; " -&gt; ";
+        act = act-&gt;sig;  // Avanza al siguiente
+    }
+    cout &lt;&lt; "NULL" &lt;&lt; endl;
+}
+
+// Busqueda booleana
+bool estaEnLista(Nodo* cabeza, int buscado) {
+    Nodo* act = cabeza;
+    while (act != nullptr) {
+        if (act-&gt;dato == buscado) return true;
+        act = act-&gt;sig;
+    }
+    return false;
+}
+                            </code></pre>
+                        </div>
+                        <div style="display: flex; flex-direction: column; justify-content: center; gap: 14px;">
+                            <div class="tile" style="border-left: 5px solid var(--danger-red); background: #FFF5F5;">
+                                <h4 style="color: var(--danger-red); font-size: 16px; margin: 0 0 4px 0;">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> ¡Cuidado con avanzar 'cabeza'!
+                                </h4>
+                                <p style="font-size: 14px; margin: 0; color: #7F1D1D;">
+                                    Si escribes <code>cabeza = cabeza-&gt;sig</code> en un bucle, destruyes la referencia a los nodos iniciales. Siempre usa un puntero auxiliar (<code>Nodo* act = cabeza</code>).
+                                </p>
+                            </div>
+                            <div class="concept-card">
+                                <h3><i class="fa-solid fa-compass"></i> Condición de Parada</h3>
+                                <p style="font-size: 15px; margin: 0;">
+                                    El bucle termina exactamente cuando <code>act == nullptr</code>. Nunca intentes acceder a <code>act-&gt;dato</code> si <code>act</code> ya es nulo.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 8: OPERACIONES III: ELIMINACIÓN Y TÉCNICA DE DOS PUNTEROS -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Eliminación: Técnica de Dos Punteros</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div>
+                            <pre><code class="cpp" data-trim data-noescape>
+void eliminarNodo(Nodo*&amp; cabeza, int valor) {
+    Nodo* act = cabeza;
+    Nodo* ant = nullptr;
+
+    while (act != nullptr &amp;&amp; act-&gt;dato != valor) {
+        ant = act;
+        act = act-&gt;sig;
+    }
+
+    if (act != nullptr) { // Encontrado
+        if (ant == nullptr) {
+            cabeza = act-&gt;sig;     // Era el primero
+        } else {
+            ant-&gt;sig = act-&gt;sig;   // Puente seguro
+        }
+        delete act; // Libera memoria en Heap
+    }
+}
+                            </code></pre>
+                        </div>
+                        <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+                            <div class="concept-card" style="border-left-color: var(--cyan-accent);">
+                                <h3 style="color: var(--cyan-accent);"><i class="fa-solid fa-arrows-split-up-and-left"></i> El Baile de ant y act</h3>
+                                <p style="font-size: 14.5px; margin: 0;">
+                                    <code>ant</code> vigila al nodo anterior para poder reconectar su puntero <code>sig</code> una vez localizado el nodo a suprimir.
+                                </p>
+                            </div>
+                            <div class="tile" style="border-left: 5px solid var(--utn-gold);">
+                                <h4 style="color: var(--utn-blue); font-size: 15px; margin: 0 0 4px 0;"><i class="fa-solid fa-shield-halved" style="color: var(--utn-gold);"></i> Secuencia Crítica</h4>
+                                <p style="font-size: 14px; margin: 0;">
+                                    1. Desviar el puntero: <code>ant-&gt;sig = act-&gt;sig;</code><br>
+                                    2. Liberar memoria: <code>delete act;</code><br>
+                                    <em>¡Invertir este orden causa fallo de segmentación!</em>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 9: TRANSICIÓN A SIMULADOR INTERACTIVO -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #002B5B 0%, #07152B 100%)">
+                <div class="section-title-layout">
+                    <span style="background: rgba(255, 193, 7, 0.2); color: var(--utn-gold); border: 1px solid var(--utn-gold); padding: 5px 14px; border-radius: 20px; font-weight: 700; font-size: 13px; margin-bottom: 16px; letter-spacing: 1px;">
+                        <i class="fa-solid fa-microchip"></i> EXPERIENCIA EN VIVO
+                    </span>
+                    <h2 style="font-size: 58px !important; color: white !important;">Pointer Inspector</h2>
+                    <p style="color: var(--cyan-accent) !important; font-size: 20px !important; letter-spacing: 1px; margin-top: 10px;">
+                        Trazas visuales interactivas de nodos, punteros y Heap
+                    </p>
+                    <p style="color: rgba(255,255,255,0.6) !important; font-size: 16px !important; margin-top: 16px; max-width: 650px;">
+                        Comprueba en tiempo real cómo se reasignan las direcciones hexadecimales, cómo se conectan las flechas y cómo trabaja el recolector del Heap.
+                    </p>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 10: SIMULADOR INTERACTIVO EMBEBIDO -->
+            <!-- ============================================================== -->
+            <section id="slide-pointer-inspector" data-background-color="#080C16">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; width: 100%;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span class="badge-pill" style="background: rgba(255, 193, 7, 0.2); color: var(--utn-gold); border: 1px solid var(--utn-gold); font-size: 13px; padding: 4px 10px; border-radius: 6px; font-weight: 700;">
+                            <i class="fa-solid fa-microchip"></i> SIMULADOR INTERACTIVO
+                        </span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important; color: #F8FAFC !important; font-size: 24px !important; border-left-color: var(--utn-gold); padding-left: 14px;">
+                            Pointer Inspector: Trazador de Nodos y Heap
+                        </h2>
+                    </div>
+                    <a href="debugger/index.html" target="_blank" style="background: rgba(56, 189, 248, 0.16); border: 1px solid #38BDF8; color: #38BDF8; padding: 5px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease;">
+                        <i class="fa-solid fa-up-right-from-square"></i> Abrir en ventana completa
+                    </a>
+                </div>
+                <div style="width: 100%; height: 560px; background: #090D16; border-radius: 12px; overflow: hidden; box-shadow: 0 16px 45px rgba(0,0,0,0.6); border: 1px solid rgba(56, 189, 248, 0.35);">
+                    <iframe id="pointer-inspector-frame" src="./debugger/index.html?v=1" style="width: 100%; height: 100%; border: none; display: block;" allow="fullscreen"></iframe>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 11: EJERCICIO 1 (HORIZONTAL + VERTICAL) -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 11.A: Enunciado Ejercicio 1 -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">1</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Unión de Listas Lineales Sin Repetidos (A U B)</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="texto-enunciado">
+                            <p><strong>Guía 18 — Ejercicio 1:</strong> Escribir una función en C++ que permita unir dos listas lineales <code>A</code> y <code>B</code> que contienen números enteros y devuelva <code>A U B</code>.</p>
+                            <p><strong>Condición:</strong> La lista resultado debe contener todos los elementos que están en <code>A</code> o en <code>B</code>, <strong>sin elementos repetidos</strong>.</p>
+                        </div>
+                        <div class="two-column" style="margin-top: 6px;">
+                            <div class="tile" style="border-left: 5px solid var(--utn-gold);">
+                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-lightbulb" style="color: var(--utn-gold);"></i> Estrategia Modular</h4>
+                                <p style="font-size: 14px; margin: 0;">
+                                    1. Recorrer <code>listaA</code>: si el número no está en <code>resultado</code>, agregarlo al final.<br>
+                                    2. Recorrer <code>listaB</code>: si el número no está en <code>resultado</code>, agregarlo al final.
+                                </p>
+                            </div>
+                            <div class="tile" style="border-left: 5px solid var(--cyan-accent);">
+                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-cube" style="color: var(--cyan-accent);"></i> Funciones Auxiliares</h4>
+                                <p style="font-size: 14px; margin: 0;">
+                                    Modularizar con <code>estaEnLista(cabeza, valor)</code> e <code>insertarFinal(cabeza, valor)</code> para mantener el código claro y testeable.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 11.B: Solución Ejercicio 1 -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">1</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Unión Modular en C++</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 16px;">
+                            <div>
+                                <pre><code class="cpp" data-trim data-noescape>
+struct Nodo {
+    int dato;
+    Nodo* sig;
+};
+
+bool estaEnLista(Nodo* cabeza, int valor) {
+    Nodo* act = cabeza;
+    while (act != nullptr) {
+        if (act-&gt;dato == valor) return true;
+        act = act-&gt;sig;
+    }
+    return false;
+}
+
+void insertarFinal(Nodo*&amp; cabeza, int valor) {
+    Nodo* nuevo = new Nodo{valor, nullptr};
+    if (cabeza == nullptr) {
+        cabeza = nuevo;
+    } else {
+        Nodo* act = cabeza;
+        while (act-&gt;sig != nullptr) act = act-&gt;sig;
+        act-&gt;sig = nuevo;
+    }
+}
+                                </code></pre>
+                            </div>
+                            <div>
+                                <pre><code class="cpp" data-trim data-noescape>
+Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
+    Nodo* res = nullptr;
+
+    // 1. Agregar elementos de A sin repetidos
+    Nodo* actA = listaA;
+    while (actA != nullptr) {
+        if (!estaEnLista(res, actA-&gt;dato)) {
+            insertarFinal(res, actA-&gt;dato);
+        }
+        actA = actA-&gt;sig;
+    }
+
+    // 2. Agregar elementos de B que no esten
+    Nodo* actB = listaB;
+    while (actB != nullptr) {
+        if (!estaEnLista(res, actB-&gt;dato)) {
+            insertarFinal(res, actB-&gt;dato);
+        }
+        actB = actB-&gt;sig;
+    }
+
+    return res;
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 11.C: Compilador Vertical Ejercicio 1 -->
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 1</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox — Unión de Listas A y B</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-1', cppCodeEjercicio1, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 12: EJERCICIO 2 (HORIZONTAL + VERTICAL) -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 12.A: Enunciado Ejercicio 2 -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">2</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Saneamiento de Tramos No Crecientes</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="texto-enunciado">
+                            <p><strong>Guía 18 — Ejercicio 2:</strong> En una lista enlazada se guardan números naturales de hasta 4 cifras. Se cargó de manera que esté ordenada en forma creciente, pero contiene errores (tramos no crecientes).</p>
+                            <p><strong>Objetivo:</strong> Construir una función que actualice la lista original, eliminando los tramos que no están en forma creciente con <code>delete</code>.</p>
+                            <p style="font-size: 15px; color: #475569; margin-top: 6px;">
+                                <strong>Ejemplo de la Cátedra:</strong><br>
+                                <code>4 - 5 - 6 - 3 - 2 - 1 - 7 - 9 - 78 - 45 - 45 - 34 - 96 - 98 - 57</code><br>
+                                <strong>Lista Resultante Esperada:</strong><br>
+                                <span style="color: var(--success-green); font-weight: 700;">4 - 5 - 6 - 7 - 9 - 78 - 96 - 98</span>
+                            </p>
+                        </div>
+                        <div class="tile" style="padding: 12px 18px; border-left: 5px solid var(--utn-gold);">
+                            <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-code-fork" style="color: var(--utn-gold);"></i> Lógica de Punteros ant y act</h4>
+                            <p style="font-size: 14px; margin: 0;">
+                                El puntero <code>ant</code> permanece en el último nodo válido confirmado (ej. 6). Cuando <code>act</code> detecta números menores o iguales (3, 2, 1), se eliminan uno a uno liberando memoria hasta encontrar el siguiente estrictamente mayor (7).
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 12.B: Solución Ejercicio 2 -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">2</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Poda de Tramos en C++</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 16px;">
+                            <div>
+                                <pre><code class="cpp" data-trim data-noescape>
+struct Nodo {
+    int dato;
+    Nodo* sig;
+};
+
+void depurarLista(Nodo*&amp; cabeza) {
+    if (cabeza == nullptr) return;
+
+    Nodo* ant = cabeza;
+    Nodo* act = cabeza-&gt;sig;
+
+    while (act != nullptr) {
+        if (act-&gt;dato &gt; ant-&gt;dato) {
+            // Tramo creciente: ant avanza
+            ant = act;
+            act = act-&gt;sig;
+        } else {
+            // Tramo no creciente: se poda
+            Nodo* aBorrar = act;
+            act = act-&gt;sig;      // Avanza explorador
+            ant-&gt;sig = act;      // Puentea el nodo
+            delete aBorrar;      // Libera memoria
+        }
+    }
+}
+                                </code></pre>
+                            </div>
+                            <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+                                <div class="concept-card" style="border-left-color: var(--success-green);">
+                                    <h3 style="color: var(--success-green);"><i class="fa-solid fa-check-double"></i> Invariante del Algoritmo</h3>
+                                    <p style="font-size: 14px; margin: 0;">
+                                        <code>ant-&gt;dato</code> siempre contiene el máximo valor creciente alcanzado hasta el momento. Cualquier nodo posterior que no lo supere es eliminado.
+                                    </p>
+                                </div>
+                                <div class="tile" style="border-left: 5px solid var(--danger-red); background: #FFF5F5;">
+                                    <h4 style="color: var(--danger-red); font-size: 15px; margin: 0 0 4px 0;"><i class="fa-solid fa-trash-can"></i> Gestión Estricta de Heap</h4>
+                                    <p style="font-size: 13.5px; margin: 0; color: #7F1D1D;">
+                                        Nótese cómo <code>aBorrar</code> guarda el puntero temporal antes de hacer <code>act = act-&gt;sig</code>. Si hiciéramos <code>delete act</code> primero, leer <code>act-&gt;sig</code> sería un acceso ilegal a memoria.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 12.C: Compilador Vertical Ejercicio 2 -->
+                <section id="slide-compiler-2">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 2</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox — Poda de Tramos Desordenados</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-2', cppCodeEjercicio2, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 13: EJERCICIO 3 (HORIZONTAL + VERTICAL) -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 13.A: Enunciado Ejercicio 3 -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">3</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Integración de Calificaciones y Ranking por Promedio</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="texto-enunciado">
+                            <p><strong>Guía 18 — Ejercicio 4:</strong> En dos listas <code>Curso1</code> y <code>Curso2</code> de tipo <code>CALIFICACIONES</code> se tienen las notas de alumnos de dos comisiones de ISI en las 6 materias de 1er año (ordenadas por ID Alumno).</p>
+                            <p><strong>Información del nodo inicial:</strong> ID Alumno (6 cifras) y un vector con las 6 notas finales.</p>
+                            <p><strong>Requerimiento:</strong> Integrar ambas listas generando una nueva lista <code>INTEGRADA</code> ordenada por <strong>promedio de mayor a menor (descendente)</strong> conteniendo en cada nodo solamente el ID y el promedio obtenido (float).</p>
+                        </div>
+                        <div class="two-column" style="margin-top: 6px;">
+                            <div class="concept-card" style="padding: 12px 16px;">
+                                <h3 style="font-size: 15px;"><i class="fa-solid fa-calculator"></i> Cálculo de Promedio</h3>
+                                <p style="font-size: 13.5px; margin: 0;">Suma de las 6 notas dividido 6.0 (división real en punto flotante).</p>
+                            </div>
+                            <div class="concept-card" style="padding: 12px 16px; border-left-color: var(--cyan-accent);">
+                                <h3 style="font-size: 15px; color: var(--cyan-accent);"><i class="fa-solid fa-arrow-down-9-1"></i> Inserción Ordenada Descendente</h3>
+                                <p style="font-size: 13.5px; margin: 0;">Buscar posición donde <code>nuevo-&gt;promedio &gt; act-&gt;promedio</code> para insertar al inicio o entre dos nodos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 13.B: Solución Ejercicio 3 -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">3</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Integración y Ranking en C++</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 16px;">
+                            <div>
+                                <pre><code class="cpp" data-trim data-noescape>
+struct NodoCalificaciones {
+    int idAlumno;
+    int notas[6];
+    NodoCalificaciones* sig;
+};
+
+struct NodoIntegrada {
+    int idAlumno;
+    float promedio;
+    NodoIntegrada* sig;
+};
+
+float calcularPromedio(const int notas[6]) {
+    float suma = 0;
+    for (int i = 0; i &lt; 6; i++) suma += notas[i];
+    return suma / 6.0f;
+}
+                                </code></pre>
+                            </div>
+                            <div>
+                                <pre><code class="cpp" data-trim data-noescape>
+void insertarDescendente(NodoIntegrada*&amp; cabeza, 
+                         int id, float prom) {
+    NodoIntegrada* nuevo = new NodoIntegrada{id, prom, nullptr};
+    NodoIntegrada* act = cabeza;
+    NodoIntegrada* ant = nullptr;
+
+    while (act != nullptr &amp;&amp; act-&gt;promedio &gt;= prom) {
+        ant = act;
+        act = act-&gt;sig;
+    }
+    nuevo-&gt;sig = act;
+    if (ant == nullptr) cabeza = nuevo;
+    else ant-&gt;sig = nuevo;
+}
+
+NodoIntegrada* integrar(NodoCalificaciones* c1, 
+                        NodoCalificaciones* c2) {
+    NodoIntegrada* res = nullptr;
+    for (NodoCalificaciones* p = c1; p; p = p-&gt;sig)
+        insertarDescendente(res, p-&gt;idAlumno, calcularPromedio(p-&gt;notas));
+    for (NodoCalificaciones* p = c2; p; p = p-&gt;sig)
+        insertarDescendente(res, p-&gt;idAlumno, calcularPromedio(p-&gt;notas));
+    return res;
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 13.C: Compilador Vertical Ejercicio 3 -->
+                <section id="slide-compiler-3">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 3</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox — Ranking y Calificaciones</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-3', cppCodeEjercicio3, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-3" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 14: CHECKLIST DE EXAMEN -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Checklist de Examen: Trampas Frecuentes</h2>
+                <div class="content-area">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%;">
+                        <div class="tile" style="border-left: 5px solid var(--danger-red);">
+                            <h3 style="color: var(--danger-red);"><i class="fa-solid fa-ban"></i> Puntero Nulo (Null Dereference)</h3>
+                            <p>Intentar hacer <code>p-&gt;sig</code> o <code>p-&gt;dato</code> cuando <code>p == nullptr</code> provoca aborto inmediato del programa (Segmentation fault).</p>
+                        </div>
+                        <div class="tile" style="border-left: 5px solid var(--warning-amber);">
+                            <h3 style="color: var(--warning-amber);"><i class="fa-solid fa-arrows-spin"></i> Paso por Referencia</h3>
+                            <p>Si una función puede modificar el primer elemento de la lista, debes pasar el puntero por referencia: <code>Nodo*&amp; cabeza</code>.</p>
+                        </div>
+                        <div class="tile" style="border-left: 5px solid var(--cyan-accent);">
+                            <h3 style="color: var(--cyan-accent);"><i class="fa-solid fa-link-slash"></i> Punteros Colgantes (Dangling)</h3>
+                            <p>Nunca uses un puntero después de haber ejecutado <code>delete</code> sobre la dirección a la que apunta. Asignarle <code>nullptr</code> si continúa en ámbito.</p>
+                        </div>
+                        <div class="tile" style="border-left: 5px solid var(--success-green);">
+                            <h3 style="color: var(--success-green);"><i class="fa-solid fa-broom"></i> Liberación Total al Cierre</h3>
+                            <p>Todo programa profesional debe recorrer la lista y liberar cada nodo con <code>delete</code> antes de finalizar el proceso.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 15: CIERRE INSTITUCIONAL -->
+            <!-- ============================================================== -->
+            <section data-background-color="#002B5B">
+                <div class="section-title-layout">
+                    <h2 style="color: var(--utn-gold) !important; font-size: 54px !important;">¿DUDAS O CONSULTAS?</h2>
+                    <p style="margin-bottom: 24px; color: rgba(255,255,255,0.8) !important;">ESPACIO PARA PUESTA EN COMÚN Y PRÁCTICA</p>
+                    <a href="debugger/index.html" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; background: rgba(56, 189, 248, 0.14); border: 2px solid var(--cyan-accent); color: var(--cyan-accent); padding: 10px 22px; border-radius: 12px; font-weight: 700; font-size: 17px; text-decoration: none; transition: all 0.2s ease;">
+                        <i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i> Probar Pointer Inspector (Simulador Visual) <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 13px;"></i>
+                    </a>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding Footer Global Unico (Regla AGENTS.md) -->
+    <div class="branding-footer">
+        AEDD / UTN <span>SANTA FE</span>
+    </div>
+
+    <!-- Scripts Base Reveal.js -->
+    <script src="../../../dist/reveal.js"></script>
+    <script src="../../../dist/plugin/highlight/highlight.js"></script>
+    <script src="../../../dist/plugin/notes/notes.js"></script>
+
+    <script>
+        // =========================================================================
+        // CODIGO FUENTE PARA INYECCION EN ONECOMPILER (SANDBOX INTERACTIVO)
+        // =========================================================================
+
+        const cppCodeEjercicio1 = `#include <iostream>
+using namespace std;
+
+// Estructura de Nodo para Lista Lineal
+struct Nodo {
+    int dato;
+    Nodo* sig;
+};
+
+// Verifica si un valor ya se encuentra en la lista
+bool estaEnLista(Nodo* cabeza, int valor) {
+    Nodo* act = cabeza;
+    while (act != nullptr) {
+        if (act->dato == valor) return true;
+        act = act->sig;
+    }
+    return false;
+}
+
+// Inserta un nodo al final de la lista
+void insertarFinal(Nodo*& cabeza, int valor) {
+    Nodo* nuevo = new Nodo{valor, nullptr};
+    if (cabeza == nullptr) {
+        cabeza = nuevo;
+    } else {
+        Nodo* act = cabeza;
+        while (act->sig != nullptr) act = act->sig;
+        act->sig = nuevo;
+    }
+}
+
+// Une dos listas lineales A y B sin elementos repetidos
+Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
+    Nodo* res = nullptr;
+
+    Nodo* actA = listaA;
+    while (actA != nullptr) {
+        if (!estaEnLista(res, actA->dato)) {
+            insertarFinal(res, actA->dato);
+        }
+        actA = actA->sig;
+    }
+
+    Nodo* actB = listaB;
+    while (actB != nullptr) {
+        if (!estaEnLista(res, actB->dato)) {
+            insertarFinal(res, actB->dato);
+        }
+        actB = actB->sig;
+    }
+
+    return res;
+}
+
+// Imprime los elementos de la lista en consola
+void imprimirLista(Nodo* cabeza, const string& nombre) {
+    cout << nombre << ": ";
+    Nodo* act = cabeza;
+    while (act != nullptr) {
+        cout << act->dato << " -> ";
+        act = act->sig;
+    }
+    cout << "NULL" << endl;
+}
+
+// Libera la memoria dinamica solicitada en Heap
+void liberarLista(Nodo*& cabeza) {
+    while (cabeza != nullptr) {
+        Nodo* aBorrar = cabeza;
+        cabeza = cabeza->sig;
+        delete aBorrar;
+    }
+}
+
+int main() {
+    cout << "=== EJERCICIO 1: UNION DE LISTAS A Y B SIN REPETIDOS ===" << endl << endl;
+
+    Nodo* listaA = nullptr;
+    Nodo* listaB = nullptr;
+
+    // Carga de lista A: { 3, 7, 12, 5 }
+    insertarFinal(listaA, 3);
+    insertarFinal(listaA, 7);
+    insertarFinal(listaA, 12);
+    insertarFinal(listaA, 5);
+
+    // Carga de lista B: { 7, 14, 5, 20 }
+    insertarFinal(listaB, 7);
+    insertarFinal(listaB, 14);
+    insertarFinal(listaB, 5);
+    insertarFinal(listaB, 20);
+
+    imprimirLista(listaA, "Lista A");
+    imprimirLista(listaB, "Lista B");
+
+    // Calculo de la union A U B
+    Nodo* unionAB = unirListas(listaA, listaB);
+
+    cout << endl;
+    imprimirLista(unionAB, "Lista Resultante (A U B)");
+
+    // Liberacion de recursos en Heap
+    liberarLista(listaA);
+    liberarLista(listaB);
+    liberarLista(unionAB);
+
+    return 0;
+}`;
+
+        const cppCodeEjercicio2 = `#include <iostream>
+using namespace std;
+
+// Estructura de Nodo para enteros de hasta 4 cifras
+struct Nodo {
+    int dato;
+    Nodo* sig;
+};
+
+// Inserta al final para cargar la lista de prueba
+void insertarFinal(Nodo*& cabeza, int valor) {
+    Nodo* nuevo = new Nodo{valor, nullptr};
+    if (cabeza == nullptr) {
+        cabeza = nuevo;
+    } else {
+        Nodo* act = cabeza;
+        while (act->sig != nullptr) act = act->sig;
+        act->sig = nuevo;
+    }
+}
+
+// Depura la lista eliminando tramos no crecientes
+void depurarLista(Nodo*& cabeza) {
+    if (cabeza == nullptr) return;
+
+    Nodo* ant = cabeza;
+    Nodo* act = cabeza->sig;
+
+    while (act != nullptr) {
+        if (act->dato > ant->dato) {
+            // Es estrictamente creciente: ant avanza
+            ant = act;
+            act = act->sig;
+        } else {
+            // Tramo no creciente: se puentea y se destruye el nodo
+            Nodo* aBorrar = act;
+            act = act->sig;      // Avanza el explorador
+            ant->sig = act;      // Reconecta ant con el siguiente
+            delete aBorrar;      // Libera memoria en Heap
+        }
+    }
+}
+
+void imprimirLista(Nodo* cabeza, const string& titulo) {
+    cout << titulo << ":" << endl;
+    Nodo* act = cabeza;
+    int count = 0;
+    while (act != nullptr) {
+        cout << act->dato;
+        if (act->sig != nullptr) cout << " -> ";
+        act = act->sig;
+        count++;
+    }
+    cout << " -> NULL (" << count << " nodos)" << endl;
+}
+
+void liberarLista(Nodo*& cabeza) {
+    while (cabeza != nullptr) {
+        Nodo* aBorrar = cabeza;
+        cabeza = cabeza->sig;
+        delete aBorrar;
+    }
+}
+
+int main() {
+    cout << "=== EJERCICIO 2: PODA DE TRAMOS NO CRECIENTES ===" << endl << endl;
+
+    Nodo* lista = nullptr;
+
+    // Lista del enunciado:
+    // 4 - 5 - 6 - 3 - 2 - 1 - 7 - 9 - 78 - 45 - 45 - 34 - 96 - 98 - 57
+    int valores[] = {4, 5, 6, 3, 2, 1, 7, 9, 78, 45, 45, 34, 96, 98, 57};
+    int n = sizeof(valores) / sizeof(valores[0]);
+
+    for (int i = 0; i < n; i++) {
+        insertarFinal(lista, valores[i]);
+    }
+
+    imprimirLista(lista, "Lista Original (con tramos desordenados)");
+
+    // Aplicar la depuracion
+    depurarLista(lista);
+
+    cout << endl;
+    imprimirLista(lista, "Lista Saneada (estrictamente creciente)");
+
+    liberarLista(lista);
+    return 0;
+}`;
+
+        const cppCodeEjercicio3 = `#include <iostream>
+#include <iomanip>
+using namespace std;
+
+// Estructura de Calificaciones de Alumno (Comisiones ISI)
+struct NodoCalificaciones {
+    int idAlumno;
+    int notas[6];
+    NodoCalificaciones* sig;
+};
+
+// Estructura de la Lista Integrada de Rendimiento
+struct NodoIntegrada {
+    int idAlumno;
+    float promedio;
+    NodoIntegrada* sig;
+};
+
+// Calcula el promedio aritmetico de las 6 materias
+float calcularPromedio(const int notas[6]) {
+    float suma = 0;
+    for (int i = 0; i < 6; i++) {
+        suma += notas[i];
+    }
+    return suma / 6.0f;
+}
+
+// Inserta ordenado de mayor a menor por promedio
+void insertarOrdenadoDesc(NodoIntegrada*& cabeza, int id, float prom) {
+    NodoIntegrada* nuevo = new NodoIntegrada{id, prom, nullptr};
+    NodoIntegrada* act = cabeza;
+    NodoIntegrada* ant = nullptr;
+
+    while (act != nullptr && act->promedio >= prom) {
+        ant = act;
+        act = act->sig;
+    }
+
+    nuevo->sig = act;
+    if (ant == nullptr) {
+        cabeza = nuevo;
+    } else {
+        ant->sig = nuevo;
+    }
+}
+
+// Integra Curso1 y Curso2 ordenando por promedio descendente
+NodoIntegrada* integrarCursos(NodoCalificaciones* c1, NodoCalificaciones* c2) {
+    NodoIntegrada* integrada = nullptr;
+
+    NodoCalificaciones* p1 = c1;
+    while (p1 != nullptr) {
+        float prom = calcularPromedio(p1->notas);
+        insertarOrdenadoDesc(integrada, p1->idAlumno, prom);
+        p1 = p1->sig;
+    }
+
+    NodoCalificaciones* p2 = c2;
+    while (p2 != nullptr) {
+        float prom = calcularPromedio(p2->notas);
+        insertarOrdenadoDesc(integrada, p2->idAlumno, prom);
+        p2 = p2->sig;
+    }
+
+    return integrada;
+}
+
+// Carga rapida para pruebas
+void agregarAlumno(NodoCalificaciones*& cabeza, int id, const int notas[6]) {
+    NodoCalificaciones* nuevo = new NodoCalificaciones;
+    nuevo->idAlumno = id;
+    for (int i = 0; i < 6; i++) nuevo->notas[i] = notas[i];
+    nuevo->sig = cabeza;
+    cabeza = nuevo;
+}
+
+void imprimirRanking(NodoIntegrada* cabeza) {
+    cout << "------------------------------------------" << endl;
+    cout << " POS |  ID ALUMNO  |  PROMEDIO 1ER ANO    " << endl;
+    cout << "------------------------------------------" << endl;
+    NodoIntegrada* act = cabeza;
+    int puesto = 1;
+    cout << fixed << setprecision(2);
+    while (act != nullptr) {
+        cout << "  " << setw(2) << puesto++ << " |   "
+             << setw(7) << act->idAlumno << "   |       "
+             << setw(5) << act->promedio << endl;
+        act = act->sig;
+    }
+    cout << "------------------------------------------" << endl;
+}
+
+int main() {
+    cout << "=== EJERCICIO 3: INTEGRACION Y RANKING DE CALIFICACIONES ===" << endl << endl;
+
+    NodoCalificaciones* curso1 = nullptr;
+    NodoCalificaciones* curso2 = nullptr;
+
+    // Alumnos Comision 1
+    int notasA[6] = {8, 7, 9, 8, 10, 8}; // Prom: 8.33
+    int notasB[6] = {6, 6, 7, 5,  8, 6}; // Prom: 6.33
+    agregarAlumno(curso1, 101234, notasA);
+    agregarAlumno(curso1, 102456, notasB);
+
+    // Alumnos Comision 2
+    int notasC[6] = {10, 9, 10, 9, 10, 9}; // Prom: 9.50
+    int notasD[6] = { 7, 8,  7, 6,  7, 7}; // Prom: 7.00
+    agregarAlumno(curso2, 203789, notasC);
+    agregarAlumno(curso2, 204912, notasD);
+
+    // Generar lista integrada ordenada descendentemente por promedio
+    NodoIntegrada* ranking = integrarCursos(curso1, curso2);
+
+    imprimirRanking(ranking);
+
+    return 0;
+}`;
+
+        // =========================================================================
+        // REGLA CRITICA DE ORDEN DE EJECUCION (Anti-Blank-Slide en Moviles/Vertical)
+        // =========================================================================
+        const isMobilePortrait = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
+        if (isMobilePortrait) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        // =========================================================================
+        // Canvas Adaptativo
+        // =========================================================================
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({ width: newSize.width, height: newSize.height });
+        });
+
+        // =========================================================================
+        // Protocolo de Inyeccion OneCompiler C++ con Reintentos
+        // =========================================================================
+        function sendCode(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        function checkCompilerSlides(slide) {
+            if (!slide) return;
+            if (slide.id === 'slide-compiler-1') {
+                sendCodeWithRetries('oc-editor-1', cppCodeEjercicio1, 'cpp', 'main.cpp');
+            } else if (slide.id === 'slide-compiler-2') {
+                sendCodeWithRetries('oc-editor-2', cppCodeEjercicio2, 'cpp', 'main.cpp');
+            } else if (slide.id === 'slide-compiler-3') {
+                sendCodeWithRetries('oc-editor-3', cppCodeEjercicio3, 'cpp', 'main.cpp');
+            }
+        }
+
+        Reveal.on('slidechanged', event => {
+            checkCompilerSlides(event.currentSlide);
+        });
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                checkCompilerSlides(Reveal.getCurrentSlide());
+            }, 600);
+        });
+    </script>
+</body>
+</html>
