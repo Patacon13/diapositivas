@@ -187,7 +187,7 @@
                             <p>Por qué los archivos binarios son más compactos, rápidos y permiten registros de tamaño fijo.</p>
                         </div>
                         <div class="tile">
-                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-font" style="color: var(--cyan-accent);"></i> 2. La Trampa de std::string</h3>
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-font" style="color: var(--cyan-accent);"></i> 2. Cadenas de Longitud Fija (char[])</h3>
                             <p>Uso obligatorio de <code>char[]</code> y <code>strncpy</code> en estructuras para evitar punteros huérfanos.</p>
                         </div>
                         <div class="tile">
@@ -243,7 +243,7 @@
             <!-- SLIDE 4: LA TRAMPA DE STD::STRING -->
             <!-- ============================================================== -->
             <section data-background-color="#FFFFFF">
-                <h2 class="slide-title">La Trampa de std::string en Binarios</h2>
+                <h2 class="slide-title">Manejo de Cadenas y Memoria en Binarios</h2>
                 <div class="content-area">
                     <div class="two-column">
                         <div style="display: flex; flex-direction: column; justify-content: center;">
@@ -270,14 +270,14 @@ void copiarCadena(char dest[], int maxLen, const string&amp; src) {
                         <div style="display: flex; flex-direction: column; justify-content: center; gap: 14px;">
                             <div class="tile" style="border-left: 6px solid var(--danger-red); background: #FFF5F5;">
                                 <h4 style="color: var(--danger-red); font-size: 16px; margin: 0 0 4px 0;">
-                                    <i class="fa-solid fa-skull-crossbones"></i> ¿Por qué std::string causa Segmentation Fault?
+                                    <i class="fa-solid fa-triangle-exclamation"></i> ¿Por qué std::string causa error de memoria?
                                 </h4>
                                 <p style="font-size: 14px; margin: 0; color: #7F1D1D;">
                                     <code>std::string</code> no almacena los caracteres en el cuerpo de la variable, sino un <strong>puntero dinámico a la memoria RAM</strong>. Al hacer <code>write</code>, se graba en disco la dirección del puntero, no el texto. Al reabrir el archivo, esa dirección apunta a memoria inválida.
                                 </p>
                             </div>
                             <div class="concept-card">
-                                <h3><i class="fa-solid fa-check"></i> Regla Inquebrantable</h3>
+                                <h3><i class="fa-solid fa-check"></i> Requisito de Estructuras</h3>
                                 <p style="font-size: 14.5px; margin: 0;">
                                     Toda estructura que se persista en un archivo binario debe ser de <strong>tamaño fijo y plano (Plain Old Data)</strong>: tipos primitivos y arreglos <code>char[]</code>.
                                 </p>
@@ -780,7 +780,7 @@ void listarInventario(const string&amp; ruta) {
             <!-- SLIDE 13: CHECKLIST DE EXAMEN -->
             <!-- ============================================================== -->
             <section data-background-color="#FFFFFF">
-                <h2 class="slide-title">Checklist de Examen: Reglas de Oro</h2>
+                <h2 class="slide-title">Checklist de Examen: Puntos Clave</h2>
                 <div class="content-area">
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%;">
                         <div class="tile" style="border-left: 5px solid var(--danger-red);">
