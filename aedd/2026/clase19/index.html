@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>AEDD - Clase 19: Punteros y Estructuras Dinámicas - UTN FRSF</title>
+    <title>AEDD - Clase 19: Archivos Binarios y Acceso Aleatorio - UTN FRSF</title>
 
     <!-- Estilos Base Reveal.js -->
     <link rel="stylesheet" href="../../../dist/reset.css" />
@@ -113,42 +113,22 @@
         .texto-enunciado p { font-size: 17px; margin: 0 0 8px 0; line-height: 1.5; }
         .texto-enunciado p:last-child { margin-bottom: 0; }
 
-        /* Diagrama de Punteros en Memoria */
-        .memory-node-chain {
-            display: flex; align-items: center; justify-content: center; gap: 12px;
+        /* Diagrama de Disco */
+        .disk-diagram {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
             background: var(--bg-neutral); padding: 16px; border-radius: 14px; margin: 12px 0;
-            border: 1px solid #E2E8F0;
+            border: 1px solid #E2E8F0; overflow-x: auto;
         }
-        .node-box {
+        .disk-record-box {
             background: white; border: 2px solid var(--utn-blue); border-radius: 10px;
-            overflow: hidden; width: 110px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;
+            padding: 8px 12px; width: 140px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;
         }
-        .node-box-addr {
+        .disk-record-offset {
             background: var(--utn-blue); color: white; font-family: 'Fira Code', monospace;
-            font-size: 10px; padding: 3px 0; font-weight: 600;
+            font-size: 9.5px; padding: 2px 4px; border-radius: 4px; display: inline-block; margin-bottom: 4px;
         }
-        .node-box-body {
-            display: grid; grid-template-columns: 1fr 1fr; height: 38px;
-        }
-        .node-box-data {
-            border-right: 1px solid #CBD5E1; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; font-family: 'Fira Code', monospace;
-            font-weight: 700; font-size: 15px; color: var(--utn-blue);
-        }
-        .node-box-sig {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: #F1F5F9;
-        }
-        .node-sig-dot {
-            width: 10px; height: 10px; border-radius: 50%; background: var(--cyan-accent);
-        }
-        .node-arrow-link {
-            color: var(--cyan-accent); font-size: 20px; font-weight: bold;
-        }
-        .node-null-tag {
-            background: #FEE2E2; border: 1px dashed var(--danger-red); color: var(--danger-red);
-            font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px;
-        }
+        .disk-record-name { font-weight: 700; font-size: 13.5px; color: var(--utn-blue); }
+        .disk-record-size { font-size: 11px; color: var(--text-light); }
 
         /* Compilador Integrado Vertical */
         .compiler-window {
@@ -179,12 +159,12 @@
                 <div style="text-align: center;">
                     <div style="display: inline-block; background: rgba(255, 193, 7, 0.15); border: 1px solid var(--utn-gold); padding: 5px 16px; border-radius: 20px; margin-bottom: 18px;">
                         <span style="color: var(--utn-gold); font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">
-                            <i class="fa-solid fa-code-branch"></i> Algoritmos y Estructuras de Datos | 2026
+                            <i class="fa-solid fa-hard-drive"></i> Algoritmos y Estructuras de Datos | Clase 19 (2026)
                         </span>
                     </div>
-                    <h1 style="color: white; font-size: 60px; line-height: 1.1; margin-bottom: 16px;">
-                        Punteros y Estructuras Dinámicas<br>
-                        <span style="color: var(--utn-gold); font-weight: 400; font-size: 42px;">Listas Simplemente Enlazadas</span>
+                    <h1 style="color: white; font-size: 58px; line-height: 1.1; margin-bottom: 16px;">
+                        Archivos Binarios y Acceso Aleatorio<br>
+                        <span style="color: var(--utn-gold); font-weight: 400; font-size: 40px;">Persistencia Estructurada en C++</span>
                     </h1>
                     <p style="color: rgba(255,255,255,0.8); margin-top: 24px; text-align: center; font-size: 20px;">
                         Comisión A — Docentes: Tomás Assenza, Facundo Sanchez, Nicolás Huber
@@ -203,265 +183,103 @@
                 <div class="content-area">
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%;">
                         <div class="tile">
-                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-location-crosshairs" style="color: var(--utn-gold);"></i> 1. Punteros y Operadores</h3>
-                            <p>Direcciones de memoria RAM, operador de dirección <code>&amp;</code> y operador de indirección <code>*</code>.</p>
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-file-lines" style="color: var(--utn-gold);"></i> 1. Texto vs Binario</h3>
+                            <p>Por qué los archivos binarios son más compactos, rápidos y permiten registros de tamaño fijo.</p>
                         </div>
                         <div class="tile">
-                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-layer-group" style="color: var(--cyan-accent);"></i> 2. Stack vs Heap</h3>
-                            <p>Gestión dinámica de memoria con <code>new</code> y <code>delete</code>. Prevención de fugas (memory leaks).</p>
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-font" style="color: var(--cyan-accent);"></i> 2. La Trampa de std::string</h3>
+                            <p>Uso obligatorio de <code>char[]</code> y <code>strncpy</code> en estructuras para evitar punteros huérfanos.</p>
                         </div>
                         <div class="tile">
-                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-circle-nodes" style="color: var(--utn-gold);"></i> 3. El Nodo Enlazado</h3>
-                            <p>Estructura autoreferenciada: campo de información + puntero siguiente al próximo nodo.</p>
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i> 3. E/S con read() y write()</h3>
+                            <p>Vuelco directo de bloques de memoria mediante casteo a <code>(char*)&amp;reg</code> y <code>sizeof()</code>.</p>
                         </div>
                         <div class="tile">
-                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-shuffle" style="color: var(--cyan-accent);"></i> 4. Operaciones Primitivas</h3>
-                            <p>Inserción al inicio, inserción al final, recorrido, búsqueda y borrado con reconexión segura.</p>
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-crosshairs" style="color: var(--cyan-accent);"></i> 4. Acceso Aleatorio O(1)</h3>
+                            <p>Punteros <code>seekg</code> y <code>seekp</code>, offsets relativos (<code>ios::beg</code>, <code>ios::end</code>) y <code>tellg()</code>.</p>
                         </div>
                         <div class="tile" style="border-bottom-color: var(--utn-gold); background: #FFF9E6;">
-                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i> 5. Pointer Inspector</h3>
-                            <p>Simulador interactivo en vivo para trazar punteros y nodos en el Heap paso a paso.</p>
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-desktop" style="color: var(--utn-gold);"></i> 5. Binary Stream Inspector</h3>
+                            <p>Simulador interactivo en vivo para visualizar bloques en disco y desplazamientos de cabezal.</p>
                         </div>
                         <div class="tile">
-                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-laptop-code" style="color: var(--cyan-accent);"></i> 6. Práctica Guiada</h3>
-                            <p>3 ejercicios integradores de Guía 18 con sandbox OneCompiler listo para ejecutar.</p>
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-laptop-code" style="color: var(--cyan-accent);"></i> 6. Práctica: Inventario Libros</h3>
+                            <p>Ejercicios 5 y 6 de la guía: carga masiva, acceso al 3er libro, edición in-place del 2do y reporte.</p>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 3: ¿QUÉ ES UN PUNTERO? -->
+            <!-- SLIDE 3: TEXTO VS BINARIO -->
             <!-- ============================================================== -->
             <section data-background-color="#F8FAFC">
-                <h2 class="slide-title">¿Qué es un Puntero?</h2>
+                <h2 class="slide-title">Archivos de Texto vs Archivos Binarios</h2>
                 <div class="content-area">
                     <div class="two-column">
-                        <div style="display: flex; flex-direction: column; gap: 14px;">
-                            <div class="concept-card">
-                                <h3><i class="fa-solid fa-cube"></i> Variable Convencional</h3>
-                                <p style="font-size: 16px; margin: 0;">
-                                    Almacena directamente un <strong>valor</strong> específico del tipo de dato declarado (un entero, un caracter, un float).
-                                </p>
-                            </div>
-                            <div class="concept-card" style="border-left-color: var(--cyan-accent);">
-                                <h3><i class="fa-solid fa-arrow-pointer" style="color: var(--cyan-accent);"></i> Variable Puntero</h3>
-                                <p style="font-size: 16px; margin: 0;">
-                                    Almacena una <strong>dirección de memoria RAM</strong> donde reside otro dato u objeto en el sistema.
-                                </p>
-                            </div>
-                            <div class="tile" style="padding: 12px 16px; border-left: 4px solid var(--utn-gold);">
-                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-lightbulb" style="color: var(--utn-gold);"></i> Operadores Clave</h4>
-                                <p style="font-size: 14px; margin: 0;">
-                                    <code>&amp;variable</code>: Obtiene la dirección de memoria de la variable.<br>
-                                    <code>*puntero</code>: Accede al contenido de la celda de memoria apuntada.
-                                </p>
-                            </div>
-                        </div>
-                        <div>
-                            <pre><code class="cpp" data-trim data-noescape>
-#include &lt;iostream&gt;
-using namespace std;
-
-int main() {
-    int count = 7;
-    int* countPtr = nullptr; // Puntero a entero
-
-    countPtr = &amp;count;       // Guarda direccion de count
-
-    cout &lt;&lt; "Valor de count:      " &lt;&lt; count &lt;&lt; endl;
-    cout &lt;&lt; "Direccion (&amp;count):   " &lt;&lt; &amp;count &lt;&lt; endl;
-    cout &lt;&lt; "Puntero (countPtr):  " &lt;&lt; countPtr &lt;&lt; endl;
-    cout &lt;&lt; "Valor apuntado (*p): " &lt;&lt; *countPtr &lt;&lt; endl;
-
-    *countPtr = 25; // Modifica count indirectamente!
-    cout &lt;&lt; "Nuevo count:         " &lt;&lt; count &lt;&lt; endl;
-
-    return 0;
-}
-                            </code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ============================================================== -->
-            <!-- SLIDE 4: MEMORIA STACK VS HEAP -->
-            <!-- ============================================================== -->
-            <section data-background-color="#FFFFFF">
-                <h2 class="slide-title">Memoria Stack vs Heap: new y delete</h2>
-                <div class="content-area">
-                    <div class="two-column" style="gap: 20px;">
                         <div class="concept-card" style="border-left-color: var(--utn-blue);">
-                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-layer-group"></i> Memoria Stack (Pila Estática)</h3>
-                            <ul style="font-size: 15px; margin: 8px 0 0 16px; line-height: 1.5;">
-                                <li>Gestionada automáticamente por el compilador.</li>
-                                <li>Aloja variables locales y parámetros de funciones.</li>
-                                <li>Tamaño prefijado en tiempo de compilación.</li>
-                                <li>Se destruye automáticamente al salir del ámbito (scope).</li>
+                            <h3><i class="fa-solid fa-file-lines"></i> Archivos de Texto</h3>
+                            <ul style="font-size: 15px; margin: 8px 0 0 16px; line-height: 1.55;">
+                                <li>Almacenan caracteres legibles (ASCII / UTF-8).</li>
+                                <li>Líneas de <strong>longitud variable</strong> delimitadas por <code>\n</code>.</li>
+                                <li>Requieren parsing y conversiones costosas (ej. convertir texto <code>"12345"</code> a <code>int</code>).</li>
+                                <li><strong>Lectura estrictamente secuencial:</strong> Para llegar a la línea 1000 hay que leer las 999 anteriores.</li>
                             </ul>
                         </div>
                         <div class="concept-card" style="border-left-color: var(--cyan-accent);">
-                            <h3 style="color: var(--cyan-accent);"><i class="fa-solid fa-cubes-stacked"></i> Memoria Heap (Montículo Dinámico)</h3>
-                            <ul style="font-size: 15px; margin: 8px 0 0 16px; line-height: 1.5;">
-                                <li>Espacio de memoria libre solicitado en tiempo de ejecución.</li>
-                                <li>Se reserva con el operador <code>new</code> y devuelve la dirección.</li>
-                                <li>Persiste hasta que el programador ejecute <code>delete</code>.</li>
-                                <li>Permite crear listas que crecen o se achican bajo demanda.</li>
+                            <h3 style="color: var(--cyan-accent);"><i class="fa-solid fa-hard-drive"></i> Archivos Binarios</h3>
+                            <ul style="font-size: 15px; margin: 8px 0 0 16px; line-height: 1.55;">
+                                <li>Copia exacta de los bytes de la memoria RAM al disco (sin transformar).</li>
+                                <li>Registros con <strong>tamaño fijo y predecible</strong> (<code>sizeof(Registro)</code>).</li>
+                                <li>Máxima velocidad de E/S y menor ocupación de almacenamiento.</li>
+                                <li><strong>Acceso Aleatorio en O(1):</strong> Saltamos directamente a cualquier registro calculando su byte offset.</li>
                             </ul>
-                        </div>
-                    </div>
-                    <div style="margin-top: 16px;">
-                        <div class="tile" style="padding: 14px 18px; border-left: 6px solid var(--danger-red); background: #FFF5F5;">
-                            <h4 style="font-size: 16px; color: var(--danger-red); margin: 0 0 4px 0;">
-                                <i class="fa-solid fa-triangle-exclamation"></i> Regla de Oro: A cada new le corresponde un delete
-                            </h4>
-                            <p style="font-size: 14.5px; margin: 0; color: #7F1D1D;">
-                                Si perdemos el puntero a un bloque del Heap sin haber hecho <code>delete</code>, esa memoria queda inaccesible hasta que finalice el proceso (<strong>Memory Leak</strong> o fuga de memoria).
-                            </p>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 5: ANATOMÍA DE UN NODO -->
+            <!-- SLIDE 4: LA TRAMPA DE STD::STRING -->
             <!-- ============================================================== -->
-            <section data-background-color="#F8FAFC">
-                <h2 class="slide-title">Anatomía del Nodo Enlazado</h2>
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">La Trampa de std::string en Binarios</h2>
                 <div class="content-area">
                     <div class="two-column">
                         <div style="display: flex; flex-direction: column; justify-content: center;">
                             <pre><code class="cpp" data-trim data-noescape>
-// Definicion de estructura autoreferenciada
-struct Nodo {
-    int dato;        // Campo de informacion
-    Nodo* sig;       // Puntero al siguiente Nodo
+// ERROR CRITICO: Contiene puntero dinamico
+struct PersonaInvalida {
+    string nombre; // Almacena puntero al Heap!
+    int edad;
 };
 
-// Crear una lista vacia:
-Nodo* cabeza = nullptr; 
+// CORRECTO: Estructura de tamanio fijo
+struct PersonaArchivo {
+    char nombre[50]; // 50 bytes contiguos
+    int edad;        // 4 bytes
+};
 
-// Crear el primer nodo en Heap:
-cabeza = new Nodo;
-cabeza-&gt;dato = 42;
-cabeza-&gt;sig = nullptr;
-                            </code></pre>
-                        </div>
-                        <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
-                            <div class="concept-card">
-                                <h3><i class="fa-solid fa-diagram-project"></i> Estructura Autoreferenciada</h3>
-                                <p style="font-size: 15px; margin: 0;">
-                                    El campo <code>sig</code> es un puntero hacia otra variable del mismo tipo <code>Nodo</code>.
-                                </p>
-                            </div>
-                            <div class="memory-node-chain">
-                                <div class="node-box">
-                                    <div class="node-box-addr">0x10A0</div>
-                                    <div class="node-box-body">
-                                        <div class="node-box-data">42</div>
-                                        <div class="node-box-sig"><div class="node-sig-dot"></div></div>
-                                    </div>
-                                </div>
-                                <div class="node-arrow-link"><i class="fa-solid fa-arrow-right"></i></div>
-                                <div class="node-null-tag">nullptr (0x0)</div>
-                            </div>
-                            <p style="font-size: 14px; color: var(--text-light); text-align: center; margin: 0;">
-                                <code>cabeza</code> almacena <code>0x10A0</code>. El último nodo de la lista siempre apunta a <code>nullptr</code>.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ============================================================== -->
-            <!-- SLIDE 6: OPERACIONES I: INSERCIÓN AL INICIO VS AL FINAL -->
-            <!-- ============================================================== -->
-            <section data-background-color="#FFFFFF">
-                <h2 class="slide-title">Inserción: Al Inicio vs Al Final</h2>
-                <div class="content-area">
-                    <div class="two-column" style="gap: 18px;">
-                        <div>
-                            <div class="concept-card" style="margin-bottom: 10px; padding: 12px 16px;">
-                                <h3 style="font-size: 16px;"><i class="fa-solid fa-bolt" style="color: var(--utn-gold);"></i> Inserción al Inicio — O(1)</h3>
-                                <p style="font-size: 13.5px; margin: 0;">Costo constante: solo se reacomodan 2 punteros sin recorrer la lista.</p>
-                            </div>
-                            <pre><code class="cpp" data-trim data-noescape>
-void insertarInicio(Nodo*&amp; cabeza, int valor) {
-    Nodo* nuevo = new Nodo;
-    nuevo-&gt;dato = valor;
-    nuevo-&gt;sig = cabeza; // Enlaza al viejo inicio
-    cabeza = nuevo;      // Nuevo pasa a ser cabeza
-}
-                            </code></pre>
-                        </div>
-                        <div>
-                            <div class="concept-card" style="margin-bottom: 10px; padding: 12px 16px; border-left-color: var(--cyan-accent);">
-                                <h3 style="font-size: 16px; color: var(--cyan-accent);"><i class="fa-solid fa-shoe-prints"></i> Inserción al Final — O(N)</h3>
-                                <p style="font-size: 13.5px; margin: 0;">Costo lineal: requiere recorrer hasta el último nodo (sig == nullptr).</p>
-                            </div>
-                            <pre><code class="cpp" data-trim data-noescape>
-void insertarFinal(Nodo*&amp; cabeza, int valor) {
-    Nodo* nuevo = new Nodo{valor, nullptr};
-    if (cabeza == nullptr) {
-        cabeza = nuevo;
-    } else {
-        Nodo* act = cabeza;
-        while (act-&gt;sig != nullptr) {
-            act = act-&gt;sig;
-        }
-        act-&gt;sig = nuevo;
-    }
-}
-                            </code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ============================================================== -->
-            <!-- SLIDE 7: OPERACIONES II: RECORRIDO Y BÚSQUEDA -->
-            <!-- ============================================================== -->
-            <section data-background-color="#F8FAFC">
-                <h2 class="slide-title">Recorrido y Búsqueda en Listas</h2>
-                <div class="content-area">
-                    <div class="two-column">
-                        <div>
-                            <pre><code class="cpp" data-trim data-noescape>
-// Patron canonico de recorrido
-void mostrarLista(Nodo* cabeza) {
-    Nodo* act = cabeza; // Puntero auxiliar
-    while (act != nullptr) {
-        cout &lt;&lt; act-&gt;dato &lt;&lt; " -&gt; ";
-        act = act-&gt;sig;  // Avanza al siguiente
-    }
-    cout &lt;&lt; "NULL" &lt;&lt; endl;
-}
-
-// Busqueda booleana
-bool estaEnLista(Nodo* cabeza, int buscado) {
-    Nodo* act = cabeza;
-    while (act != nullptr) {
-        if (act-&gt;dato == buscado) return true;
-        act = act-&gt;sig;
-    }
-    return false;
+// Copia segura de string a char[]
+void copiarCadena(char dest[], int maxLen, const string&amp; src) {
+    strncpy(dest, src.c_str(), maxLen - 1);
+    dest[maxLen - 1] = '\0'; // Garantizar terminador
 }
                             </code></pre>
                         </div>
                         <div style="display: flex; flex-direction: column; justify-content: center; gap: 14px;">
-                            <div class="tile" style="border-left: 5px solid var(--danger-red); background: #FFF5F5;">
+                            <div class="tile" style="border-left: 6px solid var(--danger-red); background: #FFF5F5;">
                                 <h4 style="color: var(--danger-red); font-size: 16px; margin: 0 0 4px 0;">
-                                    <i class="fa-solid fa-triangle-exclamation"></i> ¡Cuidado con avanzar 'cabeza'!
+                                    <i class="fa-solid fa-skull-crossbones"></i> ¿Por qué std::string causa Segmentation Fault?
                                 </h4>
                                 <p style="font-size: 14px; margin: 0; color: #7F1D1D;">
-                                    Si escribes <code>cabeza = cabeza-&gt;sig</code> en un bucle, destruyes la referencia a los nodos iniciales. Siempre usa un puntero auxiliar (<code>Nodo* act = cabeza</code>).
+                                    <code>std::string</code> no almacena los caracteres en el cuerpo de la variable, sino un <strong>puntero dinámico a la memoria RAM</strong>. Al hacer <code>write</code>, se graba en disco la dirección del puntero, no el texto. Al reabrir el archivo, esa dirección apunta a memoria inválida.
                                 </p>
                             </div>
                             <div class="concept-card">
-                                <h3><i class="fa-solid fa-compass"></i> Condición de Parada</h3>
-                                <p style="font-size: 15px; margin: 0;">
-                                    El bucle termina exactamente cuando <code>act == nullptr</code>. Nunca intentes acceder a <code>act-&gt;dato</code> si <code>act</code> ya es nulo.
+                                <h3><i class="fa-solid fa-check"></i> Regla Inquebrantable</h3>
+                                <p style="font-size: 14.5px; margin: 0;">
+                                    Toda estructura que se persista en un archivo binario debe ser de <strong>tamaño fijo y plano (Plain Old Data)</strong>: tipos primitivos y arreglos <code>char[]</code>.
                                 </p>
                             </div>
                         </div>
@@ -470,47 +288,157 @@ bool estaEnLista(Nodo* cabeza, int buscado) {
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 8: OPERACIONES III: ELIMINACIÓN Y TÉCNICA DE DOS PUNTEROS -->
+            <!-- SLIDE 5: READ Y WRITE -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Operaciones Primitivas: read() y write()</h2>
+                <div class="content-area">
+                    <div class="two-column" style="gap: 18px;">
+                        <div>
+                            <div class="concept-card" style="margin-bottom: 10px; padding: 12px 16px;">
+                                <h3 style="font-size: 16px;"><i class="fa-solid fa-file-export" style="color: var(--utn-gold);"></i> Escritura en Bloque: write()</h3>
+                                <p style="font-size: 13.5px; margin: 0;">Copia N bytes desde la dirección de memoria hacia el disco.</p>
+                            </div>
+                            <pre><code class="cpp" data-trim data-noescape>
+ofstream arch("inventario.dat", 
+              ios::binary | ios::out | ios::app);
+
+Libro l;
+// Carga de campos...
+
+// write((char*)&amp;var, sizeof(var))
+arch.write((char*)&amp;l, sizeof(Libro));
+
+if (!arch) {
+    cout &lt;&lt; "Error al escribir registro" &lt;&lt; endl;
+}
+arch.close();
+                            </code></pre>
+                        </div>
+                        <div>
+                            <div class="concept-card" style="margin-bottom: 10px; padding: 12px 16px; border-left-color: var(--cyan-accent);">
+                                <h3 style="font-size: 16px; color: var(--cyan-accent);"><i class="fa-solid fa-file-import"></i> Lectura en Bloque: read()</h3>
+                                <p style="font-size: 13.5px; margin: 0;">Lee N bytes desde el disco y los vuelca en la memoria.</p>
+                            </div>
+                            <pre><code class="cpp" data-trim data-noescape>
+ifstream arch("inventario.dat", 
+              ios::binary | ios::in);
+
+Libro l;
+
+// Lectura secuencial registro a registro
+while (arch.read((char*)&amp;l, sizeof(Libro))) {
+    cout &lt;&lt; "Titulo: " &lt;&lt; l.titulo 
+         &lt;&lt; " | Precio: $" &lt;&lt; l.precio &lt;&lt; endl;
+}
+
+arch.close();
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 6: ACCESO ALEATORIO -->
             <!-- ============================================================== -->
             <section data-background-color="#FFFFFF">
-                <h2 class="slide-title">Eliminación: Técnica de Dos Punteros</h2>
+                <h2 class="slide-title">Acceso Aleatorio: seekg, seekp y tell</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="concept-card">
+                                <h3><i class="fa-solid fa-arrows-left-right"></i> Punteros de Flujo en C++</h3>
+                                <p style="font-size: 14.5px; margin: 0;">
+                                    <strong>get pointer (lectura):</strong> <code>seekg(offset, origen)</code> / <code>tellg()</code><br>
+                                    <strong>put pointer (escritura):</strong> <code>seekp(offset, origen)</code> / <code>tellp()</code>
+                                </p>
+                            </div>
+                            <div class="concept-card" style="border-left-color: var(--cyan-accent);">
+                                <h3 style="color: var(--cyan-accent);"><i class="fa-solid fa-compass"></i> Puntos de Referencia (Origen)</h3>
+                                <p style="font-size: 14px; margin: 0;">
+                                    <code>ios::beg</code>: Relativo al inicio del archivo (byte 0).<br>
+                                    <code>ios::cur</code>: Relativo a la posición actual del cursor.<br>
+                                    <code>ios::end</code>: Relativo al final del archivo (EOF).
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="tile" style="border-left: 5px solid var(--utn-gold); margin-bottom: 12px;">
+                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;">
+                                    <i class="fa-solid fa-calculator" style="color: var(--utn-gold);"></i> Fórmula del Offset de Byte (1-Indexed)
+                                </h4>
+                                <p style="font-size: 14.5px; margin: 0; font-family: 'Fira Code', monospace; color: var(--utn-blue);">
+                                    streampos offset = (k - 1) * sizeof(Registro);
+                                </p>
+                                <p style="font-size: 13px; color: var(--text-light); margin-top: 4px;">
+                                    El 1er registro está en 0 bytes. El 3er registro (k=3) con <code>sizeof=128</code> está en el byte <code>(3-1)*128 = 256</code>.
+                                </p>
+                            </div>
+                            <pre><code class="cpp" data-trim data-noescape>
+// Saltar directamente al registro 3 en O(1)
+int pos = 3;
+streampos offset = (pos - 1) * sizeof(Libro);
+
+arch.seekg(offset, ios::beg); // Salto exacto
+arch.read((char*)&amp;l, sizeof(Libro));
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 7: CÁLCULO DE CANTIDAD DE REGISTROS -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Cálculo del Total de Registros en Disco</h2>
                 <div class="content-area">
                     <div class="two-column">
                         <div>
                             <pre><code class="cpp" data-trim data-noescape>
-void eliminarNodo(Nodo*&amp; cabeza, int valor) {
-    Nodo* act = cabeza;
-    Nodo* ant = nullptr;
+int obtenerCantidadRegistros(const string&amp; ruta) {
+    ifstream arch(ruta, ios::binary | ios::in);
+    if (!arch) return 0;
 
-    while (act != nullptr &amp;&amp; act-&gt;dato != valor) {
-        ant = act;
-        act = act-&gt;sig;
-    }
+    // 1. Desplazar cursor al final del archivo
+    arch.seekg(0, ios::end);
 
-    if (act != nullptr) { // Encontrado
-        if (ant == nullptr) {
-            cabeza = act-&gt;sig;     // Era el primero
-        } else {
-            ant-&gt;sig = act-&gt;sig;   // Puente seguro
-        }
-        delete act; // Libera memoria en Heap
-    }
+    // 2. tellg() devuelve el tamanio total en bytes
+    streampos totalBytes = arch.tellg();
+
+    // 3. Division exacta por el tamanio de registro
+    int cantidad = totalBytes / sizeof(Libro);
+
+    arch.close();
+    return cantidad;
 }
                             </code></pre>
                         </div>
                         <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
-                            <div class="concept-card" style="border-left-color: var(--cyan-accent);">
-                                <h3 style="color: var(--cyan-accent);"><i class="fa-solid fa-arrows-split-up-and-left"></i> El Baile de ant y act</h3>
-                                <p style="font-size: 14.5px; margin: 0;">
-                                    <code>ant</code> vigila al nodo anterior para poder reconectar su puntero <code>sig</code> una vez localizado el nodo a suprimir.
-                                </p>
+                            <div class="disk-diagram">
+                                <div class="disk-record-box">
+                                    <span class="disk-record-offset">Byte 0</span>
+                                    <div class="disk-record-name">Registro 1</div>
+                                    <div class="disk-record-size">128 Bytes</div>
+                                </div>
+                                <div class="disk-record-box">
+                                    <span class="disk-record-offset">Byte 128</span>
+                                    <div class="disk-record-name">Registro 2</div>
+                                    <div class="disk-record-size">128 Bytes</div>
+                                </div>
+                                <div class="disk-record-box">
+                                    <span class="disk-record-offset">Byte 256</span>
+                                    <div class="disk-record-name">Registro 3</div>
+                                    <div class="disk-record-size">128 Bytes</div>
+                                </div>
                             </div>
-                            <div class="tile" style="border-left: 5px solid var(--utn-gold);">
-                                <h4 style="color: var(--utn-blue); font-size: 15px; margin: 0 0 4px 0;"><i class="fa-solid fa-shield-halved" style="color: var(--utn-gold);"></i> Secuencia Crítica</h4>
+                            <div class="tile" style="border-left: 5px solid var(--success-green);">
+                                <h4 style="color: var(--success-green); font-size: 15px; margin: 0 0 4px 0;">
+                                    <i class="fa-solid fa-gauge-high"></i> Ventaja de Eficiencia
+                                </h4>
                                 <p style="font-size: 14px; margin: 0;">
-                                    1. Desviar el puntero: <code>ant-&gt;sig = act-&gt;sig;</code><br>
-                                    2. Liberar memoria: <code>delete act;</code><br>
-                                    <em>¡Invertir este orden causa fallo de segmentación!</em>
+                                    Saber cuántos registros hay en disco toma <strong>tiempo constante O(1)</strong> sin tener que recorrer o iterar todos los datos.
                                 </p>
                             </div>
                         </div>
@@ -519,34 +447,34 @@ void eliminarNodo(Nodo*&amp; cabeza, int valor) {
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 9: TRANSICIÓN A SIMULADOR INTERACTIVO -->
+            <!-- SLIDE 8: TRANSICIÓN A SIMULADOR INTERACTIVO -->
             <!-- ============================================================== -->
             <section data-background-gradient="radial-gradient(circle at 50% 50%, #002B5B 0%, #07152B 100%)">
                 <div class="section-title-layout">
                     <span style="background: rgba(255, 193, 7, 0.2); color: var(--utn-gold); border: 1px solid var(--utn-gold); padding: 5px 14px; border-radius: 20px; font-weight: 700; font-size: 13px; margin-bottom: 16px; letter-spacing: 1px;">
-                        <i class="fa-solid fa-microchip"></i> EXPERIENCIA EN VIVO
+                        <i class="fa-solid fa-microchip"></i> SIMULADOR INTERACTIVO
                     </span>
-                    <h2 style="font-size: 58px !important; color: white !important;">Pointer Inspector</h2>
+                    <h2 style="font-size: 56px !important; color: white !important;">Binary Stream Inspector</h2>
                     <p style="color: var(--cyan-accent) !important; font-size: 20px !important; letter-spacing: 1px; margin-top: 10px;">
-                        Trazas visuales interactivas de nodos, punteros y Heap
+                        Trazas visuales de bloques en disco, cursores seekg/seekp y buffer RAM
                     </p>
                     <p style="color: rgba(255,255,255,0.6) !important; font-size: 16px !important; margin-top: 16px; max-width: 650px;">
-                        Comprueba en tiempo real cómo se reasignan las direcciones hexadecimales, cómo se conectan las flechas y cómo trabaja el recolector del Heap.
+                        Comprueba en tiempo real cómo saltan los cabezales de lectura y escritura a cualquier posición del archivo sin leer los bytes intermedios.
                     </p>
                 </div>
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 10: SIMULADOR INTERACTIVO EMBEBIDO -->
+            <!-- SLIDE 9: SIMULADOR INTERACTIVO EMBEBIDO -->
             <!-- ============================================================== -->
-            <section id="slide-pointer-inspector" data-background-color="#080C16">
+            <section id="slide-binary-inspector" data-background-color="#080C16">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; width: 100%;">
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <span class="badge-pill" style="background: rgba(255, 193, 7, 0.2); color: var(--utn-gold); border: 1px solid var(--utn-gold); font-size: 13px; padding: 4px 10px; border-radius: 6px; font-weight: 700;">
                             <i class="fa-solid fa-microchip"></i> SIMULADOR INTERACTIVO
                         </span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important; color: #F8FAFC !important; font-size: 24px !important; border-left-color: var(--utn-gold); padding-left: 14px;">
-                            Pointer Inspector: Trazador de Nodos y Heap
+                            Binary Stream Inspector: Registros y Acceso Aleatorio
                         </h2>
                     </div>
                     <a href="debugger/index.html" target="_blank" style="background: rgba(56, 189, 248, 0.16); border: 1px solid #38BDF8; color: #38BDF8; padding: 5px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease;">
@@ -554,103 +482,90 @@ void eliminarNodo(Nodo*&amp; cabeza, int valor) {
                     </a>
                 </div>
                 <div style="width: 100%; height: 560px; background: #090D16; border-radius: 12px; overflow: hidden; box-shadow: 0 16px 45px rgba(0,0,0,0.6); border: 1px solid rgba(56, 189, 248, 0.35);">
-                    <iframe id="pointer-inspector-frame" src="./debugger/index.html?v=1" style="width: 100%; height: 100%; border: none; display: block;" allow="fullscreen"></iframe>
+                    <iframe id="binary-inspector-frame" src="./debugger/index.html?v=1" style="width: 100%; height: 100%; border: none; display: block;" allow="fullscreen"></iframe>
                 </div>
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 11: EJERCICIO 1 (HORIZONTAL + VERTICAL) -->
+            <!-- SLIDE 10: EJERCICIO 1 (HORIZONTAL + VERTICAL) -->
             <!-- ============================================================== -->
             <section>
-                <!-- 11.A: Enunciado Ejercicio 1 -->
+                <!-- 10.A: Enunciado Ejercicio 1 -->
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
                         <span class="inciso-badge">1</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Unión de Listas Lineales Sin Repetidos (A U B)</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Carga y Creación de Archivo Binario (Guía Ej 5)</h2>
                     </div>
                     <div class="content-area">
                         <div class="texto-enunciado">
-                            <p><strong>Guía 18 — Ejercicio 1:</strong> Escribir una función en C++ que permita unir dos listas lineales <code>A</code> y <code>B</code> que contienen números enteros y devuelva <code>A U B</code>.</p>
-                            <p><strong>Condición:</strong> La lista resultado debe contener todos los elementos que están en <code>A</code> o en <code>B</code>, <strong>sin elementos repetidos</strong>.</p>
+                            <p><strong>Guía de Archivos — Ejercicio 5:</strong> Escribir un programa que permita cargar desde teclado registros que contengan los siguientes campos:</p>
+                            <p style="margin-left: 15px; font-size: 16px;">
+                                • Título del libro (hasta 50 caracteres)<br>
+                                • Autor (hasta 40 caracteres)<br>
+                                • ISBN (hasta 20 caracteres)<br>
+                                • Precio (real)<br>
+                                • Cantidad en existencia (entero)<br>
+                                • Cantidad vendida (entero)
+                            </p>
+                            <p>Guardar esta información en un archivo binario de <code>"inventario.dat"</code> en modo adición.</p>
                         </div>
-                        <div class="two-column" style="margin-top: 6px;">
-                            <div class="tile" style="border-left: 5px solid var(--utn-gold);">
-                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-lightbulb" style="color: var(--utn-gold);"></i> Estrategia Modular</h4>
-                                <p style="font-size: 14px; margin: 0;">
-                                    1. Recorrer <code>listaA</code>: si el número no está en <code>resultado</code>, agregarlo al final.<br>
-                                    2. Recorrer <code>listaB</code>: si el número no está en <code>resultado</code>, agregarlo al final.
-                                </p>
-                            </div>
-                            <div class="tile" style="border-left: 5px solid var(--cyan-accent);">
-                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-cube" style="color: var(--cyan-accent);"></i> Funciones Auxiliares</h4>
-                                <p style="font-size: 14px; margin: 0;">
-                                    Modularizar con <code>estaEnLista(cabeza, valor)</code> e <code>insertarFinal(cabeza, valor)</code> para mantener el código claro y testeable.
-                                </p>
-                            </div>
+                        <div class="tile" style="border-left: 5px solid var(--utn-gold);">
+                            <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-lightbulb" style="color: var(--utn-gold);"></i> Clave de Diseño</h4>
+                            <p style="font-size: 14px; margin: 0;">
+                                Usar <code>ios::binary | ios::out | ios::app</code> para preservar los libros existentes al agregar nuevos registros al final del archivo.
+                            </p>
                         </div>
                     </div>
                 </section>
 
-                <!-- 11.B: Solución Ejercicio 1 -->
+                <!-- 10.B: Solución Ejercicio 1 -->
                 <section data-background-color="#FFFFFF">
                     <div class="inciso-header">
                         <span class="inciso-badge">1</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Unión Modular en C++</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Carga Binaria en C++</h2>
                     </div>
                     <div class="content-area">
                         <div class="two-column" style="gap: 16px;">
                             <div>
                                 <pre><code class="cpp" data-trim data-noescape>
-struct Nodo {
-    int dato;
-    Nodo* sig;
+struct Libro {
+    char titulo[50];
+    char autor[40];
+    char isbn[20];
+    float precio;
+    int stock;
+    int ventas;
 };
 
-bool estaEnLista(Nodo* cabeza, int valor) {
-    Nodo* act = cabeza;
-    while (act != nullptr) {
-        if (act-&gt;dato == valor) return true;
-        act = act-&gt;sig;
-    }
-    return false;
+void copiarTexto(char dest[], int maxLen, 
+                 const string&amp; src) {
+    strncpy(dest, src.c_str(), maxLen - 1);
+    dest[maxLen - 1] = '\0';
 }
 
-void insertarFinal(Nodo*&amp; cabeza, int valor) {
-    Nodo* nuevo = new Nodo{valor, nullptr};
-    if (cabeza == nullptr) {
-        cabeza = nuevo;
-    } else {
-        Nodo* act = cabeza;
-        while (act-&gt;sig != nullptr) act = act-&gt;sig;
-        act-&gt;sig = nuevo;
-    }
+Libro crearLibro(const string&amp; t, const string&amp; a, 
+                 const string&amp; i, float p, int st, int v) {
+    Libro l;
+    copiarTexto(l.titulo, sizeof(l.titulo), t);
+    copiarTexto(l.autor, sizeof(l.autor), a);
+    copiarTexto(l.isbn, sizeof(l.isbn), i);
+    l.precio = p; l.stock = st; l.ventas = v;
+    return l;
 }
                                 </code></pre>
                             </div>
                             <div>
                                 <pre><code class="cpp" data-trim data-noescape>
-Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
-    Nodo* res = nullptr;
-
-    // 1. Agregar elementos de A sin repetidos
-    Nodo* actA = listaA;
-    while (actA != nullptr) {
-        if (!estaEnLista(res, actA-&gt;dato)) {
-            insertarFinal(res, actA-&gt;dato);
-        }
-        actA = actA-&gt;sig;
+void agregarLibro(const string&amp; ruta, 
+                  const Libro&amp; l) {
+    ofstream arch(ruta, ios::binary | ios::out | ios::app);
+    if (!arch) {
+        cout &lt;&lt; "Error al abrir " &lt;&lt; ruta &lt;&lt; endl;
+        return;
     }
-
-    // 2. Agregar elementos de B que no esten
-    Nodo* actB = listaB;
-    while (actB != nullptr) {
-        if (!estaEnLista(res, actB-&gt;dato)) {
-            insertarFinal(res, actB-&gt;dato);
-        }
-        actB = actB-&gt;sig;
-    }
-
-    return res;
+    // Vuelco directo de los bytes del struct
+    arch.write((const char*)&amp;l, sizeof(Libro));
+    arch.close();
 }
                                 </code></pre>
                             </div>
@@ -658,12 +573,12 @@ Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
                     </div>
                 </section>
 
-                <!-- 11.C: Compilador Vertical Ejercicio 1 -->
+                <!-- 10.C: Compilador Vertical Ejercicio 1 -->
                 <section id="slide-compiler-1">
                     <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 1</h2>
                     <div class="compiler-window">
                         <div class="header">
-                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox — Unión de Listas A y B</span>
+                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox — Carga Binaria de Inventario</span>
                             <button onclick="sendCodeWithRetries('oc-editor-1', cppCodeEjercicio1, 'cpp', 'main.cpp')">Restaurar Código</button>
                         </div>
                         <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
@@ -672,96 +587,93 @@ Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 12: EJERCICIO 2 (HORIZONTAL + VERTICAL) -->
+            <!-- SLIDE 11: EJERCICIO 2 (HORIZONTAL + VERTICAL) -->
             <!-- ============================================================== -->
             <section>
-                <!-- 12.A: Enunciado Ejercicio 2 -->
+                <!-- 11.A: Enunciado Ejercicio 2 -->
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
                         <span class="inciso-badge">2</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Saneamiento de Tramos No Crecientes</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Acceso Aleatorio y Modificación In-Place (Guía Ej 6.a & 6.b)</h2>
                     </div>
                     <div class="content-area">
                         <div class="texto-enunciado">
-                            <p><strong>Guía 18 — Ejercicio 2:</strong> En una lista enlazada se guardan números naturales de hasta 4 cifras. Se cargó de manera que esté ordenada en forma creciente, pero contiene errores (tramos no crecientes).</p>
-                            <p><strong>Objetivo:</strong> Construir una función que actualice la lista original, eliminando los tramos que no están en forma creciente con <code>delete</code>.</p>
-                            <p style="font-size: 15px; color: #475569; margin-top: 6px;">
-                                <strong>Ejemplo de la Cátedra:</strong><br>
-                                <code>4 - 5 - 6 - 3 - 2 - 1 - 7 - 9 - 78 - 45 - 45 - 34 - 96 - 98 - 57</code><br>
-                                <strong>Lista Resultante Esperada:</strong><br>
-                                <span style="color: var(--success-green); font-weight: 700;">4 - 5 - 6 - 7 - 9 - 78 - 96 - 98</span>
+                            <p><strong>Guía de Archivos — Ejercicio 6:</strong> Utilizando el archivo <code>"inventario.dat"</code> generado en el punto anterior, implementar funciones para:</p>
+                            <p style="margin-left: 15px; font-size: 16px;">
+                                <strong>a)</strong> Recuperar directamente del archivo el <strong>3er libro</strong> y mostrar por pantalla su título y autor.<br>
+                                <strong>b)</strong> Reemplazar en el archivo el <strong>2do libro</strong> con uno nuevo, cuyos datos ingresará el usuario, sin modificar el resto de los registros.
                             </p>
                         </div>
-                        <div class="tile" style="padding: 12px 18px; border-left: 5px solid var(--utn-gold);">
-                            <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-code-fork" style="color: var(--utn-gold);"></i> Lógica de Punteros ant y act</h4>
-                            <p style="font-size: 14px; margin: 0;">
-                                El puntero <code>ant</code> permanece en el último nodo válido confirmado (ej. 6). Cuando <code>act</code> detecta números menores o iguales (3, 2, 1), se eliminan uno a uno liberando memoria hasta encontrar el siguiente estrictamente mayor (7).
-                            </p>
+                        <div class="two-column" style="margin-top: 6px;">
+                            <div class="tile" style="border-left: 5px solid var(--cyan-accent);">
+                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-crosshairs" style="color: var(--cyan-accent);"></i> seekg para Lectura</h4>
+                                <p style="font-size: 13.5px; margin: 0;">
+                                    <code>offset = (3 - 1) * sizeof(Libro)</code>. Salto directo en O(1) al byte 256.
+                                </p>
+                            </div>
+                            <div class="tile" style="border-left: 5px solid var(--utn-gold);">
+                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-pen-to-square" style="color: var(--utn-gold);"></i> seekp para Escritura</h4>
+                                <p style="font-size: 13.5px; margin: 0;">
+                                    Apertura <code>ios::in | ios::out | ios::binary</code> para sobreescribir el 2do bloque in-place.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- 12.B: Solución Ejercicio 2 -->
+                <!-- 11.B: Solución Ejercicio 2 -->
                 <section data-background-color="#FFFFFF">
                     <div class="inciso-header">
                         <span class="inciso-badge">2</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Poda de Tramos en C++</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Acceso Aleatorio en C++</h2>
                     </div>
                     <div class="content-area">
                         <div class="two-column" style="gap: 16px;">
                             <div>
                                 <pre><code class="cpp" data-trim data-noescape>
-struct Nodo {
-    int dato;
-    Nodo* sig;
-};
+// 6.a: Leer el 3er libro directamente
+bool leerLibroEnPos(const string&amp; ruta, 
+                    int pos1, Libro&amp; out) {
+    ifstream f(ruta, ios::binary | ios::in);
+    if (!f) return false;
 
-void depurarLista(Nodo*&amp; cabeza) {
-    if (cabeza == nullptr) return;
+    streampos offset = (pos1 - 1) * sizeof(Libro);
+    f.seekg(offset, ios::beg);
 
-    Nodo* ant = cabeza;
-    Nodo* act = cabeza-&gt;sig;
-
-    while (act != nullptr) {
-        if (act-&gt;dato &gt; ant-&gt;dato) {
-            // Tramo creciente: ant avanza
-            ant = act;
-            act = act-&gt;sig;
-        } else {
-            // Tramo no creciente: se poda
-            Nodo* aBorrar = act;
-            act = act-&gt;sig;      // Avanza explorador
-            ant-&gt;sig = act;      // Puentea el nodo
-            delete aBorrar;      // Libera memoria
-        }
-    }
+    bool ok = f.read((char*)&amp;out, sizeof(Libro));
+    f.close();
+    return ok;
 }
                                 </code></pre>
                             </div>
-                            <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
-                                <div class="concept-card" style="border-left-color: var(--success-green);">
-                                    <h3 style="color: var(--success-green);"><i class="fa-solid fa-check-double"></i> Invariante del Algoritmo</h3>
-                                    <p style="font-size: 14px; margin: 0;">
-                                        <code>ant-&gt;dato</code> siempre contiene el máximo valor creciente alcanzado hasta el momento. Cualquier nodo posterior que no lo supere es eliminado.
-                                    </p>
-                                </div>
-                                <div class="tile" style="border-left: 5px solid var(--danger-red); background: #FFF5F5;">
-                                    <h4 style="color: var(--danger-red); font-size: 15px; margin: 0 0 4px 0;"><i class="fa-solid fa-trash-can"></i> Gestión Estricta de Heap</h4>
-                                    <p style="font-size: 13.5px; margin: 0; color: #7F1D1D;">
-                                        Nótese cómo <code>aBorrar</code> guarda el puntero temporal antes de hacer <code>act = act-&gt;sig</code>. Si hiciéramos <code>delete act</code> primero, leer <code>act-&gt;sig</code> sería un acceso ilegal a memoria.
-                                    </p>
-                                </div>
+                            <div>
+                                <pre><code class="cpp" data-trim data-noescape>
+// 6.b: Reemplazar el 2do libro in-place
+bool modificarLibroEnPos(const string&amp; ruta, 
+                         int pos1, const Libro&amp; in) {
+    fstream f(ruta, ios::binary | ios::in | ios::out);
+    if (!f) return false;
+
+    streampos offset = (pos1 - 1) * sizeof(Libro);
+    f.seekp(offset, ios::beg);
+
+    f.write((const char*)&amp;in, sizeof(Libro));
+    bool ok = f.good();
+    f.close();
+    return ok;
+}
+                                </code></pre>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- 12.C: Compilador Vertical Ejercicio 2 -->
+                <!-- 11.C: Compilador Vertical Ejercicio 2 -->
                 <section id="slide-compiler-2">
                     <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 2</h2>
                     <div class="compiler-window">
                         <div class="header">
-                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox — Poda de Tramos Desordenados</span>
+                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox — seekg y seekp Directos</span>
                             <button onclick="sendCodeWithRetries('oc-editor-2', cppCodeEjercicio2, 'cpp', 'main.cpp')">Restaurar Código</button>
                         </div>
                         <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
@@ -770,101 +682,93 @@ void depurarLista(Nodo*&amp; cabeza) {
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 13: EJERCICIO 3 (HORIZONTAL + VERTICAL) -->
+            <!-- SLIDE 12: EJERCICIO 3 (HORIZONTAL + VERTICAL) -->
             <!-- ============================================================== -->
             <section>
-                <!-- 13.A: Enunciado Ejercicio 3 -->
+                <!-- 12.A: Enunciado Ejercicio 3 -->
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
                         <span class="inciso-badge">3</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Integración de Calificaciones y Ranking por Promedio</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Listado Completo y Auditoría de Stock (Guía Ej 6.c)</h2>
                     </div>
                     <div class="content-area">
                         <div class="texto-enunciado">
-                            <p><strong>Guía 18 — Ejercicio 4:</strong> En dos listas <code>Curso1</code> y <code>Curso2</code> de tipo <code>CALIFICACIONES</code> se tienen las notas de alumnos de dos comisiones de ISI en las 6 materias de 1er año (ordenadas por ID Alumno).</p>
-                            <p><strong>Información del nodo inicial:</strong> ID Alumno (6 cifras) y un vector con las 6 notas finales.</p>
-                            <p><strong>Requerimiento:</strong> Integrar ambas listas generando una nueva lista <code>INTEGRADA</code> ordenada por <strong>promedio de mayor a menor (descendente)</strong> conteniendo en cada nodo solamente el ID y el promedio obtenido (float).</p>
+                            <p><strong>Guía de Archivos — Ejercicio 6.c:</strong> Escribir una función que muestre por pantalla el inventario completo registrado en <code>"inventario.dat"</code> en forma tabular.</p>
+                            <p><strong>Métricas de Auditoría requeridas:</strong></p>
+                            <p style="margin-left: 15px; font-size: 16px;">
+                                1. Recaudación total acumulada por ventas (sumatoria de <code>precio * cantidadVendida</code>).<br>
+                                2. Alerta de libros con stock agotado (<code>stock == 0</code>).<br>
+                                3. Total de ejemplares en existencia en la librería.
+                            </p>
                         </div>
-                        <div class="two-column" style="margin-top: 6px;">
-                            <div class="concept-card" style="padding: 12px 16px;">
-                                <h3 style="font-size: 15px;"><i class="fa-solid fa-calculator"></i> Cálculo de Promedio</h3>
-                                <p style="font-size: 13.5px; margin: 0;">Suma de las 6 notas dividido 6.0 (división real en punto flotante).</p>
-                            </div>
-                            <div class="concept-card" style="padding: 12px 16px; border-left-color: var(--cyan-accent);">
-                                <h3 style="font-size: 15px; color: var(--cyan-accent);"><i class="fa-solid fa-arrow-down-9-1"></i> Inserción Ordenada Descendente</h3>
-                                <p style="font-size: 13.5px; margin: 0;">Buscar posición donde <code>nuevo-&gt;promedio &gt; act-&gt;promedio</code> para insertar al inicio o entre dos nodos.</p>
-                            </div>
+                        <div class="tile" style="padding: 12px 18px; border-left: 5px solid var(--success-green);">
+                            <h4 style="font-size: 15px; color: var(--success-green); margin: 0 0 4px 0;"><i class="fa-solid fa-table-list"></i> Salida Tabular y Control de EOF</h4>
+                            <p style="font-size: 14px; margin: 0;">
+                                Usar <code>while (arch.read((char*)&amp;l, sizeof(Libro)))</code> para cortar el bucle inmediatamente cuando no se pueda leer un registro completo, evitando procesar datos duplicados al final.
+                            </p>
                         </div>
                     </div>
                 </section>
 
-                <!-- 13.B: Solución Ejercicio 3 -->
+                <!-- 12.B: Solución Ejercicio 3 -->
                 <section data-background-color="#FFFFFF">
                     <div class="inciso-header">
                         <span class="inciso-badge">3</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Integración y Ranking en C++</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Listado y Auditoría en C++</h2>
                     </div>
                     <div class="content-area">
                         <div class="two-column" style="gap: 16px;">
                             <div>
                                 <pre><code class="cpp" data-trim data-noescape>
-struct NodoCalificaciones {
-    int idAlumno;
-    int notas[6];
-    NodoCalificaciones* sig;
-};
+void listarInventario(const string&amp; ruta) {
+    ifstream f(ruta, ios::binary | ios::in);
+    if (!f) {
+        cout &lt;&lt; "No se pudo abrir el archivo" &lt;&lt; endl;
+        return;
+    }
+    Libro l;
+    int nro = 1;
+    float recaudacionTotal = 0;
+    int stockTotal = 0;
 
-struct NodoIntegrada {
-    int idAlumno;
-    float promedio;
-    NodoIntegrada* sig;
-};
-
-float calcularPromedio(const int notas[6]) {
-    float suma = 0;
-    for (int i = 0; i &lt; 6; i++) suma += notas[i];
-    return suma / 6.0f;
+    cout &lt;&lt; "=== INVENTARIO COMPLETO ===" &lt;&lt; endl;
+    while (f.read((char*)&amp;l, sizeof(Libro))) {
+        float recLibro = l.precio * l.ventas;
+        recaudacionTotal += recLibro;
+        stockTotal += l.stock;
+        cout &lt;&lt; "#" &lt;&lt; nro++ &lt;&lt; " " &lt;&lt; l.titulo 
+             &lt;&lt; " (" &lt;&lt; l.autor &lt;&lt; ") | Stock: " 
+             &lt;&lt; l.stock &lt;&lt; " | Ventas: " &lt;&lt; l.ventas 
+             &lt;&lt; " | Recaudado: $" &lt;&lt; recLibro &lt;&lt; endl;
+    }
+    f.close();
 }
                                 </code></pre>
                             </div>
-                            <div>
-                                <pre><code class="cpp" data-trim data-noescape>
-void insertarDescendente(NodoIntegrada*&amp; cabeza, 
-                         int id, float prom) {
-    NodoIntegrada* nuevo = new NodoIntegrada{id, prom, nullptr};
-    NodoIntegrada* act = cabeza;
-    NodoIntegrada* ant = nullptr;
-
-    while (act != nullptr &amp;&amp; act-&gt;promedio &gt;= prom) {
-        ant = act;
-        act = act-&gt;sig;
-    }
-    nuevo-&gt;sig = act;
-    if (ant == nullptr) cabeza = nuevo;
-    else ant-&gt;sig = nuevo;
-}
-
-NodoIntegrada* integrar(NodoCalificaciones* c1, 
-                        NodoCalificaciones* c2) {
-    NodoIntegrada* res = nullptr;
-    for (NodoCalificaciones* p = c1; p; p = p-&gt;sig)
-        insertarDescendente(res, p-&gt;idAlumno, calcularPromedio(p-&gt;notas));
-    for (NodoCalificaciones* p = c2; p; p = p-&gt;sig)
-        insertarDescendente(res, p-&gt;idAlumno, calcularPromedio(p-&gt;notas));
-    return res;
-}
-                                </code></pre>
+                            <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+                                <div class="concept-card" style="border-left-color: var(--warning-amber);">
+                                    <h3 style="color: var(--warning-amber);"><i class="fa-solid fa-triangle-exclamation"></i> Detección de Stock Crítico</h3>
+                                    <p style="font-size: 14px; margin: 0;">
+                                        Durante la misma iteración podemos detectar libros con <code>stock == 0</code> para generar un reporte automático de reposición a proveedores.
+                                    </p>
+                                </div>
+                                <div class="tile" style="border-left: 5px solid var(--utn-blue);">
+                                    <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-coins"></i> Resumen de Negocio</h4>
+                                    <p style="font-size: 13.5px; margin: 0;">
+                                        El procesamiento de archivos binarios permite analizar millones de transacciones por segundo gracias a la ausencia de conversiones de texto.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- 13.C: Compilador Vertical Ejercicio 3 -->
+                <!-- 12.C: Compilador Vertical Ejercicio 3 -->
                 <section id="slide-compiler-3">
                     <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 3</h2>
                     <div class="compiler-window">
                         <div class="header">
-                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox — Ranking y Calificaciones</span>
+                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox — Auditoría y Reportes</span>
                             <button onclick="sendCodeWithRetries('oc-editor-3', cppCodeEjercicio3, 'cpp', 'main.cpp')">Restaurar Código</button>
                         </div>
                         <iframe id="oc-editor-3" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
@@ -873,41 +777,41 @@ NodoIntegrada* integrar(NodoCalificaciones* c1,
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 14: CHECKLIST DE EXAMEN -->
+            <!-- SLIDE 13: CHECKLIST DE EXAMEN -->
             <!-- ============================================================== -->
             <section data-background-color="#FFFFFF">
-                <h2 class="slide-title">Checklist de Examen: Trampas Frecuentes</h2>
+                <h2 class="slide-title">Checklist de Examen: Reglas de Oro</h2>
                 <div class="content-area">
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%;">
                         <div class="tile" style="border-left: 5px solid var(--danger-red);">
-                            <h3 style="color: var(--danger-red);"><i class="fa-solid fa-ban"></i> Puntero Nulo (Null Dereference)</h3>
-                            <p>Intentar hacer <code>p-&gt;sig</code> o <code>p-&gt;dato</code> cuando <code>p == nullptr</code> provoca aborto inmediato del programa (Segmentation fault).</p>
+                            <h3 style="color: var(--danger-red);"><i class="fa-solid fa-triangle-exclamation"></i> Flag ios::binary Obligatorio</h3>
+                            <p>En Windows, omitir <code>ios::binary</code> traduce automáticamente los bytes <code>0x0A</code> (LF) a <code>0x0D 0x0A</code> (CRLF), corrompiendo enteros y floats.</p>
                         </div>
                         <div class="tile" style="border-left: 5px solid var(--warning-amber);">
-                            <h3 style="color: var(--warning-amber);"><i class="fa-solid fa-arrows-spin"></i> Paso por Referencia</h3>
-                            <p>Si una función puede modificar el primer elemento de la lista, debes pasar el puntero por referencia: <code>Nodo*&amp; cabeza</code>.</p>
+                            <h3 style="color: var(--warning-amber);"><i class="fa-solid fa-rotate-left"></i> Limpieza de Flags con clear()</h3>
+                            <p>Si llegas a EOF durante una lectura y luego quieres hacer <code>seekg</code> o <code>seekp</code>, debes invocar obligatoriamente <code>archivo.clear()</code> antes de reposicionar.</p>
                         </div>
                         <div class="tile" style="border-left: 5px solid var(--cyan-accent);">
-                            <h3 style="color: var(--cyan-accent);"><i class="fa-solid fa-link-slash"></i> Punteros Colgantes (Dangling)</h3>
-                            <p>Nunca uses un puntero después de haber ejecutado <code>delete</code> sobre la dirección a la que apunta. Asignarle <code>nullptr</code> si continúa en ámbito.</p>
+                            <h3 style="color: var(--cyan-accent);"><i class="fa-solid fa-shield-halved"></i> Apertura ios::in | ios::out</h3>
+                            <p>Para modificar registros in-place, el archivo ya debe existir previamente en disco; si no existe, la apertura falla sin crearlo.</p>
                         </div>
                         <div class="tile" style="border-left: 5px solid var(--success-green);">
-                            <h3 style="color: var(--success-green);"><i class="fa-solid fa-broom"></i> Liberación Total al Cierre</h3>
-                            <p>Todo programa profesional debe recorrer la lista y liberar cada nodo con <code>delete</code> antes de finalizar el proceso.</p>
+                            <h3 style="color: var(--success-green);"><i class="fa-solid fa-ruler-combined"></i> Estructuras POD (Sin Heap)</h3>
+                            <p>Nunca usar <code>string</code> ni punteros dentro del struct. Solo tipos nativos (<code>int</code>, <code>float</code>, <code>char[]</code>) de longitud fija.</p>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 15: CIERRE INSTITUCIONAL -->
+            <!-- SLIDE 14: CIERRE INSTITUCIONAL -->
             <!-- ============================================================== -->
             <section data-background-color="#002B5B">
                 <div class="section-title-layout">
                     <h2 style="color: var(--utn-gold) !important; font-size: 54px !important;">¿DUDAS O CONSULTAS?</h2>
                     <p style="margin-bottom: 24px; color: rgba(255,255,255,0.8) !important;">ESPACIO PARA PUESTA EN COMÚN Y PRÁCTICA</p>
                     <a href="debugger/index.html" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; background: rgba(56, 189, 248, 0.14); border: 2px solid var(--cyan-accent); color: var(--cyan-accent); padding: 10px 22px; border-radius: 12px; font-weight: 700; font-size: 17px; text-decoration: none; transition: all 0.2s ease;">
-                        <i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i> Probar Pointer Inspector (Simulador Visual) <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 13px;"></i>
+                        <i class="fa-solid fa-hard-drive" style="color: var(--utn-gold);"></i> Probar Binary Stream Inspector (Simulador Visual) <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 13px;"></i>
                     </a>
                 </div>
             </section>
@@ -931,318 +835,271 @@ NodoIntegrada* integrar(NodoCalificaciones* c1,
         // =========================================================================
 
         const cppCodeEjercicio1 = `#include <iostream>
+#include <fstream>
+#include <cstring>
+#include <iomanip>
+
 using namespace std;
 
-// Estructura de Nodo para Lista Lineal
-struct Nodo {
-    int dato;
-    Nodo* sig;
+// Estructura fija para persistencia binaria (Plain Old Data)
+struct Libro {
+    char titulo[50];
+    char autor[40];
+    char isbn[20];
+    float precio;
+    int stock;
+    int ventas;
 };
 
-// Verifica si un valor ya se encuentra en la lista
-bool estaEnLista(Nodo* cabeza, int valor) {
-    Nodo* act = cabeza;
-    while (act != nullptr) {
-        if (act->dato == valor) return true;
-        act = act->sig;
-    }
-    return false;
+// Copia segura de cadena garantizando el terminador nulo '\\0'
+void copiarTexto(char dest[], int maxLen, const string& src) {
+    strncpy(dest, src.c_str(), maxLen - 1);
+    dest[maxLen - 1] = '\\0';
 }
 
-// Inserta un nodo al final de la lista
-void insertarFinal(Nodo*& cabeza, int valor) {
-    Nodo* nuevo = new Nodo{valor, nullptr};
-    if (cabeza == nullptr) {
-        cabeza = nuevo;
-    } else {
-        Nodo* act = cabeza;
-        while (act->sig != nullptr) act = act->sig;
-        act->sig = nuevo;
-    }
+// Genera un registro Libro
+Libro crearLibro(const string& t, const string& a, const string& i, float p, int st, int v) {
+    Libro l;
+    copiarTexto(l.titulo, sizeof(l.titulo), t);
+    copiarTexto(l.autor, sizeof(l.autor), a);
+    copiarTexto(l.isbn, sizeof(l.isbn), i);
+    l.precio = p;
+    l.stock = st;
+    l.ventas = v;
+    return l;
 }
 
-// Une dos listas lineales A y B sin elementos repetidos
-Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
-    Nodo* res = nullptr;
-
-    Nodo* actA = listaA;
-    while (actA != nullptr) {
-        if (!estaEnLista(res, actA->dato)) {
-            insertarFinal(res, actA->dato);
-        }
-        actA = actA->sig;
+// Escribe un libro al final del archivo binario
+void agregarLibro(const string& ruta, const Libro& l) {
+    ofstream arch(ruta, ios::binary | ios::out | ios::app);
+    if (!arch) {
+        cout << "Error al abrir el archivo para escritura." << endl;
+        return;
     }
-
-    Nodo* actB = listaB;
-    while (actB != nullptr) {
-        if (!estaEnLista(res, actB->dato)) {
-            insertarFinal(res, actB->dato);
-        }
-        actB = actB->sig;
-    }
-
-    return res;
-}
-
-// Imprime los elementos de la lista en consola
-void imprimirLista(Nodo* cabeza, const string& nombre) {
-    cout << nombre << ": ";
-    Nodo* act = cabeza;
-    while (act != nullptr) {
-        cout << act->dato << " -> ";
-        act = act->sig;
-    }
-    cout << "NULL" << endl;
-}
-
-// Libera la memoria dinamica solicitada en Heap
-void liberarLista(Nodo*& cabeza) {
-    while (cabeza != nullptr) {
-        Nodo* aBorrar = cabeza;
-        cabeza = cabeza->sig;
-        delete aBorrar;
-    }
+    arch.write((const char*)&l, sizeof(Libro));
+    arch.close();
 }
 
 int main() {
-    cout << "=== EJERCICIO 1: UNION DE LISTAS A Y B SIN REPETIDOS ===" << endl << endl;
+    cout << "=== EJERCICIO 1: CARGA DE ARCHIVO BINARIO (GUIA EJ 5) ===" << endl << endl;
+    const string ruta = "inventario.dat";
 
-    Nodo* listaA = nullptr;
-    Nodo* listaB = nullptr;
+    // Reiniciamos el archivo para la prueba
+    ofstream reset(ruta, ios::binary | ios::out | ios::trunc);
+    reset.close();
 
-    // Carga de lista A: { 3, 7, 12, 5 }
-    insertarFinal(listaA, 3);
-    insertarFinal(listaA, 7);
-    insertarFinal(listaA, 12);
-    insertarFinal(listaA, 5);
+    // Guardamos libros iniciales
+    agregarLibro(ruta, crearLibro("El Aleph", "Jorge Luis Borges", "978-950-04-1234", 18500.0f, 15, 42));
+    agregarLibro(ruta, crearLibro("Rayuela", "Julio Cortazar", "978-950-07-5678", 22000.0f, 8, 30));
+    agregarLibro(ruta, crearLibro("Ficciones", "Jorge Luis Borges", "978-950-04-9876", 19000.0f, 12, 55));
+    agregarLibro(ruta, crearLibro("Cien Anios de Soledad", "Gabriel Garcia Marquez", "978-950-07-1122", 26000.0f, 20, 80));
 
-    // Carga de lista B: { 7, 14, 5, 20 }
-    insertarFinal(listaB, 7);
-    insertarFinal(listaB, 14);
-    insertarFinal(listaB, 5);
-    insertarFinal(listaB, 20);
-
-    imprimirLista(listaA, "Lista A");
-    imprimirLista(listaB, "Lista B");
-
-    // Calculo de la union A U B
-    Nodo* unionAB = unirListas(listaA, listaB);
-
-    cout << endl;
-    imprimirLista(unionAB, "Lista Resultante (A U B)");
-
-    // Liberacion de recursos en Heap
-    liberarLista(listaA);
-    liberarLista(listaB);
-    liberarLista(unionAB);
+    cout << "Archivo '" << ruta << "' generado exitosamente con 4 registros." << endl;
+    cout << "Tamanio de cada registro Libro: " << sizeof(Libro) << " bytes." << endl;
+    cout << "Tamanio total del archivo en disco: " << 4 * sizeof(Libro) << " bytes." << endl;
 
     return 0;
 }`;
 
         const cppCodeEjercicio2 = `#include <iostream>
+#include <fstream>
+#include <cstring>
+#include <iomanip>
+
 using namespace std;
 
-// Estructura de Nodo para enteros de hasta 4 cifras
-struct Nodo {
-    int dato;
-    Nodo* sig;
+struct Libro {
+    char titulo[50];
+    char autor[40];
+    char isbn[20];
+    float precio;
+    int stock;
+    int ventas;
 };
 
-// Inserta al final para cargar la lista de prueba
-void insertarFinal(Nodo*& cabeza, int valor) {
-    Nodo* nuevo = new Nodo{valor, nullptr};
-    if (cabeza == nullptr) {
-        cabeza = nuevo;
-    } else {
-        Nodo* act = cabeza;
-        while (act->sig != nullptr) act = act->sig;
-        act->sig = nuevo;
-    }
+void copiarTexto(char dest[], int maxLen, const string& src) {
+    strncpy(dest, src.c_str(), maxLen - 1);
+    dest[maxLen - 1] = '\\0';
 }
 
-// Depura la lista eliminando tramos no crecientes
-void depurarLista(Nodo*& cabeza) {
-    if (cabeza == nullptr) return;
-
-    Nodo* ant = cabeza;
-    Nodo* act = cabeza->sig;
-
-    while (act != nullptr) {
-        if (act->dato > ant->dato) {
-            // Es estrictamente creciente: ant avanza
-            ant = act;
-            act = act->sig;
-        } else {
-            // Tramo no creciente: se puentea y se destruye el nodo
-            Nodo* aBorrar = act;
-            act = act->sig;      // Avanza el explorador
-            ant->sig = act;      // Reconecta ant con el siguiente
-            delete aBorrar;      // Libera memoria en Heap
-        }
-    }
+Libro crearLibro(const string& t, const string& a, const string& i, float p, int st, int v) {
+    Libro l;
+    copiarTexto(l.titulo, sizeof(l.titulo), t);
+    copiarTexto(l.autor, sizeof(l.autor), a);
+    copiarTexto(l.isbn, sizeof(l.isbn), i);
+    l.precio = p; l.stock = st; l.ventas = v;
+    return l;
 }
 
-void imprimirLista(Nodo* cabeza, const string& titulo) {
-    cout << titulo << ":" << endl;
-    Nodo* act = cabeza;
-    int count = 0;
-    while (act != nullptr) {
-        cout << act->dato;
-        if (act->sig != nullptr) cout << " -> ";
-        act = act->sig;
-        count++;
-    }
-    cout << " -> NULL (" << count << " nodos)" << endl;
+// 6.a: Recupera directamente del archivo el registro en posicion pos1 (1-indexed)
+bool leerLibroEnPos(const string& ruta, int pos1, Libro& out) {
+    ifstream f(ruta, ios::binary | ios::in);
+    if (!f) return false;
+
+    streampos offset = (pos1 - 1) * sizeof(Libro);
+    f.seekg(offset, ios::beg);
+
+    bool ok = f.read((char*)&out, sizeof(Libro)).good();
+    f.close();
+    return ok;
 }
 
-void liberarLista(Nodo*& cabeza) {
-    while (cabeza != nullptr) {
-        Nodo* aBorrar = cabeza;
-        cabeza = cabeza->sig;
-        delete aBorrar;
-    }
+// 6.b: Reemplaza in-place en el archivo el libro en posicion pos1
+bool modificarLibroEnPos(const string& ruta, int pos1, const Libro& in) {
+    fstream f(ruta, ios::binary | ios::in | ios::out);
+    if (!f) return false;
+
+    streampos offset = (pos1 - 1) * sizeof(Libro);
+    f.seekp(offset, ios::beg);
+
+    f.write((const char*)&in, sizeof(Libro));
+    bool ok = f.good();
+    f.close();
+    return ok;
+}
+
+void mostrarLibro(const Libro& l, const string& etiqueta) {
+    cout << etiqueta << endl;
+    cout << "  Titulo: " << l.titulo << endl;
+    cout << "  Autor:  " << l.autor << endl;
+    cout << "  ISBN:   " << l.isbn << endl;
+    cout << "  Precio: $" << l.precio << " | Stock: " << l.stock << endl;
 }
 
 int main() {
-    cout << "=== EJERCICIO 2: PODA DE TRAMOS NO CRECIENTES ===" << endl << endl;
+    cout << "=== EJERCICIO 2: ACCESO ALEATORIO CON seekg Y seekp (GUIA EJ 6.a & 6.b) ===" << endl << endl;
+    const string ruta = "inventario.dat";
 
-    Nodo* lista = nullptr;
+    // Inicializamos 4 libros de base
+    ofstream reset(ruta, ios::binary | ios::out | ios::trunc);
+    Libro base[] = {
+        crearLibro("El Aleph", "Jorge Luis Borges", "978-950-04-1234", 18500.0f, 15, 42),
+        crearLibro("Rayuela", "Julio Cortazar", "978-950-07-5678", 22000.0f, 8, 30),
+        crearLibro("Ficciones", "Jorge Luis Borges", "978-950-04-9876", 19000.0f, 12, 55),
+        crearLibro("Cien Anios", "G. Garcia Marquez", "978-950-07-1122", 26000.0f, 20, 80)
+    };
+    for (int i = 0; i < 4; i++) reset.write((char*)&base[i], sizeof(Libro));
+    reset.close();
 
-    // Lista del enunciado:
-    // 4 - 5 - 6 - 3 - 2 - 1 - 7 - 9 - 78 - 45 - 45 - 34 - 96 - 98 - 57
-    int valores[] = {4, 5, 6, 3, 2, 1, 7, 9, 78, 45, 45, 34, 96, 98, 57};
-    int n = sizeof(valores) / sizeof(valores[0]);
-
-    for (int i = 0; i < n; i++) {
-        insertarFinal(lista, valores[i]);
+    // -------------------------------------------------------------
+    // PARTE A: Recuperar el 3er libro directamente en O(1)
+    // -------------------------------------------------------------
+    Libro libro3;
+    if (leerLibroEnPos(ruta, 3, libro3)) {
+        mostrarLibro(libro3, "[PARTE A] Lectura directa del 3er libro (offset: 256 bytes):");
+    } else {
+        cout << "Error al leer la posicion 3." << endl;
     }
 
-    imprimirLista(lista, "Lista Original (con tramos desordenados)");
+    // -------------------------------------------------------------
+    // PARTE B: Reemplazar el 2do libro in-place ("Rayuela" -> "Bestiario")
+    // -------------------------------------------------------------
+    cout << endl << "[PARTE B] Reemplazando el 2do libro in-place con seekp..." << endl;
+    Libro nuevo2 = crearLibro("Bestiario", "Julio Cortazar", "978-950-07-9999", 17500.0f, 25, 12);
+    if (modificarLibroEnPos(ruta, 2, nuevo2)) {
+        cout << "Libro #2 actualizado con exito." << endl << endl;
+    }
 
-    // Aplicar la depuracion
-    depurarLista(lista);
+    // Verificamos leyendo nuevamente el libro 2
+    Libro verificacion;
+    if (leerLibroEnPos(ruta, 2, verificacion)) {
+        mostrarLibro(verificacion, "Confirmacion: Contenido actual de la posicion 2 en disco:");
+    }
 
-    cout << endl;
-    imprimirLista(lista, "Lista Saneada (estrictamente creciente)");
-
-    liberarLista(lista);
     return 0;
 }`;
 
         const cppCodeEjercicio3 = `#include <iostream>
+#include <fstream>
+#include <cstring>
 #include <iomanip>
+
 using namespace std;
 
-// Estructura de Calificaciones de Alumno (Comisiones ISI)
-struct NodoCalificaciones {
-    int idAlumno;
-    int notas[6];
-    NodoCalificaciones* sig;
+struct Libro {
+    char titulo[50];
+    char autor[40];
+    char isbn[20];
+    float precio;
+    int stock;
+    int ventas;
 };
 
-// Estructura de la Lista Integrada de Rendimiento
-struct NodoIntegrada {
-    int idAlumno;
-    float promedio;
-    NodoIntegrada* sig;
-};
-
-// Calcula el promedio aritmetico de las 6 materias
-float calcularPromedio(const int notas[6]) {
-    float suma = 0;
-    for (int i = 0; i < 6; i++) {
-        suma += notas[i];
-    }
-    return suma / 6.0f;
+void copiarTexto(char dest[], int maxLen, const string& src) {
+    strncpy(dest, src.c_str(), maxLen - 1);
+    dest[maxLen - 1] = '\\0';
 }
 
-// Inserta ordenado de mayor a menor por promedio
-void insertarOrdenadoDesc(NodoIntegrada*& cabeza, int id, float prom) {
-    NodoIntegrada* nuevo = new NodoIntegrada{id, prom, nullptr};
-    NodoIntegrada* act = cabeza;
-    NodoIntegrada* ant = nullptr;
-
-    while (act != nullptr && act->promedio >= prom) {
-        ant = act;
-        act = act->sig;
-    }
-
-    nuevo->sig = act;
-    if (ant == nullptr) {
-        cabeza = nuevo;
-    } else {
-        ant->sig = nuevo;
-    }
+Libro crearLibro(const string& t, const string& a, const string& i, float p, int st, int v) {
+    Libro l;
+    copiarTexto(l.titulo, sizeof(l.titulo), t);
+    copiarTexto(l.autor, sizeof(l.autor), a);
+    copiarTexto(l.isbn, sizeof(l.isbn), i);
+    l.precio = p; l.stock = st; l.ventas = v;
+    return l;
 }
 
-// Integra Curso1 y Curso2 ordenando por promedio descendente
-NodoIntegrada* integrarCursos(NodoCalificaciones* c1, NodoCalificaciones* c2) {
-    NodoIntegrada* integrada = nullptr;
-
-    NodoCalificaciones* p1 = c1;
-    while (p1 != nullptr) {
-        float prom = calcularPromedio(p1->notas);
-        insertarOrdenadoDesc(integrada, p1->idAlumno, prom);
-        p1 = p1->sig;
+// 6.c: Listar inventario completo y calcular metricas de negocio
+void auditarInventario(const string& ruta) {
+    ifstream f(ruta, ios::binary | ios::in);
+    if (!f) {
+        cout << "No se pudo abrir " << ruta << endl;
+        return;
     }
 
-    NodoCalificaciones* p2 = c2;
-    while (p2 != nullptr) {
-        float prom = calcularPromedio(p2->notas);
-        insertarOrdenadoDesc(integrada, p2->idAlumno, prom);
-        p2 = p2->sig;
-    }
+    cout << "--------------------------------------------------------------------------------" << endl;
+    cout << " # | TITULO                         | AUTOR            | PRECIO   | STK | VENTAS" << endl;
+    cout << "--------------------------------------------------------------------------------" << endl;
 
-    return integrada;
-}
+    Libro l;
+    int nro = 1;
+    float recaudacionTotal = 0;
+    int totalEjemplaresStock = 0;
+    int totalEjemplaresVendidos = 0;
+    int librosAgotados = 0;
 
-// Carga rapida para pruebas
-void agregarAlumno(NodoCalificaciones*& cabeza, int id, const int notas[6]) {
-    NodoCalificaciones* nuevo = new NodoCalificaciones;
-    nuevo->idAlumno = id;
-    for (int i = 0; i < 6; i++) nuevo->notas[i] = notas[i];
-    nuevo->sig = cabeza;
-    cabeza = nuevo;
-}
-
-void imprimirRanking(NodoIntegrada* cabeza) {
-    cout << "------------------------------------------" << endl;
-    cout << " POS |  ID ALUMNO  |  PROMEDIO 1ER ANO    " << endl;
-    cout << "------------------------------------------" << endl;
-    NodoIntegrada* act = cabeza;
-    int puesto = 1;
     cout << fixed << setprecision(2);
-    while (act != nullptr) {
-        cout << "  " << setw(2) << puesto++ << " |   "
-             << setw(7) << act->idAlumno << "   |       "
-             << setw(5) << act->promedio << endl;
-        act = act->sig;
+    while (f.read((char*)&l, sizeof(Libro))) {
+        cout << setw(2) << nro++ << " | "
+             << setw(30) << left << l.titulo << " | "
+             << setw(16) << left << l.autor << " | $"
+             << setw(8) << right << l.precio << " | "
+             << setw(3) << right << l.stock << " | "
+             << setw(6) << right << l.ventas << endl;
+
+        recaudacionTotal += (l.precio * l.ventas);
+        totalEjemplaresStock += l.stock;
+        totalEjemplaresVendidos += l.ventas;
+        if (l.stock == 0) librosAgotados++;
     }
-    cout << "------------------------------------------" << endl;
+    f.close();
+
+    cout << "--------------------------------------------------------------------------------" << endl;
+    cout << "RESUMEN DE AUDITORIA DE LIBRERIA:" << endl;
+    cout << "  • Recaudacion total historica:  $" << recaudacionTotal << endl;
+    cout << "  • Ejemplares en stock fisico:    " << totalEjemplaresStock << " unidades" << endl;
+    cout << "  • Total de ejemplares vendidos:  " << totalEjemplaresVendidos << " unidades" << endl;
+    cout << "  • Titulos con stock agotado:     " << librosAgotados << endl;
+    cout << "--------------------------------------------------------------------------------" << endl;
 }
 
 int main() {
-    cout << "=== EJERCICIO 3: INTEGRACION Y RANKING DE CALIFICACIONES ===" << endl << endl;
+    cout << "=== EJERCICIO 3: LISTADO COMPLETO Y AUDITORIA (GUIA EJ 6.c) ===" << endl << endl;
+    const string ruta = "inventario.dat";
 
-    NodoCalificaciones* curso1 = nullptr;
-    NodoCalificaciones* curso2 = nullptr;
+    // Crear inventario de prueba con un libro agotado (stock 0)
+    ofstream reset(ruta, ios::binary | ios::out | ios::trunc);
+    Libro catalogo[] = {
+        crearLibro("El Aleph", "Jorge L. Borges", "978-950-04-1234", 18500.0f, 15, 42),
+        crearLibro("Bestiario", "Julio Cortazar", "978-950-07-9999", 17500.0f, 25, 12),
+        crearLibro("Ficciones", "Jorge L. Borges", "978-950-04-9876", 19000.0f,  0, 55), // Agotado
+        crearLibro("Cien Anios de Soledad", "G. Garcia Marquez", "978-950-07-1122", 26000.0f, 20, 80),
+        crearLibro("Sobre Heroes y Tumbas", "Ernesto Sabato", "978-950-04-3321", 21500.0f,  6, 28)
+    };
+    for (int i = 0; i < 5; i++) reset.write((char*)&catalogo[i], sizeof(Libro));
+    reset.close();
 
-    // Alumnos Comision 1
-    int notasA[6] = {8, 7, 9, 8, 10, 8}; // Prom: 8.33
-    int notasB[6] = {6, 6, 7, 5,  8, 6}; // Prom: 6.33
-    agregarAlumno(curso1, 101234, notasA);
-    agregarAlumno(curso1, 102456, notasB);
-
-    // Alumnos Comision 2
-    int notasC[6] = {10, 9, 10, 9, 10, 9}; // Prom: 9.50
-    int notasD[6] = { 7, 8,  7, 6,  7, 7}; // Prom: 7.00
-    agregarAlumno(curso2, 203789, notasC);
-    agregarAlumno(curso2, 204912, notasD);
-
-    // Generar lista integrada ordenada descendentemente por promedio
-    NodoIntegrada* ranking = integrarCursos(curso1, curso2);
-
-    imprimirRanking(ranking);
+    auditarInventario(ruta);
 
     return 0;
 }`;

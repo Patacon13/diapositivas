@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Pointer Inspector: Simulador de Listas Enlazadas & Heap | AEDD - UTN FRSF</title>
+    <title>Binary Stream Inspector: Simulador de Registros y Acceso Aleatorio | AEDD - UTN FRSF</title>
 
     <!-- Google Fonts & Iconos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -212,7 +212,7 @@
             width: 100%;
             max-width: 1320px;
             display: grid;
-            grid-template-columns: 1fr 1.05fr;
+            grid-template-columns: 1fr 1.15fr;
             grid-template-rows: 1fr;
             height: calc(100vh - 62px);
             max-height: calc(100vh - 62px);
@@ -402,7 +402,7 @@
             transform: none !important;
         }
 
-        /* PANEL DERECHO: OBSERVADOR DE HEAP Y MEMORIA */
+        /* PANEL DERECHO: OBSERVADOR DE REGISTROS EN DISCO Y MEMORIA */
         .inspector-column {
             display: flex;
             flex-direction: column;
@@ -470,8 +470,9 @@
             border-radius: 3px;
             font-weight: 700;
         }
-        .badge-ptr { background: rgba(56, 189, 248, 0.2); color: #38BDF8; }
+        .badge-streampos { background: rgba(56, 189, 248, 0.2); color: #38BDF8; }
         .badge-int { background: rgba(245, 158, 11, 0.2); color: #FBBF24; }
+        .badge-reg { background: rgba(168, 85, 247, 0.2); color: #D8B4FE; }
 
         .stack-var-value {
             font-size: 11.5px;
@@ -479,197 +480,144 @@
             color: #F8FAFC;
         }
 
-        /* HEAP CANVAS */
-        .heap-canvas-area {
+        /* DISK TRACK: REGISTROS BINARIOS */
+        .disk-track-area {
             background: #070B12;
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            padding: 10px 10px 14px 10px;
-            min-height: 185px;
+            padding: 12px 10px 16px 10px;
             display: flex;
-            align-items: center;
-            overflow-x: auto;
-            position: relative;
-        }
-
-        .nodes-chain {
-            display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 8px;
-            min-width: max-content;
-            padding: 24px 6px 6px 6px;
             position: relative;
         }
 
-        /* NODO VISUAL */
-        .node-wrapper {
+        .disk-header-info {
             display: flex;
-            align-items: center;
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            justify-content: space-between;
+            font-size: 9.5px;
+            color: #94A3B8;
+            font-family: 'Fira Code', monospace;
         }
 
-        .node-tags-overlay {
+        .disk-blocks-row {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 24px 4px 6px 4px;
+            position: relative;
+        }
+
+        /* BLOQUE DE REGISTRO EN DISCO */
+        .disk-block {
+            background: #0F172A;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            width: 140px;
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .disk-block.active-get {
+            border-color: var(--cyan-accent);
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.4);
+        }
+        .disk-block.active-put {
+            border-color: var(--utn-gold);
+            box-shadow: 0 0 14px rgba(255, 193, 7, 0.4);
+            animation: pulseBlock 0.8s infinite alternate;
+        }
+        @keyframes pulseBlock {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.02); }
+        }
+
+        .disk-block-header {
+            background: #1E293B;
+            font-family: 'Fira Code', monospace;
+            font-size: 9px;
+            padding: 3px 6px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            color: #94A3B8;
+        }
+
+        .disk-block-content {
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-family: 'Fira Code', monospace;
+            font-size: 10px;
+        }
+
+        .block-title {
+            color: #F8FAFC;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .block-detail {
+            color: #94A3B8;
+            font-size: 8.5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* CURSOR SEEK FLOTANTE */
+        .seek-pointer-tag {
             position: absolute;
             top: -24px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            gap: 3px;
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        .pointer-tag {
+            left: 50%;
+            transform: translateX(-50%);
             font-family: 'Poppins', sans-serif;
-            font-size: 8px;
+            font-size: 8.5px;
             font-weight: 800;
-            padding: 2px 5px;
+            padding: 2px 6px;
             border-radius: 4px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
             box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-            animation: tagBounce 0.4s ease-out;
-        }
-        @keyframes tagBounce {
-            0% { transform: translateY(-5px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        .tag-cabeza { background: var(--utn-gold); color: #002B5B; }
-        .tag-ant { background: #3B82F6; color: white; }
-        .tag-act { background: #06B6D4; color: #082F49; }
-        .tag-nuevo { background: #A855F7; color: white; border: 1px solid #D8B4FE; }
-        .tag-aborrar { background: var(--danger-red); color: white; animation: pulseRed 0.8s infinite alternate; }
-
-        @keyframes pulseRed {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.08); }
-        }
-
-        .node-card {
-            background: #0F172A;
-            border: 2px solid #334155;
-            border-radius: 8px;
-            overflow: hidden;
-            width: 104px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .node-card.highlight-act {
-            border-color: #06B6D4;
-            box-shadow: 0 0 14px rgba(6, 182, 212, 0.45);
-        }
-        .node-card.highlight-nuevo {
-            border-color: #A855F7;
-            box-shadow: 0 0 14px rgba(168, 85, 247, 0.5);
-            animation: dropIn 0.35s ease;
-        }
-        @keyframes dropIn {
-            0% { transform: translateY(-12px); opacity: 0.3; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-        .node-card.deleting {
-            border-color: var(--danger-red);
-            background: rgba(239, 68, 68, 0.15);
-            transform: scale(0.92);
-            opacity: 0.6;
-        }
-
-        .node-addr-bar {
-            background: #1E293B;
-            font-family: 'Fira Code', monospace;
-            font-size: 8.5px;
-            color: #94A3B8;
-            padding: 2px 4px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .node-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            height: 40px;
-        }
-
-        .node-field-dato {
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(15, 23, 42, 0.6);
-        }
-        .node-field-lbl {
-            font-size: 7.5px;
-            color: #64748B;
-            text-transform: uppercase;
-        }
-        .node-field-val {
-            font-family: 'Fira Code', monospace;
-            font-size: 13.5px;
-            font-weight: 700;
-            color: #F8FAFC;
-        }
-
-        .node-field-sig {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(30, 41, 59, 0.3);
-            position: relative;
-        }
-
-        .sig-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--cyan-accent);
-            box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .sig-dot::after {
-            content: '';
-            width: 4px;
-            height: 4px;
-            background: #090D16;
-            border-radius: 50%;
-        }
-
-        /* FLECHA DE CONEXIÓN */
-        .node-arrow {
-            width: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--cyan-accent);
-            font-size: 12px;
-            transition: all 0.25s ease;
-        }
-
-        .null-badge {
-            background: rgba(239, 68, 68, 0.12);
-            border: 1px dashed rgba(239, 68, 68, 0.45);
-            color: #F87171;
-            font-family: 'Fira Code', monospace;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 4px 6px;
-            border-radius: 6px;
+            white-space: nowrap;
             display: flex;
             align-items: center;
             gap: 4px;
         }
+        .tag-seekg { background: var(--cyan-accent); color: #082F49; }
+        .tag-seekp { background: var(--utn-gold); color: #002B5B; }
 
-        /* CONSOLA DE SALIDA */
+        /* BUFFER EN RAM */
+        .ram-buffer-card {
+            background: #070B12;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-family: 'Fira Code', monospace;
+            font-size: 10px;
+        }
+
+        .ram-buffer-fields {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .ram-field-box {
+            background: #0F172A;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 3px 6px;
+            border-radius: 5px;
+        }
+        .ram-field-lbl { color: #64748B; font-size: 8px; }
+        .ram-field-val { color: #F8FAFC; font-weight: 700; }
+
+        /* TERMINAL LOG */
         .terminal-box {
             background: #070B12;
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -677,7 +625,7 @@
             padding: 6px 10px;
             font-family: 'Fira Code', monospace;
             font-size: 10.5px;
-            height: 80px;
+            height: 75px;
             overflow-y: auto;
             display: flex;
             flex-direction: column-reverse;
@@ -691,10 +639,10 @@
         }
         .terminal-time { color: #64748B; font-size: 9.5px; }
         .terminal-msg { color: #E2E8F0; }
-        .terminal-msg.alloc { color: #A855F7; }
-        .terminal-msg.free { color: #EF4444; }
-        .terminal-msg.link { color: #38BDF8; }
-        .terminal-msg.info { color: #FBBF24; }
+        .terminal-msg.seek { color: var(--cyan-accent); }
+        .terminal-msg.write { color: var(--utn-gold); }
+        .terminal-msg.read { color: #34D399; }
+        .terminal-msg.info { color: #A855F7; }
 
         /* QUIZ MODAL */
         .quiz-overlay {
@@ -853,24 +801,24 @@
             <span class="brand-badge">AEDD</span>
             <div class="brand-titles">
                 <span class="brand-title">
-                    <i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i> Pointer Inspector
+                    <i class="fa-solid fa-hard-drive" style="color: var(--utn-gold);"></i> Binary Stream Inspector
                 </span>
-                <span class="brand-sub">Estructuras Dinámicas & Gestión de Heap</span>
+                <span class="brand-sub">Archivos Binarios & Acceso Aleatorio</span>
             </div>
         </div>
 
         <div class="level-selector-row">
             <button class="level-tab-btn active" onclick="switchLevel(0)">
-                <i class="fa-solid fa-plus-circle"></i> N1: Inserción Inicio
+                <i class="fa-solid fa-file-export"></i> N1: Carga con write
             </button>
             <button class="level-tab-btn" onclick="switchLevel(1)">
-                <i class="fa-solid fa-arrow-down-short-wide"></i> N2: Inserción Ordenada
+                <i class="fa-solid fa-crosshairs"></i> N2: Acceso Directo seekg
             </button>
             <button class="level-tab-btn" onclick="switchLevel(2)">
-                <i class="fa-solid fa-trash-can"></i> N3: Eliminación & Delete
+                <i class="fa-solid fa-pen-to-square"></i> N3: Modificación seekp
             </button>
             <button class="level-tab-btn" onclick="switchLevel(3)">
-                <i class="fa-solid fa-scissors"></i> N4: Poda Tramos (Ej 2)
+                <i class="fa-solid fa-calculator"></i> N4: Conteo con tellg
             </button>
         </div>
 
@@ -897,7 +845,7 @@
             <div class="editor-tab-bar">
                 <div class="editor-tab-title">
                     <i class="fa-solid fa-file-code" style="color: var(--cyan-accent);"></i>
-                    <span id="editor-file-name">insercion_inicio.cpp</span>
+                    <span id="editor-file-name">acceso_directo.cpp</span>
                 </div>
                 <div style="font-size: 10px; color: #64748B;">
                     C++ ISO 2020 | UTN FRSF
@@ -905,7 +853,7 @@
             </div>
 
             <div class="editor-scroll-area" id="code-container">
-                <!-- Se inyecta dinamicamente con las lineas de codigo del nivel -->
+                <!-- Se inyectan las lineas de codigo -->
             </div>
 
             <div class="stepper-controls-bar">
@@ -927,43 +875,71 @@
             </div>
         </div>
 
-        <!-- PANEL DERECHO: OBSERVADOR DE HEAP Y MEMORIA -->
+        <!-- PANEL DERECHO: DISCO, RAM Y LOG -->
         <div class="inspector-column">
 
-            <!-- TABLA DE PUNTEROS EN STACK -->
+            <!-- TABLA DE VARIABLES Y OFFSETS EN STACK -->
             <div class="panel-card">
                 <div class="panel-header-title">
-                    <span><i class="fa-solid fa-layer-group"></i> Punteros y Variables en Stack (RAM)</span>
-                    <span style="font-size: 9px; color: #64748B;">Alcance Local</span>
+                    <span><i class="fa-solid fa-layer-group"></i> Variables y Offsets en RAM</span>
+                    <span style="font-size: 9px; color: #64748B;">sizeof(Libro) = 128 Bytes</span>
                 </div>
                 <div class="stack-vars-grid" id="stack-grid">
-                    <!-- Se inyecta con variables cabeza, act, ant, nuevo, etc. -->
+                    <!-- Variables locales -->
                 </div>
             </div>
 
-            <!-- CANVAS VISUAL DEL HEAP -->
+            <!-- TRACK DE REGISTROS EN DISCO -->
             <div class="panel-card" style="flex: 1; display: flex; flex-direction: column;">
                 <div class="panel-header-title">
-                    <span><i class="fa-solid fa-network-wired"></i> Memoria Dinámica Heap (Nodos Enlazados)</span>
-                    <span style="font-size: 9px; color: var(--utn-gold);">Direcciones Hexadecimales</span>
+                    <span><i class="fa-solid fa-hard-drive"></i> Archivo en Disco: inventario.dat</span>
+                    <span style="font-size: 9px; color: var(--utn-gold);">Estructura Binaria Fija</span>
                 </div>
-                <div class="heap-canvas-area" id="heap-canvas">
-                    <div class="nodes-chain" id="nodes-chain">
-                        <!-- Nodos renderizados dinámicamente -->
+                <div class="disk-track-area">
+                    <div class="disk-header-info">
+                        <span id="disk-file-mode">Modo: ios::binary | ios::in | ios::out</span>
+                        <span id="disk-file-size">Tamaño: 512 Bytes (4 Registros)</span>
+                    </div>
+                    <div class="disk-blocks-row" id="disk-blocks-row">
+                        <!-- Bloques de registros -->
+                    </div>
+                </div>
+
+                <!-- BUFFER DE MEMORIA RAM -->
+                <div class="ram-buffer-card" style="margin-top: 6px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--cyan-accent); font-weight: 700; font-size: 9.5px;">
+                            <i class="fa-solid fa-microchip"></i> Buffer en RAM: Registro Libro
+                        </span>
+                        <span style="font-size: 8.5px; color: #64748B;">(char*)&amp;l</span>
+                    </div>
+                    <div class="ram-buffer-fields" id="ram-buffer-fields">
+                        <div class="ram-field-box">
+                            <div class="ram-field-lbl">TITULO</div>
+                            <div class="ram-field-val" id="buf-titulo">---</div>
+                        </div>
+                        <div class="ram-field-box">
+                            <div class="ram-field-lbl">AUTOR</div>
+                            <div class="ram-field-val" id="buf-autor">---</div>
+                        </div>
+                        <div class="ram-field-box">
+                            <div class="ram-field-lbl">PRECIO</div>
+                            <div class="ram-field-val" id="buf-precio">---</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- LOG TERMINAL DE EJECUCIÓN -->
+            <!-- LOG TERMINAL -->
             <div class="panel-card">
                 <div class="panel-header-title">
-                    <span><i class="fa-solid fa-terminal"></i> Log de Asignaciones y Punteros</span>
-                    <span style="font-size: 9px; color: #64748B;">stdout / kernel</span>
+                    <span><i class="fa-solid fa-terminal"></i> Log del Flujo y Controladores de E/S</span>
+                    <span style="font-size: 9px; color: #64748B;">fstream audit</span>
                 </div>
                 <div class="terminal-box" id="terminal-log">
                     <div class="terminal-line">
                         <span class="terminal-time">[00:00:00]</span>
-                        <span class="terminal-msg info">Pointer Inspector inicializado. Listo para trazar.</span>
+                        <span class="terminal-msg info">Binary Stream Inspector iniciado. inventario.dat cargado.</span>
                     </div>
                 </div>
             </div>
@@ -980,10 +956,10 @@
                 <span style="font-size: 11px; color: var(--utn-gold); font-weight: 700;">+25 pts</span>
             </div>
             <div class="quiz-question" id="quiz-question-text">
-                ¿A qué nodo apuntará el siguiente puntero tras esta operación?
+                ¿A qué posición de bytes saltará el puntero con esta operación?
             </div>
             <div class="quiz-options-list" id="quiz-options-container">
-                <!-- Se inyectan las 4 opciones de longitud uniforme -->
+                <!-- Opciones -->
             </div>
             <div class="quiz-feedback" id="quiz-feedback-box"></div>
             <button class="quiz-btn-continue" id="quiz-btn-continue" onclick="closeQuizAndContinue()">
@@ -994,7 +970,7 @@
 
     <script>
         // =========================================================================
-        // ESTADO GLOBAL DEL SIMULADOR
+        // ESTADO GLOBAL
         // =========================================================================
         let currentLevelIndex = 0;
         let currentStepIndex = 0;
@@ -1003,514 +979,376 @@
         let score = 100;
         let streak = 0;
 
-        // DEFINICIÓN DE LOS 4 NIVELES PEDAGÓGICOS
         const levels = [
-            // NIVEL 1: Inserción al Inicio
+            // NIVEL 1: Carga con write
             {
                 id: 1,
-                fileName: "insertar_inicio.cpp",
-                title: "Inserción al Inicio",
+                fileName: "agregar_libro.cpp",
+                title: "Carga con write",
                 codeLines: [
-                    { num: 1, text: `<span class="kw">struct</span> <span class="tp">Nodo</span> {` },
-                    { num: 2, text: `    <span class="tp">int</span> <span class="vr">dato</span>;` },
-                    { num: 3, text: `    <span class="tp">Nodo</span>* <span class="vr">sig</span>;` },
-                    { num: 4, text: `};` },
-                    { num: 5, text: `` },
-                    { num: 6, text: `<span class="tp">void</span> <span class="vr">insertarInicio</span>(<span class="tp">Nodo</span>*&amp; <span class="vr">cabeza</span>, <span class="tp">int</span> <span class="vr">valor</span>) {` },
-                    { num: 7, text: `    <span class="tp">Nodo</span>* <span class="vr">nuevo</span> = <span class="kw">new</span> <span class="tp">Nodo</span>;` },
-                    { num: 8, text: `    <span class="vr">nuevo</span>-&gt;<span class="vr">dato</span> = <span class="vr">valor</span>;` },
-                    { num: 9, text: `    <span class="vr">nuevo</span>-&gt;<span class="vr">sig</span> = <span class="vr">cabeza</span>;` },
-                    { num: 10, text: `    <span class="vr">cabeza</span> = <span class="vr">nuevo</span>;` },
-                    { num: 11, text: `}` }
+                    { num: 1, text: `<span class="tp">void</span> <span class="vr">guardarLibro</span>(<span class="tp">ofstream</span>&amp; <span class="vr">arch</span>, <span class="kw">const</span> <span class="tp">Libro</span>&amp; <span class="vr">l</span>) {` },
+                    { num: 2, text: `    <span class="cm">// Vuelco binario exacto en disco</span>` },
+                    { num: 3, text: `    <span class="vr">arch</span>.<span class="vr">write</span>((<span class="tp">char</span>*)&amp;<span class="vr">l</span>, <span class="kw">sizeof</span>(<span class="tp">Libro</span>));` },
+                    { num: 4, text: `    <span class="kw">if</span> (!<span class="vr">arch</span>) {` },
+                    { num: 5, text: `        <span class="vr">cout</span> &lt;&lt; <span class="st">"Error en escritura binaria"</span>;` },
+                    { num: 6, text: `    }` },
+                    { num: 7, text: `}` }
                 ],
                 initialStack: [
-                    { name: "cabeza", type: "ptr", val: "0x10A0" },
-                    { name: "nuevo", type: "ptr", val: "nullptr" },
-                    { name: "valor", type: "int", val: "10" }
+                    { name: "sizeof(Libro)", type: "int", val: "128 B" },
+                    { name: "tellp()", type: "pos", val: "384 B" }
                 ],
-                initialHeap: [
-                    { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                initialDisk: [
+                    { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                    { id: 2, offset: 128, titulo: "Rayuela", autor: "Cortazar", precio: "22000" },
+                    { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" }
                 ],
                 steps: [
                     {
-                        line: 6,
-                        desc: "Llamada a insertarInicio(cabeza, 10). Se pasan cabeza por referencia y valor = 10.",
+                        line: 1,
+                        desc: "Se prepara la estructura Libro con el nuevo registro ('Cien Anios').",
                         stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0", hl: true },
-                            { name: "nuevo", type: "ptr", val: "nullptr" },
-                            { name: "valor", type: "int", val: "10", hl: true }
+                            { name: "sizeof", type: "int", val: "128 B" },
+                            { name: "tellp()", type: "pos", val: "384 B" }
                         ],
-                        heap: [
-                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                        buffer: { titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" },
+                        disk: [
+                            { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                            { id: 2, offset: 128, titulo: "Rayuela", autor: "Cortazar", precio: "22000" },
+                            { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" }
                         ],
-                        log: { type: "info", text: "Invocando insertarInicio: cabeza apunta a 0x10A0." }
+                        log: { type: "info", text: "Preparando escritura: Libro 'Cien Anios' en buffer RAM." }
                     },
                     {
-                        line: 7,
-                        desc: "new Nodo: se reserva bloque en Heap (0x2B40). 'nuevo' almacena su dirección.",
+                        line: 3,
+                        desc: "arch.write((char*)&l, sizeof(Libro)): escribe 128 bytes al final del archivo.",
                         stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0" },
-                            { name: "nuevo", type: "ptr", val: "0x2B40", hl: true },
-                            { name: "valor", type: "int", val: "10" }
+                            { name: "sizeof", type: "int", val: "128 B" },
+                            { name: "tellp()", type: "pos", val: "512 B", hl: true }
                         ],
-                        heap: [
-                            { addr: "0x2B40", dato: "?", sig: "nullptr", tags: ["nuevo"], isNew: true },
-                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                        buffer: { titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" },
+                        disk: [
+                            { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                            { id: 2, offset: 128, titulo: "Rayuela", autor: "Cortazar", precio: "22000" },
+                            { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                            { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000", isPut: true }
                         ],
-                        log: { type: "alloc", text: "Heap alloc: Nodo reservado en 0x2B40." }
-                    },
-                    {
-                        line: 8,
-                        desc: "nuevo->dato = valor: se asigna el número 10 en el campo de información del nodo.",
-                        stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0" },
-                            { name: "nuevo", type: "ptr", val: "0x2B40" },
-                            { name: "valor", type: "int", val: "10" }
-                        ],
-                        heap: [
-                            { addr: "0x2B40", dato: 10, sig: "nullptr", tags: ["nuevo"] },
-                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
-                        ],
-                        log: { type: "info", text: "Asignación: nodo 0x2B40->dato = 10." },
+                        log: { type: "write", text: "WRITE: 128 bytes grabados en offset 384. tellp ahora es 512." },
                         quiz: {
-                            question: "¿A qué debe apuntar 'nuevo->sig' para preservar el resto de la lista?",
+                            question: "¿Por qué pasamos (char*)&l como primer argumento a la función write?",
                             options: [
-                                "Al nodo apuntado por cabeza (0x10A0) para enlazarlo como siguiente.",
-                                "A nullptr para convertir al nuevo nodo en el último de la lista.",
-                                "A su propia dirección (0x2B40) para formar una lista circular.",
-                                "A la dirección de memoria de la variable local valor en el stack."
+                                "Porque write exige un puntero a bytes sin tipo (char*) para transferir el bloque.",
+                                "Para que el compilador convierta el texto a mayúsculas antes de guardarlo en disco.",
+                                "Porque el archivo se convertirá internamente en formato de texto plano con comas.",
+                                "Para evitar que los números enteros se interpreten como código hexadecimal."
                             ],
                             correctIndex: 0,
-                            explanation: "Correcto: 'nuevo->sig = cabeza' enlaza el nuevo nodo con el primer elemento actual antes de reubicar la cabeza."
+                            explanation: "Correcto: write() es agnóstica del tipo; solo requiere la dirección inicial de memoria como (char*) y la cantidad de bytes a copiar."
                         }
                     },
                     {
-                        line: 9,
-                        desc: "nuevo->sig = cabeza: el nuevo nodo apunta a 0x10A0 (nodo con dato 20).",
+                        line: 4,
+                        desc: "Verificación de stream: arch.good() confirma que la escritura en disco fue exitosa.",
                         stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0" },
-                            { name: "nuevo", type: "ptr", val: "0x2B40" },
-                            { name: "valor", type: "int", val: "10" }
+                            { name: "sizeof", type: "int", val: "128 B" },
+                            { name: "tellp()", type: "pos", val: "512 B" }
                         ],
-                        heap: [
-                            { addr: "0x2B40", dato: 10, sig: "0x10A0", tags: ["nuevo"] },
-                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                        buffer: { titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" },
+                        disk: [
+                            { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                            { id: 2, offset: 128, titulo: "Rayuela", autor: "Cortazar", precio: "22000" },
+                            { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                            { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" }
                         ],
-                        log: { type: "link", text: "Enlace: 0x2B40->sig = 0x10A0 (nodo con dato 20)." }
-                    },
-                    {
-                        line: 10,
-                        desc: "cabeza = nuevo: cabeza se actualiza a 0x2B40. Ahora el nodo 10 es el inicio.",
-                        stack: [
-                            { name: "cabeza", type: "ptr", val: "0x2B40", hl: true },
-                            { name: "nuevo", type: "ptr", val: "0x2B40" },
-                            { name: "valor", type: "int", val: "10" }
-                        ],
-                        heap: [
-                            { addr: "0x2B40", dato: 10, sig: "0x10A0", tags: ["cabeza", "nuevo"] },
-                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: [] }
-                        ],
-                        log: { type: "link", text: "Actualización de cabeza: lista comienza en 0x2B40." }
-                    },
-                    {
-                        line: 11,
-                        desc: "Fin de función: 'nuevo' sale de scope; la lista enlazada persiste en Heap.",
-                        stack: [
-                            { name: "cabeza", type: "ptr", val: "0x2B40" }
-                        ],
-                        heap: [
-                            { addr: "0x2B40", dato: 10, sig: "0x10A0", tags: ["cabeza"] },
-                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: [] }
-                        ],
-                        log: { type: "info", text: "Inserción completada: [ 10 ] -> [ 20 ] -> nullptr." }
+                        log: { type: "info", text: "Stream OK: Archivo creció a 512 bytes (4 registros)." }
                     }
                 ]
             },
 
-            // NIVEL 2: Inserción Ordenada & Técnica de Dos Punteros
+            // NIVEL 2: Acceso Directo con seekg (Guía 18 Ej 6.a)
             {
                 id: 2,
-                fileName: "insercion_ordenada.cpp",
-                title: "Inserción Ordenada",
+                fileName: "recuperar_pos.cpp",
+                title: "Acceso Directo seekg",
                 codeLines: [
-                    { num: 1, text: `<span class="tp">void</span> <span class="vr">insertarOrdenado</span>(<span class="tp">Nodo</span>*&amp; <span class="vr">cabeza</span>, <span class="tp">int</span> <span class="vr">valor</span>) {` },
-                    { num: 2, text: `    <span class="tp">Nodo</span>* <span class="vr">nuevo</span> = <span class="kw">new</span> <span class="tp">Nodo</span>{<span class="vr">valor</span>, <span class="kw">nullptr</span>};` },
-                    { num: 3, text: `    <span class="tp">Nodo</span>* <span class="vr">act</span> = <span class="vr">cabeza</span>;` },
-                    { num: 4, text: `    <span class="tp">Nodo</span>* <span class="vr">ant</span> = <span class="kw">nullptr</span>;` },
-                    { num: 5, text: `    <span class="kw">while</span> (<span class="vr">act</span> != <span class="kw">nullptr</span> &amp;&amp; <span class="vr">act</span>-&gt;<span class="vr">dato</span> &lt; <span class="vr">valor</span>) {` },
-                    { num: 6, text: `        <span class="vr">ant</span> = <span class="vr">act</span>;` },
-                    { num: 7, text: `        <span class="vr">act</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
-                    { num: 8, text: `    }` },
-                    { num: 9, text: `    <span class="vr">nuevo</span>-&gt;<span class="vr">sig</span> = <span class="vr">act</span>;` },
-                    { num: 10, text: `    <span class="kw">if</span> (<span class="vr">ant</span> == <span class="kw">nullptr</span>) <span class="vr">cabeza</span> = <span class="vr">nuevo</span>;` },
-                    { num: 11, text: `    <span class="kw">else</span> <span class="vr">ant</span>-&gt;<span class="vr">sig</span> = <span class="vr">nuevo</span>;` },
-                    { num: 12, text: `}` }
+                    { num: 1, text: `<span class="tp">void</span> <span class="vr">leerLibroEnPos</span>(<span class="tp">ifstream</span>&amp; <span class="vr">f</span>, <span class="tp">int</span> <span class="vr">pos1</span>, <span class="tp">Libro</span>&amp; <span class="vr">out</span>) {` },
+                    { num: 2, text: `    <span class="tp">int</span> <span class="vr">offset</span> = (<span class="vr">pos1</span> - <span class="nm">1</span>) * <span class="kw">sizeof</span>(<span class="tp">Libro</span>);` },
+                    { num: 3, text: `    <span class="vr">f</span>.<span class="vr">seekg</span>(<span class="vr">offset</span>, <span class="tp">ios</span>::<span class="vr">beg</span>);` },
+                    { num: 4, text: `    <span class="vr">f</span>.<span class="vr">read</span>((<span class="tp">char</span>*)&amp;<span class="vr">out</span>, <span class="kw">sizeof</span>(<span class="tp">Libro</span>));` },
+                    { num: 5, text: `}` }
                 ],
                 initialStack: [
-                    { name: "cabeza", type: "ptr", val: "0x10A0" },
-                    { name: "valor", type: "int", val: "18" }
+                    { name: "pos1", type: "int", val: "3" },
+                    { name: "offset", type: "pos", val: "---" },
+                    { name: "tellg()", type: "pos", val: "0 B" }
                 ],
-                initialHeap: [
-                    { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza"] },
-                    { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
+                initialDisk: [
+                    { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                    { id: 2, offset: 128, titulo: "Rayuela", autor: "Cortazar", precio: "22000" },
+                    { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                    { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" }
+                ],
+                steps: [
+                    {
+                        line: 1,
+                        desc: "Invocación para recuperar el 3er libro (pos1 = 3) sin leer los anteriores.",
+                        stack: [
+                            { name: "pos1", type: "int", val: "3", hl: true },
+                            { name: "offset", type: "pos", val: "---" },
+                            { name: "tellg()", type: "pos", val: "0 B" }
+                        ],
+                        buffer: { titulo: "---", autor: "---", precio: "---" },
+                        disk: [
+                            { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500", isGet: true },
+                            { id: 2, offset: 128, titulo: "Rayuela", autor: "Cortazar", precio: "22000" },
+                            { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                            { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" }
+                        ],
+                        log: { type: "info", text: "Inicio: cursor de lectura en byte 0." }
+                    },
+                    {
+                        line: 2,
+                        desc: "Cálculo de offset: (3 - 1) * 128 = 256 bytes desde el inicio.",
+                        stack: [
+                            { name: "pos1", type: "int", val: "3" },
+                            { name: "offset", type: "pos", val: "256 B", hl: true },
+                            { name: "tellg()", type: "pos", val: "0 B" }
+                        ],
+                        buffer: { titulo: "---", autor: "---", precio: "---" },
+                        disk: [
+                            { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                            { id: 2, offset: 128, titulo: "Rayuela", autor: "Cortazar", precio: "22000" },
+                            { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                            { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" }
+                        ],
+                        log: { type: "info", text: "Offset calculado: salto exacto a 256 bytes." },
+                        quiz: {
+                            question: "¿Por qué la fórmula resta 1 a pos1: (pos1 - 1) * sizeof(Registro)?",
+                            options: [
+                                "Porque los offsets comienzan en el byte 0 (el 1er registro está en offset 0).",
+                                "Para reservar un byte de cabecera reservado para el nombre del autor.",
+                                "Porque el sistema operativo resta un registro como margen de seguridad.",
+                                "Para sincronizar la lectura con el caracter de fin de archivo EOF."
+                            ],
+                            correctIndex: 0,
+                            explanation: "Exacto: la indexación es base 0. El 1er libro está en 0*128=0, el 2do en 1*128=128, el 3ro en 2*128=256."
+                        }
+                    },
+                    {
+                        line: 3,
+                        desc: "f.seekg(256, ios::beg): el cabezal de lectura salta en O(1) directo al Registro #3.",
+                        stack: [
+                            { name: "pos1", type: "int", val: "3" },
+                            { name: "offset", type: "pos", val: "256 B" },
+                            { name: "tellg()", type: "pos", val: "256 B", hl: true }
+                        ],
+                        buffer: { titulo: "---", autor: "---", precio: "---" },
+                        disk: [
+                            { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                            { id: 2, offset: 128, titulo: "Rayuela", autor: "Cortazar", precio: "22000" },
+                            { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000", isGet: true },
+                            { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" }
+                        ],
+                        log: { type: "seek", text: "SEEKG: Cabezal posicionado en byte 256 (Registro #3)." }
+                    },
+                    {
+                        line: 4,
+                        desc: "f.read((char*)&out, 128): se transfieren los 128 bytes del 3er libro al buffer RAM.",
+                        stack: [
+                            { name: "pos1", type: "int", val: "3" },
+                            { name: "offset", type: "pos", val: "256 B" },
+                            { name: "tellg()", type: "pos", val: "384 B", hl: true }
+                        ],
+                        buffer: { titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                        disk: [
+                            { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                            { id: 2, offset: 128, titulo: "Rayuela", autor: "Cortazar", precio: "22000" },
+                            { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                            { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" }
+                        ],
+                        log: { type: "read", text: "READ: Leído 'Ficciones' de Borges. tellg avanzó a 384." }
+                    }
+                ]
+            },
+
+            // NIVEL 3: Modificación In-Place con seekp (Guía 18 Ej 6.b)
+            {
+                id: 3,
+                fileName: "reemplazar_libro.cpp",
+                title: "Modificación seekp",
+                codeLines: [
+                    { num: 1, text: `<span class="tp">void</span> <span class="vr">modificarLibro</span>(<span class="tp">fstream</span>&amp; <span class="vr">f</span>, <span class="tp">int</span> <span class="vr">pos1</span>, <span class="kw">const</span> <span class="tp">Libro</span>&amp; <span class="vr">in</span>) {` },
+                    { num: 2, text: `    <span class="tp">int</span> <span class="vr">offset</span> = (<span class="vr">pos1</span> - <span class="nm">1</span>) * <span class="kw">sizeof</span>(<span class="tp">Libro</span>);` },
+                    { num: 3, text: `    <span class="vr">f</span>.<span class="vr">seekp</span>(<span class="vr">offset</span>, <span class="tp">ios</span>::<span class="vr">beg</span>);` },
+                    { num: 4, text: `    <span class="vr">f</span>.<span class="vr">write</span>((<span class="tp">char</span>*)&amp;<span class="vr">in</span>, <span class="kw">sizeof</span>(<span class="tp">Libro</span>));` },
+                    { num: 5, text: `}` }
+                ],
+                initialStack: [
+                    { name: "pos1", type: "int", val: "2" },
+                    { name: "offset", type: "pos", val: "---" },
+                    { name: "tellp()", type: "pos", val: "0 B" }
+                ],
+                initialDisk: [
+                    { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                    { id: 2, offset: 128, titulo: "Rayuela", autor: "Cortazar", precio: "22000" },
+                    { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                    { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" }
                 ],
                 steps: [
                     {
                         line: 2,
-                        desc: "new Nodo: se crea el nodo en 0x3C10 con dato 18 y sig = nullptr.",
+                        desc: "Reemplazo del 2do libro (pos1 = 2): offset = (2 - 1) * 128 = 128 bytes.",
                         stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0" },
-                            { name: "nuevo", type: "ptr", val: "0x3C10", hl: true },
-                            { name: "valor", type: "int", val: "18" }
+                            { name: "pos1", type: "int", val: "2" },
+                            { name: "offset", type: "pos", val: "128 B", hl: true },
+                            { name: "tellp()", type: "pos", val: "0 B" }
                         ],
-                        heap: [
-                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] },
-                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"], isNew: true }
+                        buffer: { titulo: "Bestiario", autor: "Cortazar", precio: "17500" },
+                        disk: [
+                            { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                            { id: 2, offset: 128, titulo: "Rayuela", autor: "Cortazar", precio: "22000" },
+                            { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                            { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" }
                         ],
-                        log: { type: "alloc", text: "Nodo reservado en 0x3C10 con valor 18." }
+                        log: { type: "info", text: "Preparando modificación in-place en offset 128." }
                     },
                     {
                         line: 3,
-                        desc: "act = cabeza: 'act' comienza apuntando al primer nodo (0x10A0).",
+                        desc: "f.seekp(128, ios::beg): el puntero de escritura se ubica exactamente sobre el Registro #2.",
                         stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0" },
-                            { name: "act", type: "ptr", val: "0x10A0", hl: true },
-                            { name: "ant", type: "ptr", val: "nullptr" },
-                            { name: "nuevo", type: "ptr", val: "0x3C10" }
+                            { name: "pos1", type: "int", val: "2" },
+                            { name: "offset", type: "pos", val: "128 B" },
+                            { name: "tellp()", type: "pos", val: "128 B", hl: true }
                         ],
-                        heap: [
-                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "act"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] },
-                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"] }
+                        buffer: { titulo: "Bestiario", autor: "Cortazar", precio: "17500" },
+                        disk: [
+                            { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                            { id: 2, offset: 128, titulo: "Rayuela", autor: "Cortazar", precio: "22000", isPut: true },
+                            { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                            { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" }
                         ],
-                        log: { type: "info", text: "Inicialización: act = 0x10A0, ant = nullptr." }
-                    },
-                    {
-                        line: 5,
-                        desc: "Evaluación while: act != nullptr (0x10A0) y 10 < 18 -> entra al ciclo.",
-                        stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0" },
-                            { name: "act", type: "ptr", val: "0x10A0" },
-                            { name: "ant", type: "ptr", val: "nullptr" },
-                            { name: "nuevo", type: "ptr", val: "0x3C10" }
-                        ],
-                        heap: [
-                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "act"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] },
-                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"] }
-                        ],
-                        log: { type: "info", text: "Condición while verdadera: 10 < 18." }
-                    },
-                    {
-                        line: 7,
-                        desc: "ant = act (0x10A0); act = act->sig (0x10B0). Avanzan ambos punteros.",
-                        stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0" },
-                            { name: "act", type: "ptr", val: "0x10B0", hl: true },
-                            { name: "ant", type: "ptr", val: "0x10A0", hl: true },
-                            { name: "nuevo", type: "ptr", val: "0x3C10" }
-                        ],
-                        heap: [
-                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: ["act"] },
-                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"] }
-                        ],
-                        log: { type: "info", text: "Avance: ant = 0x10A0, act = 0x10B0." }
-                    },
-                    {
-                        line: 5,
-                        desc: "Evaluación while: 25 < 18 es FALSO. Se encontró la posición de inserción.",
-                        stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0" },
-                            { name: "act", type: "ptr", val: "0x10B0" },
-                            { name: "ant", type: "ptr", val: "0x10A0" },
-                            { name: "nuevo", type: "ptr", val: "0x3C10" }
-                        ],
-                        heap: [
-                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: ["act"] },
-                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"] }
-                        ],
-                        log: { type: "info", text: "Fin del while: 25 >= 18. Posición encontrada." },
+                        log: { type: "seek", text: "SEEKP: Puntero de escritura posicionado en offset 128." },
                         quiz: {
-                            question: "¿Qué ocurriría si asignamos 'ant->sig = nuevo' ANTES de 'nuevo->sig = act'?",
+                            question: "¿Qué sucede con los libros 1, 3 y 4 al sobreescribir el 2do libro?",
                             options: [
-                                "Perderíamos la referencia al nodo act (0x10B0), provocando un memory leak.",
-                                "El sistema operativo reacomoda automáticamente los punteros del heap.",
-                                "El compilador generará un error en tiempo de ejecución de tipo stack overflow.",
-                                "El valor entero 18 se sobreescribirá en el nodo anterior 10."
+                                "Permanecen intactos en disco; solo se reemplazan los 128 bytes del registro 2.",
+                                "Se desplazan automáticamente 128 bytes hacia adelante en el archivo.",
+                                "Quedan corruptos porque el archivo binario debe reescribirse por completo.",
+                                "Se eliminan y el archivo se trunca hasta la posición del 2do registro."
                             ],
                             correctIndex: 0,
-                            explanation: "Exacto: si cambiamos 'ant->sig' primero, perdemos el puntero hacia el resto de la lista (nodo 25)."
+                            explanation: "Exacto: la magia del acceso directo es que modifica in-place únicamente los bytes del bloque deseado sin tocar el resto."
                         }
                     },
-                    {
-                        line: 9,
-                        desc: "nuevo->sig = act: 'nuevo' apunta al nodo 0x10B0 (con valor 25).",
-                        stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0" },
-                            { name: "act", type: "ptr", val: "0x10B0" },
-                            { name: "ant", type: "ptr", val: "0x10A0" },
-                            { name: "nuevo", type: "ptr", val: "0x3C10" }
-                        ],
-                        heap: [
-                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
-                            { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: ["nuevo"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: ["act"] }
-                        ],
-                        log: { type: "link", text: "Enlace: nuevo->sig apunta a act (0x10B0)." }
-                    },
-                    {
-                        line: 11,
-                        desc: "ant->sig = nuevo: el nodo 10 (ant) ahora apunta a 18 (nuevo). Lista enlazada.",
-                        stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0" },
-                            { name: "act", type: "ptr", val: "0x10B0" },
-                            { name: "ant", type: "ptr", val: "0x10A0" },
-                            { name: "nuevo", type: "ptr", val: "0x3C10" }
-                        ],
-                        heap: [
-                            { addr: "0x10A0", dato: 10, sig: "0x3C10", tags: ["cabeza", "ant"] },
-                            { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: ["nuevo"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: ["act"] }
-                        ],
-                        log: { type: "link", text: "Reconexión: ant->sig apunta a nuevo (0x3C10)." }
-                    }
-                ]
-            },
-
-            // NIVEL 3: Eliminación & Trampa del Puntero Perdido
-            {
-                id: 3,
-                fileName: "eliminar_nodo.cpp",
-                title: "Eliminación & Free Memory",
-                codeLines: [
-                    { num: 1, text: `<span class="tp">void</span> <span class="vr">eliminar</span>(<span class="tp">Nodo</span>*&amp; <span class="vr">cabeza</span>, <span class="tp">int</span> <span class="vr">valor</span>) {` },
-                    { num: 2, text: `    <span class="tp">Nodo</span>* <span class="vr">act</span> = <span class="vr">cabeza</span>;` },
-                    { num: 3, text: `    <span class="tp">Nodo</span>* <span class="vr">ant</span> = <span class="kw">nullptr</span>;` },
-                    { num: 4, text: `    <span class="kw">while</span> (<span class="vr">act</span> != <span class="kw">nullptr</span> &amp;&amp; <span class="vr">act</span>-&gt;<span class="vr">dato</span> != <span class="vr">valor</span>) {` },
-                    { num: 5, text: `        <span class="vr">ant</span> = <span class="vr">act</span>; <span class="vr">act</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
-                    { num: 6, text: `    }` },
-                    { num: 7, text: `    <span class="kw">if</span> (<span class="vr">act</span> != <span class="kw">nullptr</span>) {` },
-                    { num: 8, text: `        <span class="kw">if</span> (<span class="vr">ant</span> == <span class="kw">nullptr</span>) <span class="vr">cabeza</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
-                    { num: 9, text: `        <span class="kw">else</span> <span class="vr">ant</span>-&gt;<span class="vr">sig</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
-                    { num: 10, text: `        <span class="kw">delete</span> <span class="vr">act</span>;` },
-                    { num: 11, text: `    }` },
-                    { num: 12, text: `}` }
-                ],
-                initialStack: [
-                    { name: "cabeza", type: "ptr", val: "0x10A0" },
-                    { name: "valor", type: "int", val: "18" }
-                ],
-                initialHeap: [
-                    { addr: "0x10A0", dato: 10, sig: "0x3C10", tags: ["cabeza"] },
-                    { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: [] },
-                    { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
-                ],
-                steps: [
                     {
                         line: 4,
-                        desc: "Búsqueda: se localiza el nodo a eliminar (18) en 0x3C10 con ant en 0x10A0.",
+                        desc: "f.write: 'Rayuela' es sobreescrito por 'Bestiario' directamente en disco.",
                         stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0" },
-                            { name: "act", type: "ptr", val: "0x3C10", hl: true },
-                            { name: "ant", type: "ptr", val: "0x10A0", hl: true },
-                            { name: "valor", type: "int", val: "18" }
+                            { name: "pos1", type: "int", val: "2" },
+                            { name: "offset", type: "pos", val: "128 B" },
+                            { name: "tellp()", type: "pos", val: "256 B", hl: true }
                         ],
-                        heap: [
-                            { addr: "0x10A0", dato: 10, sig: "0x3C10", tags: ["cabeza", "ant"] },
-                            { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: ["act"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
+                        buffer: { titulo: "Bestiario", autor: "Cortazar", precio: "17500" },
+                        disk: [
+                            { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                            { id: 2, offset: 128, titulo: "Bestiario", autor: "Cortazar", precio: "17500", isUpdated: true },
+                            { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                            { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" }
                         ],
-                        log: { type: "info", text: "Nodo 18 encontrado en 0x3C10. Preparando desconexión." },
-                        quiz: {
-                            question: "¿Por qué es obligatorio reubicar ant->sig antes de ejecutar delete act?",
-                            options: [
-                                "Porque tras delete act su memoria queda liberada y leer act->sig es indefinido.",
-                                "Porque delete act borra automáticamente las variables estáticas del stack.",
-                                "Para que el compilador transforme el nodo 25 en la nueva cabeza de la lista.",
-                                "Porque la función delete solo acepta nodos que no tengan punteros siguientes."
-                            ],
-                            correctIndex: 0,
-                            explanation: "Exacto: desreferenciar un puntero después de destruirlo genera segmentation fault o comportamiento indefinido."
-                        }
-                    },
-                    {
-                        line: 9,
-                        desc: "ant->sig = act->sig: se desvía el puntero de 10 directamente a 25. 18 queda puenteado.",
-                        stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0" },
-                            { name: "act", type: "ptr", val: "0x3C10" },
-                            { name: "ant", type: "ptr", val: "0x10A0" }
-                        ],
-                        heap: [
-                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
-                            { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: ["act", "aBorrar"], isDeleting: true },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
-                        ],
-                        log: { type: "link", text: "Puente realizado: ant->sig (0x10A0) apunta ahora a 0x10B0." }
-                    },
-                    {
-                        line: 10,
-                        desc: "delete act: se libera el bloque 0x3C10 en el Heap. No hay fugas de memoria.",
-                        stack: [
-                            { name: "cabeza", type: "ptr", val: "0x10A0" },
-                            { name: "ant", type: "ptr", val: "0x10A0" }
-                        ],
-                        heap: [
-                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
-                        ],
-                        log: { type: "free", text: "Heap free: bloque 0x3C10 devuelto al sistema operativo." }
+                        log: { type: "write", text: "WRITE IN-PLACE: Registro 2 actualizado a 'Bestiario'. Tamaño 512B inalterado." }
                     }
                 ]
             },
 
-            // NIVEL 4: Algoritmo Guía 18 Ejercicio 2 (Poda de Tramos Desordenados)
+            // NIVEL 4: Conteo y Tamaño con tellg
             {
                 id: 4,
-                fileName: "depurar_tramos_ej2.cpp",
-                title: "Poda de Tramos (Guía 18 Ej 2)",
+                fileName: "contar_registros.cpp",
+                title: "Conteo con tellg",
                 codeLines: [
-                    { num: 1, text: `<span class="tp">void</span> <span class="vr">depurarLista</span>(<span class="tp">Nodo</span>*&amp; <span class="vr">cabeza</span>) {` },
-                    { num: 2, text: `    <span class="kw">if</span> (!<span class="vr">cabeza</span>) <span class="kw">return</span>;` },
-                    { num: 3, text: `    <span class="tp">Nodo</span>* <span class="vr">ant</span> = <span class="vr">cabeza</span>;` },
-                    { num: 4, text: `    <span class="tp">Nodo</span>* <span class="vr">act</span> = <span class="vr">cabeza</span>-&gt;<span class="vr">sig</span>;` },
-                    { num: 5, text: `    <span class="kw">while</span> (<span class="vr">act</span> != <span class="kw">nullptr</span>) {` },
-                    { num: 6, text: `        <span class="kw">if</span> (<span class="vr">act</span>-&gt;<span class="vr">dato</span> &gt; <span class="vr">ant</span>-&gt;<span class="vr">dato</span>) {` },
-                    { num: 7, text: `            <span class="vr">ant</span> = <span class="vr">act</span>; <span class="vr">act</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
-                    { num: 8, text: `        } <span class="kw">else</span> {` },
-                    { num: 9, text: `            <span class="tp">Nodo</span>* <span class="vr">aBorrar</span> = <span class="vr">act</span>;` },
-                    { num: 10, text: `            <span class="vr">act</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
-                    { num: 11, text: `            <span class="vr">ant</span>-&gt;<span class="vr">sig</span> = <span class="vr">act</span>;` },
-                    { num: 12, text: `            <span class="kw">delete</span> <span class="vr">aBorrar</span>;` },
-                    { num: 13, text: `        }` },
-                    { num: 14, text: `    }` },
-                    { num: 15, text: `}` }
+                    { num: 1, text: `<span class="tp">int</span> <span class="vr">contarRegistros</span>(<span class="tp">ifstream</span>&amp; <span class="vr">f</span>) {` },
+                    { num: 2, text: `    <span class="vr">f</span>.<span class="vr">seekg</span>(<span class="nm">0</span>, <span class="tp">ios</span>::<span class="vr">end</span>); <span class="cm">// Salto al final</span>` },
+                    { num: 3, text: `    <span class="tp">streampos</span> <span class="vr">bytes</span> = <span class="vr">f</span>.<span class="vr">tellg</span>();` },
+                    { num: 4, text: `    <span class="vr">f</span>.<span class="vr">seekg</span>(<span class="nm">0</span>, <span class="tp">ios</span>::<span class="vr">beg</span>); <span class="cm">// Rebobinar</span>` },
+                    { num: 5, text: `    <span class="kw">return</span> <span class="vr">bytes</span> / <span class="kw">sizeof</span>(<span class="tp">Libro</span>);` },
+                    { num: 6, text: `}` }
                 ],
                 initialStack: [
-                    { name: "cabeza", type: "ptr", val: "0x1010" }
+                    { name: "bytes", type: "pos", val: "---" },
+                    { name: "tellg()", type: "pos", val: "0 B" }
                 ],
-                initialHeap: [
-                    { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
-                    { addr: "0x1020", dato: 6, sig: "0x1030", tags: [] },
-                    { addr: "0x1030", dato: 3, sig: "0x1040", tags: [] },
-                    { addr: "0x1040", dato: 7, sig: "nullptr", tags: [] }
+                initialDisk: [
+                    { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                    { id: 2, offset: 128, titulo: "Bestiario", autor: "Cortazar", precio: "17500" },
+                    { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                    { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" }
                 ],
                 steps: [
                     {
-                        line: 4,
-                        desc: "Inicio de inspección: ant = 4 (0x1010), act = 6 (0x1020).",
+                        line: 2,
+                        desc: "f.seekg(0, ios::end): salta instantáneamente al final de los 512 bytes del archivo.",
                         stack: [
-                            { name: "cabeza", type: "ptr", val: "0x1010" },
-                            { name: "ant", type: "ptr", val: "0x1010", hl: true },
-                            { name: "act", type: "ptr", val: "0x1020", hl: true }
+                            { name: "bytes", type: "pos", val: "---" },
+                            { name: "tellg()", type: "pos", val: "512 B", hl: true }
                         ],
-                        heap: [
-                            { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza", "ant"] },
-                            { addr: "0x1020", dato: 6, sig: "0x1030", tags: ["act"] },
-                            { addr: "0x1030", dato: 3, sig: "0x1040", tags: [] },
-                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: [] }
+                        buffer: { titulo: "---", autor: "---", precio: "---" },
+                        disk: [
+                            { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                            { id: 2, offset: 128, titulo: "Bestiario", autor: "Cortazar", precio: "17500" },
+                            { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                            { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000", isGet: true }
                         ],
-                        log: { type: "info", text: "Inspeccionando tramo: ant->dato = 4, act->dato = 6." }
+                        log: { type: "seek", text: "SEEKG END: Cursor en EOF (512 bytes)." }
                     },
                     {
-                        line: 6,
-                        desc: "act->dato > ant->dato (6 > 4): Es creciente. ant y act avanzan normalmente.",
+                        line: 3,
+                        desc: "streampos bytes = f.tellg(): obtiene la cantidad total de bytes en disco (512).",
                         stack: [
-                            { name: "cabeza", type: "ptr", val: "0x1010" },
-                            { name: "ant", type: "ptr", val: "0x1020", hl: true },
-                            { name: "act", type: "ptr", val: "0x1030", hl: true }
+                            { name: "bytes", type: "pos", val: "512 B", hl: true },
+                            { name: "tellg()", type: "pos", val: "512 B" }
                         ],
-                        heap: [
-                            { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
-                            { addr: "0x1020", dato: 6, sig: "0x1030", tags: ["ant"] },
-                            { addr: "0x1030", dato: 3, sig: "0x1040", tags: ["act"] },
-                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: [] }
+                        buffer: { titulo: "---", autor: "---", precio: "---" },
+                        disk: [
+                            { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500" },
+                            { id: 2, offset: 128, titulo: "Bestiario", autor: "Cortazar", precio: "17500" },
+                            { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                            { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" }
                         ],
-                        log: { type: "info", text: "Orden correcto: 6 > 4. ant avanza a 6, act pasa a 3." }
-                    },
-                    {
-                        line: 8,
-                        desc: "act->dato > ant->dato (3 > 6) es FALSO. ¡Se detectó ruptura del orden creciente!",
-                        stack: [
-                            { name: "cabeza", type: "ptr", val: "0x1010" },
-                            { name: "ant", type: "ptr", val: "0x1020" },
-                            { name: "act", type: "ptr", val: "0x1030" }
-                        ],
-                        heap: [
-                            { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
-                            { addr: "0x1020", dato: 6, sig: "0x1030", tags: ["ant"] },
-                            { addr: "0x1030", dato: 3, sig: "0x1040", tags: ["act"] },
-                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: [] }
-                        ],
-                        log: { type: "info", text: "ALERTA: 3 no es mayor que 6. Tramo desordenado detectado." },
+                        log: { type: "info", text: "TELLG: Total = 512 bytes registrados." },
                         quiz: {
-                            question: "¿Cómo debe proceder la función para corregir la lista sin mover 'ant'?",
+                            question: "¿Por qué es fundamental ejecutar f.seekg(0, ios::beg) tras obtener el tamaño?",
                             options: [
-                                "Eliminar el nodo 3 liberando su memoria y reconectar el 6 con el 7.",
-                                "Avanzar el puntero ant al nodo 3 y continuar la comparación hacia adelante.",
-                                "Sobrescribir el dato del nodo 3 con un valor mayor a 6 aleatorio.",
-                                "Intercambiar los punteros siguientes de los nodos 6 y 3 directamente."
+                                "Para rebobinar el cursor al inicio y poder leer registros posteriormente.",
+                                "Porque el sistema operativo cerrará el archivo si el cursor queda en el final.",
+                                "Para vaciar la memoria RAM utilizada por el objeto ifstream.",
+                                "Para recalcular automáticamente la división entre bytes y sizeof."
                             ],
                             correctIndex: 0,
-                            explanation: "Exacto: ant permanece en el último nodo válido (6), mientras eliminamos los nodos no crecientes."
+                            explanation: "Exacto: si no rebobinamos, cualquier f.read() posterior fallará inmediatamente porque el cursor quedó en EOF."
                         }
                     },
                     {
-                        line: 11,
-                        desc: "aBorrar = act (3); act = 7; ant->sig = act (6 apunta a 7). Tramo puenteado.",
+                        line: 5,
+                        desc: "return 512 / 128 = 4 registros. Conteo exacto en O(1) sin recorrer el archivo.",
                         stack: [
-                            { name: "cabeza", type: "ptr", val: "0x1010" },
-                            { name: "ant", type: "ptr", val: "0x1020" },
-                            { name: "act", type: "ptr", val: "0x1040", hl: true },
-                            { name: "aBorrar", type: "ptr", val: "0x1030" }
+                            { name: "total", type: "int", val: "4 registros", hl: true },
+                            { name: "tellg()", type: "pos", val: "0 B" }
                         ],
-                        heap: [
-                            { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
-                            { addr: "0x1020", dato: 6, sig: "0x1040", tags: ["ant"] },
-                            { addr: "0x1030", dato: 3, sig: "0x1040", tags: ["aBorrar"], isDeleting: true },
-                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: ["act"] }
+                        buffer: { titulo: "---", autor: "---", precio: "---" },
+                        disk: [
+                            { id: 1, offset: 0, titulo: "El Aleph", autor: "Borges", precio: "18500", isGet: true },
+                            { id: 2, offset: 128, titulo: "Bestiario", autor: "Cortazar", precio: "17500" },
+                            { id: 3, offset: 256, titulo: "Ficciones", autor: "Borges", precio: "19000" },
+                            { id: 4, offset: 384, titulo: "Cien Anios", autor: "G. Marquez", precio: "26000" }
                         ],
-                        log: { type: "link", text: "Puente: ant (0x1020) conectado directamente a act (0x1040)." }
-                    },
-                    {
-                        line: 12,
-                        desc: "delete aBorrar: se libera el nodo 3. Se preserva el orden '4 -> 6 -> 7'.",
-                        stack: [
-                            { name: "cabeza", type: "ptr", val: "0x1010" },
-                            { name: "ant", type: "ptr", val: "0x1020" },
-                            { name: "act", type: "ptr", val: "0x1040" }
-                        ],
-                        heap: [
-                            { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
-                            { addr: "0x1020", dato: 6, sig: "0x1040", tags: ["ant"] },
-                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: ["act"] }
-                        ],
-                        log: { type: "free", text: "delete: memoria del nodo con valor 3 liberada con éxito." }
-                    },
-                    {
-                        line: 7,
-                        desc: "Siguiente comparación: 7 > 6 es VERDADERO. ant pasa a 7 y act finaliza en nullptr.",
-                        stack: [
-                            { name: "cabeza", type: "ptr", val: "0x1010" },
-                            { name: "ant", type: "ptr", val: "0x1040", hl: true },
-                            { name: "act", type: "ptr", val: "nullptr", hl: true }
-                        ],
-                        heap: [
-                            { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
-                            { addr: "0x1020", dato: 6, sig: "0x1040", tags: [] },
-                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: ["ant"] }
-                        ],
-                        log: { type: "info", text: "Depuración finalizada. Lista resultante limpia y creciente." }
+                        log: { type: "info", text: "Cálculo final: 512B / 128B = 4 registros en O(1)." }
                     }
                 ]
             }
         ];
 
         // =========================================================================
-        // CONTROLADORES DE RENDERIZADO
+        // CONTROLADORES
         // =========================================================================
         function switchLevel(index) {
             currentLevelIndex = index;
@@ -1526,7 +1364,6 @@
             const lvl = levels[index];
             document.getElementById("editor-file-name").innerText = lvl.fileName;
 
-            // Renderizar lineas de código
             const codeContainer = document.getElementById("code-container");
             codeContainer.innerHTML = lvl.codeLines.map(line => `
                 <div class="code-row" id="code-row-${line.num}">
@@ -1543,11 +1380,9 @@
             const lvl = levels[currentLevelIndex];
             const step = lvl.steps[stepIdx];
 
-            // Actualizar Badge y Descripción
             document.getElementById("step-badge").innerText = `Paso ${stepIdx + 1}/${lvl.steps.length}`;
             document.getElementById("step-desc").innerText = step.desc;
 
-            // Resaltar línea de código
             document.querySelectorAll(".code-row").forEach(r => r.classList.remove("active"));
             const activeRow = document.getElementById(`code-row-${step.line}`);
             if (activeRow) {
@@ -1555,84 +1390,59 @@
                 activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
 
-            // Renderizar Stack
+            // Stack
             const stackGrid = document.getElementById("stack-grid");
             stackGrid.innerHTML = step.stack.map(v => `
                 <div class="stack-var-box ${v.hl ? 'highlight' : ''}">
                     <div class="stack-var-name">
                         <span>${v.name}</span>
-                        <span class="stack-var-badge ${v.type === 'ptr' ? 'badge-ptr' : 'badge-int'}">${v.type === 'ptr' ? 'ptr' : 'int'}</span>
+                        <span class="stack-var-badge ${v.type === 'pos' ? 'badge-streampos' : 'badge-int'}">${v.type}</span>
                     </div>
                     <div class="stack-var-value">${v.val}</div>
                 </div>
             `).join("");
 
-            // Renderizar Heap Canvas
-            const chain = document.getElementById("nodes-chain");
-            chain.innerHTML = "";
+            // Buffer
+            if (step.buffer) {
+                document.getElementById("buf-titulo").innerText = step.buffer.titulo;
+                document.getElementById("buf-autor").innerText = step.buffer.autor;
+                document.getElementById("buf-precio").innerText = step.buffer.precio !== "---" ? "$" + step.buffer.precio : "---";
+            }
 
-            step.heap.forEach((node, i) => {
-                const wrapper = document.createElement("div");
-                wrapper.className = "node-wrapper";
+            // Disk Blocks
+            const diskRow = document.getElementById("disk-blocks-row");
+            diskRow.innerHTML = "";
 
-                // Overlays de punteros
-                let tagsHtml = "";
-                if (node.tags && node.tags.length > 0) {
-                    tagsHtml = `<div class="node-tags-overlay">` +
-                        node.tags.map(t => {
-                            if (t === "cabeza") return `<span class="pointer-tag tag-cabeza">cabeza</span>`;
-                            if (t === "ant") return `<span class="pointer-tag tag-ant">ant</span>`;
-                            if (t === "act") return `<span class="pointer-tag tag-act">act</span>`;
-                            if (t === "nuevo") return `<span class="pointer-tag tag-nuevo">nuevo</span>`;
-                            if (t === "aBorrar") return `<span class="pointer-tag tag-aborrar"><i class="fa-solid fa-trash-can"></i> delete</span>`;
-                            return `<span class="pointer-tag tag-act">${t}</span>`;
-                        }).join("") + `</div>`;
+            step.disk.forEach((reg) => {
+                const block = document.createElement("div");
+                let cls = "disk-block";
+                let tagHtml = "";
+                if (reg.isGet) {
+                    cls += " active-get";
+                    tagHtml = `<div class="seek-pointer-tag tag-seekg"><i class="fa-solid fa-crosshairs"></i> seekg (byte ${reg.offset})</div>`;
                 }
+                if (reg.isPut) {
+                    cls += " active-put";
+                    tagHtml = `<div class="seek-pointer-tag tag-seekp"><i class="fa-solid fa-pen"></i> seekp (byte ${reg.offset})</div>`;
+                }
+                block.className = cls;
 
-                const cardClass = `node-card ${node.isNew ? 'highlight-nuevo' : ''} ${node.isDeleting ? 'deleting' : ''}`;
-
-                wrapper.innerHTML = `
-                    ${tagsHtml}
-                    <div class="${cardClass}">
-                        <div class="node-addr-bar">
-                            <span><i class="fa-solid fa-memory"></i> ${node.addr}</span>
-                            <span style="font-size:7px; color: #64748B;">Nodo</span>
-                        </div>
-                        <div class="node-body">
-                            <div class="node-field-dato">
-                                <span class="node-field-lbl">dato</span>
-                                <span class="node-field-val">${node.dato}</span>
-                            </div>
-                            <div class="node-field-sig">
-                                <span class="node-field-lbl">sig</span>
-                                <div class="sig-dot" title="Apunta a: ${node.sig}"></div>
-                            </div>
-                        </div>
+                block.innerHTML = `
+                    ${tagHtml}
+                    <div class="disk-block-header">
+                        <span>Reg #${reg.id}</span>
+                        <span>${reg.offset}B</span>
+                    </div>
+                    <div class="disk-block-content">
+                        <div class="block-title">${reg.titulo}</div>
+                        <div class="block-detail"><span>Autor:</span> <span>${reg.autor}</span></div>
+                        <div class="block-detail"><span>Precio:</span> <span>$${reg.precio}</span></div>
                     </div>
                 `;
-
-                chain.appendChild(wrapper);
-
-                // Agregar flecha
-                if (node.sig === "nullptr") {
-                    const arrowDiv = document.createElement("div");
-                    arrowDiv.className = "node-arrow";
-                    arrowDiv.innerHTML = `<i class="fa-solid fa-arrow-right"></i>`;
-                    chain.appendChild(arrowDiv);
-
-                    const nullDiv = document.createElement("div");
-                    nullDiv.className = "null-badge";
-                    nullDiv.innerHTML = `<i class="fa-solid fa-ban"></i> nullptr`;
-                    chain.appendChild(nullDiv);
-                } else if (i < step.heap.length - 1) {
-                    const arrowDiv = document.createElement("div");
-                    arrowDiv.className = "node-arrow";
-                    arrowDiv.innerHTML = `<i class="fa-solid fa-arrow-right"></i>`;
-                    chain.appendChild(arrowDiv);
-                }
+                diskRow.appendChild(block);
             });
 
-            // Log de Terminal
+            // Log Terminal
             if (step.log) {
                 const now = new Date();
                 const timeStr = `[${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}]`;
@@ -1646,7 +1456,7 @@
                 term.insertBefore(line, term.firstChild);
             }
 
-            // Desafío Quiz
+            // Quiz
             if (step.quiz) {
                 if (autoPlayTimer) {
                     clearInterval(autoPlayTimer);
@@ -1705,7 +1515,7 @@
         }
 
         // =========================================================================
-        // QUIZ LOGIC
+        // QUIZ
         // =========================================================================
         function openQuiz(quizData) {
             isWaitingForQuiz = true;
@@ -1758,18 +1568,14 @@
             isWaitingForQuiz = false;
         }
 
-        // =========================================================================
-        // ATAJOS DE TECLADO Y RECONOCIMIENTO DE IFRAME
-        // =========================================================================
         function initApp() {
             if (window.self !== window.top) {
-                // Embebido dentro del iframe de la diapositiva Reveal.js
                 const returnBtn = document.querySelector('.btn-return-slides');
                 if (returnBtn) {
                     returnBtn.innerHTML = '<i class="fa-solid fa-up-right-from-square"></i> Pestaña Nueva';
                     returnBtn.href = 'index.html';
                     returnBtn.target = '_blank';
-                    returnBtn.title = 'Abrir Pointer Inspector en ventana completa';
+                    returnBtn.title = 'Abrir simulador en pantalla completa';
                 }
             }
             switchLevel(0);

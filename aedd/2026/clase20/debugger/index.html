@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Pointer Inspector: Simulador de Listas Enlazadas & Heap | AEDD - UTN FRSF</title>
+
+    <!-- Google Fonts & Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --cyan-accent: #38BDF8;
+            --cyan-dark: #0284C7;
+            --bg-dark: #090D16;
+            --panel-bg: #0F172A;
+            --panel-border: rgba(56, 189, 248, 0.22);
+            --code-bg: #070B12;
+            --danger-red: #EF4444;
+            --success-green: #10B981;
+            --warning-amber: #F59E0B;
+            --purple-accent: #A855F7;
+            --text-main: #F8FAFC;
+            --text-dim: #94A3B8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100vh;
+            max-height: 100vh;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 8px 12px;
+        }
+
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.12) 50%);
+            z-index: 900;
+            background-size: 100% 3px;
+            pointer-events: none;
+            opacity: 0.35;
+        }
+
+        /* HEADER HUD */
+        header {
+            width: 100%;
+            max-width: 1320px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 14px;
+            background: rgba(15, 23, 42, 0.94);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 6px;
+            flex-shrink: 0;
+            z-index: 20;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            background: var(--utn-gold);
+            color: var(--utn-blue);
+            font-weight: 900;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.8px;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.35);
+        }
+
+        .brand-titles {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14.5px;
+            font-weight: 800;
+            color: #F8FAFC;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-sub {
+            font-size: 10px;
+            color: var(--cyan-accent);
+            text-transform: uppercase;
+            letter-spacing: 1.1px;
+            font-weight: 600;
+        }
+
+        /* SELECTOR DE NIVELES */
+        .level-selector-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(8, 12, 22, 0.85);
+            padding: 3px 6px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .level-tab-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #94A3B8;
+            padding: 5px 11px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .level-tab-btn:hover {
+            color: #F8FAFC;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .level-tab-btn.active {
+            background: rgba(56, 189, 248, 0.16);
+            border-color: var(--cyan-accent);
+            color: #38BDF8;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+        }
+
+        .hud-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hud-stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 4px 9px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+        .hud-stat-pill.score {
+            border-color: rgba(255, 193, 7, 0.45);
+            color: #FEF08A;
+        }
+        .hud-stat-pill.streak {
+            border-color: rgba(244, 63, 94, 0.45);
+            color: #FDA4AF;
+        }
+
+        .btn-return-slides {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 43, 91, 0.8);
+            border: 1px solid var(--utn-gold);
+            color: var(--utn-gold);
+            text-decoration: none;
+            padding: 4px 11px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+        .btn-return-slides:hover {
+            background: var(--utn-gold);
+            color: var(--utn-blue);
+            transform: translateY(-1px);
+        }
+
+        /* WORKSPACE PRINCIPAL EN GRID */
+        .workspace-grid {
+            width: 100%;
+            max-width: 1320px;
+            display: grid;
+            grid-template-columns: 1fr 1.05fr;
+            grid-template-rows: 1fr;
+            height: calc(100vh - 62px);
+            max-height: calc(100vh - 62px);
+            gap: 8px;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        /* PANEL IZQUIERDO: EDITOR C++ */
+        .editor-container {
+            background: var(--code-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            min-height: 0;
+        }
+
+        .editor-tab-bar {
+            background: #0D1322;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            flex-shrink: 0;
+        }
+
+        .editor-tab-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            color: #94A3B8;
+        }
+
+        .editor-tab-title span {
+            color: #E2E8F0;
+            font-weight: 600;
+        }
+
+        .editor-scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            line-height: 1.45;
+            min-height: 0;
+        }
+
+        .code-row {
+            display: flex;
+            align-items: center;
+            padding: 1px 0;
+            transition: background 0.15s ease;
+            position: relative;
+        }
+
+        .code-row.active {
+            background: rgba(255, 193, 7, 0.18);
+            border-left: 3px solid var(--utn-gold);
+        }
+
+        .row-pointer {
+            width: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--utn-gold);
+            font-size: 10px;
+            opacity: 0;
+        }
+
+        .code-row.active .row-pointer {
+            opacity: 1;
+            animation: pointerPulse 0.9s infinite alternate;
+        }
+
+        @keyframes pointerPulse {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(3px); }
+        }
+
+        .row-number {
+            width: 28px;
+            color: #475569;
+            text-align: right;
+            padding-right: 10px;
+            font-size: 11px;
+            user-select: none;
+        }
+
+        .row-text {
+            flex: 1;
+            white-space: pre;
+        }
+
+        /* Syntax colors */
+        .kw { color: #F472B6; font-weight: 600; }
+        .tp { color: #38BDF8; font-weight: 600; }
+        .vr { color: #F8FAFC; }
+        .nm { color: #FBBF24; }
+        .st { color: #34D399; }
+        .op { color: #CBD5E1; font-weight: bold; }
+        .cm { color: #64748B; font-style: italic; }
+
+        /* STEPPER CONTROL BAR */
+        .stepper-controls-bar {
+            background: rgba(15, 23, 42, 0.96);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .explanation-text {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            color: #E2E8F0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .explanation-badge {
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--cyan-accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .stepper-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .step-btn {
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #E2E8F0;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+        }
+        .step-btn:hover:not(:disabled) {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: var(--cyan-accent);
+            color: white;
+            transform: translateY(-1px);
+        }
+        .step-btn.primary {
+            background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+            border-color: #38BDF8;
+            color: white;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
+        }
+        .step-btn.primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #0369A1 0%, #0284C7 100%);
+            box-shadow: 0 3px 12px rgba(56, 189, 248, 0.5);
+        }
+        .step-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* PANEL DERECHO: OBSERVADOR DE HEAP Y MEMORIA */
+        .inspector-column {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-height: 0;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+
+        .panel-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            padding: 6px 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .panel-header-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--cyan-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        /* STACK VARIABLES TABLE */
+        .stack-vars-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .stack-var-box {
+            background: #070B12;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 4px 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            transition: all 0.25s ease;
+        }
+        .stack-var-box.highlight {
+            border-color: var(--utn-gold);
+            background: rgba(255, 193, 7, 0.08);
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.2);
+        }
+
+        .stack-var-name {
+            font-size: 9.5px;
+            color: #94A3B8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .stack-var-badge {
+            font-size: 8px;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-weight: 700;
+        }
+        .badge-ptr { background: rgba(56, 189, 248, 0.2); color: #38BDF8; }
+        .badge-int { background: rgba(245, 158, 11, 0.2); color: #FBBF24; }
+
+        .stack-var-value {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+
+        /* HEAP CANVAS */
+        .heap-canvas-area {
+            background: #070B12;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 10px 14px 10px;
+            min-height: 185px;
+            display: flex;
+            align-items: center;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .nodes-chain {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: max-content;
+            padding: 24px 6px 6px 6px;
+            position: relative;
+        }
+
+        /* NODO VISUAL */
+        .node-wrapper {
+            display: flex;
+            align-items: center;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .node-tags-overlay {
+            position: absolute;
+            top: -24px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .pointer-tag {
+            font-family: 'Poppins', sans-serif;
+            font-size: 8px;
+            font-weight: 800;
+            padding: 2px 5px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            animation: tagBounce 0.4s ease-out;
+        }
+        @keyframes tagBounce {
+            0% { transform: translateY(-5px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .tag-cabeza { background: var(--utn-gold); color: #002B5B; }
+        .tag-ant { background: #3B82F6; color: white; }
+        .tag-act { background: #06B6D4; color: #082F49; }
+        .tag-nuevo { background: #A855F7; color: white; border: 1px solid #D8B4FE; }
+        .tag-aborrar { background: var(--danger-red); color: white; animation: pulseRed 0.8s infinite alternate; }
+
+        @keyframes pulseRed {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.08); }
+        }
+
+        .node-card {
+            background: #0F172A;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+            width: 104px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .node-card.highlight-act {
+            border-color: #06B6D4;
+            box-shadow: 0 0 14px rgba(6, 182, 212, 0.45);
+        }
+        .node-card.highlight-nuevo {
+            border-color: #A855F7;
+            box-shadow: 0 0 14px rgba(168, 85, 247, 0.5);
+            animation: dropIn 0.35s ease;
+        }
+        @keyframes dropIn {
+            0% { transform: translateY(-12px); opacity: 0.3; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .node-card.deleting {
+            border-color: var(--danger-red);
+            background: rgba(239, 68, 68, 0.15);
+            transform: scale(0.92);
+            opacity: 0.6;
+        }
+
+        .node-addr-bar {
+            background: #1E293B;
+            font-family: 'Fira Code', monospace;
+            font-size: 8.5px;
+            color: #94A3B8;
+            padding: 2px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .node-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 40px;
+        }
+
+        .node-field-dato {
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .node-field-lbl {
+            font-size: 7.5px;
+            color: #64748B;
+            text-transform: uppercase;
+        }
+        .node-field-val {
+            font-family: 'Fira Code', monospace;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+
+        .node-field-sig {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(30, 41, 59, 0.3);
+            position: relative;
+        }
+
+        .sig-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--cyan-accent);
+            box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sig-dot::after {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: #090D16;
+            border-radius: 50%;
+        }
+
+        /* FLECHA DE CONEXIÓN */
+        .node-arrow {
+            width: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan-accent);
+            font-size: 12px;
+            transition: all 0.25s ease;
+        }
+
+        .null-badge {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px dashed rgba(239, 68, 68, 0.45);
+            color: #F87171;
+            font-family: 'Fira Code', monospace;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 4px 6px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* CONSOLA DE SALIDA */
+        .terminal-box {
+            background: #070B12;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-family: 'Fira Code', monospace;
+            font-size: 10.5px;
+            height: 80px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 2px;
+        }
+
+        .terminal-line {
+            display: flex;
+            gap: 6px;
+            line-height: 1.35;
+        }
+        .terminal-time { color: #64748B; font-size: 9.5px; }
+        .terminal-msg { color: #E2E8F0; }
+        .terminal-msg.alloc { color: #A855F7; }
+        .terminal-msg.free { color: #EF4444; }
+        .terminal-msg.link { color: #38BDF8; }
+        .terminal-msg.info { color: #FBBF24; }
+
+        /* QUIZ MODAL */
+        .quiz-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 14px;
+        }
+
+        .quiz-overlay.open {
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .quiz-card {
+            background: #0F172A;
+            border: 2px solid var(--utn-gold);
+            border-radius: 14px;
+            width: 100%;
+            max-width: 580px;
+            padding: 16px 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.7), 0 0 25px rgba(255, 193, 7, 0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .quiz-badge {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--utn-gold);
+            border: 1px solid var(--utn-gold);
+            font-size: 10.5px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.6px;
+        }
+
+        .quiz-question {
+            font-size: 14px;
+            font-weight: 600;
+            color: #F8FAFC;
+            line-height: 1.4;
+        }
+
+        .quiz-options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .quiz-opt-btn {
+            background: #1E293B;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            padding: 8px 12px;
+            text-align: left;
+            font-size: 12px;
+            color: #E2E8F0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .quiz-opt-btn:hover:not(:disabled) {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: #38BDF8;
+            color: white;
+            transform: translateX(3px);
+        }
+        .quiz-opt-btn.correct {
+            background: rgba(16, 185, 129, 0.25) !important;
+            border-color: var(--success-green) !important;
+            color: #A7F3D0 !important;
+        }
+        .quiz-opt-btn.wrong {
+            background: rgba(239, 68, 68, 0.25) !important;
+            border-color: var(--danger-red) !important;
+            color: #FECACA !important;
+        }
+
+        .quiz-opt-letter {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .quiz-feedback {
+            font-size: 11.5px;
+            line-height: 1.4;
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: none;
+        }
+        .quiz-feedback.success {
+            display: block;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--success-green);
+            color: #A7F3D0;
+        }
+        .quiz-feedback.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger-red);
+            color: #FECACA;
+        }
+
+        .quiz-btn-continue {
+            background: var(--utn-gold);
+            color: var(--utn-blue);
+            font-weight: 800;
+            font-size: 12px;
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            align-self: flex-end;
+            display: none;
+            transition: all 0.2s ease;
+        }
+        .quiz-btn-continue:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER HUD -->
+    <header>
+        <div class="brand-box">
+            <span class="brand-badge">AEDD</span>
+            <div class="brand-titles">
+                <span class="brand-title">
+                    <i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i> Pointer Inspector
+                </span>
+                <span class="brand-sub">Estructuras Dinámicas & Gestión de Heap</span>
+            </div>
+        </div>
+
+        <div class="level-selector-row">
+            <button class="level-tab-btn active" onclick="switchLevel(0)">
+                <i class="fa-solid fa-plus-circle"></i> N1: Inserción Inicio
+            </button>
+            <button class="level-tab-btn" onclick="switchLevel(1)">
+                <i class="fa-solid fa-arrow-down-short-wide"></i> N2: Inserción Ordenada
+            </button>
+            <button class="level-tab-btn" onclick="switchLevel(2)">
+                <i class="fa-solid fa-trash-can"></i> N3: Eliminación & Delete
+            </button>
+            <button class="level-tab-btn" onclick="switchLevel(3)">
+                <i class="fa-solid fa-scissors"></i> N4: Poda Tramos (Ej 2)
+            </button>
+        </div>
+
+        <div class="hud-actions">
+            <div class="hud-stat-pill score">
+                <i class="fa-solid fa-star" style="color: var(--utn-gold);"></i>
+                <span id="score-counter">100 pts</span>
+            </div>
+            <div class="hud-stat-pill streak">
+                <i class="fa-solid fa-fire" style="color: #F43F5E;"></i>
+                <span id="streak-counter">0x racha</span>
+            </div>
+            <a href="../index.html" class="btn-return-slides">
+                <i class="fa-solid fa-arrow-left"></i> Diapositiva
+            </a>
+        </div>
+    </header>
+
+    <!-- WORKSPACE GRID -->
+    <div class="workspace-grid">
+
+        <!-- PANEL IZQUIERDO: EDITOR C++ Y STEPPER -->
+        <div class="editor-container">
+            <div class="editor-tab-bar">
+                <div class="editor-tab-title">
+                    <i class="fa-solid fa-file-code" style="color: var(--cyan-accent);"></i>
+                    <span id="editor-file-name">insercion_inicio.cpp</span>
+                </div>
+                <div style="font-size: 10px; color: #64748B;">
+                    C++ ISO 2020 | UTN FRSF
+                </div>
+            </div>
+
+            <div class="editor-scroll-area" id="code-container">
+                <!-- Se inyecta dinamicamente con las lineas de codigo del nivel -->
+            </div>
+
+            <div class="stepper-controls-bar">
+                <div class="explanation-text">
+                    <span class="explanation-badge" id="step-badge">Paso 0/0</span>
+                    <span id="step-desc">Presiona F8 o Siguiente Paso para comenzar.</span>
+                </div>
+                <div class="stepper-actions">
+                    <button class="step-btn" onclick="resetCurrentLevel()" title="Reiniciar nivel (F5)">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                    <button class="step-btn" id="btn-autoplay" onclick="toggleAutoPlay()" title="Reproducción automática (Espacio)">
+                        <i class="fa-solid fa-play"></i> Auto
+                    </button>
+                    <button class="step-btn primary" id="btn-next-step" onclick="executeNextStep()" title="Avanzar línea (F8)">
+                        <i class="fa-solid fa-forward-step"></i> Siguiente
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL DERECHO: OBSERVADOR DE HEAP Y MEMORIA -->
+        <div class="inspector-column">
+
+            <!-- TABLA DE PUNTEROS EN STACK -->
+            <div class="panel-card">
+                <div class="panel-header-title">
+                    <span><i class="fa-solid fa-layer-group"></i> Punteros y Variables en Stack (RAM)</span>
+                    <span style="font-size: 9px; color: #64748B;">Alcance Local</span>
+                </div>
+                <div class="stack-vars-grid" id="stack-grid">
+                    <!-- Se inyecta con variables cabeza, act, ant, nuevo, etc. -->
+                </div>
+            </div>
+
+            <!-- CANVAS VISUAL DEL HEAP -->
+            <div class="panel-card" style="flex: 1; display: flex; flex-direction: column;">
+                <div class="panel-header-title">
+                    <span><i class="fa-solid fa-network-wired"></i> Memoria Dinámica Heap (Nodos Enlazados)</span>
+                    <span style="font-size: 9px; color: var(--utn-gold);">Direcciones Hexadecimales</span>
+                </div>
+                <div class="heap-canvas-area" id="heap-canvas">
+                    <div class="nodes-chain" id="nodes-chain">
+                        <!-- Nodos renderizados dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOG TERMINAL DE EJECUCIÓN -->
+            <div class="panel-card">
+                <div class="panel-header-title">
+                    <span><i class="fa-solid fa-terminal"></i> Log de Asignaciones y Punteros</span>
+                    <span style="font-size: 9px; color: #64748B;">stdout / kernel</span>
+                </div>
+                <div class="terminal-box" id="terminal-log">
+                    <div class="terminal-line">
+                        <span class="terminal-time">[00:00:00]</span>
+                        <span class="terminal-msg info">Pointer Inspector inicializado. Listo para trazar.</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- QUIZ MODAL OVERLAY -->
+    <div class="quiz-overlay" id="quiz-modal">
+        <div class="quiz-card">
+            <div class="quiz-header">
+                <span class="quiz-badge"><i class="fa-solid fa-circle-question"></i> Desafío de Razonamiento</span>
+                <span style="font-size: 11px; color: var(--utn-gold); font-weight: 700;">+25 pts</span>
+            </div>
+            <div class="quiz-question" id="quiz-question-text">
+                ¿A qué nodo apuntará el siguiente puntero tras esta operación?
+            </div>
+            <div class="quiz-options-list" id="quiz-options-container">
+                <!-- Se inyectan las 4 opciones de longitud uniforme -->
+            </div>
+            <div class="quiz-feedback" id="quiz-feedback-box"></div>
+            <button class="quiz-btn-continue" id="quiz-btn-continue" onclick="closeQuizAndContinue()">
+                Continuar Ejecución <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // ESTADO GLOBAL DEL SIMULADOR
+        // =========================================================================
+        let currentLevelIndex = 0;
+        let currentStepIndex = 0;
+        let autoPlayTimer = null;
+        let isWaitingForQuiz = false;
+        let score = 100;
+        let streak = 0;
+
+        // DEFINICIÓN DE LOS 4 NIVELES PEDAGÓGICOS
+        const levels = [
+            // NIVEL 1: Inserción al Inicio
+            {
+                id: 1,
+                fileName: "insertar_inicio.cpp",
+                title: "Inserción al Inicio",
+                codeLines: [
+                    { num: 1, text: `<span class="kw">struct</span> <span class="tp">Nodo</span> {` },
+                    { num: 2, text: `    <span class="tp">int</span> <span class="vr">dato</span>;` },
+                    { num: 3, text: `    <span class="tp">Nodo</span>* <span class="vr">sig</span>;` },
+                    { num: 4, text: `};` },
+                    { num: 5, text: `` },
+                    { num: 6, text: `<span class="tp">void</span> <span class="vr">insertarInicio</span>(<span class="tp">Nodo</span>*&amp; <span class="vr">cabeza</span>, <span class="tp">int</span> <span class="vr">valor</span>) {` },
+                    { num: 7, text: `    <span class="tp">Nodo</span>* <span class="vr">nuevo</span> = <span class="kw">new</span> <span class="tp">Nodo</span>;` },
+                    { num: 8, text: `    <span class="vr">nuevo</span>-&gt;<span class="vr">dato</span> = <span class="vr">valor</span>;` },
+                    { num: 9, text: `    <span class="vr">nuevo</span>-&gt;<span class="vr">sig</span> = <span class="vr">cabeza</span>;` },
+                    { num: 10, text: `    <span class="vr">cabeza</span> = <span class="vr">nuevo</span>;` },
+                    { num: 11, text: `}` }
+                ],
+                initialStack: [
+                    { name: "cabeza", type: "ptr", val: "0x10A0" },
+                    { name: "nuevo", type: "ptr", val: "nullptr" },
+                    { name: "valor", type: "int", val: "10" }
+                ],
+                initialHeap: [
+                    { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                ],
+                steps: [
+                    {
+                        line: 6,
+                        desc: "Llamada a insertarInicio(cabeza, 10). Se pasan cabeza por referencia y valor = 10.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0", hl: true },
+                            { name: "nuevo", type: "ptr", val: "nullptr" },
+                            { name: "valor", type: "int", val: "10", hl: true }
+                        ],
+                        heap: [
+                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                        ],
+                        log: { type: "info", text: "Invocando insertarInicio: cabeza apunta a 0x10A0." }
+                    },
+                    {
+                        line: 7,
+                        desc: "new Nodo: se reserva bloque en Heap (0x2B40). 'nuevo' almacena su dirección.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0" },
+                            { name: "nuevo", type: "ptr", val: "0x2B40", hl: true },
+                            { name: "valor", type: "int", val: "10" }
+                        ],
+                        heap: [
+                            { addr: "0x2B40", dato: "?", sig: "nullptr", tags: ["nuevo"], isNew: true },
+                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                        ],
+                        log: { type: "alloc", text: "Heap alloc: Nodo reservado en 0x2B40." }
+                    },
+                    {
+                        line: 8,
+                        desc: "nuevo->dato = valor: se asigna el número 10 en el campo de información del nodo.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0" },
+                            { name: "nuevo", type: "ptr", val: "0x2B40" },
+                            { name: "valor", type: "int", val: "10" }
+                        ],
+                        heap: [
+                            { addr: "0x2B40", dato: 10, sig: "nullptr", tags: ["nuevo"] },
+                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                        ],
+                        log: { type: "info", text: "Asignación: nodo 0x2B40->dato = 10." },
+                        quiz: {
+                            question: "¿A qué debe apuntar 'nuevo->sig' para preservar el resto de la lista?",
+                            options: [
+                                "Al nodo apuntado por cabeza (0x10A0) para enlazarlo como siguiente.",
+                                "A nullptr para convertir al nuevo nodo en el último de la lista.",
+                                "A su propia dirección (0x2B40) para formar una lista circular.",
+                                "A la dirección de memoria de la variable local valor en el stack."
+                            ],
+                            correctIndex: 0,
+                            explanation: "Correcto: 'nuevo->sig = cabeza' enlaza el nuevo nodo con el primer elemento actual antes de reubicar la cabeza."
+                        }
+                    },
+                    {
+                        line: 9,
+                        desc: "nuevo->sig = cabeza: el nuevo nodo apunta a 0x10A0 (nodo con dato 20).",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0" },
+                            { name: "nuevo", type: "ptr", val: "0x2B40" },
+                            { name: "valor", type: "int", val: "10" }
+                        ],
+                        heap: [
+                            { addr: "0x2B40", dato: 10, sig: "0x10A0", tags: ["nuevo"] },
+                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                        ],
+                        log: { type: "link", text: "Enlace: 0x2B40->sig = 0x10A0 (nodo con dato 20)." }
+                    },
+                    {
+                        line: 10,
+                        desc: "cabeza = nuevo: cabeza se actualiza a 0x2B40. Ahora el nodo 10 es el inicio.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x2B40", hl: true },
+                            { name: "nuevo", type: "ptr", val: "0x2B40" },
+                            { name: "valor", type: "int", val: "10" }
+                        ],
+                        heap: [
+                            { addr: "0x2B40", dato: 10, sig: "0x10A0", tags: ["cabeza", "nuevo"] },
+                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: [] }
+                        ],
+                        log: { type: "link", text: "Actualización de cabeza: lista comienza en 0x2B40." }
+                    },
+                    {
+                        line: 11,
+                        desc: "Fin de función: 'nuevo' sale de scope; la lista enlazada persiste en Heap.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x2B40" }
+                        ],
+                        heap: [
+                            { addr: "0x2B40", dato: 10, sig: "0x10A0", tags: ["cabeza"] },
+                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: [] }
+                        ],
+                        log: { type: "info", text: "Inserción completada: [ 10 ] -> [ 20 ] -> nullptr." }
+                    }
+                ]
+            },
+
+            // NIVEL 2: Inserción Ordenada & Técnica de Dos Punteros
+            {
+                id: 2,
+                fileName: "insercion_ordenada.cpp",
+                title: "Inserción Ordenada",
+                codeLines: [
+                    { num: 1, text: `<span class="tp">void</span> <span class="vr">insertarOrdenado</span>(<span class="tp">Nodo</span>*&amp; <span class="vr">cabeza</span>, <span class="tp">int</span> <span class="vr">valor</span>) {` },
+                    { num: 2, text: `    <span class="tp">Nodo</span>* <span class="vr">nuevo</span> = <span class="kw">new</span> <span class="tp">Nodo</span>{<span class="vr">valor</span>, <span class="kw">nullptr</span>};` },
+                    { num: 3, text: `    <span class="tp">Nodo</span>* <span class="vr">act</span> = <span class="vr">cabeza</span>;` },
+                    { num: 4, text: `    <span class="tp">Nodo</span>* <span class="vr">ant</span> = <span class="kw">nullptr</span>;` },
+                    { num: 5, text: `    <span class="kw">while</span> (<span class="vr">act</span> != <span class="kw">nullptr</span> &amp;&amp; <span class="vr">act</span>-&gt;<span class="vr">dato</span> &lt; <span class="vr">valor</span>) {` },
+                    { num: 6, text: `        <span class="vr">ant</span> = <span class="vr">act</span>;` },
+                    { num: 7, text: `        <span class="vr">act</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
+                    { num: 8, text: `    }` },
+                    { num: 9, text: `    <span class="vr">nuevo</span>-&gt;<span class="vr">sig</span> = <span class="vr">act</span>;` },
+                    { num: 10, text: `    <span class="kw">if</span> (<span class="vr">ant</span> == <span class="kw">nullptr</span>) <span class="vr">cabeza</span> = <span class="vr">nuevo</span>;` },
+                    { num: 11, text: `    <span class="kw">else</span> <span class="vr">ant</span>-&gt;<span class="vr">sig</span> = <span class="vr">nuevo</span>;` },
+                    { num: 12, text: `}` }
+                ],
+                initialStack: [
+                    { name: "cabeza", type: "ptr", val: "0x10A0" },
+                    { name: "valor", type: "int", val: "18" }
+                ],
+                initialHeap: [
+                    { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza"] },
+                    { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
+                ],
+                steps: [
+                    {
+                        line: 2,
+                        desc: "new Nodo: se crea el nodo en 0x3C10 con dato 18 y sig = nullptr.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0" },
+                            { name: "nuevo", type: "ptr", val: "0x3C10", hl: true },
+                            { name: "valor", type: "int", val: "18" }
+                        ],
+                        heap: [
+                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza"] },
+                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] },
+                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"], isNew: true }
+                        ],
+                        log: { type: "alloc", text: "Nodo reservado en 0x3C10 con valor 18." }
+                    },
+                    {
+                        line: 3,
+                        desc: "act = cabeza: 'act' comienza apuntando al primer nodo (0x10A0).",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0" },
+                            { name: "act", type: "ptr", val: "0x10A0", hl: true },
+                            { name: "ant", type: "ptr", val: "nullptr" },
+                            { name: "nuevo", type: "ptr", val: "0x3C10" }
+                        ],
+                        heap: [
+                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "act"] },
+                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] },
+                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"] }
+                        ],
+                        log: { type: "info", text: "Inicialización: act = 0x10A0, ant = nullptr." }
+                    },
+                    {
+                        line: 5,
+                        desc: "Evaluación while: act != nullptr (0x10A0) y 10 < 18 -> entra al ciclo.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0" },
+                            { name: "act", type: "ptr", val: "0x10A0" },
+                            { name: "ant", type: "ptr", val: "nullptr" },
+                            { name: "nuevo", type: "ptr", val: "0x3C10" }
+                        ],
+                        heap: [
+                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "act"] },
+                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] },
+                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"] }
+                        ],
+                        log: { type: "info", text: "Condición while verdadera: 10 < 18." }
+                    },
+                    {
+                        line: 7,
+                        desc: "ant = act (0x10A0); act = act->sig (0x10B0). Avanzan ambos punteros.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0" },
+                            { name: "act", type: "ptr", val: "0x10B0", hl: true },
+                            { name: "ant", type: "ptr", val: "0x10A0", hl: true },
+                            { name: "nuevo", type: "ptr", val: "0x3C10" }
+                        ],
+                        heap: [
+                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
+                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: ["act"] },
+                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"] }
+                        ],
+                        log: { type: "info", text: "Avance: ant = 0x10A0, act = 0x10B0." }
+                    },
+                    {
+                        line: 5,
+                        desc: "Evaluación while: 25 < 18 es FALSO. Se encontró la posición de inserción.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0" },
+                            { name: "act", type: "ptr", val: "0x10B0" },
+                            { name: "ant", type: "ptr", val: "0x10A0" },
+                            { name: "nuevo", type: "ptr", val: "0x3C10" }
+                        ],
+                        heap: [
+                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
+                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: ["act"] },
+                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"] }
+                        ],
+                        log: { type: "info", text: "Fin del while: 25 >= 18. Posición encontrada." },
+                        quiz: {
+                            question: "¿Qué ocurriría si asignamos 'ant->sig = nuevo' ANTES de 'nuevo->sig = act'?",
+                            options: [
+                                "Perderíamos la referencia al nodo act (0x10B0), provocando un memory leak.",
+                                "El sistema operativo reacomoda automáticamente los punteros del heap.",
+                                "El compilador generará un error en tiempo de ejecución de tipo stack overflow.",
+                                "El valor entero 18 se sobreescribirá en el nodo anterior 10."
+                            ],
+                            correctIndex: 0,
+                            explanation: "Exacto: si cambiamos 'ant->sig' primero, perdemos el puntero hacia el resto de la lista (nodo 25)."
+                        }
+                    },
+                    {
+                        line: 9,
+                        desc: "nuevo->sig = act: 'nuevo' apunta al nodo 0x10B0 (con valor 25).",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0" },
+                            { name: "act", type: "ptr", val: "0x10B0" },
+                            { name: "ant", type: "ptr", val: "0x10A0" },
+                            { name: "nuevo", type: "ptr", val: "0x3C10" }
+                        ],
+                        heap: [
+                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
+                            { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: ["nuevo"] },
+                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: ["act"] }
+                        ],
+                        log: { type: "link", text: "Enlace: nuevo->sig apunta a act (0x10B0)." }
+                    },
+                    {
+                        line: 11,
+                        desc: "ant->sig = nuevo: el nodo 10 (ant) ahora apunta a 18 (nuevo). Lista enlazada.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0" },
+                            { name: "act", type: "ptr", val: "0x10B0" },
+                            { name: "ant", type: "ptr", val: "0x10A0" },
+                            { name: "nuevo", type: "ptr", val: "0x3C10" }
+                        ],
+                        heap: [
+                            { addr: "0x10A0", dato: 10, sig: "0x3C10", tags: ["cabeza", "ant"] },
+                            { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: ["nuevo"] },
+                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: ["act"] }
+                        ],
+                        log: { type: "link", text: "Reconexión: ant->sig apunta a nuevo (0x3C10)." }
+                    }
+                ]
+            },
+
+            // NIVEL 3: Eliminación & Trampa del Puntero Perdido
+            {
+                id: 3,
+                fileName: "eliminar_nodo.cpp",
+                title: "Eliminación & Free Memory",
+                codeLines: [
+                    { num: 1, text: `<span class="tp">void</span> <span class="vr">eliminar</span>(<span class="tp">Nodo</span>*&amp; <span class="vr">cabeza</span>, <span class="tp">int</span> <span class="vr">valor</span>) {` },
+                    { num: 2, text: `    <span class="tp">Nodo</span>* <span class="vr">act</span> = <span class="vr">cabeza</span>;` },
+                    { num: 3, text: `    <span class="tp">Nodo</span>* <span class="vr">ant</span> = <span class="kw">nullptr</span>;` },
+                    { num: 4, text: `    <span class="kw">while</span> (<span class="vr">act</span> != <span class="kw">nullptr</span> &amp;&amp; <span class="vr">act</span>-&gt;<span class="vr">dato</span> != <span class="vr">valor</span>) {` },
+                    { num: 5, text: `        <span class="vr">ant</span> = <span class="vr">act</span>; <span class="vr">act</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
+                    { num: 6, text: `    }` },
+                    { num: 7, text: `    <span class="kw">if</span> (<span class="vr">act</span> != <span class="kw">nullptr</span>) {` },
+                    { num: 8, text: `        <span class="kw">if</span> (<span class="vr">ant</span> == <span class="kw">nullptr</span>) <span class="vr">cabeza</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
+                    { num: 9, text: `        <span class="kw">else</span> <span class="vr">ant</span>-&gt;<span class="vr">sig</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
+                    { num: 10, text: `        <span class="kw">delete</span> <span class="vr">act</span>;` },
+                    { num: 11, text: `    }` },
+                    { num: 12, text: `}` }
+                ],
+                initialStack: [
+                    { name: "cabeza", type: "ptr", val: "0x10A0" },
+                    { name: "valor", type: "int", val: "18" }
+                ],
+                initialHeap: [
+                    { addr: "0x10A0", dato: 10, sig: "0x3C10", tags: ["cabeza"] },
+                    { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: [] },
+                    { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
+                ],
+                steps: [
+                    {
+                        line: 4,
+                        desc: "Búsqueda: se localiza el nodo a eliminar (18) en 0x3C10 con ant en 0x10A0.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0" },
+                            { name: "act", type: "ptr", val: "0x3C10", hl: true },
+                            { name: "ant", type: "ptr", val: "0x10A0", hl: true },
+                            { name: "valor", type: "int", val: "18" }
+                        ],
+                        heap: [
+                            { addr: "0x10A0", dato: 10, sig: "0x3C10", tags: ["cabeza", "ant"] },
+                            { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: ["act"] },
+                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
+                        ],
+                        log: { type: "info", text: "Nodo 18 encontrado en 0x3C10. Preparando desconexión." },
+                        quiz: {
+                            question: "¿Por qué es obligatorio reubicar ant->sig antes de ejecutar delete act?",
+                            options: [
+                                "Porque tras delete act su memoria queda liberada y leer act->sig es indefinido.",
+                                "Porque delete act borra automáticamente las variables estáticas del stack.",
+                                "Para que el compilador transforme el nodo 25 en la nueva cabeza de la lista.",
+                                "Porque la función delete solo acepta nodos que no tengan punteros siguientes."
+                            ],
+                            correctIndex: 0,
+                            explanation: "Exacto: desreferenciar un puntero después de destruirlo genera segmentation fault o comportamiento indefinido."
+                        }
+                    },
+                    {
+                        line: 9,
+                        desc: "ant->sig = act->sig: se desvía el puntero de 10 directamente a 25. 18 queda puenteado.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0" },
+                            { name: "act", type: "ptr", val: "0x3C10" },
+                            { name: "ant", type: "ptr", val: "0x10A0" }
+                        ],
+                        heap: [
+                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
+                            { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: ["act", "aBorrar"], isDeleting: true },
+                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
+                        ],
+                        log: { type: "link", text: "Puente realizado: ant->sig (0x10A0) apunta ahora a 0x10B0." }
+                    },
+                    {
+                        line: 10,
+                        desc: "delete act: se libera el bloque 0x3C10 en el Heap. No hay fugas de memoria.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x10A0" },
+                            { name: "ant", type: "ptr", val: "0x10A0" }
+                        ],
+                        heap: [
+                            { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
+                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
+                        ],
+                        log: { type: "free", text: "Heap free: bloque 0x3C10 devuelto al sistema operativo." }
+                    }
+                ]
+            },
+
+            // NIVEL 4: Algoritmo Guía 18 Ejercicio 2 (Poda de Tramos Desordenados)
+            {
+                id: 4,
+                fileName: "depurar_tramos_ej2.cpp",
+                title: "Poda de Tramos (Guía 18 Ej 2)",
+                codeLines: [
+                    { num: 1, text: `<span class="tp">void</span> <span class="vr">depurarLista</span>(<span class="tp">Nodo</span>*&amp; <span class="vr">cabeza</span>) {` },
+                    { num: 2, text: `    <span class="kw">if</span> (!<span class="vr">cabeza</span>) <span class="kw">return</span>;` },
+                    { num: 3, text: `    <span class="tp">Nodo</span>* <span class="vr">ant</span> = <span class="vr">cabeza</span>;` },
+                    { num: 4, text: `    <span class="tp">Nodo</span>* <span class="vr">act</span> = <span class="vr">cabeza</span>-&gt;<span class="vr">sig</span>;` },
+                    { num: 5, text: `    <span class="kw">while</span> (<span class="vr">act</span> != <span class="kw">nullptr</span>) {` },
+                    { num: 6, text: `        <span class="kw">if</span> (<span class="vr">act</span>-&gt;<span class="vr">dato</span> &gt; <span class="vr">ant</span>-&gt;<span class="vr">dato</span>) {` },
+                    { num: 7, text: `            <span class="vr">ant</span> = <span class="vr">act</span>; <span class="vr">act</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
+                    { num: 8, text: `        } <span class="kw">else</span> {` },
+                    { num: 9, text: `            <span class="tp">Nodo</span>* <span class="vr">aBorrar</span> = <span class="vr">act</span>;` },
+                    { num: 10, text: `            <span class="vr">act</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
+                    { num: 11, text: `            <span class="vr">ant</span>-&gt;<span class="vr">sig</span> = <span class="vr">act</span>;` },
+                    { num: 12, text: `            <span class="kw">delete</span> <span class="vr">aBorrar</span>;` },
+                    { num: 13, text: `        }` },
+                    { num: 14, text: `    }` },
+                    { num: 15, text: `}` }
+                ],
+                initialStack: [
+                    { name: "cabeza", type: "ptr", val: "0x1010" }
+                ],
+                initialHeap: [
+                    { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
+                    { addr: "0x1020", dato: 6, sig: "0x1030", tags: [] },
+                    { addr: "0x1030", dato: 3, sig: "0x1040", tags: [] },
+                    { addr: "0x1040", dato: 7, sig: "nullptr", tags: [] }
+                ],
+                steps: [
+                    {
+                        line: 4,
+                        desc: "Inicio de inspección: ant = 4 (0x1010), act = 6 (0x1020).",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x1010" },
+                            { name: "ant", type: "ptr", val: "0x1010", hl: true },
+                            { name: "act", type: "ptr", val: "0x1020", hl: true }
+                        ],
+                        heap: [
+                            { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza", "ant"] },
+                            { addr: "0x1020", dato: 6, sig: "0x1030", tags: ["act"] },
+                            { addr: "0x1030", dato: 3, sig: "0x1040", tags: [] },
+                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: [] }
+                        ],
+                        log: { type: "info", text: "Inspeccionando tramo: ant->dato = 4, act->dato = 6." }
+                    },
+                    {
+                        line: 6,
+                        desc: "act->dato > ant->dato (6 > 4): Es creciente. ant y act avanzan normalmente.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x1010" },
+                            { name: "ant", type: "ptr", val: "0x1020", hl: true },
+                            { name: "act", type: "ptr", val: "0x1030", hl: true }
+                        ],
+                        heap: [
+                            { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
+                            { addr: "0x1020", dato: 6, sig: "0x1030", tags: ["ant"] },
+                            { addr: "0x1030", dato: 3, sig: "0x1040", tags: ["act"] },
+                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: [] }
+                        ],
+                        log: { type: "info", text: "Orden correcto: 6 > 4. ant avanza a 6, act pasa a 3." }
+                    },
+                    {
+                        line: 8,
+                        desc: "act->dato > ant->dato (3 > 6) es FALSO. ¡Se detectó ruptura del orden creciente!",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x1010" },
+                            { name: "ant", type: "ptr", val: "0x1020" },
+                            { name: "act", type: "ptr", val: "0x1030" }
+                        ],
+                        heap: [
+                            { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
+                            { addr: "0x1020", dato: 6, sig: "0x1030", tags: ["ant"] },
+                            { addr: "0x1030", dato: 3, sig: "0x1040", tags: ["act"] },
+                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: [] }
+                        ],
+                        log: { type: "info", text: "ALERTA: 3 no es mayor que 6. Tramo desordenado detectado." },
+                        quiz: {
+                            question: "¿Cómo debe proceder la función para corregir la lista sin mover 'ant'?",
+                            options: [
+                                "Eliminar el nodo 3 liberando su memoria y reconectar el 6 con el 7.",
+                                "Avanzar el puntero ant al nodo 3 y continuar la comparación hacia adelante.",
+                                "Sobrescribir el dato del nodo 3 con un valor mayor a 6 aleatorio.",
+                                "Intercambiar los punteros siguientes de los nodos 6 y 3 directamente."
+                            ],
+                            correctIndex: 0,
+                            explanation: "Exacto: ant permanece en el último nodo válido (6), mientras eliminamos los nodos no crecientes."
+                        }
+                    },
+                    {
+                        line: 11,
+                        desc: "aBorrar = act (3); act = 7; ant->sig = act (6 apunta a 7). Tramo puenteado.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x1010" },
+                            { name: "ant", type: "ptr", val: "0x1020" },
+                            { name: "act", type: "ptr", val: "0x1040", hl: true },
+                            { name: "aBorrar", type: "ptr", val: "0x1030" }
+                        ],
+                        heap: [
+                            { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
+                            { addr: "0x1020", dato: 6, sig: "0x1040", tags: ["ant"] },
+                            { addr: "0x1030", dato: 3, sig: "0x1040", tags: ["aBorrar"], isDeleting: true },
+                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: ["act"] }
+                        ],
+                        log: { type: "link", text: "Puente: ant (0x1020) conectado directamente a act (0x1040)." }
+                    },
+                    {
+                        line: 12,
+                        desc: "delete aBorrar: se libera el nodo 3. Se preserva el orden '4 -> 6 -> 7'.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x1010" },
+                            { name: "ant", type: "ptr", val: "0x1020" },
+                            { name: "act", type: "ptr", val: "0x1040" }
+                        ],
+                        heap: [
+                            { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
+                            { addr: "0x1020", dato: 6, sig: "0x1040", tags: ["ant"] },
+                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: ["act"] }
+                        ],
+                        log: { type: "free", text: "delete: memoria del nodo con valor 3 liberada con éxito." }
+                    },
+                    {
+                        line: 7,
+                        desc: "Siguiente comparación: 7 > 6 es VERDADERO. ant pasa a 7 y act finaliza en nullptr.",
+                        stack: [
+                            { name: "cabeza", type: "ptr", val: "0x1010" },
+                            { name: "ant", type: "ptr", val: "0x1040", hl: true },
+                            { name: "act", type: "ptr", val: "nullptr", hl: true }
+                        ],
+                        heap: [
+                            { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
+                            { addr: "0x1020", dato: 6, sig: "0x1040", tags: [] },
+                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: ["ant"] }
+                        ],
+                        log: { type: "info", text: "Depuración finalizada. Lista resultante limpia y creciente." }
+                    }
+                ]
+            }
+        ];
+
+        // =========================================================================
+        // CONTROLADORES DE RENDERIZADO
+        // =========================================================================
+        function switchLevel(index) {
+            currentLevelIndex = index;
+            currentStepIndex = 0;
+            if (autoPlayTimer) clearInterval(autoPlayTimer);
+            autoPlayTimer = null;
+            document.getElementById("btn-autoplay").innerHTML = '<i class="fa-solid fa-play"></i> Auto';
+
+            document.querySelectorAll(".level-tab-btn").forEach((btn, i) => {
+                btn.classList.toggle("active", i === index);
+            });
+
+            const lvl = levels[index];
+            document.getElementById("editor-file-name").innerText = lvl.fileName;
+
+            // Renderizar lineas de código
+            const codeContainer = document.getElementById("code-container");
+            codeContainer.innerHTML = lvl.codeLines.map(line => `
+                <div class="code-row" id="code-row-${line.num}">
+                    <div class="row-pointer"><i class="fa-solid fa-play"></i></div>
+                    <div class="row-number">${line.num}</div>
+                    <div class="row-text">${line.text}</div>
+                </div>
+            `).join("");
+
+            renderStep(0);
+        }
+
+        function renderStep(stepIdx) {
+            const lvl = levels[currentLevelIndex];
+            const step = lvl.steps[stepIdx];
+
+            // Actualizar Badge y Descripción
+            document.getElementById("step-badge").innerText = `Paso ${stepIdx + 1}/${lvl.steps.length}`;
+            document.getElementById("step-desc").innerText = step.desc;
+
+            // Resaltar línea de código
+            document.querySelectorAll(".code-row").forEach(r => r.classList.remove("active"));
+            const activeRow = document.getElementById(`code-row-${step.line}`);
+            if (activeRow) {
+                activeRow.classList.add("active");
+                activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            // Renderizar Stack
+            const stackGrid = document.getElementById("stack-grid");
+            stackGrid.innerHTML = step.stack.map(v => `
+                <div class="stack-var-box ${v.hl ? 'highlight' : ''}">
+                    <div class="stack-var-name">
+                        <span>${v.name}</span>
+                        <span class="stack-var-badge ${v.type === 'ptr' ? 'badge-ptr' : 'badge-int'}">${v.type === 'ptr' ? 'ptr' : 'int'}</span>
+                    </div>
+                    <div class="stack-var-value">${v.val}</div>
+                </div>
+            `).join("");
+
+            // Renderizar Heap Canvas
+            const chain = document.getElementById("nodes-chain");
+            chain.innerHTML = "";
+
+            step.heap.forEach((node, i) => {
+                const wrapper = document.createElement("div");
+                wrapper.className = "node-wrapper";
+
+                // Overlays de punteros
+                let tagsHtml = "";
+                if (node.tags && node.tags.length > 0) {
+                    tagsHtml = `<div class="node-tags-overlay">` +
+                        node.tags.map(t => {
+                            if (t === "cabeza") return `<span class="pointer-tag tag-cabeza">cabeza</span>`;
+                            if (t === "ant") return `<span class="pointer-tag tag-ant">ant</span>`;
+                            if (t === "act") return `<span class="pointer-tag tag-act">act</span>`;
+                            if (t === "nuevo") return `<span class="pointer-tag tag-nuevo">nuevo</span>`;
+                            if (t === "aBorrar") return `<span class="pointer-tag tag-aborrar"><i class="fa-solid fa-trash-can"></i> delete</span>`;
+                            return `<span class="pointer-tag tag-act">${t}</span>`;
+                        }).join("") + `</div>`;
+                }
+
+                const cardClass = `node-card ${node.isNew ? 'highlight-nuevo' : ''} ${node.isDeleting ? 'deleting' : ''}`;
+
+                wrapper.innerHTML = `
+                    ${tagsHtml}
+                    <div class="${cardClass}">
+                        <div class="node-addr-bar">
+                            <span><i class="fa-solid fa-memory"></i> ${node.addr}</span>
+                            <span style="font-size:7px; color: #64748B;">Nodo</span>
+                        </div>
+                        <div class="node-body">
+                            <div class="node-field-dato">
+                                <span class="node-field-lbl">dato</span>
+                                <span class="node-field-val">${node.dato}</span>
+                            </div>
+                            <div class="node-field-sig">
+                                <span class="node-field-lbl">sig</span>
+                                <div class="sig-dot" title="Apunta a: ${node.sig}"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                chain.appendChild(wrapper);
+
+                // Agregar flecha
+                if (node.sig === "nullptr") {
+                    const arrowDiv = document.createElement("div");
+                    arrowDiv.className = "node-arrow";
+                    arrowDiv.innerHTML = `<i class="fa-solid fa-arrow-right"></i>`;
+                    chain.appendChild(arrowDiv);
+
+                    const nullDiv = document.createElement("div");
+                    nullDiv.className = "null-badge";
+                    nullDiv.innerHTML = `<i class="fa-solid fa-ban"></i> nullptr`;
+                    chain.appendChild(nullDiv);
+                } else if (i < step.heap.length - 1) {
+                    const arrowDiv = document.createElement("div");
+                    arrowDiv.className = "node-arrow";
+                    arrowDiv.innerHTML = `<i class="fa-solid fa-arrow-right"></i>`;
+                    chain.appendChild(arrowDiv);
+                }
+            });
+
+            // Log de Terminal
+            if (step.log) {
+                const now = new Date();
+                const timeStr = `[${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}]`;
+                const term = document.getElementById("terminal-log");
+                const line = document.createElement("div");
+                line.className = "terminal-line";
+                line.innerHTML = `
+                    <span class="terminal-time">${timeStr}</span>
+                    <span class="terminal-msg ${step.log.type}">${step.log.text}</span>
+                `;
+                term.insertBefore(line, term.firstChild);
+            }
+
+            // Desafío Quiz
+            if (step.quiz) {
+                if (autoPlayTimer) {
+                    clearInterval(autoPlayTimer);
+                    autoPlayTimer = null;
+                    document.getElementById("btn-autoplay").innerHTML = '<i class="fa-solid fa-play"></i> Auto';
+                }
+                openQuiz(step.quiz);
+            }
+        }
+
+        function executeNextStep() {
+            if (isWaitingForQuiz) return;
+            const lvl = levels[currentLevelIndex];
+            if (currentStepIndex < lvl.steps.length - 1) {
+                currentStepIndex++;
+                renderStep(currentStepIndex);
+            } else {
+                if (autoPlayTimer) {
+                    clearInterval(autoPlayTimer);
+                    autoPlayTimer = null;
+                    document.getElementById("btn-autoplay").innerHTML = '<i class="fa-solid fa-play"></i> Auto';
+                }
+            }
+        }
+
+        function resetCurrentLevel() {
+            if (autoPlayTimer) {
+                clearInterval(autoPlayTimer);
+                autoPlayTimer = null;
+                document.getElementById("btn-autoplay").innerHTML = '<i class="fa-solid fa-play"></i> Auto';
+            }
+            isWaitingForQuiz = false;
+            document.getElementById("quiz-modal").classList.remove("open");
+            currentStepIndex = 0;
+            renderStep(0);
+        }
+
+        function toggleAutoPlay() {
+            if (autoPlayTimer) {
+                clearInterval(autoPlayTimer);
+                autoPlayTimer = null;
+                document.getElementById("btn-autoplay").innerHTML = '<i class="fa-solid fa-play"></i> Auto';
+            } else {
+                document.getElementById("btn-autoplay").innerHTML = '<i class="fa-solid fa-pause"></i> Pausa';
+                autoPlayTimer = setInterval(() => {
+                    const lvl = levels[currentLevelIndex];
+                    if (currentStepIndex < lvl.steps.length - 1) {
+                        executeNextStep();
+                    } else {
+                        clearInterval(autoPlayTimer);
+                        autoPlayTimer = null;
+                        document.getElementById("btn-autoplay").innerHTML = '<i class="fa-solid fa-play"></i> Auto';
+                    }
+                }, 2200);
+            }
+        }
+
+        // =========================================================================
+        // QUIZ LOGIC
+        // =========================================================================
+        function openQuiz(quizData) {
+            isWaitingForQuiz = true;
+            document.getElementById("quiz-question-text").innerText = quizData.question;
+            const container = document.getElementById("quiz-options-container");
+            container.innerHTML = "";
+
+            const letters = ["A", "B", "C", "D"];
+            quizData.options.forEach((opt, idx) => {
+                const btn = document.createElement("button");
+                btn.className = "quiz-opt-btn";
+                btn.innerHTML = `<span class="quiz-opt-letter">${letters[idx]}</span> <span>${opt}</span>`;
+                btn.onclick = () => handleQuizAnswer(idx, quizData);
+                container.appendChild(btn);
+            });
+
+            document.getElementById("quiz-feedback-box").className = "quiz-feedback";
+            document.getElementById("quiz-feedback-box").style.display = "none";
+            document.getElementById("quiz-btn-continue").style.display = "none";
+            document.getElementById("quiz-modal").classList.add("open");
+        }
+
+        function handleQuizAnswer(selectedIdx, quizData) {
+            const buttons = document.querySelectorAll(".quiz-opt-btn");
+            buttons.forEach(b => b.disabled = true);
+
+            const feedback = document.getElementById("quiz-feedback-box");
+            if (selectedIdx === quizData.correctIndex) {
+                buttons[selectedIdx].classList.add("correct");
+                feedback.className = "quiz-feedback success";
+                feedback.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${quizData.explanation}`;
+                score += 25;
+                streak += 1;
+            } else {
+                buttons[selectedIdx].classList.add("wrong");
+                buttons[quizData.correctIndex].classList.add("correct");
+                feedback.className = "quiz-feedback error";
+                feedback.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Incorrecto. ${quizData.explanation}`;
+                streak = 0;
+            }
+
+            feedback.style.display = "block";
+            document.getElementById("score-counter").innerText = `${score} pts`;
+            document.getElementById("streak-counter").innerText = `${streak}x racha`;
+            document.getElementById("quiz-btn-continue").style.display = "block";
+        }
+
+        function closeQuizAndContinue() {
+            document.getElementById("quiz-modal").classList.remove("open");
+            isWaitingForQuiz = false;
+        }
+
+        // =========================================================================
+        // ATAJOS DE TECLADO Y RECONOCIMIENTO DE IFRAME
+        // =========================================================================
+        function initApp() {
+            if (window.self !== window.top) {
+                // Embebido dentro del iframe de la diapositiva Reveal.js
+                const returnBtn = document.querySelector('.btn-return-slides');
+                if (returnBtn) {
+                    returnBtn.innerHTML = '<i class="fa-solid fa-up-right-from-square"></i> Pestaña Nueva';
+                    returnBtn.href = 'index.html';
+                    returnBtn.target = '_blank';
+                    returnBtn.title = 'Abrir Pointer Inspector en ventana completa';
+                }
+            }
+            switchLevel(0);
+
+            window.addEventListener('keydown', (e) => {
+                if (isWaitingForQuiz) return;
+                if (e.key === 'F8') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    executeNextStep();
+                } else if (e.key === 'F5') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    resetCurrentLevel();
+                } else if (e.key === ' ') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleAutoPlay();
+                }
+            });
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
