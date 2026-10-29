@@ -72,12 +72,20 @@
             font-variant-ligatures: none;
             font-feature-settings: "liga" 0, "calt" 0;
         }
-        .reveal code {
+        .reveal pre code {
             font-family: 'Fira Code', monospace;
             padding: 14px 18px;
             font-size: 13px;
             font-variant-ligatures: none;
             font-feature-settings: "liga" 0, "calt" 0;
+        }
+        .reveal :not(pre) > code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(0, 43, 91, 0.08);
+            color: var(--utn-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.88em;
         }
 
         .section-title-layout { display: flex; flex-direction: column; justify-content: center; align-items: center; }
@@ -189,8 +197,8 @@
                             <p>Simulador interactivo en vivo para visualizar bloques en disco y desplazamientos de cabezal.</p>
                         </div>
                         <div class="tile">
-                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-laptop-code" style="color: var(--cyan-accent);"></i> 6. Práctica: Inventario Libros</h3>
-                            <p>Ejercicios 5 y 6 de la guía: carga masiva, acceso al 3er libro, edición in-place del 2do y reporte.</p>
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-laptop-code" style="color: var(--cyan-accent);"></i> 6. Práctica y Ejercicios</h3>
+                            <p>Persistencia básica de un registro (producto.dat) y casos avanzados de la guía (inventario.dat).</p>
                         </div>
                     </div>
                 </div>
@@ -480,6 +488,127 @@ int obtenerCantidadRegistros(const string&amp; ruta) {
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
                         <span class="inciso-badge">1</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Almacenamiento y Recuperación de Producto</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="texto-enunciado">
+                            <p><strong>Ejercicio 1:</strong> Desarrollar un programa en C++ que permita almacenar los datos de un producto en un archivo binario llamado <code>producto.dat</code> y luego recuperarlos para mostrarlos por pantalla.</p>
+                            <p>Un producto tendrá un <strong>código</strong> (<code>int</code>), una <strong>descripción</strong> (cadena de 30 caracteres) y un <strong>precio</strong> (<code>float</code>).</p>
+                            <p><strong>El programa debe realizar las siguientes operaciones:</strong></p>
+                            <ol style="font-size: 15.5px; margin: 4px 0 0 24px; line-height: 1.55;">
+                                <li>Solicitar al usuario el código, la descripción y el precio de un producto.</li>
+                                <li>Escribir el registro completo en el archivo <code>producto.dat</code>.</li>
+                                <li>Leer el registro completo desde el archivo.</li>
+                                <li>Mostrar por pantalla los datos recuperados.</li>
+                            </ol>
+                        </div>
+                        <div class="tile" style="border-left: 5px solid var(--utn-gold); margin-top: 8px;">
+                            <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-lightbulb" style="color: var(--utn-gold);"></i> Clave de Persistencia</h4>
+                            <p style="font-size: 13.5px; margin: 0;">
+                                Definir un <code>struct Producto</code> de tamaño plano con <code>char[30]</code>. Escribir y leer bloques directos con <code>write</code> y <code>read</code> pasando <code>(char*)&amp;p</code> y <code>sizeof(Producto)</code> en modo <code>ios::binary</code>.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10.B: Solución Ejercicio 1 -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">1</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Escritura y Lectura en C++</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 16px;">
+                            <div>
+                                <pre style="font-size: 11px; line-height: 1.3;"><code class="cpp" data-trim data-noescape>
+struct Producto {
+    int codigo;
+    char descripcion[30];
+    float precio;
+};
+
+bool escribirProducto(const string&amp; ruta, 
+                      const Producto&amp; p) {
+    bool ok = false;
+    ofstream arch(ruta, ios::binary | ios::out);
+    if (arch.is_open()) {
+        arch.write((const char*)&amp;p, sizeof(Producto));
+        ok = arch.good();
+        arch.close();
+    }
+    return ok;
+}
+
+bool leerProducto(const string&amp; ruta, 
+                  Producto&amp; p) {
+    bool ok = false;
+    ifstream arch(ruta, ios::binary | ios::in);
+    if (arch.is_open()) {
+        arch.read((char*)&amp;p, sizeof(Producto));
+        ok = arch.good();
+        arch.close();
+    }
+    return ok;
+}
+                                </code></pre>
+                            </div>
+                            <div>
+                                <pre style="font-size: 11px; line-height: 1.3;"><code class="cpp" data-trim data-noescape>
+void solicitarProducto(Producto&amp; p) {
+    cout &lt;&lt; "Codigo: ";      cin &gt;&gt; p.codigo;
+    cout &lt;&lt; "Descripcion: "; cin &gt;&gt; ws;
+    cin.getline(p.descripcion, sizeof(p.descripcion));
+    cout &lt;&lt; "Precio: ";      cin &gt;&gt; p.precio;
+}
+
+void mostrarProducto(const Producto&amp; p) {
+    cout &lt;&lt; "Codigo:      " &lt;&lt; p.codigo &lt;&lt; endl;
+    cout &lt;&lt; "Descripcion: " &lt;&lt; p.descripcion &lt;&lt; endl;
+    cout &lt;&lt; "Precio:      $" &lt;&lt; p.precio &lt;&lt; endl;
+}
+
+int main() {
+    const string ruta = "producto.dat";
+    Producto prod, rec;
+
+    // 1. Solicitar datos al usuario
+    solicitarProducto(prod);
+    // 2. Escribir registro en el archivo
+    escribirProducto(ruta, prod);
+    // 3. Leer registro completo
+    leerProducto(ruta, rec);
+    // 4. Mostrar datos recuperados
+    mostrarProducto(rec);
+
+    return 0;
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10.C: Compilador Vertical Ejercicio 1 -->
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 1</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox — Persistencia Básica de Producto</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-1', cppCodeEjercicio1, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 11: EJERCICIO 2 (HORIZONTAL + VERTICAL) -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 11.A: Enunciado Ejercicio 2 -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">2</span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Carga y Creación de Archivo Binario (Guía Ej 5)</h2>
                     </div>
                     <div class="content-area">
@@ -504,10 +633,10 @@ int obtenerCantidadRegistros(const string&amp; ruta) {
                     </div>
                 </section>
 
-                <!-- 10.B: Solución Ejercicio 1 -->
+                <!-- 11.B: Solución Ejercicio 2 -->
                 <section data-background-color="#FFFFFF">
                     <div class="inciso-header">
-                        <span class="inciso-badge">1</span>
+                        <span class="inciso-badge">2</span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Carga Binaria en C++</h2>
                     </div>
                     <div class="content-area">
@@ -548,27 +677,27 @@ void agregarLibro(const string&amp; ruta, const Libro&amp; l) {
                     </div>
                 </section>
 
-                <!-- 10.C: Compilador Vertical Ejercicio 1 -->
-                <section id="slide-compiler-1">
-                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 1</h2>
+                <!-- 11.C: Compilador Vertical Ejercicio 2 -->
+                <section id="slide-compiler-2">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 2</h2>
                     <div class="compiler-window">
                         <div class="header">
                             <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox — Carga Binaria de Inventario</span>
-                            <button onclick="sendCodeWithRetries('oc-editor-1', cppCodeEjercicio1, 'cpp', 'main.cpp')">Restaurar Código</button>
+                            <button onclick="sendCodeWithRetries('oc-editor-2', cppCodeEjercicio2, 'cpp', 'main.cpp')">Restaurar Código</button>
                         </div>
-                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
                     </div>
                 </section>
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 11: EJERCICIO 2 (HORIZONTAL + VERTICAL) -->
+            <!-- SLIDE 12: EJERCICIO 3 (HORIZONTAL + VERTICAL) -->
             <!-- ============================================================== -->
             <section>
-                <!-- 11.A: Enunciado Ejercicio 2 -->
+                <!-- 12.A: Enunciado Ejercicio 3 -->
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
-                        <span class="inciso-badge">2</span>
+                        <span class="inciso-badge">3</span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Acceso Aleatorio y Modificación In-Place (Guía Ej 6.a & 6.b)</h2>
                     </div>
                     <div class="content-area">
@@ -596,10 +725,10 @@ void agregarLibro(const string&amp; ruta, const Libro&amp; l) {
                     </div>
                 </section>
 
-                <!-- 11.B: Solución Ejercicio 2 -->
+                <!-- 12.B: Solución Ejercicio 3 -->
                 <section data-background-color="#FFFFFF">
                     <div class="inciso-header">
-                        <span class="inciso-badge">2</span>
+                        <span class="inciso-badge">3</span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Acceso Aleatorio en C++</h2>
                     </div>
                     <div class="content-area">
@@ -641,27 +770,27 @@ bool modificarLibroEnPos(const string&amp; ruta, int pos1, const Libro&amp; in) 
                     </div>
                 </section>
 
-                <!-- 11.C: Compilador Vertical Ejercicio 2 -->
-                <section id="slide-compiler-2">
-                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 2</h2>
+                <!-- 12.C: Compilador Vertical Ejercicio 3 -->
+                <section id="slide-compiler-3">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 3</h2>
                     <div class="compiler-window">
                         <div class="header">
                             <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox — seekg y seekp Directos</span>
-                            <button onclick="sendCodeWithRetries('oc-editor-2', cppCodeEjercicio2, 'cpp', 'main.cpp')">Restaurar Código</button>
+                            <button onclick="sendCodeWithRetries('oc-editor-3', cppCodeEjercicio3, 'cpp', 'main.cpp')">Restaurar Código</button>
                         </div>
-                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                        <iframe id="oc-editor-3" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
                     </div>
                 </section>
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 12: EJERCICIO 3 (HORIZONTAL + VERTICAL) -->
+            <!-- SLIDE 13: EJERCICIO 4 (HORIZONTAL + VERTICAL) -->
             <!-- ============================================================== -->
             <section>
-                <!-- 12.A: Enunciado Ejercicio 3 -->
+                <!-- 13.A: Enunciado Ejercicio 4 -->
                 <section data-background-color="#F8FAFC">
                     <div class="inciso-header">
-                        <span class="inciso-badge">3</span>
+                        <span class="inciso-badge">4</span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Listado Completo y Auditoría de Stock (Guía Ej 6.c)</h2>
                     </div>
                     <div class="content-area">
@@ -683,10 +812,10 @@ bool modificarLibroEnPos(const string&amp; ruta, int pos1, const Libro&amp; in) 
                     </div>
                 </section>
 
-                <!-- 12.B: Solución Ejercicio 3 -->
+                <!-- 13.B: Solución Ejercicio 4 -->
                 <section data-background-color="#FFFFFF">
                     <div class="inciso-header">
-                        <span class="inciso-badge">3</span>
+                        <span class="inciso-badge">4</span>
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Listado y Auditoría en C++</h2>
                     </div>
                     <div class="content-area">
@@ -721,21 +850,21 @@ void listarInventario(const string&amp; ruta) {
                     </div>
                 </section>
 
-                <!-- 12.C: Compilador Vertical Ejercicio 3 -->
-                <section id="slide-compiler-3">
-                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 3</h2>
+                <!-- 13.C: Compilador Vertical Ejercicio 4 -->
+                <section id="slide-compiler-4">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 4</h2>
                     <div class="compiler-window">
                         <div class="header">
                             <span><i class="fa-solid fa-code"></i> OneCompiler C++ Sandbox — Auditoría y Reportes</span>
-                            <button onclick="sendCodeWithRetries('oc-editor-3', cppCodeEjercicio3, 'cpp', 'main.cpp')">Restaurar Código</button>
+                            <button onclick="sendCodeWithRetries('oc-editor-4', cppCodeEjercicio4, 'cpp', 'main.cpp')">Restaurar Código</button>
                         </div>
-                        <iframe id="oc-editor-3" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                        <iframe id="oc-editor-4" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
                     </div>
                 </section>
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 13: CHECKLIST DE EXAMEN -->
+            <!-- SLIDE 14: CHECKLIST DE EXAMEN -->
             <!-- ============================================================== -->
             <section data-background-color="#FFFFFF">
                 <h2 class="slide-title">Checklist de Examen: Puntos Clave</h2>
@@ -762,7 +891,7 @@ void listarInventario(const string&amp; ruta) {
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 14: CIERRE INSTITUCIONAL -->
+            <!-- SLIDE 15: CIERRE INSTITUCIONAL -->
             <!-- ============================================================== -->
             <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
                 <div class="section-title-layout">
@@ -798,6 +927,112 @@ void listarInventario(const string&amp; ruta) {
         // =========================================================================
 
         const cppCodeEjercicio1 = `#include <iostream>
+#include <fstream>
+#include <cstring>
+#include <iomanip>
+
+using namespace std;
+
+// Estructura fija (Plain Old Data) para persistencia binaria
+struct Producto {
+    int codigo;
+    char descripcion[30];
+    float precio;
+};
+
+// Solicita los datos al usuario por teclado (con soporte para STDIN en Sandbox)
+void solicitarProducto(Producto& p) {
+    cout << "Ingrese codigo del producto: ";
+    if (cin >> p.codigo) {
+        cout << p.codigo << endl;
+        cout << "Ingrese descripcion (hasta 29 caracteres): ";
+        cin >> ws;
+        cin.getline(p.descripcion, sizeof(p.descripcion));
+        cout << p.descripcion << endl;
+        cout << "Ingrese precio: ";
+        cin >> p.precio;
+        cout << fixed << setprecision(2) << p.precio << endl;
+    } else {
+        // En entornos sin STDIN interactivo, cargamos datos de prueba
+        cout << "[Cargando datos de prueba por defecto]" << endl;
+        p.codigo = 101;
+        strncpy(p.descripcion, "Teclado Mecanico RGB", sizeof(p.descripcion) - 1);
+        p.descripcion[sizeof(p.descripcion) - 1] = '\\0';
+        p.precio = 45999.50f;
+    }
+}
+
+// 2. Escribe el registro completo en el archivo binario
+bool escribirProducto(const string& ruta, const Producto& p) {
+    bool exito = false;
+    ofstream arch(ruta, ios::binary | ios::out);
+    if (arch.is_open()) {
+        arch.write((const char*)&p, sizeof(Producto));
+        exito = arch.good();
+        arch.close();
+    }
+    return exito;
+}
+
+// 3. Lee el registro completo desde el archivo binario
+bool leerProducto(const string& ruta, Producto& p) {
+    bool exito = false;
+    ifstream arch(ruta, ios::binary | ios::in);
+    if (arch.is_open()) {
+        arch.read((char*)&p, sizeof(Producto));
+        exito = arch.good();
+        arch.close();
+    }
+    return exito;
+}
+
+// 4. Muestra por pantalla los datos recuperados
+void mostrarProducto(const Producto& p) {
+    cout << "----------------------------------------" << endl;
+    cout << "  DATOS RECUPERADOS DESDE producto.dat  " << endl;
+    cout << "----------------------------------------" << endl;
+    cout << "  Codigo:      " << p.codigo << endl;
+    cout << "  Descripcion: " << p.descripcion << endl;
+    cout << "  Precio:      $" << fixed << setprecision(2) << p.precio << endl;
+    cout << "----------------------------------------" << endl;
+    cout << "Tamanio del struct en disco: " << sizeof(Producto) << " bytes." << endl;
+}
+
+int main() {
+    cout << "=== EJERCICIO 1: ALMACENAR Y RECUPERAR REGISTRO BINARIO ===" << endl << endl;
+    const string ruta = "producto.dat";
+    Producto prodOriginal;
+
+    // 1. Solicitar datos al usuario
+    cout << "[Paso 1] Solicitar datos al usuario:" << endl;
+    solicitarProducto(prodOriginal);
+    cout << endl;
+
+    // 2. Escribir registro completo en producto.dat
+    cout << "[Paso 2] Escribiendo registro en '" << ruta << "'..." << endl;
+    if (escribirProducto(ruta, prodOriginal)) {
+        cout << ">> Registro guardado exitosamente en modo binario." << endl << endl;
+    } else {
+        cout << ">> Error al escribir en el archivo." << endl << endl;
+    }
+
+    // 3. Leer el registro completo
+    cout << "[Paso 3] Leyendo registro desde '" << ruta << "'..." << endl;
+    Producto prodRecuperado;
+    if (leerProducto(ruta, prodRecuperado)) {
+        cout << ">> Registro leido con exito." << endl << endl;
+
+        // 4. Mostrar por pantalla los datos recuperados
+        cout << "[Paso 4] Mostrar por pantalla los datos recuperados:" << endl;
+        mostrarProducto(prodRecuperado);
+    } else {
+        cout << ">> Error al leer el archivo." << endl;
+    }
+
+    return 0;
+}`;
+
+        const cppCodeEjercicio2 = `#include <iostream>
 #include <fstream>
 #include <cstring>
 #include <iomanip>
@@ -844,7 +1079,7 @@ void agregarLibro(const string& ruta, const Libro& l) {
 }
 
 int main() {
-    cout << "=== EJERCICIO 1: CARGA DE ARCHIVO BINARIO (GUIA EJ 5) ===" << endl << endl;
+    cout << "=== EJERCICIO 2: CARGA DE ARCHIVO BINARIO (GUIA EJ 5) ===" << endl << endl;
     const string ruta = "inventario.dat";
 
     // Reiniciamos el archivo para la prueba
@@ -864,7 +1099,7 @@ int main() {
     return 0;
 }`;
 
-        const cppCodeEjercicio2 = `#include <iostream>
+        const cppCodeEjercicio3 = `#include <iostream>
 #include <fstream>
 #include <cstring>
 #include <iomanip>
@@ -937,7 +1172,7 @@ void mostrarLibro(const Libro& l, const string& etiqueta) {
 }
 
 int main() {
-    cout << "=== EJERCICIO 2: ACCESO ALEATORIO CON seekg Y seekp (GUIA EJ 6.a & 6.b) ===" << endl << endl;
+    cout << "=== EJERCICIO 3: ACCESO ALEATORIO CON seekg Y seekp (GUIA EJ 6.a & 6.b) ===" << endl << endl;
     const string ruta = "inventario.dat";
 
     // Inicializamos 4 libros de base
@@ -979,7 +1214,7 @@ int main() {
     return 0;
 }`;
 
-        const cppCodeEjercicio3 = `#include <iostream>
+        const cppCodeEjercicio4 = `#include <iostream>
 #include <fstream>
 #include <cstring>
 #include <iomanip>
@@ -1054,7 +1289,7 @@ void auditarInventario(const string& ruta) {
 }
 
 int main() {
-    cout << "=== EJERCICIO 3: LISTADO COMPLETO Y AUDITORIA (GUIA EJ 6.c) ===" << endl << endl;
+    cout << "=== EJERCICIO 4: LISTADO COMPLETO Y AUDITORIA (GUIA EJ 6.c) ===" << endl << endl;
     const string ruta = "inventario.dat";
 
     // Crear inventario de prueba con un libro agotado (stock 0)
@@ -1156,6 +1391,8 @@ int main() {
                 sendCodeWithRetries('oc-editor-2', cppCodeEjercicio2, 'cpp', 'main.cpp');
             } else if (slide.id === 'slide-compiler-3') {
                 sendCodeWithRetries('oc-editor-3', cppCodeEjercicio3, 'cpp', 'main.cpp');
+            } else if (slide.id === 'slide-compiler-4') {
+                sendCodeWithRetries('oc-editor-4', cppCodeEjercicio4, 'cpp', 'main.cpp');
             }
         }
 
