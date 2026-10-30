@@ -612,7 +612,11 @@ bool leerLibroEnPos(const string&amp; ruta, int pos1, Libro&amp; out) {
     int offset = (pos1 - 1) * sizeof(Libro);
     f.seekg(offset, ios::beg);
 
-    bool ok = f.read((char*)&amp;out, sizeof(Libro));
+    f.read((char*)&amp;out, sizeof(Libro));
+    bool ok = false;
+    if (f) {
+        ok = true;
+    }
     f.close();
     return ok;
 }
@@ -626,7 +630,10 @@ bool modificarLibroEnPos(const string&amp; ruta, int pos1, const Libro&amp; in) 
     f.seekp(offset, ios::beg);
 
     f.write((const char*)&amp;in, sizeof(Libro));
-    bool ok = f.good();
+    bool ok = false;
+    if (f) {
+        ok = true;
+    }
     f.close();
     return ok;
 }
@@ -739,8 +746,8 @@ void listarInventario(const string&amp; ruta) {
                             <p>En Windows, omitir <code>ios::binary</code> traduce automáticamente los bytes <code>0x0A</code> (LF) a <code>0x0D 0x0A</code> (CRLF), corrompiendo enteros y floats.</p>
                         </div>
                         <div class="tile" style="border-left: 5px solid var(--warning-amber);">
-                            <h3 style="color: var(--warning-amber);"><i class="fa-solid fa-rotate-left"></i> Limpieza de Flags con clear()</h3>
-                            <p>Si llegas a EOF durante una lectura y luego quieres hacer <code>seekg</code> o <code>seekp</code>, debes invocar obligatoriamente <code>archivo.clear()</code> antes de reposicionar.</p>
+                            <h3 style="color: var(--warning-amber);"><i class="fa-solid fa-calculator"></i> Cálculo de Posición Directa</h3>
+                            <p>Para acceder al registro <code>k</code> (1-indexed), calculamos <code>int offset = (k - 1) * sizeof(TipoReg)</code> y nos posicionamos con <code>archivo.seekg(offset, ios::beg)</code>.</p>
                         </div>
                         <div class="tile" style="border-left: 5px solid var(--cyan-accent);">
                             <h3 style="color: var(--cyan-accent);"><i class="fa-solid fa-shield-halved"></i> Apertura ios::in | ios::out</h3>
@@ -892,10 +899,14 @@ bool leerLibroEnPos(const string& ruta, int pos1, Libro& out) {
     ifstream f(ruta, ios::binary | ios::in);
     if (!f) return false;
 
-    streampos offset = (pos1 - 1) * sizeof(Libro);
+    int offset = (pos1 - 1) * sizeof(Libro);
     f.seekg(offset, ios::beg);
 
-    bool ok = f.read((char*)&out, sizeof(Libro)).good();
+    f.read((char*)&out, sizeof(Libro));
+    bool ok = false;
+    if (f) {
+        ok = true;
+    }
     f.close();
     return ok;
 }
@@ -905,11 +916,14 @@ bool modificarLibroEnPos(const string& ruta, int pos1, const Libro& in) {
     fstream f(ruta, ios::binary | ios::in | ios::out);
     if (!f) return false;
 
-    streampos offset = (pos1 - 1) * sizeof(Libro);
+    int offset = (pos1 - 1) * sizeof(Libro);
     f.seekp(offset, ios::beg);
 
     f.write((const char*)&in, sizeof(Libro));
-    bool ok = f.good();
+    bool ok = false;
+    if (f) {
+        ok = true;
+    }
     f.close();
     return ok;
 }
