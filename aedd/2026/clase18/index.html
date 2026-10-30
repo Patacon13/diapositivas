@@ -178,24 +178,10 @@
             <!-- ============================================================== -->
             <!-- SLIDE 1: PORTADA INSTITUCIONAL AEDD -->
             <!-- ============================================================== -->
-            <section data-background-gradient="radial-gradient(circle at 50% 50%, #002B5B 0%, #051329 100%)">
-                <div style="text-align: center;">
-                    <div style="display: inline-block; background: rgba(255, 193, 7, 0.15); border: 1px solid var(--utn-gold); padding: 5px 16px; border-radius: 20px; margin-bottom: 18px;">
-                        <span style="color: var(--utn-gold); font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">
-                            <i class="fa-solid fa-file-lines"></i> Algoritmos y Estructuras de Datos | Clase 18 (2026)
-                        </span>
-                    </div>
-                    <h1 style="color: white; font-size: 58px; line-height: 1.1; margin-bottom: 16px;">
-                        Archivos de Texto y Flujos de E/S<br>
-                        <span style="color: var(--utn-gold); font-weight: 400; font-size: 40px;">Persistencia Secuencial en C++</span>
-                    </h1>
-                    <p style="color: rgba(255,255,255,0.8); margin-top: 24px; text-align: center; font-size: 20px;">
-                        Comisión A — Docentes: Tomás Assenza, Facundo Sanchez, Nicolás Huber
-                    </p>
-                    <p style="color: rgba(255,255,255,0.4); margin-top: 8px; text-align: center; font-size: 14px; letter-spacing: 2px;">
-                        UTN — FACULTAD REGIONAL SANTA FE (INGENIERÍA EN SISTEMAS DE INFORMACIÓN)
-                    </p>
-                </div>
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <h1 style="color: white; font-size: 64px; line-height: 1.05; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 46px;">Clase 18: Archivos de Texto</span></h1>
+                <p style="color: rgba(255,255,255,0.7); margin-top: 35px; text-align: center; font-size: 22px;">Docentes de práctica: Tomás Assenza, Facundo Sanchez</p>
+                <p style="color: rgba(255,255,255,0.35); margin-top: 10px; text-align: center; font-size: 16px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe</p>
             </section>
 
             <!-- ============================================================== -->
@@ -551,48 +537,35 @@ int main() {
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución Modular en C++</h2>
                     </div>
                     <div class="content-area">
-                        <div class="two-column" style="gap: 18px;">
-                            <div>
-                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
-// Funciones auxiliares modulares
+                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-3|5-7|9-27|14-24">
 bool esLetra(char c) {
-    bool res = false;
-    if ((c &gt;= 'a' &amp;&amp; c &lt;= 'z') || 
-        (c &gt;= 'A' &amp;&amp; c &lt;= 'Z')) {
-        res = true;
-    }
-    return res;
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
 bool esDigito(char c) {
-    bool res = false;
-    if (c &gt;= '0' &amp;&amp; c &lt;= '9') {
-        res = true;
-    }
-    return res;
+    return (c >= '0' && c <= '9');
 }
-                                </code></pre>
-                            </div>
-                            <div>
-                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
-// Flujo caracter a caracter
-void analizarArchivo(const string&amp; ruta, 
-                     int&amp; l, int&amp; d, int&amp; o) {
+
+void analizarArchivo(const string&amp; ruta, int&amp; l, int&amp; d, int&amp; o) {
     ifstream arch(ruta);
     l = 0; d = 0; o = 0;
     if (arch.is_open()) {
         char c;
-        while (arch.get(c)) {
-            if (esLetra(c)) { l++; }
-            else if (esDigito(c)) { d++; }
-            else { o++; }
+        arch.get(c);
+        while (!arch.eof()) {
+            if (esLetra(c)) {
+                l++;
+            } else if (esDigito(c)) {
+                d++;
+            } else {
+                o++;
+            }
+            arch.get(c);
         }
         arch.close();
     }
 }
-                                </code></pre>
-                            </div>
-                        </div>
+                        </code></pre>
                     </div>
                 </section>
 
@@ -638,52 +611,35 @@ void analizarArchivo(const string&amp; ruta,
                 <section data-background-color="#FFFFFF">
                     <div class="inciso-header">
                         <span class="inciso-badge">2</span>
-                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución Modular: Cifrado en Disco</h2>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Cifrado en Disco</h2>
                     </div>
                     <div class="content-area">
-                        <div class="two-column" style="gap: 18px;">
-                            <div>
-                                <pre style="font-size: 12.5px;"><code class="cpp" data-trim data-noescape>
-// Transformacion con rotacion ciclica
+                        <pre style="font-size: 10.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-13|15-32|21-27">
 char cifrarCaracter(char c, int shift) {
     char res = c;
-    if (c &gt;= 'A' &amp;&amp; c &lt;= 'Z') {
-        int nuevoCodigo = c + shift;
-        if (nuevoCodigo &gt; 'Z') {
-            nuevoCodigo = nuevoCodigo - 26;
-        }
-        res = (char) nuevoCodigo;
-    } else if (c &gt;= 'a' &amp;&amp; c &lt;= 'z') {
-        int nuevoCodigo = c + shift;
-        if (nuevoCodigo &gt; 'z') {
-            nuevoCodigo = nuevoCodigo - 26;
-        }
-        res = (char) nuevoCodigo;
+    if (c >= 'A' && c <= 'Z') {
+        int nuevo = c + shift;
+        if (nuevo > 'Z') nuevo -= 26;
+        res = (char)nuevo;
+    } else if (c >= 'a' && c <= 'z') {
+        int nuevo = c + shift;
+        if (nuevo > 'z') nuevo -= 26;
+        res = (char)nuevo;
     }
     return res;
 }
-                                </code></pre>
-                                <div class="tile" style="margin-top: 10px; padding: 10px 14px;">
-                                    <p style="font-size: 13.5px; margin: 0;">
-                                        <strong>Rotacion ciclica:</strong> Si supera <code>'Z'</code> (o <code>'z'</code>), vuelve a <code>'A'</code> (o <code>'a'</code>). Se preservan espacios, saltos y signos.
-                                    </p>
-                                </div>
-                            </div>
-                            <div>
-                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
-// Proceso simultaneo entrada &rarr; salida
-bool cifrarArchivo(const string&amp; orig, 
-                   const string&amp; dest, 
-                   int shift) {
+
+bool cifrarArchivo(const string&amp; orig, const string&amp; dest, int shift) {
     ifstream entrada(orig);
     ofstream salida(dest);
     bool exito = false;
-
-    if (entrada.is_open() &amp;&amp; salida.is_open()) {
+    if (entrada.is_open() && salida.is_open()) {
         char c;
-        while (entrada.get(c)) {
+        entrada.get(c);
+        while (!entrada.eof()) {
             char cif = cifrarCaracter(c, shift);
             salida.put(cif);
+            entrada.get(c);
         }
         entrada.close();
         salida.close();
@@ -691,9 +647,7 @@ bool cifrarArchivo(const string&amp; orig,
     }
     return exito;
 }
-                                </code></pre>
-                            </div>
-                        </div>
+                        </code></pre>
                     </div>
                 </section>
 
@@ -743,53 +697,41 @@ bool cifrarArchivo(const string&amp; orig,
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución Modular: Análisis de Palabras</h2>
                     </div>
                     <div class="content-area">
-                        <div class="two-column" style="gap: 18px;">
-                            <div>
-                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
+                        <pre style="font-size: 10.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-17|19-35|26-33">
 char aMinuscula(char c) {
     char res = c;
-    if (c &gt;= 'A' &amp;&amp; c &lt;= 'Z') { 
-        res = static_cast&lt;char&gt;(c + ('a' - 'A')); 
-    }
+    if (c >= 'A' && c <= 'Z') res = (char)(c + ('a' - 'A'));
     return res;
 }
 
-bool coincideExtremos(const string&amp; pal, 
-                      char inicio, char fin) {
+bool coincideExtremos(const string&amp; pal, char ini, char fin) {
     bool coincide = false;
-    if (pal.length() &gt; 0) {
+    if (pal.length() > 0) {
         char p = aMinuscula(pal[0]);
-        char u = aMinuscula(pal[pal.length()-1]);
-        if (p == aMinuscula(inicio) &amp;&amp; 
-            u == aMinuscula(fin)) {
+        char u = aMinuscula(pal[pal.length() - 1]);
+        if (p == aMinuscula(ini) && u == aMinuscula(fin)) {
             coincide = true;
         }
     }
     return coincide;
 }
-                                </code></pre>
-                            </div>
-                            <div>
-                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
-// Bucle formateado palabra por palabra
-while (arch &gt;&gt; palabra) {
-    totalPalabras++;
-    if (palabra.length() &gt; maxLongitud) {
-        maxLongitud = palabra.length();
-        palabraMasLarga = palabra;
+
+void procesarEstadisticas(const string&amp; ruta, char ini, char fin) {
+    ifstream arch(ruta);
+    if (!arch.is_open()) return;
+    int total = 0, maxLong = 0, cantFiltro = 0;
+    string palabra, masLarga = "";
+    while (arch >> palabra) {
+        total++;
+        if (palabra.length() > maxLong) {
+            maxLong = palabra.length();
+            masLarga = palabra;
+        }
+        if (coincideExtremos(palabra, ini, fin)) cantFiltro++;
     }
-    if (coincideExtremos(palabra, ini, fin)) { 
-        cantFiltro++; 
-    }
+    arch.close();
 }
-                                </code></pre>
-                                <div class="tile" style="margin-top: 12px; padding: 12px 16px;">
-                                    <p style="font-size: 14px; margin: 0;">
-                                        <strong>Ventaja:</strong> No necesitamos bucles manuales buscando espacios; el stream tokeniza de forma natural.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        </code></pre>
                     </div>
                 </section>
 
@@ -841,9 +783,7 @@ while (arch &gt;&gt; palabra) {
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución Modular: Parsing CSV</h2>
                     </div>
                     <div class="content-area">
-                        <div class="two-column" style="gap: 18px;">
-                            <div>
-                                <pre style="font-size: 13px;"><code class="cpp" data-trim data-noescape>
+                        <pre style="font-size: 10.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-9|11-26|15-24">
 struct Alumno {
     int legajo;
     string nombre;
@@ -851,37 +791,26 @@ struct Alumno {
 };
 
 float calcularProm(float n1, float n2) {
-    float res = (n1 + n2) / 2.0f;
-    return res;
+    return (n1 + n2) / 2.0f;
 }
-                                </code></pre>
-                                <div class="tile" style="margin-top: 12px; padding: 12px 16px;">
-                                    <p style="font-size: 14px; margin: 0;">
-                                        <code>stoi</code> convierte texto a entero y <code>stof</code> a flotante.
-                                    </p>
-                                </div>
-                            </div>
-                            <div>
-                                <pre style="font-size: 12.5px;"><code class="cpp" data-trim data-noescape>
-// Lectura de registro delimitado
-string sLeg, nom, sN1, sN2;
-while (getline(arch, sLeg, ',') &amp;&amp;
-       getline(arch, nom, ',') &amp;&amp;
-       getline(arch, sN1, ',') &amp;&amp;
-       getline(arch, sN2)) {
-    
-    Alumno a;
-    a.legajo = stoi(sLeg);
-    a.nombre = nom;
-    a.promedio = calcularProm(stof(sN1), 
-                              stof(sN2));
-    
-    cout &lt;&lt; a.legajo &lt;&lt; " | " &lt;&lt; a.nombre 
-         &lt;&lt; " | Prom: " &lt;&lt; a.promedio &lt;&lt; endl;
+
+void procesarCSV(const string&amp; ruta) {
+    ifstream arch(ruta);
+    if (!arch.is_open()) return;
+    string sLeg, nom, sN1, sN2;
+    while (getline(arch, sLeg, ',') &&
+           getline(arch, nom, ',') &&
+           getline(arch, sN1, ',') &&
+           getline(arch, sN2)) {
+        Alumno a;
+        a.legajo = stoi(sLeg);
+        a.nombre = nom;
+        a.promedio = calcularProm(stof(sN1), stof(sN2));
+        cout << a.legajo << " | " << a.nombre << " | Prom: " << a.promedio << endl;
+    }
+    arch.close();
 }
-                                </code></pre>
-                            </div>
-                        </div>
+                        </code></pre>
                     </div>
                 </section>
 
@@ -928,13 +857,18 @@ while (getline(arch, sLeg, ',') &amp;&amp;
             <!-- ============================================================== -->
             <!-- SLIDE 18: CIERRE INSTITUCIONAL AEDD -->
             <!-- ============================================================== -->
-            <section data-background-color="#002B5B">
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
                 <div class="section-title-layout">
-                    <h2 style="color: var(--utn-gold) !important; font-size: 54px !important;">¿DUDAS O CONSULTAS?</h2>
-                    <p style="margin-bottom: 24px; color: rgba(255,255,255,0.8) !important;">ESPACIO PARA PUESTA EN COMÚN Y PRÁCTICA</p>
-                    <a href="debugger/index.html" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; background: rgba(56, 189, 248, 0.14); border: 2px solid var(--cyan-accent); color: var(--cyan-accent); padding: 10px 22px; border-radius: 12px; font-weight: 700; font-size: 17px; text-decoration: none; transition: all 0.2s ease;">
-                        <i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i> Probar Stream Inspector (Depurador Interactivo) <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 13px;"></i>
-                    </a>
+                    <h2>¿DUDAS O CONSULTAS?</h2>
+                    <p style="color: white !important;">Espacio para puesta en común y preguntas</p>
+                    <div style="margin-top: 30px;">
+                        <a href="debugger/index.html" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; background: rgba(56, 189, 248, 0.14); border: 2px solid var(--cyan-accent); color: var(--cyan-accent); padding: 10px 22px; border-radius: 12px; font-weight: 700; font-size: 17px; text-decoration: none; transition: all 0.2s ease;">
+                            <i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i> Probar Stream Inspector (Depurador Interactivo) <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 13px;"></i>
+                        </a>
+                    </div>
+                    <div style="margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 20px;">
+                        <p style="font-size: 18px !important; color: rgba(255,255,255,0.5) !important; letter-spacing: 2px;">AEDD - UTN SANTA FE - INGENIERÍA EN SISTEMAS</p>
+                    </div>
                 </div>
             </section>
 

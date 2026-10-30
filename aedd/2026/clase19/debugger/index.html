@@ -470,7 +470,7 @@
             border-radius: 3px;
             font-weight: 700;
         }
-        .badge-streampos { background: rgba(56, 189, 248, 0.2); color: #38BDF8; }
+        .badge-int { background: rgba(56, 189, 248, 0.2); color: #38BDF8; }
         .badge-int { background: rgba(245, 158, 11, 0.2); color: #FBBF24; }
         .badge-reg { background: rgba(168, 85, 247, 0.2); color: #D8B4FE; }
 
@@ -1268,7 +1268,7 @@
                 codeLines: [
                     { num: 1, text: `<span class="tp">int</span> <span class="vr">contarRegistros</span>(<span class="tp">ifstream</span>&amp; <span class="vr">f</span>) {` },
                     { num: 2, text: `    <span class="vr">f</span>.<span class="vr">seekg</span>(<span class="nm">0</span>, <span class="tp">ios</span>::<span class="vr">end</span>); <span class="cm">// Salto al final</span>` },
-                    { num: 3, text: `    <span class="tp">streampos</span> <span class="vr">bytes</span> = <span class="vr">f</span>.<span class="vr">tellg</span>();` },
+                    { num: 3, text: `    <span class="tp">int</span> <span class="vr">bytes</span> = <span class="vr">f</span>.<span class="vr">tellg</span>();` },
                     { num: 4, text: `    <span class="vr">f</span>.<span class="vr">seekg</span>(<span class="nm">0</span>, <span class="tp">ios</span>::<span class="vr">beg</span>); <span class="cm">// Rebobinar</span>` },
                     { num: 5, text: `    <span class="kw">return</span> <span class="vr">bytes</span> / <span class="kw">sizeof</span>(<span class="tp">Libro</span>);` },
                     { num: 6, text: `}` }
@@ -1302,7 +1302,7 @@
                     },
                     {
                         line: 3,
-                        desc: "streampos bytes = f.tellg(): obtiene la cantidad total de bytes en disco (512).",
+                        desc: "int bytes = f.tellg(): obtiene la cantidad total de bytes en disco (512).",
                         stack: [
                             { name: "bytes", type: "pos", val: "512 B", hl: true },
                             { name: "tellg()", type: "pos", val: "512 B" }
@@ -1396,7 +1396,7 @@
                 <div class="stack-var-box ${v.hl ? 'highlight' : ''}">
                     <div class="stack-var-name">
                         <span>${v.name}</span>
-                        <span class="stack-var-badge ${v.type === 'pos' ? 'badge-streampos' : 'badge-int'}">${v.type}</span>
+                        <span class="stack-var-badge ${v.type === 'pos' ? 'badge-int' : 'badge-int'}">${v.type}</span>
                     </div>
                     <div class="stack-var-value">${v.val}</div>
                 </div>

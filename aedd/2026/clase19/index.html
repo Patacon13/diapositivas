@@ -155,24 +155,10 @@
             <!-- ============================================================== -->
             <!-- SLIDE 1: PORTADA INSTITUCIONAL AEDD (Radial Gradient Dark) -->
             <!-- ============================================================== -->
-            <section data-background-gradient="radial-gradient(circle at 50% 50%, #002B5B 0%, #051329 100%)">
-                <div style="text-align: center;">
-                    <div style="display: inline-block; background: rgba(255, 193, 7, 0.15); border: 1px solid var(--utn-gold); padding: 5px 16px; border-radius: 20px; margin-bottom: 18px;">
-                        <span style="color: var(--utn-gold); font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">
-                            <i class="fa-solid fa-hard-drive"></i> Algoritmos y Estructuras de Datos | Clase 19 (2026)
-                        </span>
-                    </div>
-                    <h1 style="color: white; font-size: 58px; line-height: 1.1; margin-bottom: 16px;">
-                        Archivos Binarios y Acceso Aleatorio<br>
-                        <span style="color: var(--utn-gold); font-weight: 400; font-size: 40px;">Persistencia Estructurada en C++</span>
-                    </h1>
-                    <p style="color: rgba(255,255,255,0.8); margin-top: 24px; text-align: center; font-size: 20px;">
-                        Comisión A — Docentes: Tomás Assenza, Facundo Sanchez, Nicolás Huber
-                    </p>
-                    <p style="color: rgba(255,255,255,0.4); margin-top: 8px; text-align: center; font-size: 14px; letter-spacing: 2px;">
-                        UTN — FACULTAD REGIONAL SANTA FE (INGENIERÍA EN SISTEMAS DE INFORMACIÓN)
-                    </p>
-                </div>
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <h1 style="color: white; font-size: 64px; line-height: 1.05; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 46px;">Clase 19: Archivos Binarios</span></h1>
+                <p style="color: rgba(255,255,255,0.7); margin-top: 35px; text-align: center; font-size: 22px;">Docentes de práctica: Tomás Assenza, Facundo Sanchez</p>
+                <p style="color: rgba(255,255,255,0.35); margin-top: 10px; text-align: center; font-size: 16px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe</p>
             </section>
 
             <!-- ============================================================== -->
@@ -329,7 +315,7 @@ Libro l;
 // Lectura secuencial registro a registro
 while (arch.read((char*)&amp;l, sizeof(Libro))) {
     cout &lt;&lt; "Titulo: " &lt;&lt; l.titulo 
-         &lt;&lt; " | Precio: $" &lt;&lt; l.precio &lt;&lt; endl;
+         &lt;&lt; " | Precio: ARS " &lt;&lt; l.precio &lt;&lt; endl;
 }
 
 arch.close();
@@ -369,7 +355,7 @@ arch.close();
                                     <i class="fa-solid fa-calculator" style="color: var(--utn-gold);"></i> Fórmula del Offset de Byte (1-Indexed)
                                 </h4>
                                 <p style="font-size: 14.5px; margin: 0; font-family: 'Fira Code', monospace; color: var(--utn-blue);">
-                                    streampos offset = (k - 1) * sizeof(Registro);
+                                    int offset = (k - 1) * sizeof(Registro);
                                 </p>
                                 <p style="font-size: 13px; color: var(--text-light); margin-top: 4px;">
                                     El 1er registro está en 0 bytes. El 3er registro (k=3) con <code>sizeof=128</code> está en el byte <code>(3-1)*128 = 256</code>.
@@ -378,7 +364,7 @@ arch.close();
                             <pre><code class="cpp" data-trim data-noescape>
 // Saltar directamente al registro 3 en O(1)
 int pos = 3;
-streampos offset = (pos - 1) * sizeof(Libro);
+int offset = (pos - 1) * sizeof(Libro);
 
 arch.seekg(offset, ios::beg); // Salto exacto
 arch.read((char*)&amp;l, sizeof(Libro));
@@ -405,7 +391,7 @@ int obtenerCantidadRegistros(const string&amp; ruta) {
     arch.seekg(0, ios::end);
 
     // 2. tellg() devuelve el tamanio total en bytes
-    streampos totalBytes = arch.tellg();
+    int totalBytes = arch.tellg();
 
     // 3. Division exacta por el tamanio de registro
     int cantidad = totalBytes / sizeof(Libro);
@@ -525,9 +511,7 @@ int obtenerCantidadRegistros(const string&amp; ruta) {
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Carga Binaria en C++</h2>
                     </div>
                     <div class="content-area">
-                        <div class="two-column" style="gap: 16px;">
-                            <div>
-                                <pre><code class="cpp" data-trim data-noescape>
+                        <pre style="font-size: 10px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-8|10-13|15-22|24-32">
 struct Libro {
     char titulo[50];
     char autor[40];
@@ -537,14 +521,12 @@ struct Libro {
     int ventas;
 };
 
-void copiarTexto(char dest[], int maxLen, 
-                 const string&amp; src) {
+void copiarTexto(char dest[], int maxLen, const string&amp; src) {
     strncpy(dest, src.c_str(), maxLen - 1);
-    dest[maxLen - 1] = '\0';
+    dest[maxLen - 1] = ' ';
 }
 
-Libro crearLibro(const string&amp; t, const string&amp; a, 
-                 const string&amp; i, float p, int st, int v) {
+Libro crearLibro(const string&amp; t, const string&amp; a, const string&amp; i, float p, int st, int v) {
     Libro l;
     copiarTexto(l.titulo, sizeof(l.titulo), t);
     copiarTexto(l.autor, sizeof(l.autor), a);
@@ -552,24 +534,17 @@ Libro crearLibro(const string&amp; t, const string&amp; a,
     l.precio = p; l.stock = st; l.ventas = v;
     return l;
 }
-                                </code></pre>
-                            </div>
-                            <div>
-                                <pre><code class="cpp" data-trim data-noescape>
-void agregarLibro(const string&amp; ruta, 
-                  const Libro&amp; l) {
+
+void agregarLibro(const string&amp; ruta, const Libro&amp; l) {
     ofstream arch(ruta, ios::binary | ios::out | ios::app);
     if (!arch) {
         cout &lt;&lt; "Error al abrir " &lt;&lt; ruta &lt;&lt; endl;
         return;
     }
-    // Vuelco directo de los bytes del struct
     arch.write((const char*)&amp;l, sizeof(Libro));
     arch.close();
 }
-                                </code></pre>
-                            </div>
-                        </div>
+                        </code></pre>
                     </div>
                 </section>
 
@@ -628,33 +603,26 @@ void agregarLibro(const string&amp; ruta,
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Acceso Aleatorio en C++</h2>
                     </div>
                     <div class="content-area">
-                        <div class="two-column" style="gap: 16px;">
-                            <div>
-                                <pre><code class="cpp" data-trim data-noescape>
-// 6.a: Leer el 3er libro directamente
-bool leerLibroEnPos(const string&amp; ruta, 
-                    int pos1, Libro&amp; out) {
+                        <pre style="font-size: 10.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-11|13-24">
+// 6.a: Leer el 3er libro directamente (pos1 = 3)
+bool leerLibroEnPos(const string&amp; ruta, int pos1, Libro&amp; out) {
     ifstream f(ruta, ios::binary | ios::in);
     if (!f) return false;
 
-    streampos offset = (pos1 - 1) * sizeof(Libro);
+    int offset = (pos1 - 1) * sizeof(Libro);
     f.seekg(offset, ios::beg);
 
     bool ok = f.read((char*)&amp;out, sizeof(Libro));
     f.close();
     return ok;
 }
-                                </code></pre>
-                            </div>
-                            <div>
-                                <pre><code class="cpp" data-trim data-noescape>
-// 6.b: Reemplazar el 2do libro in-place
-bool modificarLibroEnPos(const string&amp; ruta, 
-                         int pos1, const Libro&amp; in) {
+
+// 6.b: Reemplazar el 2do libro in-place (pos1 = 2)
+bool modificarLibroEnPos(const string&amp; ruta, int pos1, const Libro&amp; in) {
     fstream f(ruta, ios::binary | ios::in | ios::out);
     if (!f) return false;
 
-    streampos offset = (pos1 - 1) * sizeof(Libro);
+    int offset = (pos1 - 1) * sizeof(Libro);
     f.seekp(offset, ios::beg);
 
     f.write((const char*)&amp;in, sizeof(Libro));
@@ -662,9 +630,7 @@ bool modificarLibroEnPos(const string&amp; ruta,
     f.close();
     return ok;
 }
-                                </code></pre>
-                            </div>
-                        </div>
+                        </code></pre>
                     </div>
                 </section>
 
@@ -717,13 +683,11 @@ bool modificarLibroEnPos(const string&amp; ruta,
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Listado y Auditoría en C++</h2>
                     </div>
                     <div class="content-area">
-                        <div class="two-column" style="gap: 16px;">
-                            <div>
-                                <pre><code class="cpp" data-trim data-noescape>
+                        <pre style="font-size: 10px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-8|10-21|23-25">
 void listarInventario(const string&amp; ruta) {
     ifstream f(ruta, ios::binary | ios::in);
     if (!f) {
-        cout &lt;&lt; "No se pudo abrir el archivo" &lt;&lt; endl;
+        cout &lt;&lt; "No se pudo abrir el archivo " &lt;&lt; ruta &lt;&lt; endl;
         return;
     }
     Libro l;
@@ -732,34 +696,21 @@ void listarInventario(const string&amp; ruta) {
     int stockTotal = 0;
 
     cout &lt;&lt; "=== INVENTARIO COMPLETO ===" &lt;&lt; endl;
-    while (f.read((char*)&amp;l, sizeof(Libro))) {
+    f.read((char*)&amp;l, sizeof(Libro));
+    while (!f.eof()) {
         float recLibro = l.precio * l.ventas;
         recaudacionTotal += recLibro;
         stockTotal += l.stock;
         cout &lt;&lt; "#" &lt;&lt; nro++ &lt;&lt; " " &lt;&lt; l.titulo 
              &lt;&lt; " (" &lt;&lt; l.autor &lt;&lt; ") | Stock: " 
              &lt;&lt; l.stock &lt;&lt; " | Ventas: " &lt;&lt; l.ventas 
-             &lt;&lt; " | Recaudado: $" &lt;&lt; recLibro &lt;&lt; endl;
+             &lt;&lt; " | Recaudado: ARS " &lt;&lt; recLibro &lt;&lt; endl;
+        f.read((char*)&amp;l, sizeof(Libro));
     }
     f.close();
+    cout &lt;&lt; "Total recaudado: ARS " &lt;&lt; recaudacionTotal &lt;&lt; endl;
 }
-                                </code></pre>
-                            </div>
-                            <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
-                                <div class="concept-card" style="border-left-color: var(--warning-amber);">
-                                    <h3 style="color: var(--warning-amber);"><i class="fa-solid fa-triangle-exclamation"></i> Detección de Stock Crítico</h3>
-                                    <p style="font-size: 14px; margin: 0;">
-                                        Durante la misma iteración podemos detectar libros con <code>stock == 0</code> para generar un reporte automático de reposición a proveedores.
-                                    </p>
-                                </div>
-                                <div class="tile" style="border-left: 5px solid var(--utn-blue);">
-                                    <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-coins"></i> Resumen de Negocio</h4>
-                                    <p style="font-size: 13.5px; margin: 0;">
-                                        El procesamiento de archivos binarios permite analizar millones de transacciones por segundo gracias a la ausencia de conversiones de texto.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        </code></pre>
                     </div>
                 </section>
 
@@ -806,13 +757,18 @@ void listarInventario(const string&amp; ruta) {
             <!-- ============================================================== -->
             <!-- SLIDE 14: CIERRE INSTITUCIONAL -->
             <!-- ============================================================== -->
-            <section data-background-color="#002B5B">
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
                 <div class="section-title-layout">
-                    <h2 style="color: var(--utn-gold) !important; font-size: 54px !important;">¿DUDAS O CONSULTAS?</h2>
-                    <p style="margin-bottom: 24px; color: rgba(255,255,255,0.8) !important;">ESPACIO PARA PUESTA EN COMÚN Y PRÁCTICA</p>
-                    <a href="debugger/index.html" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; background: rgba(56, 189, 248, 0.14); border: 2px solid var(--cyan-accent); color: var(--cyan-accent); padding: 10px 22px; border-radius: 12px; font-weight: 700; font-size: 17px; text-decoration: none; transition: all 0.2s ease;">
-                        <i class="fa-solid fa-hard-drive" style="color: var(--utn-gold);"></i> Probar Binary Stream Inspector (Simulador Visual) <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 13px;"></i>
-                    </a>
+                    <h2>¿DUDAS O CONSULTAS?</h2>
+                    <p style="color: white !important;">Espacio para puesta en común y preguntas</p>
+                    <div style="margin-top: 30px;">
+                        <a href="debugger/index.html" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; background: rgba(56, 189, 248, 0.14); border: 2px solid var(--cyan-accent); color: var(--cyan-accent); padding: 10px 22px; border-radius: 12px; font-weight: 700; font-size: 17px; text-decoration: none; transition: all 0.2s ease;">
+                            <i class="fa-solid fa-hard-drive" style="color: var(--utn-gold);"></i> Probar Binary Stream Inspector (Simulador Visual) <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 13px;"></i>
+                        </a>
+                    </div>
+                    <div style="margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 20px;">
+                        <p style="font-size: 18px !important; color: rgba(255,255,255,0.5) !important; letter-spacing: 2px;">AEDD - UTN SANTA FE - INGENIERÍA EN SISTEMAS</p>
+                    </div>
                 </div>
             </section>
 
@@ -963,7 +919,7 @@ void mostrarLibro(const Libro& l, const string& etiqueta) {
     cout << "  Titulo: " << l.titulo << endl;
     cout << "  Autor:  " << l.autor << endl;
     cout << "  ISBN:   " << l.isbn << endl;
-    cout << "  Precio: $" << l.precio << " | Stock: " << l.stock << endl;
+    cout << "  Precio: ARS " << l.precio << " | Stock: " << l.stock << endl;
 }
 
 int main() {
@@ -1062,7 +1018,7 @@ void auditarInventario(const string& ruta) {
     while (f.read((char*)&l, sizeof(Libro))) {
         cout << setw(2) << nro++ << " | "
              << setw(30) << left << l.titulo << " | "
-             << setw(16) << left << l.autor << " | $"
+             << setw(16) << left << l.autor << " | ARS "
              << setw(8) << right << l.precio << " | "
              << setw(3) << right << l.stock << " | "
              << setw(6) << right << l.ventas << endl;
@@ -1076,7 +1032,7 @@ void auditarInventario(const string& ruta) {
 
     cout << "--------------------------------------------------------------------------------" << endl;
     cout << "RESUMEN DE AUDITORIA DE LIBRERIA:" << endl;
-    cout << "  • Recaudacion total historica:  $" << recaudacionTotal << endl;
+    cout << "  • Recaudacion total historica:  ARS " << recaudacionTotal << endl;
     cout << "  • Ejemplares en stock fisico:    " << totalEjemplaresStock << " unidades" << endl;
     cout << "  • Total de ejemplares vendidos:  " << totalEjemplaresVendidos << " unidades" << endl;
     cout << "  • Titulos con stock agotado:     " << librosAgotados << endl;

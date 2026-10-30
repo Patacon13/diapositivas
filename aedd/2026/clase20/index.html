@@ -175,24 +175,10 @@
             <!-- ============================================================== -->
             <!-- SLIDE 1: PORTADA INSTITUCIONAL AEDD (Radial Gradient Dark) -->
             <!-- ============================================================== -->
-            <section data-background-gradient="radial-gradient(circle at 50% 50%, #002B5B 0%, #051329 100%)">
-                <div style="text-align: center;">
-                    <div style="display: inline-block; background: rgba(255, 193, 7, 0.15); border: 1px solid var(--utn-gold); padding: 5px 16px; border-radius: 20px; margin-bottom: 18px;">
-                        <span style="color: var(--utn-gold); font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">
-                            <i class="fa-solid fa-code-branch"></i> Algoritmos y Estructuras de Datos | Clase 20 (2026)
-                        </span>
-                    </div>
-                    <h1 style="color: white; font-size: 60px; line-height: 1.1; margin-bottom: 16px;">
-                        Punteros y Estructuras Dinámicas<br>
-                        <span style="color: var(--utn-gold); font-weight: 400; font-size: 42px;">Listas Simplemente Enlazadas</span>
-                    </h1>
-                    <p style="color: rgba(255,255,255,0.8); margin-top: 24px; text-align: center; font-size: 20px;">
-                        Comisión A — Docentes: Tomás Assenza, Facundo Sanchez, Nicolás Huber
-                    </p>
-                    <p style="color: rgba(255,255,255,0.4); margin-top: 8px; text-align: center; font-size: 14px; letter-spacing: 2px;">
-                        UTN — FACULTAD REGIONAL SANTA FE (INGENIERÍA EN SISTEMAS DE INFORMACIÓN)
-                    </p>
-                </div>
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <h1 style="color: white; font-size: 64px; line-height: 1.05; margin-bottom: 20px;">Algoritmos y Estructuras de Datos<br><span style="color: var(--utn-gold); font-weight: 300; font-size: 46px;">Clase 20: Punteros y Listas Enlazadas</span></h1>
+                <p style="color: rgba(255,255,255,0.7); margin-top: 35px; text-align: center; font-size: 22px;">Docentes de práctica: Tomás Assenza, Facundo Sanchez</p>
+                <p style="color: rgba(255,255,255,0.35); margin-top: 10px; text-align: center; font-size: 16px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe</p>
             </section>
 
             <!-- ============================================================== -->
@@ -598,9 +584,7 @@ void eliminarNodo(Nodo*&amp; cabeza, int valor) {
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Unión Modular en C++</h2>
                     </div>
                     <div class="content-area">
-                        <div class="two-column" style="gap: 16px;">
-                            <div>
-                                <pre><code class="cpp" data-trim data-noescape>
+                        <pre style="font-size: 10px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-13|15-24|26-44|29-35|37-43">
 struct Nodo {
     int dato;
     Nodo* sig;
@@ -625,14 +609,9 @@ void insertarFinal(Nodo*&amp; cabeza, int valor) {
         act-&gt;sig = nuevo;
     }
 }
-                                </code></pre>
-                            </div>
-                            <div>
-                                <pre><code class="cpp" data-trim data-noescape>
+
 Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
     Nodo* res = nullptr;
-
-    // 1. Agregar elementos de A sin repetidos
     Nodo* actA = listaA;
     while (actA != nullptr) {
         if (!estaEnLista(res, actA-&gt;dato)) {
@@ -640,8 +619,6 @@ Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
         }
         actA = actA-&gt;sig;
     }
-
-    // 2. Agregar elementos de B que no esten
     Nodo* actB = listaB;
     while (actB != nullptr) {
         if (!estaEnLista(res, actB-&gt;dato)) {
@@ -649,12 +626,9 @@ Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
         }
         actB = actB-&gt;sig;
     }
-
     return res;
 }
-                                </code></pre>
-                            </div>
-                        </div>
+                        </code></pre>
                     </div>
                 </section>
 
@@ -708,9 +682,7 @@ Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Poda de Tramos en C++</h2>
                     </div>
                     <div class="content-area">
-                        <div class="two-column" style="gap: 16px;">
-                            <div>
-                                <pre><code class="cpp" data-trim data-noescape>
+                        <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-11|13-26|15-18|19-25">
 struct Nodo {
     int dato;
     Nodo* sig;
@@ -724,35 +696,19 @@ void depurarLista(Nodo*&amp; cabeza) {
 
     while (act != nullptr) {
         if (act-&gt;dato &gt; ant-&gt;dato) {
-            // Tramo creciente: ant avanza
+            // Tramo estrictamente creciente: ant avanza
             ant = act;
             act = act-&gt;sig;
         } else {
-            // Tramo no creciente: se poda
+            // Tramo no creciente: se desvincula y libera
             Nodo* aBorrar = act;
             act = act-&gt;sig;      // Avanza explorador
             ant-&gt;sig = act;      // Puentea el nodo
-            delete aBorrar;      // Libera memoria
+            delete aBorrar;      // Libera memoria en heap
         }
     }
 }
-                                </code></pre>
-                            </div>
-                            <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
-                                <div class="concept-card" style="border-left-color: var(--success-green);">
-                                    <h3 style="color: var(--success-green);"><i class="fa-solid fa-check-double"></i> Invariante del Algoritmo</h3>
-                                    <p style="font-size: 14px; margin: 0;">
-                                        <code>ant-&gt;dato</code> siempre contiene el máximo valor creciente alcanzado hasta el momento. Cualquier nodo posterior que no lo supere es eliminado.
-                                    </p>
-                                </div>
-                                <div class="tile" style="border-left: 5px solid var(--danger-red); background: #FFF5F5;">
-                                    <h4 style="color: var(--danger-red); font-size: 15px; margin: 0 0 4px 0;"><i class="fa-solid fa-trash-can"></i> Gestión Estricta de Heap</h4>
-                                    <p style="font-size: 13.5px; margin: 0; color: #7F1D1D;">
-                                        Nótese cómo <code>aBorrar</code> guarda el puntero temporal antes de hacer <code>act = act-&gt;sig</code>. Si hiciéramos <code>delete act</code> primero, leer <code>act-&gt;sig</code> sería un acceso ilegal a memoria.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        </code></pre>
                     </div>
                 </section>
 
@@ -805,9 +761,7 @@ void depurarLista(Nodo*&amp; cabeza) {
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Integración y Ranking en C++</h2>
                     </div>
                     <div class="content-area">
-                        <div class="two-column" style="gap: 16px;">
-                            <div>
-                                <pre><code class="cpp" data-trim data-noescape>
+                        <pre style="font-size: 10px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-11|13-17|19-30|32-41">
 struct NodoCalificaciones {
     int idAlumno;
     int notas[6];
@@ -825,16 +779,11 @@ float calcularPromedio(const int notas[6]) {
     for (int i = 0; i &lt; 6; i++) suma += notas[i];
     return suma / 6.0f;
 }
-                                </code></pre>
-                            </div>
-                            <div>
-                                <pre><code class="cpp" data-trim data-noescape>
-void insertarDescendente(NodoIntegrada*&amp; cabeza, 
-                         int id, float prom) {
+
+void insertarDescendente(NodoIntegrada*&amp; cabeza, int id, float prom) {
     NodoIntegrada* nuevo = new NodoIntegrada{id, prom, nullptr};
     NodoIntegrada* act = cabeza;
     NodoIntegrada* ant = nullptr;
-
     while (act != nullptr &amp;&amp; act-&gt;promedio &gt;= prom) {
         ant = act;
         act = act-&gt;sig;
@@ -844,18 +793,17 @@ void insertarDescendente(NodoIntegrada*&amp; cabeza,
     else ant-&gt;sig = nuevo;
 }
 
-NodoIntegrada* integrar(NodoCalificaciones* c1, 
-                        NodoCalificaciones* c2) {
+NodoIntegrada* integrar(NodoCalificaciones* c1, NodoCalificaciones* c2) {
     NodoIntegrada* res = nullptr;
-    for (NodoCalificaciones* p = c1; p; p = p-&gt;sig)
+    for (NodoCalificaciones* p = c1; p != nullptr; p = p-&gt;sig) {
         insertarDescendente(res, p-&gt;idAlumno, calcularPromedio(p-&gt;notas));
-    for (NodoCalificaciones* p = c2; p; p = p-&gt;sig)
+    }
+    for (NodoCalificaciones* p = c2; p != nullptr; p = p-&gt;sig) {
         insertarDescendente(res, p-&gt;idAlumno, calcularPromedio(p-&gt;notas));
+    }
     return res;
 }
-                                </code></pre>
-                            </div>
-                        </div>
+                        </code></pre>
                     </div>
                 </section>
 
@@ -902,13 +850,18 @@ NodoIntegrada* integrar(NodoCalificaciones* c1,
             <!-- ============================================================== -->
             <!-- SLIDE 15: CIERRE INSTITUCIONAL -->
             <!-- ============================================================== -->
-            <section data-background-color="#002B5B">
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
                 <div class="section-title-layout">
-                    <h2 style="color: var(--utn-gold) !important; font-size: 54px !important;">¿DUDAS O CONSULTAS?</h2>
-                    <p style="margin-bottom: 24px; color: rgba(255,255,255,0.8) !important;">ESPACIO PARA PUESTA EN COMÚN Y PRÁCTICA</p>
-                    <a href="debugger/index.html" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; background: rgba(56, 189, 248, 0.14); border: 2px solid var(--cyan-accent); color: var(--cyan-accent); padding: 10px 22px; border-radius: 12px; font-weight: 700; font-size: 17px; text-decoration: none; transition: all 0.2s ease;">
-                        <i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i> Probar Pointer Inspector (Simulador Visual) <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 13px;"></i>
-                    </a>
+                    <h2>¿DUDAS O CONSULTAS?</h2>
+                    <p style="color: white !important;">Espacio para puesta en común y preguntas</p>
+                    <div style="margin-top: 30px;">
+                        <a href="debugger/index.html" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; background: rgba(56, 189, 248, 0.14); border: 2px solid var(--cyan-accent); color: var(--cyan-accent); padding: 10px 22px; border-radius: 12px; font-weight: 700; font-size: 17px; text-decoration: none; transition: all 0.2s ease;">
+                            <i class="fa-solid fa-code-fork" style="color: var(--utn-gold);"></i> Probar Pointer Inspector (Simulador Visual) <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 13px;"></i>
+                        </a>
+                    </div>
+                    <div style="margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 20px;">
+                        <p style="font-size: 18px !important; color: rgba(255,255,255,0.5) !important; letter-spacing: 2px;">AEDD - UTN SANTA FE - INGENIERÍA EN SISTEMAS</p>
+                    </div>
                 </div>
             </section>
 
