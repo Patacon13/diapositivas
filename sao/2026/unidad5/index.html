@@ -333,6 +333,16 @@
             transform: scale(1.02);
         }
 
+        .btn-debug {
+            background: #7C3AED;
+            color: white;
+        }
+
+        .btn-debug:hover {
+            background: #6D28D9;
+            transform: scale(1.02);
+        }
+
         /* Grilla de Documentación (2 columnas) */
         .docs-grid {
             max-width: 1240px;
@@ -388,6 +398,11 @@
         .doc-badge-guide {
             background: #FFE4E6;
             color: #E11D48;
+        }
+
+        .doc-badge-debug {
+            background: #F5F3FF;
+            color: #7C3AED;
         }
 
         .doc-details {
@@ -774,7 +789,7 @@
         <div class="section-header" style="margin-top: 20px;">
             <h2><i class="fa-solid fa-book-bookmark" style="color: #E11D48;"></i> Documentación &amp; Material de Estudio</h2>
             <div class="section-line"></div>
-            <span class="badge-count">2 Documentos</span>
+            <span class="badge-count">3 Documentos</span>
         </div>
 
         <section class="docs-grid">
@@ -810,6 +825,23 @@
                 </div>
                 <a href="https://tuti.sied.utn.edu.ar/pluginfile.php/13357/mod_resource/content/4/SAO_Guia_Unidad_5.pdf" target="_blank" rel="noopener noreferrer" class="action-btn doc-btn btn-guide">
                     <span>Abrir Práctica</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+
+            <!-- DOC 3: ANEXO DEBUGGING -->
+            <div class="doc-card">
+                <div class="doc-info">
+                    <div class="doc-icon-badge doc-badge-debug">
+                        <i class="fa-solid fa-bug-slash"></i>
+                    </div>
+                    <div class="doc-details">
+                        <span class="doc-meta">Anexo • PDF</span>
+                        <h4>Anexo — Instructivo Debugging</h4>
+                        <p>Guía de depuración en Java: configuración de breakpoints, inspección de variables y seguimiento del flujo de ejecución en el IDE.</p>
+                    </div>
+                </div>
+                <a href="https://tuti.sied.utn.edu.ar/pluginfile.php/15015/mod_resource/content/2/Anexo-InstructivoDebugging.pdf" target="_blank" rel="noopener noreferrer" class="action-btn doc-btn btn-debug">
+                    <span>Abrir Anexo</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </a>
             </div>
 
