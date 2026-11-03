@@ -606,15 +606,14 @@
                  SLIDE 5: PRÁCTICA GUIADA 1: INSERCIÓN CONDICIONADA (PROBLEMA 7)
                  ========================================================================= -->
             <section>
-                <section>
-                    <h2 class="slide-title">PRÁCTICA GUIADA 1: <span class="slide-subtitle">Inserción de Múltiplos (Prob. 7)</span></h2>
-                    <div class="content-area">
-                        <p style="font-size: 14.5px; color: #475569; margin-bottom: 8px; line-height: 1.4;">
-                            <strong>Problema:</strong> Insertar un elemento con valor <code class="code-badge">X + 1</code> inmediatamente detrás de cada elemento que sea múltiplo de 100 (<code class="code-badge">X % 100 == 0</code>). Retornar la cantidad de elementos insertados. <em>(Versión base: asume capacidad física suficiente).</em>
-                        </p>
+                <h2 class="slide-title">PRÁCTICA GUIADA 1: <span class="slide-subtitle">Inserción de Múltiplos (Prob. 7)</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 14.5px; color: #475569; margin-bottom: 8px; line-height: 1.4;">
+                        <strong>Problema:</strong> Insertar un elemento con valor <code class="code-badge">X + 1</code> inmediatamente detrás de cada elemento que sea múltiplo de 100 (<code class="code-badge">X % 100 == 0</code>). Retornar la cantidad de elementos insertados. <em>(Versión base: asume capacidad física suficiente).</em>
+                    </p>
 
-                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 8px;">
-                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px; line-height: 1.35;">public static int insertarDetrasDeMultiplos(int[] arr, int cantActual) {
+                    <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 8px;">
+                        <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px; line-height: 1.35;">public static int insertarDetrasDeMultiplos(int[] arr, int cantActual) {
     int insertados = 0;
     for (int i = 0; i &lt; cantActual; i++) {
         if (arr[i] != 0 && arr[i] % 100 == 0) {
@@ -630,41 +629,41 @@
     }
     return insertados;
 }</code></pre>
+                    </div>
+
+                    <div class="two-column" style="gap: 14px; margin-top: 6px; align-items: stretch;">
+                        <div class="callout-box" style="margin-top: 0; padding: 9px 13px; height: 100%; box-sizing: border-box;">
+                            <i class="fa-solid fa-triangle-exclamation" style="font-size: 17px; margin-top: 2px !important;"></i>
+                            <div>
+                                <strong>¡Ojo con el bucle infinito! (<code class="code-badge">i++</code>)</strong>
+                                <p>Al insertar en <code class="code-badge">i + 1</code>, se debe avanzar <code class="code-badge">i++</code> para saltar el valor nuevo y no volver a evaluarlo.</p>
+                            </div>
                         </div>
 
-                        <div class="two-column" style="gap: 14px; margin-top: 6px; align-items: stretch;">
-                            <div class="callout-box" style="margin-top: 0; padding: 9px 13px; height: 100%; box-sizing: border-box;">
-                                <i class="fa-solid fa-triangle-exclamation" style="font-size: 17px; margin-top: 2px !important;"></i>
-                                <div>
-                                    <strong>¡Ojo con el bucle infinito! (<code class="code-badge">i++</code>)</strong>
-                                    <p>Al insertar en <code class="code-badge">i + 1</code>, se debe avanzar <code class="code-badge">i++</code> para saltar el valor nuevo y no volver a evaluarlo.</p>
-                                </div>
-                            </div>
-
-                            <div class="callout-box warning" style="margin-top: 0; padding: 9px 13px; border: 1px solid #FDE68A; border-left: 5px solid #D97706; height: 100%; box-sizing: border-box;">
-                                <i class="fa-solid fa-laptop-code" style="color: #D97706; font-size: 17px; margin-top: 2px !important;"></i>
-                                <div>
-                                    <strong style="color: #92400E;">Desafío: Control de Límites Físicos</strong>
-                                    <p style="color: #78350F;">Modificar la función considerando la validación de no exceder los límites físicos del arreglo (<code class="code-badge">cantActual &lt; arr.length</code>) antes de desplazar.</p>
-                                </div>
+                        <div class="callout-box warning" style="margin-top: 0; padding: 9px 13px; border: 1px solid #FDE68A; border-left: 5px solid #D97706; height: 100%; box-sizing: border-box;">
+                            <i class="fa-solid fa-laptop-code" style="color: #D97706; font-size: 17px; margin-top: 2px !important;"></i>
+                            <div>
+                                <strong style="color: #92400E;">Desafío: Control de Límites Físicos</strong>
+                                <p style="color: #78350F;">Modificar la función considerando la validación de no exceder los límites físicos del arreglo (<code class="code-badge">cantActual &lt; arr.length</code>) antes de desplazar.</p>
                             </div>
                         </div>
                     </div>
-                </section>
-
-                <!-- VERTICAL SLIDE: ONECOMPILER INSERCIÓN MÚLTIPLOS -->
-                <section id="slide-compiler-multiplos" data-background-color="#0F172A">
-                    <div class="compiler-window">
-                        <div class="header">
-                            <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Inserción Condicionada (Problema 7)</span>
-                            <button onclick="sendCodeWithRetries('oc-editor-multiplos', codeMultiplos, 'java', 'Main.java')">
-                                <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
-                            </button>
-                        </div>
-                        <iframe id="oc-editor-multiplos" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
-                    </div>
-                </section>
+                </div>
             </section>
+
+            <!-- VERTICAL SLIDE: ONECOMPILER INSERCIÓN MÚLTIPLOS (Deshabilitado temporalmente)
+            <section id="slide-compiler-multiplos" data-background-color="#0F172A">
+                <div class="compiler-window">
+                    <div class="header">
+                        <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Inserción Condicionada (Problema 7)</span>
+                        <button onclick="sendCodeWithRetries('oc-editor-multiplos', codeMultiplos, 'java', 'Main.java')">
+                            <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
+                        </button>
+                    </div>
+                    <iframe id="oc-editor-multiplos" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                </div>
+            </section>
+            -->
 
             <!-- =========================================================================
                  SLIDE 6: ELIMINACIÓN: AL FINAL VS. AL INICIO
@@ -733,57 +732,57 @@
                  SLIDE 7: PRÁCTICA GUIADA 2: ELIMINACIÓN DE REPETIDOS (PROBLEMA 8)
                  ========================================================================= -->
             <section>
-                <section>
-                    <h2 class="slide-title">PRÁCTICA GUIADA 2: <span class="slide-subtitle">Eliminación In Situ (Prob. 8)</span></h2>
-                    <div class="content-area">
-                        <p style="font-size: 15px; color: #475569; margin-bottom: 10px;">
-                            <strong>Problema:</strong> Dado un vector <strong>ordenado</strong>, eliminar todos los elementos repetidos *in situ* (sin crear un arreglo auxiliar) y retornar la cantidad de elementos pares eliminados.
-                        </p>
+                <h2 class="slide-title">PRÁCTICA GUIADA 2: <span class="slide-subtitle">Eliminación In Situ (Prob. 8)</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15px; color: #475569; margin-bottom: 10px;">
+                        <strong>Problema:</strong> Dado un vector <strong>ordenado</strong>, eliminar todos los elementos repetidos *in situ* (sin crear un arreglo auxiliar) y retornar la cantidad de elementos eliminados.
+                    </p>
 
-                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 12px;">
-                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13px;">public static int eliminarRepetidos(int[] arr, int tope) {
-    int paresEliminados = 0;
-    int i = 0;
-    while (i &lt; tope - 1) {
-        if (arr[i] == arr[i + 1]) { // Encontramos un duplicado
-            if (arr[i] % 2 == 0) paresEliminados++;
-            
-            // Compactamos a la izquierda sobreescribiendo arr[i+1]
-            for (int k = i + 1; k &lt; tope - 1; k++) {
-                arr[k] = arr[k + 1];
+                    <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 12px;">
+                        <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 13px;">    public static int eliminarRepetidos(int[] arr, int tope) {
+        int eliminados = 0;
+        int i = 0;
+
+        while (i < tope - 1) {
+            if (arr[i] == arr[i + 1]) {
+                eliminados++;
+                // Corrimiento hacia la izquierda para compactar
+                for (int k = i + 1; k < tope - 1; k++) {
+                    arr[k] = arr[k + 1];
+                }
+                tope--; // Reducimos el tamaño lógico
+                        // No incrementamos i porque el nuevo arr[i+1] podría ser repetido
+            } else {
+                i++;
             }
-            tope--; // ¡NO incrementamos i! Podría haber otro repetido
-        } else {
-            i++; // Solo avanzamos si no hubo eliminación
         }
-    }
-    return paresEliminados;
-}</code></pre>
-                        </div>
+        return eliminados;
+    }</code></pre>
+                    </div>
 
-                        <div class="callout-box">
-                            <i class="fa-solid fa-code-compare"></i>
-                            <div>
-                                <strong>¿Por qué usar while en lugar de for?</strong>
-                                <p>Si el arreglo tiene <code class="code-badge">{ 2, 2, 2, 5 }</code> y borramos el segundo <code class="code-badge">2</code>, el tercer <code class="code-badge">2</code> cae en la posición actual. Si avanzáramos ciegamente el índice, ese tercer <code class="code-badge">2</code> quedaría sin evaluar.</p>
-                            </div>
+                    <div class="callout-box">
+                        <i class="fa-solid fa-code-compare"></i>
+                        <div>
+                            <strong>¿Por qué usar while en lugar de for?</strong>
+                            <p>Si el arreglo tiene <code class="code-badge">{ 2, 2, 2, 5 }</code> y borramos el segundo <code class="code-badge">2</code>, el tercer <code class="code-badge">2</code> cae en la posición actual. Si avanzáramos ciegamente el índice, ese tercer <code class="code-badge">2</code> quedaría sin evaluar.</p>
                         </div>
                     </div>
-                </section>
-
-                <!-- VERTICAL SLIDE: ONECOMPILER ELIMINACIÓN REPETIDOS -->
-                <section id="slide-compiler-repetidos" data-background-color="#0F172A">
-                    <div class="compiler-window">
-                        <div class="header">
-                            <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Eliminación In Situ de Repetidos (Problema 8)</span>
-                            <button onclick="sendCodeWithRetries('oc-editor-repetidos', codeRepetidos, 'java', 'Main.java')">
-                                <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
-                            </button>
-                        </div>
-                        <iframe id="oc-editor-repetidos" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
-                    </div>
-                </section>
+                </div>
             </section>
+
+            <!-- VERTICAL SLIDE: ONECOMPILER ELIMINACIÓN REPETIDOS (Deshabilitado temporalmente)
+            <section id="slide-compiler-repetidos" data-background-color="#0F172A">
+                <div class="compiler-window">
+                    <div class="header">
+                        <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Eliminación In Situ de Repetidos (Problema 8)</span>
+                        <button onclick="sendCodeWithRetries('oc-editor-repetidos', codeRepetidos, 'java', 'Main.java')">
+                            <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
+                        </button>
+                    </div>
+                    <iframe id="oc-editor-repetidos" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                </div>
+            </section>
+            -->
 
             <!-- =========================================================================
                  SLIDE 8: MATRIZ DE COMPLEJIDAD Y RENDIMIENTO
