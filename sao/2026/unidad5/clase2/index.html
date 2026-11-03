@@ -456,14 +456,14 @@
                                 <span>1. Inserción al Final (al Tope)</span>
                                 <span style="background: #0284C7; color: white; padding: 1px 7px; border-radius: 4px; font-size: 11px;">O(1) Inmediato</span>
                             </div>
-                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12px; line-height: 1.35;">public static boolean insertarFinal(int[] arr, int tope, int valor) {
-    if (tope &lt; arr.length) {
-        arr[tope] = valor;
-        tope++;
-        return true;
-    }
-    return false; // Vector lleno
-}</code></pre>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12px; line-height: 1.35;">    public static boolean insertarFinal(int[] arr, int tope, int valor) {
+        boolean rta=false;
+        if (tope < arr.length) {
+            arr[tope] = valor;
+            rta=true;
+        } 
+        return rta;
+    }</code></pre>
                             <p style="padding: 7px 14px; margin: 0; font-size: 12px; color: #94A3B8; background: #0F172A;">
                                 Directo: se guarda en la celda <code class="code-badge">tope</code> sin desplazar ningún elemento existente.
                             </p>
@@ -475,17 +475,18 @@
                                 <span>2. Inserción al Inicio (en 0)</span>
                                 <span style="background: #D97706; color: white; padding: 1px 7px; border-radius: 4px; font-size: 11px;">O(N) Corrimiento</span>
                             </div>
-                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12px; line-height: 1.35;">public static boolean insertarInicio(int[] arr, int tope, int valor) {
-    if (tope &gt;= arr.length) return false;
-    
-    // Corrimiento a la derecha (descendente)
-    for (int i = tope; i &gt; 0; i--) {
-        arr[i] = arr[i - 1];
-    }
-    arr[0] = valor;
-    tope++;
-    return true;
-}</code></pre>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12px; line-height: 1.35;">    public static boolean insertarInicio(int[] arr, int tope, int valor) {
+        boolean rta=false;
+        if (tope < arr.length) {
+            // Corrimiento a la derecha (descendente)
+            for (int i = tope; i > 0; i--) {
+                arr[i] = arr[i - 1];
+            }
+            arr[0] = valor;
+            rta=true;
+        }
+        return rta;
+    }</code></pre>
                             <p style="padding: 7px 14px; margin: 0; font-size: 12px; color: #94A3B8; background: #0F172A;">
                                 Requiere "hacer espacio": empuja todos los datos una posición a la derecha.
                             </p>
