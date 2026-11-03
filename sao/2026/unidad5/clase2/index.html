@@ -785,15 +785,15 @@
                                 <span>1. Eliminación al Final</span>
                                 <span style="background: #0284C7; color: white; padding: 1px 7px; border-radius: 4px; font-size: 11px;">O(1) Inmediato</span>
                             </div>
-                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px;">public static boolean eliminarFinal(int[] arr) {
-    if (tope &gt; 0) {
-        tope--; // Eliminación lógica
-        return true;
-    }
-    return false; // Vector vacío (Underflow)
-}</code></pre>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px;">    public static boolean eliminarFinal(int[] arr, int tope) {
+        boolean rta = false;
+        if (tope > 0) {
+            rta = true;
+        }
+        return rta;
+    }</code></pre>
                             <p style="padding: 10px 14px; margin: 0; font-size: 12px; color: #94A3B8; background: #0F172A;">
-                                Instantáneo: decrementar <code class="code-badge">tope--</code> ignora el último dato sin borrar físicamente la RAM.
+                                Si se pudo eliminar, hay que decrementar <code class="code-badge">tope--</code> en el invocador. Así, ignora el último dato sin borrar físicamente la RAM.
                             </p>
                         </div>
 
@@ -803,18 +803,19 @@
                                 <span>2. Eliminación al Inicio (en 0)</span>
                                 <span style="background: #DC2626; color: white; padding: 1px 7px; border-radius: 4px; font-size: 11px;">O(N) Compactación</span>
                             </div>
-                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px;">public static boolean eliminarInicio(int[] arr) {
-    if (tope &lt;= 0) return false;
-    
-    // Corrimiento hacia la izquierda (ascendente)
-    for (int i = 0; i &lt; tope - 1; i++) {
-        arr[i] = arr[i + 1];
-    }
-    tope--;
-    return true;
-}</code></pre>
+                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 12px 16px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12.5px;">    public static boolean eliminarInicio(int[] arr, int tope) {
+        boolean rta = false;
+        if (tope > 0) {
+            // Corrimiento a la izquierda
+            for (int i = 0; i < tope - 1; i++) {
+                arr[i] = arr[i + 1];
+            }
+            rta = true;
+        }
+        return rta;
+    }</code></pre>
                             <p style="padding: 10px 14px; margin: 0; font-size: 12px; color: #94A3B8; background: #0F172A;">
-                                Compactación: cada elemento subsiguiente sobreescribe a su vecino izquierdo.
+                                Compactación: cada elemento subsiguiente sobreescribe a su vecino izquierdo. Si se pudo eliminar, el invocador reduce en 1 el tope (tope--).
                             </p>
                         </div>
 
