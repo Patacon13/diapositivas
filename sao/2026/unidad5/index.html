@@ -343,6 +343,19 @@
             transform: scale(1.02);
         }
 
+        .btn-disabled {
+            background: #E2E8F0;
+            color: #94A3B8;
+            cursor: not-allowed;
+            pointer-events: none;
+            box-shadow: none;
+        }
+
+        .btn-disabled:hover {
+            transform: none;
+            background: #E2E8F0;
+        }
+
         /* Grilla de Documentación (2 columnas) */
         .docs-grid {
             max-width: 1240px;
@@ -777,7 +790,8 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="clase3/index.html" class="action-btn btn-slate">
+                    <!-- Enlace a Clase 3 deshabilitado temporalmente -->
+                    <a href="clase3/index.html" class="action-btn btn-disabled" aria-disabled="true" tabindex="-1">
                         <span>Iniciar Clase 3</span> <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
