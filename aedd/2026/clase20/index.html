@@ -74,9 +74,8 @@
             font-variant-ligatures: none;
             font-feature-settings: "liga" 0, "calt" 0;
         }
-        .reveal code,
         .reveal pre code,
-        .reveal .hljs:not(:first-child).fragment {
+        .reveal pre .hljs:not(:first-child).fragment {
             font-family: 'Fira Code', monospace;
             font-size: inherit;
             padding: 14px 18px;
@@ -91,29 +90,40 @@
             scrollbar-width: thin;
             scrollbar-color: rgba(255, 193, 7, 0.45) rgba(15, 23, 42, 0.6);
         }
-        .reveal code::-webkit-scrollbar,
         .reveal pre code::-webkit-scrollbar,
-        .reveal .hljs:not(:first-child).fragment::-webkit-scrollbar {
+        .reveal pre .hljs:not(:first-child).fragment::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
-        .reveal code::-webkit-scrollbar-track,
         .reveal pre code::-webkit-scrollbar-track,
-        .reveal .hljs:not(:first-child).fragment::-webkit-scrollbar-track {
+        .reveal pre .hljs:not(:first-child).fragment::-webkit-scrollbar-track {
             background: rgba(15, 23, 42, 0.6);
             border-radius: 8px;
         }
-        .reveal code::-webkit-scrollbar-thumb,
         .reveal pre code::-webkit-scrollbar-thumb,
-        .reveal .hljs:not(:first-child).fragment::-webkit-scrollbar-thumb {
+        .reveal pre .hljs:not(:first-child).fragment::-webkit-scrollbar-thumb {
             background: rgba(255, 193, 7, 0.45);
             border-radius: 8px;
             border: 2px solid transparent;
         }
-        .reveal code::-webkit-scrollbar-thumb:hover,
         .reveal pre code::-webkit-scrollbar-thumb:hover,
-        .reveal .hljs:not(:first-child).fragment::-webkit-scrollbar-thumb:hover {
+        .reveal pre .hljs:not(:first-child).fragment::-webkit-scrollbar-thumb:hover {
             background: var(--utn-gold);
+        }
+
+        /* Codigo inline en listas, parrafos y cards */
+        .reveal :not(pre) > code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(0, 43, 91, 0.08);
+            color: var(--utn-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.88em;
+            display: inline-block;
+            vertical-align: baseline;
+            width: auto;
+            max-height: none !important;
+            overflow: visible !important;
         }
 
         .section-title-layout { display: flex; flex-direction: column; justify-content: center; align-items: center; }
