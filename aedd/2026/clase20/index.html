@@ -248,7 +248,7 @@
                         </div>
                         <div class="tile">
                             <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-circle-nodes" style="color: var(--utn-gold);"></i> 4. El Nodo Enlazado</h3>
-                            <p>Estructura autoreferenciada y operaciones primitivas (inserción, recorrido, búsqueda y borrado).</p>
+                            <p>Estructura autoreferenciada, alias con <code>typedef</code> y operaciones primitivas (inserción, recorrido, búsqueda y borrado).</p>
                         </div>
                         <div class="tile" style="border-bottom-color: var(--utn-gold); background: #FFF9E6;">
                             <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i> 5. Pointer Inspector</h3>
@@ -655,14 +655,18 @@ void mostrarLista(Nodo* cabeza) {
     cout &lt;&lt; "NULL" &lt;&lt; endl;
 }
 
-// Busqueda booleana
+// Busqueda booleana (recorrido condicional estructurado)
 bool estaEnLista(Nodo* cabeza, int buscado) {
     Nodo* act = cabeza;
-    while (act != nullptr) {
-        if (act-&gt;dato == buscado) return true;
-        act = act-&gt;sig;
+    bool esta = false;
+    while (act != nullptr && !esta) {
+        if (act-&gt;dato == buscado) {
+            esta = true;
+        } else {
+            act = act-&gt;sig;
+        }
     }
-    return false;
+    return esta;
 }
                             </code></pre>
                         </div>
@@ -676,9 +680,9 @@ bool estaEnLista(Nodo* cabeza, int buscado) {
                                 </p>
                             </div>
                             <div class="concept-card">
-                                <h3><i class="fa-solid fa-compass"></i> Condición de Parada</h3>
-                                <p style="font-size: 15px; margin: 0;">
-                                    El bucle termina exactamente cuando <code>act == nullptr</code>. Nunca intentes acceder a <code>act-&gt;dato</code> si <code>act</code> ya es nulo.
+                                <h3><i class="fa-solid fa-compass"></i> Condición de Parada Doble</h3>
+                                <p style="font-size: 14px; margin: 0;">
+                                    El bucle de búsqueda finaliza si se encuentra el elemento (<code>esta == true</code>) o si se agota la lista (<code>act == nullptr</code>). Usar la bandera booleana en la condición preserva la programación estructurada.
                                 </p>
                             </div>
                         </div>
@@ -736,7 +740,87 @@ void eliminarNodo(Nodo*&amp; cabeza, int valor) {
             </section>
 
             <!-- ============================================================== -->
-            <!-- SLIDE 9: TRANSICIÓN A SIMULADOR INTERACTIVO -->
+            <!-- SLIDE 9: SIMPLIFICACIÓN DE SINTAXIS CON TYPEDEF -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Simplificación de Sintaxis: Alias con <code>typedef</code></h2>
+                <div class="content-area">
+                    <div class="two-column" style="gap: 18px; align-items: start;">
+                        <!-- Columna Izquierda: Fundamento y Ventajas -->
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="concept-card" style="border-left-color: var(--utn-gold);">
+                                <h3 style="color: var(--utn-blue); font-size: 18px;">
+                                    <i class="fa-solid fa-signature" style="color: var(--utn-gold);"></i> ¿Qué hace <code>typedef</code>?
+                                </h3>
+                                <p style="font-size: 14px; margin: 0; line-height: 1.55;">
+                                    Crea un <strong>sinónimo o alias</strong> para un tipo de dato existente:
+                                    <br>
+                                    <code style="margin-top: 6px;">typedef Nodo* ptrNodo;</code>
+                                    <br>
+                                    A partir de esa definición, el identificador <code>ptrNodo</code> representa exactamente a <code>Nodo*</code> (puntero a Nodo).
+                                </p>
+                            </div>
+
+                            <div class="tile" style="border-left: 5px solid var(--cyan-accent); padding: 12px 14px;">
+                                <h4 style="color: var(--utn-blue); font-size: 14.5px; margin: 0 0 4px 0;">
+                                    <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--cyan-accent);"></i> Claridad en Paso por Referencia
+                                </h4>
+                                <p style="font-size: 13.5px; margin: 0; line-height: 1.5; color: var(--text-main);">
+                                    En lugar de la confusa notación <code>Nodo*&amp; cabeza</code> (referencia a un puntero), escribimos limpiamente:
+                                    <br>
+                                    <code style="margin-top: 4px;">void insertar(ptrNodo&amp; cabeza, int valor);</code>
+                                    <br>
+                                    Se lee con total naturalidad: <em>"cabeza se pasa por referencia y su tipo es puntero a nodo"</em>.
+                                </p>
+                            </div>
+
+                            <div class="tile" style="border-left: 5px solid var(--utn-blue); padding: 10px 14px; background: #F1F5F9;">
+                                <p style="font-size: 13px; margin: 0; color: var(--text-light);">
+                                    <i class="fa-solid fa-circle-info" style="color: var(--utn-blue);"></i> <strong>Equivalencia 100%:</strong> Ambos estilos compilan exactamente igual en C++. Es una herramienta de legibilidad y buenas prácticas.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Columna Derecha: Código C++ en Acción -->
+                        <div>
+                            <pre style="font-size: 11px !important;"><code class="cpp" data-trim data-noescape>
+struct Nodo {
+    int dato;
+    Nodo* sig;
+};
+
+// 1. Definimos el alias del puntero
+typedef Nodo* ptrNodo;
+
+// 2. Parámetro por referencia claro y legible
+void insertarInicio(ptrNodo&amp; cabeza, int valor) {
+    ptrNodo nuevo = new Nodo{valor, cabeza};
+    cabeza = nuevo;
+}
+
+// 3. Declaración y punteros auxiliares
+void mostrar(ptrNodo cabeza) {
+    ptrNodo act = cabeza;
+    while (act != nullptr) {
+        cout &lt;&lt; act-&gt;dato &lt;&lt; " -&gt; ";
+        act = act-&gt;sig;
+    }
+    cout &lt;&lt; "NULL" &lt;&lt; endl;
+}
+
+int main() {
+    ptrNodo lista = nullptr; // Nodo* lista = nullptr;
+    insertarInicio(lista, 10);
+    mostrar(lista);
+}
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 10: TRANSICIÓN A SIMULADOR INTERACTIVO -->
             <!-- ============================================================== -->
             <section data-background-gradient="radial-gradient(circle at 50% 50%, #002B5B 0%, #07152B 100%)">
                 <div class="section-title-layout">
@@ -815,7 +899,7 @@ void eliminarNodo(Nodo*&amp; cabeza, int valor) {
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Unión Modular en C++</h2>
                     </div>
                     <div class="content-area">
-                        <pre style="font-size: 10px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-13|15-24|26-44|29-35|37-43">
+                        <pre style="font-size: 10px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-18|20-29|31-49|34-40|42-48">
 struct Nodo {
     int dato;
     Nodo* sig;
@@ -823,11 +907,15 @@ struct Nodo {
 
 bool estaEnLista(Nodo* cabeza, int valor) {
     Nodo* act = cabeza;
-    while (act != nullptr) {
-        if (act-&gt;dato == valor) return true;
-        act = act-&gt;sig;
+    bool esta = false;
+    while (act != nullptr && !esta) {
+        if (act-&gt;dato == valor) {
+            esta = true;
+        } else {
+            act = act-&gt;sig;
+        }
     }
-    return false;
+    return esta;
 }
 
 void insertarFinal(Nodo*&amp; cabeza, int valor) {
@@ -1101,11 +1189,15 @@ struct Nodo {
 // Verifica si un valor ya se encuentra en la lista
 bool estaEnLista(Nodo* cabeza, int valor) {
     Nodo* act = cabeza;
-    while (act != nullptr) {
-        if (act->dato == valor) return true;
-        act = act->sig;
+    bool esta = false;
+    while (act != nullptr && !esta) {
+        if (act->dato == valor) {
+            esta = true;
+        } else {
+            act = act->sig;
+        }
     }
-    return false;
+    return esta;
 }
 
 // Inserta un nodo al final de la lista
