@@ -841,11 +841,11 @@
                 ],
                 initialStack: [
                     { name: "cabeza", type: "ptr", val: "0x10A0" },
-                    { name: "nuevo", type: "ptr", val: "nullptr" },
+                    { name: "nuevo", type: "ptr", val: "NULL" },
                     { name: "valor", type: "int", val: "10" }
                 ],
                 initialHeap: [
-                    { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                    { addr: "0x10A0", dato: 20, sig: "NULL", tags: ["cabeza"] }
                 ],
                 steps: [
                     {
@@ -853,11 +853,11 @@
                         desc: "Llamada a insertarInicio(cabeza, 10). Se pasan cabeza por referencia y valor = 10.",
                         stack: [
                             { name: "cabeza", type: "ptr", val: "0x10A0", hl: true },
-                            { name: "nuevo", type: "ptr", val: "nullptr" },
+                            { name: "nuevo", type: "ptr", val: "NULL" },
                             { name: "valor", type: "int", val: "10", hl: true }
                         ],
                         heap: [
-                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                            { addr: "0x10A0", dato: 20, sig: "NULL", tags: ["cabeza"] }
                         ],
                         log: { type: "info", text: "Invocando insertarInicio: cabeza apunta a 0x10A0." }
                     },
@@ -870,8 +870,8 @@
                             { name: "valor", type: "int", val: "10" }
                         ],
                         heap: [
-                            { addr: "0x2B40", dato: "?", sig: "nullptr", tags: ["nuevo"], isNew: true },
-                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                            { addr: "0x2B40", dato: "?", sig: "NULL", tags: ["nuevo"], isNew: true },
+                            { addr: "0x10A0", dato: 20, sig: "NULL", tags: ["cabeza"] }
                         ],
                         log: { type: "alloc", text: "Heap alloc: Nodo reservado en 0x2B40." }
                     },
@@ -884,8 +884,8 @@
                             { name: "valor", type: "int", val: "10" }
                         ],
                         heap: [
-                            { addr: "0x2B40", dato: 10, sig: "nullptr", tags: ["nuevo"] },
-                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                            { addr: "0x2B40", dato: 10, sig: "NULL", tags: ["nuevo"] },
+                            { addr: "0x10A0", dato: 20, sig: "NULL", tags: ["cabeza"] }
                         ],
                         log: { type: "info", text: "Asignación: nodo 0x2B40->dato = 10." }
                     },
@@ -899,7 +899,7 @@
                         ],
                         heap: [
                             { addr: "0x2B40", dato: 10, sig: "0x10A0", tags: ["nuevo"] },
-                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
+                            { addr: "0x10A0", dato: 20, sig: "NULL", tags: ["cabeza"] }
                         ],
                         log: { type: "link", text: "Enlace: 0x2B40->sig = 0x10A0 (nodo con dato 20)." }
                     },
@@ -913,7 +913,7 @@
                         ],
                         heap: [
                             { addr: "0x2B40", dato: 10, sig: "0x10A0", tags: ["cabeza", "nuevo"] },
-                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: [] }
+                            { addr: "0x10A0", dato: 20, sig: "NULL", tags: [] }
                         ],
                         log: { type: "link", text: "Actualización de cabeza: lista comienza en 0x2B40." }
                     },
@@ -925,9 +925,9 @@
                         ],
                         heap: [
                             { addr: "0x2B40", dato: 10, sig: "0x10A0", tags: ["cabeza"] },
-                            { addr: "0x10A0", dato: 20, sig: "nullptr", tags: [] }
+                            { addr: "0x10A0", dato: 20, sig: "NULL", tags: [] }
                         ],
-                        log: { type: "info", text: "Inserción completada: [ 10 ] -> [ 20 ] -> nullptr." }
+                        log: { type: "info", text: "Inserción completada: [ 10 ] -> [ 20 ] -> NULL." }
                     }
                 ]
             },
@@ -939,15 +939,15 @@
                 title: "Inserción Ordenada",
                 codeLines: [
                     { num: 1, text: `<span class="tp">void</span> <span class="vr">insertarOrdenado</span>(<span class="tp">Nodo</span>*&amp; <span class="vr">cabeza</span>, <span class="tp">int</span> <span class="vr">valor</span>) {` },
-                    { num: 2, text: `    <span class="tp">Nodo</span>* <span class="vr">nuevo</span> = <span class="kw">new</span> <span class="tp">Nodo</span>{<span class="vr">valor</span>, <span class="kw">nullptr</span>};` },
+                    { num: 2, text: `    <span class="tp">Nodo</span>* <span class="vr">nuevo</span> = <span class="kw">new</span> <span class="tp">Nodo</span>{<span class="vr">valor</span>, <span class="kw">NULL</span>};` },
                     { num: 3, text: `    <span class="tp">Nodo</span>* <span class="vr">act</span> = <span class="vr">cabeza</span>;` },
-                    { num: 4, text: `    <span class="tp">Nodo</span>* <span class="vr">ant</span> = <span class="kw">nullptr</span>;` },
-                    { num: 5, text: `    <span class="kw">while</span> (<span class="vr">act</span> != <span class="kw">nullptr</span> &amp;&amp; <span class="vr">act</span>-&gt;<span class="vr">dato</span> &lt; <span class="vr">valor</span>) {` },
+                    { num: 4, text: `    <span class="tp">Nodo</span>* <span class="vr">ant</span> = <span class="kw">NULL</span>;` },
+                    { num: 5, text: `    <span class="kw">while</span> (<span class="vr">act</span> != <span class="kw">NULL</span> &amp;&amp; <span class="vr">act</span>-&gt;<span class="vr">dato</span> &lt; <span class="vr">valor</span>) {` },
                     { num: 6, text: `        <span class="vr">ant</span> = <span class="vr">act</span>;` },
                     { num: 7, text: `        <span class="vr">act</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
                     { num: 8, text: `    }` },
                     { num: 9, text: `    <span class="vr">nuevo</span>-&gt;<span class="vr">sig</span> = <span class="vr">act</span>;` },
-                    { num: 10, text: `    <span class="kw">if</span> (<span class="vr">ant</span> == <span class="kw">nullptr</span>) <span class="vr">cabeza</span> = <span class="vr">nuevo</span>;` },
+                    { num: 10, text: `    <span class="kw">if</span> (<span class="vr">ant</span> == <span class="kw">NULL</span>) <span class="vr">cabeza</span> = <span class="vr">nuevo</span>;` },
                     { num: 11, text: `    <span class="kw">else</span> <span class="vr">ant</span>-&gt;<span class="vr">sig</span> = <span class="vr">nuevo</span>;` },
                     { num: 12, text: `}` }
                 ],
@@ -957,12 +957,12 @@
                 ],
                 initialHeap: [
                     { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza"] },
-                    { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
+                    { addr: "0x10B0", dato: 25, sig: "NULL", tags: [] }
                 ],
                 steps: [
                     {
                         line: 2,
-                        desc: "new Nodo: se crea el nodo en 0x3C10 con dato 18 y sig = nullptr.",
+                        desc: "new Nodo: se crea el nodo en 0x3C10 con dato 18 y sig = NULL.",
                         stack: [
                             { name: "cabeza", type: "ptr", val: "0x10A0" },
                             { name: "nuevo", type: "ptr", val: "0x3C10", hl: true },
@@ -970,8 +970,8 @@
                         ],
                         heap: [
                             { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] },
-                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"], isNew: true }
+                            { addr: "0x10B0", dato: 25, sig: "NULL", tags: [] },
+                            { addr: "0x3C10", dato: 18, sig: "NULL", tags: ["nuevo"], isNew: true }
                         ],
                         log: { type: "alloc", text: "Nodo reservado en 0x3C10 con valor 18." }
                     },
@@ -981,29 +981,29 @@
                         stack: [
                             { name: "cabeza", type: "ptr", val: "0x10A0" },
                             { name: "act", type: "ptr", val: "0x10A0", hl: true },
-                            { name: "ant", type: "ptr", val: "nullptr" },
+                            { name: "ant", type: "ptr", val: "NULL" },
                             { name: "nuevo", type: "ptr", val: "0x3C10" }
                         ],
                         heap: [
                             { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "act"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] },
-                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"] }
+                            { addr: "0x10B0", dato: 25, sig: "NULL", tags: [] },
+                            { addr: "0x3C10", dato: 18, sig: "NULL", tags: ["nuevo"] }
                         ],
-                        log: { type: "info", text: "Inicialización: act = 0x10A0, ant = nullptr." }
+                        log: { type: "info", text: "Inicialización: act = 0x10A0, ant = NULL." }
                     },
                     {
                         line: 5,
-                        desc: "Evaluación while: act != nullptr (0x10A0) y 10 < 18 -> entra al ciclo.",
+                        desc: "Evaluación while: act != NULL (0x10A0) y 10 < 18 -> entra al ciclo.",
                         stack: [
                             { name: "cabeza", type: "ptr", val: "0x10A0" },
                             { name: "act", type: "ptr", val: "0x10A0" },
-                            { name: "ant", type: "ptr", val: "nullptr" },
+                            { name: "ant", type: "ptr", val: "NULL" },
                             { name: "nuevo", type: "ptr", val: "0x3C10" }
                         ],
                         heap: [
                             { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "act"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] },
-                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"] }
+                            { addr: "0x10B0", dato: 25, sig: "NULL", tags: [] },
+                            { addr: "0x3C10", dato: 18, sig: "NULL", tags: ["nuevo"] }
                         ],
                         log: { type: "info", text: "Condición while verdadera: 10 < 18." }
                     },
@@ -1018,8 +1018,8 @@
                         ],
                         heap: [
                             { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: ["act"] },
-                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"] }
+                            { addr: "0x10B0", dato: 25, sig: "NULL", tags: ["act"] },
+                            { addr: "0x3C10", dato: 18, sig: "NULL", tags: ["nuevo"] }
                         ],
                         log: { type: "info", text: "Avance: ant = 0x10A0, act = 0x10B0." }
                     },
@@ -1034,8 +1034,8 @@
                         ],
                         heap: [
                             { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: ["act"] },
-                            { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"] }
+                            { addr: "0x10B0", dato: 25, sig: "NULL", tags: ["act"] },
+                            { addr: "0x3C10", dato: 18, sig: "NULL", tags: ["nuevo"] }
                         ],
                         log: { type: "info", text: "Fin del while: 25 >= 18. Posición encontrada." }
                     },
@@ -1051,7 +1051,7 @@
                         heap: [
                             { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
                             { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: ["nuevo"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: ["act"] }
+                            { addr: "0x10B0", dato: 25, sig: "NULL", tags: ["act"] }
                         ],
                         log: { type: "link", text: "Enlace: nuevo->sig apunta a act (0x10B0)." }
                     },
@@ -1067,7 +1067,7 @@
                         heap: [
                             { addr: "0x10A0", dato: 10, sig: "0x3C10", tags: ["cabeza", "ant"] },
                             { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: ["nuevo"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: ["act"] }
+                            { addr: "0x10B0", dato: 25, sig: "NULL", tags: ["act"] }
                         ],
                         log: { type: "link", text: "Reconexión: ant->sig apunta a nuevo (0x3C10)." }
                     }
@@ -1082,12 +1082,12 @@
                 codeLines: [
                     { num: 1, text: `<span class="tp">void</span> <span class="vr">eliminar</span>(<span class="tp">Nodo</span>*&amp; <span class="vr">cabeza</span>, <span class="tp">int</span> <span class="vr">valor</span>) {` },
                     { num: 2, text: `    <span class="tp">Nodo</span>* <span class="vr">act</span> = <span class="vr">cabeza</span>;` },
-                    { num: 3, text: `    <span class="tp">Nodo</span>* <span class="vr">ant</span> = <span class="kw">nullptr</span>;` },
-                    { num: 4, text: `    <span class="kw">while</span> (<span class="vr">act</span> != <span class="kw">nullptr</span> &amp;&amp; <span class="vr">act</span>-&gt;<span class="vr">dato</span> != <span class="vr">valor</span>) {` },
+                    { num: 3, text: `    <span class="tp">Nodo</span>* <span class="vr">ant</span> = <span class="kw">NULL</span>;` },
+                    { num: 4, text: `    <span class="kw">while</span> (<span class="vr">act</span> != <span class="kw">NULL</span> &amp;&amp; <span class="vr">act</span>-&gt;<span class="vr">dato</span> != <span class="vr">valor</span>) {` },
                     { num: 5, text: `        <span class="vr">ant</span> = <span class="vr">act</span>; <span class="vr">act</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
                     { num: 6, text: `    }` },
-                    { num: 7, text: `    <span class="kw">if</span> (<span class="vr">act</span> != <span class="kw">nullptr</span>) {` },
-                    { num: 8, text: `        <span class="kw">if</span> (<span class="vr">ant</span> == <span class="kw">nullptr</span>) <span class="vr">cabeza</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
+                    { num: 7, text: `    <span class="kw">if</span> (<span class="vr">act</span> != <span class="kw">NULL</span>) {` },
+                    { num: 8, text: `        <span class="kw">if</span> (<span class="vr">ant</span> == <span class="kw">NULL</span>) <span class="vr">cabeza</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
                     { num: 9, text: `        <span class="kw">else</span> <span class="vr">ant</span>-&gt;<span class="vr">sig</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
                     { num: 10, text: `        <span class="kw">delete</span> <span class="vr">act</span>;` },
                     { num: 11, text: `    }` },
@@ -1100,7 +1100,7 @@
                 initialHeap: [
                     { addr: "0x10A0", dato: 10, sig: "0x3C10", tags: ["cabeza"] },
                     { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: [] },
-                    { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
+                    { addr: "0x10B0", dato: 25, sig: "NULL", tags: [] }
                 ],
                 steps: [
                     {
@@ -1115,7 +1115,7 @@
                         heap: [
                             { addr: "0x10A0", dato: 10, sig: "0x3C10", tags: ["cabeza", "ant"] },
                             { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: ["act"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
+                            { addr: "0x10B0", dato: 25, sig: "NULL", tags: [] }
                         ],
                         log: { type: "info", text: "Nodo 18 encontrado en 0x3C10. Preparando desconexión." }
                     },
@@ -1130,7 +1130,7 @@
                         heap: [
                             { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
                             { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: ["act", "aBorrar"], isDeleting: true },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
+                            { addr: "0x10B0", dato: 25, sig: "NULL", tags: [] }
                         ],
                         log: { type: "link", text: "Puente realizado: ant->sig (0x10A0) apunta ahora a 0x10B0." }
                     },
@@ -1143,7 +1143,7 @@
                         ],
                         heap: [
                             { addr: "0x10A0", dato: 10, sig: "0x10B0", tags: ["cabeza", "ant"] },
-                            { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
+                            { addr: "0x10B0", dato: 25, sig: "NULL", tags: [] }
                         ],
                         log: { type: "free", text: "Heap free: bloque 0x3C10 devuelto al sistema operativo." }
                     }
@@ -1160,7 +1160,7 @@
                     { num: 2, text: `    <span class="kw">if</span> (!<span class="vr">cabeza</span>) <span class="kw">return</span>;` },
                     { num: 3, text: `    <span class="tp">Nodo</span>* <span class="vr">ant</span> = <span class="vr">cabeza</span>;` },
                     { num: 4, text: `    <span class="tp">Nodo</span>* <span class="vr">act</span> = <span class="vr">cabeza</span>-&gt;<span class="vr">sig</span>;` },
-                    { num: 5, text: `    <span class="kw">while</span> (<span class="vr">act</span> != <span class="kw">nullptr</span>) {` },
+                    { num: 5, text: `    <span class="kw">while</span> (<span class="vr">act</span> != <span class="kw">NULL</span>) {` },
                     { num: 6, text: `        <span class="kw">if</span> (<span class="vr">act</span>-&gt;<span class="vr">dato</span> &gt; <span class="vr">ant</span>-&gt;<span class="vr">dato</span>) {` },
                     { num: 7, text: `            <span class="vr">ant</span> = <span class="vr">act</span>; <span class="vr">act</span> = <span class="vr">act</span>-&gt;<span class="vr">sig</span>;` },
                     { num: 8, text: `        } <span class="kw">else</span> {` },
@@ -1179,7 +1179,7 @@
                     { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
                     { addr: "0x1020", dato: 6, sig: "0x1030", tags: [] },
                     { addr: "0x1030", dato: 3, sig: "0x1040", tags: [] },
-                    { addr: "0x1040", dato: 7, sig: "nullptr", tags: [] }
+                    { addr: "0x1040", dato: 7, sig: "NULL", tags: [] }
                 ],
                 steps: [
                     {
@@ -1194,7 +1194,7 @@
                             { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza", "ant"] },
                             { addr: "0x1020", dato: 6, sig: "0x1030", tags: ["act"] },
                             { addr: "0x1030", dato: 3, sig: "0x1040", tags: [] },
-                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: [] }
+                            { addr: "0x1040", dato: 7, sig: "NULL", tags: [] }
                         ],
                         log: { type: "info", text: "Inspeccionando tramo: ant->dato = 4, act->dato = 6." }
                     },
@@ -1210,7 +1210,7 @@
                             { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
                             { addr: "0x1020", dato: 6, sig: "0x1030", tags: ["ant"] },
                             { addr: "0x1030", dato: 3, sig: "0x1040", tags: ["act"] },
-                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: [] }
+                            { addr: "0x1040", dato: 7, sig: "NULL", tags: [] }
                         ],
                         log: { type: "info", text: "Orden correcto: 6 > 4. ant avanza a 6, act pasa a 3." }
                     },
@@ -1226,7 +1226,7 @@
                             { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
                             { addr: "0x1020", dato: 6, sig: "0x1030", tags: ["ant"] },
                             { addr: "0x1030", dato: 3, sig: "0x1040", tags: ["act"] },
-                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: [] }
+                            { addr: "0x1040", dato: 7, sig: "NULL", tags: [] }
                         ],
                         log: { type: "info", text: "ALERTA: 3 no es mayor que 6. Tramo desordenado detectado." }
                     },
@@ -1243,7 +1243,7 @@
                             { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
                             { addr: "0x1020", dato: 6, sig: "0x1040", tags: ["ant"] },
                             { addr: "0x1030", dato: 3, sig: "0x1040", tags: ["aBorrar"], isDeleting: true },
-                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: ["act"] }
+                            { addr: "0x1040", dato: 7, sig: "NULL", tags: ["act"] }
                         ],
                         log: { type: "link", text: "Puente: ant (0x1020) conectado directamente a act (0x1040)." }
                     },
@@ -1258,22 +1258,22 @@
                         heap: [
                             { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
                             { addr: "0x1020", dato: 6, sig: "0x1040", tags: ["ant"] },
-                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: ["act"] }
+                            { addr: "0x1040", dato: 7, sig: "NULL", tags: ["act"] }
                         ],
                         log: { type: "free", text: "delete: memoria del nodo con valor 3 liberada con éxito." }
                     },
                     {
                         line: 7,
-                        desc: "Siguiente comparación: 7 > 6 es VERDADERO. ant pasa a 7 y act finaliza en nullptr.",
+                        desc: "Siguiente comparación: 7 > 6 es VERDADERO. ant pasa a 7 y act finaliza en NULL.",
                         stack: [
                             { name: "cabeza", type: "ptr", val: "0x1010" },
                             { name: "ant", type: "ptr", val: "0x1040", hl: true },
-                            { name: "act", type: "ptr", val: "nullptr", hl: true }
+                            { name: "act", type: "ptr", val: "NULL", hl: true }
                         ],
                         heap: [
                             { addr: "0x1010", dato: 4, sig: "0x1020", tags: ["cabeza"] },
                             { addr: "0x1020", dato: 6, sig: "0x1040", tags: [] },
-                            { addr: "0x1040", dato: 7, sig: "nullptr", tags: ["ant"] }
+                            { addr: "0x1040", dato: 7, sig: "NULL", tags: ["ant"] }
                         ],
                         log: { type: "info", text: "Depuración finalizada. Lista resultante limpia y creciente." }
                     }
@@ -1386,7 +1386,7 @@
                 chain.appendChild(wrapper);
 
                 // Agregar flecha
-                if (node.sig === "nullptr") {
+                if (node.sig === "NULL") {
                     const arrowDiv = document.createElement("div");
                     arrowDiv.className = "node-arrow";
                     arrowDiv.innerHTML = `<i class="fa-solid fa-arrow-right"></i>`;
@@ -1394,7 +1394,7 @@
 
                     const nullDiv = document.createElement("div");
                     nullDiv.className = "null-badge";
-                    nullDiv.innerHTML = `<i class="fa-solid fa-ban"></i> nullptr`;
+                    nullDiv.innerHTML = `<i class="fa-solid fa-ban"></i> NULL`;
                     chain.appendChild(nullDiv);
                 } else if (i < step.heap.length - 1) {
                     const arrowDiv = document.createElement("div");

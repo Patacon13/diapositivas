@@ -297,7 +297,7 @@ using namespace std;
 
 int main() {
     int count = 7;
-    int* countPtr = nullptr; // Puntero a entero
+    int* countPtr = NULL; // Puntero a entero
 
     countPtr = &amp;count;       // Guarda direccion de count
 
@@ -489,7 +489,7 @@ cout &lt;&lt; "pAdelante - 2 apunta a: " &lt;&lt; *pAtras &lt;&lt; endl; // 2.2
                             <div>
                                 <pre style="font-size: 10.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-10|12-20|22-28">
 void invertirCadena(char* str) {
-    if (str == nullptr || *str == '\0') return;
+    if (str == NULL || *str == '\0') return;
 
     char* inicio = str;
     char* fin = str;
@@ -557,12 +557,12 @@ struct Nodo {
 };
 
 // Crear una lista vacia:
-Nodo* cabeza = nullptr; 
+Nodo* cabeza = NULL; 
 
 // Crear el primer nodo en Heap:
 cabeza = new Nodo;
 cabeza-&gt;dato = 42;
-cabeza-&gt;sig = nullptr;
+cabeza-&gt;sig = NULL;
                             </code></pre>
                         </div>
                         <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
@@ -581,10 +581,10 @@ cabeza-&gt;sig = nullptr;
                                     </div>
                                 </div>
                                 <div class="node-arrow-link"><i class="fa-solid fa-arrow-right"></i></div>
-                                <div class="node-null-tag">nullptr (0x0)</div>
+                                <div class="node-null-tag">NULL (0x0)</div>
                             </div>
                             <p style="font-size: 14px; color: var(--text-light); text-align: center; margin: 0;">
-                                <code>cabeza</code> almacena <code>0x10A0</code>. El último nodo de la lista siempre apunta a <code>nullptr</code>.
+                                <code>cabeza</code> almacena <code>0x10A0</code>. El último nodo de la lista siempre apunta a <code>NULL</code>.
                             </p>
                         </div>
                     </div>
@@ -615,16 +615,16 @@ void insertarInicio(Nodo*&amp; cabeza, int valor) {
                         <div>
                             <div class="concept-card" style="margin-bottom: 10px; padding: 12px 16px; border-left-color: var(--cyan-accent);">
                                 <h3 style="font-size: 16px; color: var(--cyan-accent);"><i class="fa-solid fa-shoe-prints"></i> Inserción al Final — O(N)</h3>
-                                <p style="font-size: 13.5px; margin: 0;">Costo lineal: requiere recorrer hasta el último nodo (sig == nullptr).</p>
+                                <p style="font-size: 13.5px; margin: 0;">Costo lineal: requiere recorrer hasta el último nodo (sig == NULL).</p>
                             </div>
                             <pre><code class="cpp" data-trim data-noescape>
 void insertarFinal(Nodo*&amp; cabeza, int valor) {
-    Nodo* nuevo = new Nodo{valor, nullptr};
-    if (cabeza == nullptr) {
+    Nodo* nuevo = new Nodo{valor, NULL};
+    if (cabeza == NULL) {
         cabeza = nuevo;
     } else {
         Nodo* act = cabeza;
-        while (act-&gt;sig != nullptr) {
+        while (act-&gt;sig != NULL) {
             act = act-&gt;sig;
         }
         act-&gt;sig = nuevo;
@@ -648,7 +648,7 @@ void insertarFinal(Nodo*&amp; cabeza, int valor) {
 // Patron canonico de recorrido
 void mostrarLista(Nodo* cabeza) {
     Nodo* act = cabeza; // Puntero auxiliar
-    while (act != nullptr) {
+    while (act != NULL) {
         cout &lt;&lt; act-&gt;dato &lt;&lt; " -&gt; ";
         act = act-&gt;sig;  // Avanza al siguiente
     }
@@ -659,7 +659,7 @@ void mostrarLista(Nodo* cabeza) {
 bool estaEnLista(Nodo* cabeza, int buscado) {
     Nodo* act = cabeza;
     bool esta = false;
-    while (act != nullptr && !esta) {
+    while (act != NULL && !esta) {
         if (act-&gt;dato == buscado) {
             esta = true;
         } else {
@@ -682,7 +682,7 @@ bool estaEnLista(Nodo* cabeza, int buscado) {
                             <div class="concept-card">
                                 <h3><i class="fa-solid fa-compass"></i> Condición de Parada Doble</h3>
                                 <p style="font-size: 14px; margin: 0;">
-                                    El bucle de búsqueda finaliza si se encuentra el elemento (<code>esta == true</code>) o si se agota la lista (<code>act == nullptr</code>). Usar la bandera booleana en la condición preserva la programación estructurada.
+                                    El bucle de búsqueda finaliza si se encuentra el elemento (<code>esta == true</code>) o si se agota la lista (<code>act == NULL</code>). Usar la bandera booleana en la condición preserva la programación estructurada.
                                 </p>
                             </div>
                         </div>
@@ -701,15 +701,15 @@ bool estaEnLista(Nodo* cabeza, int buscado) {
                             <pre><code class="cpp" data-trim data-noescape>
 void eliminarNodo(Nodo*&amp; cabeza, int valor) {
     Nodo* act = cabeza;
-    Nodo* ant = nullptr;
+    Nodo* ant = NULL;
 
-    while (act != nullptr &amp;&amp; act-&gt;dato != valor) {
+    while (act != NULL &amp;&amp; act-&gt;dato != valor) {
         ant = act;
         act = act-&gt;sig;
     }
 
-    if (act != nullptr) { // Encontrado
-        if (ant == nullptr) {
+    if (act != NULL) { // Encontrado
+        if (ant == NULL) {
             cabeza = act-&gt;sig;     // Era el primero
         } else {
             ant-&gt;sig = act-&gt;sig;   // Puente seguro
@@ -801,7 +801,7 @@ void insertarInicio(ptrNodo&amp; cabeza, int valor) {
 // 3. Declaración y punteros auxiliares
 void mostrar(ptrNodo cabeza) {
     ptrNodo act = cabeza;
-    while (act != nullptr) {
+    while (act != NULL) {
         cout &lt;&lt; act-&gt;dato &lt;&lt; " -&gt; ";
         act = act-&gt;sig;
     }
@@ -809,7 +809,7 @@ void mostrar(ptrNodo cabeza) {
 }
 
 int main() {
-    ptrNodo lista = nullptr; // Nodo* lista = nullptr;
+    ptrNodo lista = NULL; // Nodo* lista = NULL;
     insertarInicio(lista, 10);
     mostrar(lista);
 }
@@ -908,7 +908,7 @@ struct Nodo {
 bool estaEnLista(Nodo* cabeza, int valor) {
     Nodo* act = cabeza;
     bool esta = false;
-    while (act != nullptr && !esta) {
+    while (act != NULL && !esta) {
         if (act-&gt;dato == valor) {
             esta = true;
         } else {
@@ -919,27 +919,27 @@ bool estaEnLista(Nodo* cabeza, int valor) {
 }
 
 void insertarFinal(Nodo*&amp; cabeza, int valor) {
-    Nodo* nuevo = new Nodo{valor, nullptr};
-    if (cabeza == nullptr) {
+    Nodo* nuevo = new Nodo{valor, NULL};
+    if (cabeza == NULL) {
         cabeza = nuevo;
     } else {
         Nodo* act = cabeza;
-        while (act-&gt;sig != nullptr) act = act-&gt;sig;
+        while (act-&gt;sig != NULL) act = act-&gt;sig;
         act-&gt;sig = nuevo;
     }
 }
 
 Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
-    Nodo* res = nullptr;
+    Nodo* res = NULL;
     Nodo* actA = listaA;
-    while (actA != nullptr) {
+    while (actA != NULL) {
         if (!estaEnLista(res, actA-&gt;dato)) {
             insertarFinal(res, actA-&gt;dato);
         }
         actA = actA-&gt;sig;
     }
     Nodo* actB = listaB;
-    while (actB != nullptr) {
+    while (actB != NULL) {
         if (!estaEnLista(res, actB-&gt;dato)) {
             insertarFinal(res, actB-&gt;dato);
         }
@@ -1008,12 +1008,12 @@ struct Nodo {
 };
 
 void depurarLista(Nodo*&amp; cabeza) {
-    if (cabeza == nullptr) return;
+    if (cabeza == NULL) return;
 
     Nodo* ant = cabeza;
     Nodo* act = cabeza-&gt;sig;
 
-    while (act != nullptr) {
+    while (act != NULL) {
         if (act-&gt;dato &gt; ant-&gt;dato) {
             // Tramo estrictamente creciente: ant avanza
             ant = act;
@@ -1100,24 +1100,24 @@ float calcularPromedio(const int notas[6]) {
 }
 
 void insertarDescendente(NodoIntegrada*&amp; cabeza, int id, float prom) {
-    NodoIntegrada* nuevo = new NodoIntegrada{id, prom, nullptr};
+    NodoIntegrada* nuevo = new NodoIntegrada{id, prom, NULL};
     NodoIntegrada* act = cabeza;
-    NodoIntegrada* ant = nullptr;
-    while (act != nullptr &amp;&amp; act-&gt;promedio &gt;= prom) {
+    NodoIntegrada* ant = NULL;
+    while (act != NULL &amp;&amp; act-&gt;promedio &gt;= prom) {
         ant = act;
         act = act-&gt;sig;
     }
     nuevo-&gt;sig = act;
-    if (ant == nullptr) cabeza = nuevo;
+    if (ant == NULL) cabeza = nuevo;
     else ant-&gt;sig = nuevo;
 }
 
 NodoIntegrada* integrar(NodoCalificaciones* c1, NodoCalificaciones* c2) {
-    NodoIntegrada* res = nullptr;
-    for (NodoCalificaciones* p = c1; p != nullptr; p = p-&gt;sig) {
+    NodoIntegrada* res = NULL;
+    for (NodoCalificaciones* p = c1; p != NULL; p = p-&gt;sig) {
         insertarDescendente(res, p-&gt;idAlumno, calcularPromedio(p-&gt;notas));
     }
-    for (NodoCalificaciones* p = c2; p != nullptr; p = p-&gt;sig) {
+    for (NodoCalificaciones* p = c2; p != NULL; p = p-&gt;sig) {
         insertarDescendente(res, p-&gt;idAlumno, calcularPromedio(p-&gt;notas));
     }
     return res;
@@ -1190,7 +1190,7 @@ struct Nodo {
 bool estaEnLista(Nodo* cabeza, int valor) {
     Nodo* act = cabeza;
     bool esta = false;
-    while (act != nullptr && !esta) {
+    while (act != NULL && !esta) {
         if (act->dato == valor) {
             esta = true;
         } else {
@@ -1202,22 +1202,22 @@ bool estaEnLista(Nodo* cabeza, int valor) {
 
 // Inserta un nodo al final de la lista
 void insertarFinal(Nodo*& cabeza, int valor) {
-    Nodo* nuevo = new Nodo{valor, nullptr};
-    if (cabeza == nullptr) {
+    Nodo* nuevo = new Nodo{valor, NULL};
+    if (cabeza == NULL) {
         cabeza = nuevo;
     } else {
         Nodo* act = cabeza;
-        while (act->sig != nullptr) act = act->sig;
+        while (act->sig != NULL) act = act->sig;
         act->sig = nuevo;
     }
 }
 
 // Une dos listas lineales A y B sin elementos repetidos
 Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
-    Nodo* res = nullptr;
+    Nodo* res = NULL;
 
     Nodo* actA = listaA;
-    while (actA != nullptr) {
+    while (actA != NULL) {
         if (!estaEnLista(res, actA->dato)) {
             insertarFinal(res, actA->dato);
         }
@@ -1225,7 +1225,7 @@ Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
     }
 
     Nodo* actB = listaB;
-    while (actB != nullptr) {
+    while (actB != NULL) {
         if (!estaEnLista(res, actB->dato)) {
             insertarFinal(res, actB->dato);
         }
@@ -1239,7 +1239,7 @@ Nodo* unirListas(Nodo* listaA, Nodo* listaB) {
 void imprimirLista(Nodo* cabeza, const string& nombre) {
     cout << nombre << ": ";
     Nodo* act = cabeza;
-    while (act != nullptr) {
+    while (act != NULL) {
         cout << act->dato << " -> ";
         act = act->sig;
     }
@@ -1248,7 +1248,7 @@ void imprimirLista(Nodo* cabeza, const string& nombre) {
 
 // Libera la memoria dinamica solicitada en Heap
 void liberarLista(Nodo*& cabeza) {
-    while (cabeza != nullptr) {
+    while (cabeza != NULL) {
         Nodo* aBorrar = cabeza;
         cabeza = cabeza->sig;
         delete aBorrar;
@@ -1258,8 +1258,8 @@ void liberarLista(Nodo*& cabeza) {
 int main() {
     cout << "=== EJERCICIO 1: UNION DE LISTAS A Y B SIN REPETIDOS ===" << endl << endl;
 
-    Nodo* listaA = nullptr;
-    Nodo* listaB = nullptr;
+    Nodo* listaA = NULL;
+    Nodo* listaB = NULL;
 
     // Carga de lista A: { 3, 7, 12, 5 }
     insertarFinal(listaA, 3);
@@ -1301,24 +1301,24 @@ struct Nodo {
 
 // Inserta al final para cargar la lista de prueba
 void insertarFinal(Nodo*& cabeza, int valor) {
-    Nodo* nuevo = new Nodo{valor, nullptr};
-    if (cabeza == nullptr) {
+    Nodo* nuevo = new Nodo{valor, NULL};
+    if (cabeza == NULL) {
         cabeza = nuevo;
     } else {
         Nodo* act = cabeza;
-        while (act->sig != nullptr) act = act->sig;
+        while (act->sig != NULL) act = act->sig;
         act->sig = nuevo;
     }
 }
 
 // Depura la lista eliminando tramos no crecientes
 void depurarLista(Nodo*& cabeza) {
-    if (cabeza == nullptr) return;
+    if (cabeza == NULL) return;
 
     Nodo* ant = cabeza;
     Nodo* act = cabeza->sig;
 
-    while (act != nullptr) {
+    while (act != NULL) {
         if (act->dato > ant->dato) {
             // Es estrictamente creciente: ant avanza
             ant = act;
@@ -1337,9 +1337,9 @@ void imprimirLista(Nodo* cabeza, const string& titulo) {
     cout << titulo << ":" << endl;
     Nodo* act = cabeza;
     int count = 0;
-    while (act != nullptr) {
+    while (act != NULL) {
         cout << act->dato;
-        if (act->sig != nullptr) cout << " -> ";
+        if (act->sig != NULL) cout << " -> ";
         act = act->sig;
         count++;
     }
@@ -1347,7 +1347,7 @@ void imprimirLista(Nodo* cabeza, const string& titulo) {
 }
 
 void liberarLista(Nodo*& cabeza) {
-    while (cabeza != nullptr) {
+    while (cabeza != NULL) {
         Nodo* aBorrar = cabeza;
         cabeza = cabeza->sig;
         delete aBorrar;
@@ -1357,7 +1357,7 @@ void liberarLista(Nodo*& cabeza) {
 int main() {
     cout << "=== EJERCICIO 2: PODA DE TRAMOS NO CRECIENTES ===" << endl << endl;
 
-    Nodo* lista = nullptr;
+    Nodo* lista = NULL;
 
     // Lista del enunciado:
     // 4 - 5 - 6 - 3 - 2 - 1 - 7 - 9 - 78 - 45 - 45 - 34 - 96 - 98 - 57
@@ -1409,17 +1409,17 @@ float calcularPromedio(const int notas[6]) {
 
 // Inserta ordenado de mayor a menor por promedio
 void insertarOrdenadoDesc(NodoIntegrada*& cabeza, int id, float prom) {
-    NodoIntegrada* nuevo = new NodoIntegrada{id, prom, nullptr};
+    NodoIntegrada* nuevo = new NodoIntegrada{id, prom, NULL};
     NodoIntegrada* act = cabeza;
-    NodoIntegrada* ant = nullptr;
+    NodoIntegrada* ant = NULL;
 
-    while (act != nullptr && act->promedio >= prom) {
+    while (act != NULL && act->promedio >= prom) {
         ant = act;
         act = act->sig;
     }
 
     nuevo->sig = act;
-    if (ant == nullptr) {
+    if (ant == NULL) {
         cabeza = nuevo;
     } else {
         ant->sig = nuevo;
@@ -1428,17 +1428,17 @@ void insertarOrdenadoDesc(NodoIntegrada*& cabeza, int id, float prom) {
 
 // Integra Curso1 y Curso2 ordenando por promedio descendente
 NodoIntegrada* integrarCursos(NodoCalificaciones* c1, NodoCalificaciones* c2) {
-    NodoIntegrada* integrada = nullptr;
+    NodoIntegrada* integrada = NULL;
 
     NodoCalificaciones* p1 = c1;
-    while (p1 != nullptr) {
+    while (p1 != NULL) {
         float prom = calcularPromedio(p1->notas);
         insertarOrdenadoDesc(integrada, p1->idAlumno, prom);
         p1 = p1->sig;
     }
 
     NodoCalificaciones* p2 = c2;
-    while (p2 != nullptr) {
+    while (p2 != NULL) {
         float prom = calcularPromedio(p2->notas);
         insertarOrdenadoDesc(integrada, p2->idAlumno, prom);
         p2 = p2->sig;
@@ -1463,7 +1463,7 @@ void imprimirRanking(NodoIntegrada* cabeza) {
     NodoIntegrada* act = cabeza;
     int puesto = 1;
     cout << fixed << setprecision(2);
-    while (act != nullptr) {
+    while (act != NULL) {
         cout << "  " << setw(2) << puesto++ << " |   "
              << setw(7) << act->idAlumno << "   |       "
              << setw(5) << act->promedio << endl;
@@ -1475,8 +1475,8 @@ void imprimirRanking(NodoIntegrada* cabeza) {
 int main() {
     cout << "=== EJERCICIO 3: INTEGRACION Y RANKING DE CALIFICACIONES ===" << endl << endl;
 
-    NodoCalificaciones* curso1 = nullptr;
-    NodoCalificaciones* curso2 = nullptr;
+    NodoCalificaciones* curso1 = NULL;
+    NodoCalificaciones* curso2 = NULL;
 
     // Alumnos Comision 1
     int notasA[6] = {8, 7, 9, 8, 10, 8}; // Prom: 8.33
