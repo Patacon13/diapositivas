@@ -652,7 +652,7 @@ struct Libro {
 
 void copiarTexto(char dest[], int maxLen, const string&amp; src) {
     strncpy(dest, src.c_str(), maxLen - 1);
-    dest[maxLen - 1] = ' ';
+    dest[maxLen - 1] = '\0';
 }
 
 Libro crearLibro(const string&amp; t, const string&amp; a, const string&amp; i, float p, int st, int v) {

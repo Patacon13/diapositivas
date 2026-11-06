@@ -66,18 +66,54 @@
 
         .reveal pre {
             background: #272822; padding: 0 !important; border-radius: 12px;
-            font-family: 'Fira Code', monospace; margin: 0; position: relative !important;
+            font-family: 'Fira Code', monospace; font-size: 13px; margin: 0; position: relative !important;
             border-left: 6px solid var(--utn-gold); box-shadow: 0 15px 40px rgba(0,0,0,0.25);
             width: 100%; box-sizing: border-box;
+            max-height: 470px !important;
+            overflow: hidden !important;
             font-variant-ligatures: none;
             font-feature-settings: "liga" 0, "calt" 0;
         }
-        .reveal code {
+        .reveal code,
+        .reveal pre code,
+        .reveal .hljs:not(:first-child).fragment {
             font-family: 'Fira Code', monospace;
+            font-size: inherit;
             padding: 14px 18px;
-            font-size: 13px;
+            max-height: 470px !important;
+            overflow-y: auto !important;
+            overflow-x: auto !important;
+            box-sizing: border-box !important;
+            width: 100%;
+            display: block;
             font-variant-ligatures: none;
             font-feature-settings: "liga" 0, "calt" 0;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 193, 7, 0.45) rgba(15, 23, 42, 0.6);
+        }
+        .reveal code::-webkit-scrollbar,
+        .reveal pre code::-webkit-scrollbar,
+        .reveal .hljs:not(:first-child).fragment::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .reveal code::-webkit-scrollbar-track,
+        .reveal pre code::-webkit-scrollbar-track,
+        .reveal .hljs:not(:first-child).fragment::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+        }
+        .reveal code::-webkit-scrollbar-thumb,
+        .reveal pre code::-webkit-scrollbar-thumb,
+        .reveal .hljs:not(:first-child).fragment::-webkit-scrollbar-thumb {
+            background: rgba(255, 193, 7, 0.45);
+            border-radius: 8px;
+            border: 2px solid transparent;
+        }
+        .reveal code::-webkit-scrollbar-thumb:hover,
+        .reveal pre code::-webkit-scrollbar-thumb:hover,
+        .reveal .hljs:not(:first-child).fragment::-webkit-scrollbar-thumb:hover {
+            background: var(--utn-gold);
         }
 
         .section-title-layout { display: flex; flex-direction: column; justify-content: center; align-items: center; }
