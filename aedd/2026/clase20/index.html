@@ -196,13 +196,13 @@
                             <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-layer-group" style="color: var(--cyan-accent);"></i> 2. Stack vs Heap</h3>
                             <p>Gestión dinámica de memoria con <code>new</code> y <code>delete</code>. Prevención de fugas (memory leaks).</p>
                         </div>
-                        <div class="tile">
-                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-circle-nodes" style="color: var(--utn-gold);"></i> 3. El Nodo Enlazado</h3>
-                            <p>Estructura autoreferenciada: campo de información + puntero siguiente al próximo nodo.</p>
+                        <div class="tile" style="border-bottom-color: var(--cyan-accent); background: #F0F9FF;">
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-code" style="color: var(--cyan-accent);"></i> 3. Taller Guía 17</h3>
+                            <p>Aritmética de punteros en arreglos (caso Colapinto F1) e inversión in-place con dos punteros.</p>
                         </div>
                         <div class="tile">
-                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-shuffle" style="color: var(--cyan-accent);"></i> 4. Operaciones Primitivas</h3>
-                            <p>Inserción al inicio, inserción al final, recorrido, búsqueda y borrado con reconexión segura.</p>
+                            <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-circle-nodes" style="color: var(--utn-gold);"></i> 4. El Nodo Enlazado</h3>
+                            <p>Estructura autoreferenciada y operaciones primitivas (inserción, recorrido, búsqueda y borrado).</p>
                         </div>
                         <div class="tile" style="border-bottom-color: var(--utn-gold); background: #FFF9E6;">
                             <h3 style="color: var(--utn-blue);"><i class="fa-solid fa-microchip" style="color: var(--utn-gold);"></i> 5. Pointer Inspector</h3>
@@ -308,6 +308,198 @@ int main() {
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 5: EJERCICIO GUÍA 17 - ARITMÉTICA DE PUNTEROS -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 5.A: Enunciado Guía 17 Ejercicio 2 -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge" style="background: var(--cyan-accent); color: var(--utn-blue); font-size: 15px; width: 44px; height: 44px; line-height: 44px;">G17·2</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Aritmética de Punteros en Arreglos (Telemetría F1)</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="texto-enunciado">
+                            <p><strong>Guía 17 — Ejercicio 2:</strong> La presión de los neumáticos es vital para el agarre del monoplaza de Colapinto en F1. Trabajamos con: <code>float presiones[] = {1.1, 2.2, 3.3, 4.4, 5.5};</code> (con <code>SIZE = 5</code>) y un puntero <code>float* ppres = presiones;</code>.</p>
+                        </div>
+                        <div class="two-column" style="gap: 16px;">
+                            <div class="tile" style="border-left: 5px solid var(--utn-blue);">
+                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-list-ol"></i> 1. Recorrido: Índices vs Punteros</h4>
+                                <p style="font-size: 13.5px; margin: 0;">
+                                    • Con índices: <code>presiones[i]</code>.<br>
+                                    • Con puntero: <code>*(ppres + i)</code> o avanzando <code>ppres++</code>.<br>
+                                    <strong>Equivalencia C++:</strong> <code>presiones[i] == *(presiones + i)</code>.
+                                </p>
+                            </div>
+                            <div class="tile" style="border-left: 5px solid var(--utn-gold);">
+                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-arrows-left-right"></i> 2. Saltos Relativos de Memoria</h4>
+                                <p style="font-size: 13.5px; margin: 0;">
+                                    • Si <code>ppres</code> apunta a <code>presiones[0]</code>, <code>(ppres + 3)</code> apunta a <strong>4.4</strong> (avanza <code>3 * sizeof(float) = 12</code> bytes).<br>
+                                    • Desde <code>presiones[3]</code>, <code>(ppres - 2)</code> retrocede al elemento <strong>2.2</strong> (posición 1).
+                                </p>
+                            </div>
+                        </div>
+                        <div class="tile" style="margin-top: 10px; padding: 10px 16px; border-left: 5px solid var(--warning-amber); background: #FFFBEB;">
+                            <p style="font-size: 13px; margin: 0; color: #92400E;">
+                                <i class="fa-solid fa-triangle-exclamation"></i> <strong>Atención:</strong> <code>*(ppres + 1)</code> desreferencia la celda siguiente (valor 2.2), mientras que <code>*ppres + 1</code> sumaría 1.0 al float actual (1.1 + 1.0 = 2.1).
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5.B: Solución Guía 17 Ejercicio 2 -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge" style="background: var(--cyan-accent); color: var(--utn-blue); font-size: 15px; width: 44px; height: 44px; line-height: 44px;">G17·2</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Navegación de Arreglos en Memoria</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 16px; align-items: start;">
+                            <div>
+                                <pre style="font-size: 11.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-5|7-12|14-19">
+#define SIZE 5
+float presiones[SIZE] = {1.1, 2.2, 3.3, 4.4, 5.5};
+float* ppres = presiones; // ppres == &amp;presiones[0]
+
+// 1. Recorrido usando solo punteros (sin corchetes [])
+cout &lt;&lt; "Lectura por puntero: ";
+for (float* p = presiones; p &lt; presiones + SIZE; p++) {
+    cout &lt;&lt; *p &lt;&lt; " "; // Imprime: 1.1 2.2 3.3 4.4 5.5
+}
+cout &lt;&lt; endl;
+
+// 2. Desplazamientos hacia adelante y atras
+float* pAdelante = ppres + 3; 
+cout &lt;&lt; "ppres + 3 apunta a: " &lt;&lt; *pAdelante &lt;&lt; endl; // 4.4
+
+float* pAtras = pAdelante - 2; 
+cout &lt;&lt; "pAdelante - 2 apunta a: " &lt;&lt; *pAtras &lt;&lt; endl; // 2.2
+                                </code></pre>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div class="tile" style="padding: 12px 14px; border-left: 4px solid var(--utn-blue);">
+                                    <h4 style="font-size: 14px; margin: 0 0 4px 0; color: var(--utn-blue);"><i class="fa-solid fa-memory"></i> Mapa de RAM (Bloques de 4 Bytes)</h4>
+                                    <div style="font-family: 'Fira Code', monospace; font-size: 11px; background: #0F172A; color: #E2E8F0; padding: 10px; border-radius: 8px; line-height: 1.6;">
+                                        [0x1000] : 1.1 &lt;-- ppres (&amp;presiones[0])<br>
+                                        [0x1004] : 2.2 &lt;-- pAtras (ppres + 1)<br>
+                                        [0x1008] : 3.3 &lt;-- (ppres + 2)<br>
+                                        [0x100C] : 4.4 &lt;-- pAdelante (ppres + 3)<br>
+                                        [0x1010] : 5.5 &lt;-- (ppres + 4)
+                                    </div>
+                                </div>
+                                <div class="tile" style="padding: 10px 14px; border-left: 4px solid var(--cyan-accent); background: #F0FDF4;">
+                                    <p style="font-size: 12.5px; margin: 0; color: #166534;">
+                                        <i class="fa-solid fa-circle-check"></i> <strong>Resta de punteros:</strong> <code>pAdelante - ppres</code> devuelve <code>3</code> (la distancia en cantidad de elementos, no en bytes crudos).
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 6: EJERCICIO GUÍA 17 - INVERSIÓN CON DOS PUNTEROS -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 6.A: Enunciado Guía 17 Ejercicio 4 -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge" style="background: var(--cyan-accent); color: var(--utn-blue); font-size: 15px; width: 44px; height: 44px; line-height: 44px;">G17·4</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Inversión de Cadena in-place (Aritmética de Punteros)</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="texto-enunciado">
+                            <p><strong>Guía 17 — Ejercicio 4:</strong> Dada una cadena de caracteres modificable en C++, invertirla sobre el mismo arreglo (in-place) haciendo uso exclusivo de la <strong>aritmética de punteros</strong>.</p>
+                            <p><strong>Restricción algorítmica:</strong> No usar memoria auxiliar (arreglos extras), ni funciones como <code>std::reverse</code>, ni notación de corchetes <code>cadena[i]</code>.</p>
+                        </div>
+                        <div class="two-column" style="gap: 16px;">
+                            <div class="tile" style="border-left: 5px solid var(--utn-gold);">
+                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-arrows-to-dot" style="color: var(--utn-gold);"></i> 1. Punteros Convergentes</h4>
+                                <p style="font-size: 13.5px; margin: 0;">
+                                    • Puntero <code>inicio</code> posicionado en el primer caracter (<code>cadena</code>).<br>
+                                    • Puntero <code>fin</code> avanza hasta el último caracter válido previo al <code>'\0'</code>.
+                                </p>
+                            </div>
+                            <div class="tile" style="border-left: 5px solid var(--cyan-accent);">
+                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;"><i class="fa-solid fa-repeat" style="color: var(--cyan-accent);"></i> 2. Swap y Condición de Cruce</h4>
+                                <p style="font-size: 13.5px; margin: 0;">
+                                    • Mientras <code>inicio &lt; fin</code>: intercambiar <code>*inicio</code> y <code>*fin</code>.<br>
+                                    • Avanzar <code>inicio++</code> y retroceder <code>fin--</code> en cada iteración.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="tile" style="margin-top: 10px; padding: 10px 16px; border-left: 5px solid var(--utn-blue); background: #EFF6FF;">
+                            <p style="font-size: 13px; margin: 0; color: #1E40AF;">
+                                <i class="fa-solid fa-lightbulb"></i> <strong>Puente mental:</strong> Esta técnica de dos punteros que inspeccionan memoria simultáneamente es el fundamento exacto de los punteros <code>ant</code> y <code>act</code> en listas enlazadas.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6.B: Solución Guía 17 Ejercicio 4 -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge" style="background: var(--cyan-accent); color: var(--utn-blue); font-size: 15px; width: 44px; height: 44px; line-height: 44px;">G17·4</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Inversión in-place con Dos Punteros</h2>
+                    </div>
+                    <div class="content-area">
+                        <div class="two-column" style="gap: 16px; align-items: start;">
+                            <div>
+                                <pre style="font-size: 10.5px !important;"><code class="cpp" data-trim data-noescape data-line-numbers="1-4|6-10|12-20|22-28">
+void invertirCadena(char* str) {
+    if (str == nullptr || *str == '\0') return;
+
+    char* inicio = str;
+    char* fin = str;
+
+    // 1. Mover fin hasta el ultimo caracter valido (antes de '\0')
+    while (*(fin + 1) != '\0') {
+        fin++;
+    }
+
+    // 2. Intercambiar extremos convergiendo al centro
+    while (inicio &lt; fin) {
+        char temp = *inicio;
+        *inicio = *fin;
+        *fin = temp;
+
+        inicio++; // Desplaza a la derecha en RAM (+1 byte)
+        fin--;    // Desplaza a la izquierda en RAM (-1 byte)
+    }
+}
+
+int main() {
+    char mensaje[] = "AEDD_UTN_FRSF";
+    invertirCadena(mensaje);
+    cout &lt;&lt; mensaje &lt;&lt; endl; // "FSRF_NTU_DDEA"
+    return 0;
+}
+                                </code></pre>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div class="tile" style="padding: 12px 14px; border-left: 4px solid var(--utn-gold);">
+                                    <h4 style="font-size: 14px; margin: 0 0 4px 0; color: var(--utn-blue);"><i class="fa-solid fa-arrows-split-up-and-left"></i> Traza de Ejecución</h4>
+                                    <div style="font-family: 'Fira Code', monospace; font-size: 10.5px; background: #0F172A; color: #E2E8F0; padding: 10px; border-radius: 8px; line-height: 1.6;">
+                                        Inicio: [A][E][D][D]...[S][F][\0]<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ^inicio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^fin<br>
+                                        Paso 1: [F][E][D][D]...[S][A][\0]<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ^inicio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^fin<br>
+                                        Paso 2: [F][S][D][D]...[E][A][\0]<br>
+                                        Fin cuando: inicio &gt;= fin
+                                    </div>
+                                </div>
+                                <div class="tile" style="padding: 10px 14px; border-left: 4px solid var(--cyan-accent); background: #F8FAFC;">
+                                    <p style="font-size: 12px; margin: 0; color: #334155;">
+                                        <i class="fa-solid fa-bolt"></i> <strong>Complejidad:</strong> Tiempo lineal O(N) y espacio auxiliar constante O(1). Cero clonación de cadenas en memoria.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </section>
 
             <!-- ============================================================== -->
@@ -540,7 +732,7 @@ void eliminarNodo(Nodo*&amp; cabeza, int valor) {
                     </a>
                 </div>
                 <div style="width: 100%; height: 560px; background: #090D16; border-radius: 12px; overflow: hidden; box-shadow: 0 16px 45px rgba(0,0,0,0.6); border: 1px solid rgba(56, 189, 248, 0.35);">
-                    <iframe id="pointer-inspector-frame" src="./debugger/index.html?v=1" style="width: 100%; height: 100%; border: none; display: block;" allow="fullscreen"></iframe>
+                    <iframe id="pointer-inspector-frame" src="./debugger/index.html?v=2" style="width: 100%; height: 100%; border: none; display: block;" allow="fullscreen"></iframe>
                 </div>
             </section>
 
@@ -820,32 +1012,7 @@ NodoIntegrada* integrar(NodoCalificaciones* c1, NodoCalificaciones* c2) {
                 </section>
             </section>
 
-            <!-- ============================================================== -->
-            <!-- SLIDE 14: CHECKLIST DE EXAMEN -->
-            <!-- ============================================================== -->
-            <section data-background-color="#FFFFFF">
-                <h2 class="slide-title">Checklist de Examen: Errores Frecuentes</h2>
-                <div class="content-area">
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%;">
-                        <div class="tile" style="border-left: 5px solid var(--danger-red);">
-                            <h3 style="color: var(--danger-red);"><i class="fa-solid fa-ban"></i> Puntero Nulo (Null Dereference)</h3>
-                            <p>Intentar hacer <code>p-&gt;sig</code> o <code>p-&gt;dato</code> cuando <code>p == nullptr</code> provoca aborto inmediato del programa (Segmentation fault).</p>
-                        </div>
-                        <div class="tile" style="border-left: 5px solid var(--warning-amber);">
-                            <h3 style="color: var(--warning-amber);"><i class="fa-solid fa-arrows-spin"></i> Paso por Referencia</h3>
-                            <p>Si una función puede modificar el primer elemento de la lista, debes pasar el puntero por referencia: <code>Nodo*&amp; cabeza</code>.</p>
-                        </div>
-                        <div class="tile" style="border-left: 5px solid var(--cyan-accent);">
-                            <h3 style="color: var(--cyan-accent);"><i class="fa-solid fa-link-slash"></i> Punteros Colgantes (Dangling)</h3>
-                            <p>Nunca uses un puntero después de haber ejecutado <code>delete</code> sobre la dirección a la que apunta. Asignarle <code>nullptr</code> si continúa en ámbito.</p>
-                        </div>
-                        <div class="tile" style="border-left: 5px solid var(--success-green);">
-                            <h3 style="color: var(--success-green);"><i class="fa-solid fa-broom"></i> Liberación Total al Cierre</h3>
-                            <p>Todo programa profesional debe recorrer la lista y liberar cada nodo con <code>delete</code> antes de finalizar el proceso.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+
 
             <!-- ============================================================== -->
             <!-- SLIDE 15: CIERRE INSTITUCIONAL -->

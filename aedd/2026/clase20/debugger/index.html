@@ -178,14 +178,7 @@
             font-size: 11.5px;
             font-weight: 600;
         }
-        .hud-stat-pill.score {
-            border-color: rgba(255, 193, 7, 0.45);
-            color: #FEF08A;
-        }
-        .hud-stat-pill.streak {
-            border-color: rgba(244, 63, 94, 0.45);
-            color: #FDA4AF;
-        }
+
 
         .btn-return-slides {
             display: flex;
@@ -696,153 +689,7 @@
         .terminal-msg.link { color: #38BDF8; }
         .terminal-msg.info { color: #FBBF24; }
 
-        /* QUIZ MODAL */
-        .quiz-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(6px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 14px;
-        }
 
-        .quiz-overlay.open {
-            display: flex;
-            animation: fadeIn 0.2s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .quiz-card {
-            background: #0F172A;
-            border: 2px solid var(--utn-gold);
-            border-radius: 14px;
-            width: 100%;
-            max-width: 580px;
-            padding: 16px 20px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.7), 0 0 25px rgba(255, 193, 7, 0.25);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .quiz-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .quiz-badge {
-            background: rgba(255, 193, 7, 0.2);
-            color: var(--utn-gold);
-            border: 1px solid var(--utn-gold);
-            font-size: 10.5px;
-            font-weight: 800;
-            padding: 3px 8px;
-            border-radius: 6px;
-            letter-spacing: 0.6px;
-        }
-
-        .quiz-question {
-            font-size: 14px;
-            font-weight: 600;
-            color: #F8FAFC;
-            line-height: 1.4;
-        }
-
-        .quiz-options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-
-        .quiz-opt-btn {
-            background: #1E293B;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 8px;
-            padding: 8px 12px;
-            text-align: left;
-            font-size: 12px;
-            color: #E2E8F0;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .quiz-opt-btn:hover:not(:disabled) {
-            background: rgba(56, 189, 248, 0.15);
-            border-color: #38BDF8;
-            color: white;
-            transform: translateX(3px);
-        }
-        .quiz-opt-btn.correct {
-            background: rgba(16, 185, 129, 0.25) !important;
-            border-color: var(--success-green) !important;
-            color: #A7F3D0 !important;
-        }
-        .quiz-opt-btn.wrong {
-            background: rgba(239, 68, 68, 0.25) !important;
-            border-color: var(--danger-red) !important;
-            color: #FECACA !important;
-        }
-
-        .quiz-opt-letter {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 10px;
-            flex-shrink: 0;
-        }
-
-        .quiz-feedback {
-            font-size: 11.5px;
-            line-height: 1.4;
-            padding: 8px 12px;
-            border-radius: 8px;
-            display: none;
-        }
-        .quiz-feedback.success {
-            display: block;
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid var(--success-green);
-            color: #A7F3D0;
-        }
-        .quiz-feedback.error {
-            display: block;
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid var(--danger-red);
-            color: #FECACA;
-        }
-
-        .quiz-btn-continue {
-            background: var(--utn-gold);
-            color: var(--utn-blue);
-            font-weight: 800;
-            font-size: 12px;
-            padding: 7px 14px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            align-self: flex-end;
-            display: none;
-            transition: all 0.2s ease;
-        }
-        .quiz-btn-continue:hover {
-            transform: scale(1.03);
-            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
-        }
     </style>
 </head>
 <body>
@@ -875,14 +722,6 @@
         </div>
 
         <div class="hud-actions">
-            <div class="hud-stat-pill score">
-                <i class="fa-solid fa-star" style="color: var(--utn-gold);"></i>
-                <span id="score-counter">100 pts</span>
-            </div>
-            <div class="hud-stat-pill streak">
-                <i class="fa-solid fa-fire" style="color: #F43F5E;"></i>
-                <span id="streak-counter">0x racha</span>
-            </div>
             <a href="../index.html" class="btn-return-slides">
                 <i class="fa-solid fa-arrow-left"></i> Diapositiva
             </a>
@@ -972,26 +811,6 @@
 
     </div>
 
-    <!-- QUIZ MODAL OVERLAY -->
-    <div class="quiz-overlay" id="quiz-modal">
-        <div class="quiz-card">
-            <div class="quiz-header">
-                <span class="quiz-badge"><i class="fa-solid fa-circle-question"></i> Desafío de Razonamiento</span>
-                <span style="font-size: 11px; color: var(--utn-gold); font-weight: 700;">+25 pts</span>
-            </div>
-            <div class="quiz-question" id="quiz-question-text">
-                ¿A qué nodo apuntará el siguiente puntero tras esta operación?
-            </div>
-            <div class="quiz-options-list" id="quiz-options-container">
-                <!-- Se inyectan las 4 opciones de longitud uniforme -->
-            </div>
-            <div class="quiz-feedback" id="quiz-feedback-box"></div>
-            <button class="quiz-btn-continue" id="quiz-btn-continue" onclick="closeQuizAndContinue()">
-                Continuar Ejecución <i class="fa-solid fa-arrow-right"></i>
-            </button>
-        </div>
-    </div>
-
     <script>
         // =========================================================================
         // ESTADO GLOBAL DEL SIMULADOR
@@ -999,9 +818,6 @@
         let currentLevelIndex = 0;
         let currentStepIndex = 0;
         let autoPlayTimer = null;
-        let isWaitingForQuiz = false;
-        let score = 100;
-        let streak = 0;
 
         // DEFINICIÓN DE LOS 4 NIVELES PEDAGÓGICOS
         const levels = [
@@ -1071,18 +887,7 @@
                             { addr: "0x2B40", dato: 10, sig: "nullptr", tags: ["nuevo"] },
                             { addr: "0x10A0", dato: 20, sig: "nullptr", tags: ["cabeza"] }
                         ],
-                        log: { type: "info", text: "Asignación: nodo 0x2B40->dato = 10." },
-                        quiz: {
-                            question: "¿A qué debe apuntar 'nuevo->sig' para preservar el resto de la lista?",
-                            options: [
-                                "Al nodo apuntado por cabeza (0x10A0) para enlazarlo como siguiente.",
-                                "A nullptr para convertir al nuevo nodo en el último de la lista.",
-                                "A su propia dirección (0x2B40) para formar una lista circular.",
-                                "A la dirección de memoria de la variable local valor en el stack."
-                            ],
-                            correctIndex: 0,
-                            explanation: "Correcto: 'nuevo->sig = cabeza' enlaza el nuevo nodo con el primer elemento actual antes de reubicar la cabeza."
-                        }
+                        log: { type: "info", text: "Asignación: nodo 0x2B40->dato = 10." }
                     },
                     {
                         line: 9,
@@ -1232,18 +1037,7 @@
                             { addr: "0x10B0", dato: 25, sig: "nullptr", tags: ["act"] },
                             { addr: "0x3C10", dato: 18, sig: "nullptr", tags: ["nuevo"] }
                         ],
-                        log: { type: "info", text: "Fin del while: 25 >= 18. Posición encontrada." },
-                        quiz: {
-                            question: "¿Qué ocurriría si asignamos 'ant->sig = nuevo' ANTES de 'nuevo->sig = act'?",
-                            options: [
-                                "Perderíamos la referencia al nodo act (0x10B0), provocando un memory leak.",
-                                "El sistema operativo reacomoda automáticamente los punteros del heap.",
-                                "El compilador generará un error en tiempo de ejecución de tipo stack overflow.",
-                                "El valor entero 18 se sobreescribirá en el nodo anterior 10."
-                            ],
-                            correctIndex: 0,
-                            explanation: "Exacto: si cambiamos 'ant->sig' primero, perdemos el puntero hacia el resto de la lista (nodo 25)."
-                        }
+                        log: { type: "info", text: "Fin del while: 25 >= 18. Posición encontrada." }
                     },
                     {
                         line: 9,
@@ -1323,18 +1117,7 @@
                             { addr: "0x3C10", dato: 18, sig: "0x10B0", tags: ["act"] },
                             { addr: "0x10B0", dato: 25, sig: "nullptr", tags: [] }
                         ],
-                        log: { type: "info", text: "Nodo 18 encontrado en 0x3C10. Preparando desconexión." },
-                        quiz: {
-                            question: "¿Por qué es obligatorio reubicar ant->sig antes de ejecutar delete act?",
-                            options: [
-                                "Porque tras delete act su memoria queda liberada y leer act->sig es indefinido.",
-                                "Porque delete act borra automáticamente las variables estáticas del stack.",
-                                "Para que el compilador transforme el nodo 25 en la nueva cabeza de la lista.",
-                                "Porque la función delete solo acepta nodos que no tengan punteros siguientes."
-                            ],
-                            correctIndex: 0,
-                            explanation: "Exacto: desreferenciar un puntero después de destruirlo genera segmentation fault o comportamiento indefinido."
-                        }
+                        log: { type: "info", text: "Nodo 18 encontrado en 0x3C10. Preparando desconexión." }
                     },
                     {
                         line: 9,
@@ -1445,18 +1228,7 @@
                             { addr: "0x1030", dato: 3, sig: "0x1040", tags: ["act"] },
                             { addr: "0x1040", dato: 7, sig: "nullptr", tags: [] }
                         ],
-                        log: { type: "info", text: "ALERTA: 3 no es mayor que 6. Tramo desordenado detectado." },
-                        quiz: {
-                            question: "¿Cómo debe proceder la función para corregir la lista sin mover 'ant'?",
-                            options: [
-                                "Eliminar el nodo 3 liberando su memoria y reconectar el 6 con el 7.",
-                                "Avanzar el puntero ant al nodo 3 y continuar la comparación hacia adelante.",
-                                "Sobrescribir el dato del nodo 3 con un valor mayor a 6 aleatorio.",
-                                "Intercambiar los punteros siguientes de los nodos 6 y 3 directamente."
-                            ],
-                            correctIndex: 0,
-                            explanation: "Exacto: ant permanece en el último nodo válido (6), mientras eliminamos los nodos no crecientes."
-                        }
+                        log: { type: "info", text: "ALERTA: 3 no es mayor que 6. Tramo desordenado detectado." }
                     },
                     {
                         line: 11,
@@ -1645,20 +1417,9 @@
                 `;
                 term.insertBefore(line, term.firstChild);
             }
-
-            // Desafío Quiz
-            if (step.quiz) {
-                if (autoPlayTimer) {
-                    clearInterval(autoPlayTimer);
-                    autoPlayTimer = null;
-                    document.getElementById("btn-autoplay").innerHTML = '<i class="fa-solid fa-play"></i> Auto';
-                }
-                openQuiz(step.quiz);
-            }
         }
 
         function executeNextStep() {
-            if (isWaitingForQuiz) return;
             const lvl = levels[currentLevelIndex];
             if (currentStepIndex < lvl.steps.length - 1) {
                 currentStepIndex++;
@@ -1678,8 +1439,6 @@
                 autoPlayTimer = null;
                 document.getElementById("btn-autoplay").innerHTML = '<i class="fa-solid fa-play"></i> Auto';
             }
-            isWaitingForQuiz = false;
-            document.getElementById("quiz-modal").classList.remove("open");
             currentStepIndex = 0;
             renderStep(0);
         }
@@ -1705,60 +1464,6 @@
         }
 
         // =========================================================================
-        // QUIZ LOGIC
-        // =========================================================================
-        function openQuiz(quizData) {
-            isWaitingForQuiz = true;
-            document.getElementById("quiz-question-text").innerText = quizData.question;
-            const container = document.getElementById("quiz-options-container");
-            container.innerHTML = "";
-
-            const letters = ["A", "B", "C", "D"];
-            quizData.options.forEach((opt, idx) => {
-                const btn = document.createElement("button");
-                btn.className = "quiz-opt-btn";
-                btn.innerHTML = `<span class="quiz-opt-letter">${letters[idx]}</span> <span>${opt}</span>`;
-                btn.onclick = () => handleQuizAnswer(idx, quizData);
-                container.appendChild(btn);
-            });
-
-            document.getElementById("quiz-feedback-box").className = "quiz-feedback";
-            document.getElementById("quiz-feedback-box").style.display = "none";
-            document.getElementById("quiz-btn-continue").style.display = "none";
-            document.getElementById("quiz-modal").classList.add("open");
-        }
-
-        function handleQuizAnswer(selectedIdx, quizData) {
-            const buttons = document.querySelectorAll(".quiz-opt-btn");
-            buttons.forEach(b => b.disabled = true);
-
-            const feedback = document.getElementById("quiz-feedback-box");
-            if (selectedIdx === quizData.correctIndex) {
-                buttons[selectedIdx].classList.add("correct");
-                feedback.className = "quiz-feedback success";
-                feedback.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${quizData.explanation}`;
-                score += 25;
-                streak += 1;
-            } else {
-                buttons[selectedIdx].classList.add("wrong");
-                buttons[quizData.correctIndex].classList.add("correct");
-                feedback.className = "quiz-feedback error";
-                feedback.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Incorrecto. ${quizData.explanation}`;
-                streak = 0;
-            }
-
-            feedback.style.display = "block";
-            document.getElementById("score-counter").innerText = `${score} pts`;
-            document.getElementById("streak-counter").innerText = `${streak}x racha`;
-            document.getElementById("quiz-btn-continue").style.display = "block";
-        }
-
-        function closeQuizAndContinue() {
-            document.getElementById("quiz-modal").classList.remove("open");
-            isWaitingForQuiz = false;
-        }
-
-        // =========================================================================
         // ATAJOS DE TECLADO Y RECONOCIMIENTO DE IFRAME
         // =========================================================================
         function initApp() {
@@ -1775,7 +1480,6 @@
             switchLevel(0);
 
             window.addEventListener('keydown', (e) => {
-                if (isWaitingForQuiz) return;
                 if (e.key === 'F8') {
                     e.preventDefault();
                     e.stopPropagation();
