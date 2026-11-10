@@ -80,6 +80,18 @@
             .branding-footer { bottom: 10px !important; left: 15px !important; font-size: 11px !important; }
         }
 
+        /* Estilos de Práctica Guiada (Enunciado) */
+        .problem-statement-box {
+            background: #FFFFFF;
+            border: 2px solid #E2E8F0;
+            border-left: 6px solid var(--cyan-accent);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
         /* Tarjetas Conceptuales */
         .cards-container {
             display: grid;
@@ -556,47 +568,123 @@ for (int j = 0; j &lt; cols; j++) {
             </section>
 
             <!-- =========================================================================
-                 SLIDE 6: PRÁCTICA GUIADA 1: TRÁFICO ENTRE SERVIDORES (5x5)
+                 SLIDE 6: PRÁCTICA GUIADA 1: TRÁFICO ENTRE SERVIDORES (5x5) (3 Pasos Verticales)
                  ========================================================================= -->
             <section>
+                <!-- 6.A Slide Teórica Horizontal: Enunciado del Problema (Sin spoilers) -->
                 <section>
                     <h2 class="slide-title">PRÁCTICA GUIADA 1: <span class="slide-subtitle">Tráfico entre Servidores (5x5)</span></h2>
                     <div class="content-area">
-                        <p style="font-size: 14.5px; color: #475569; margin-bottom: 8px;">
-                            <strong>Problema:</strong> 5 servidores registran tráfico en <code class="code-badge">correo[5][5]</code> (KB enviados de servidor <code class="code-badge">i</code> a <code class="code-badge">j</code>). Obtener: <br>
-                            a) Total enviado por cada servidor (sumatoria por filas).<br>
-                            b) Servidor que envió mayor cantidad total.<br>
-                            c) Servidores que recibieron más de una cota <code class="code-badge">M</code> (sumatoria por columnas).
-                        </p>
-
-                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 10px;">
-                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 14px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12px;">// a) y b) Total enviado y servidor máximo (por filas)
-int maxEnvio = -1, servMayor = -1;
-for (int i = 0; i &lt; 5; i++) {
-    int totalEnviado = 0;
-    for (int j = 0; j &lt; 5; j++) { totalEnviado += correo[i][j]; }
-    System.out.println("Servidor " + i + " envió: " + totalEnviado + " KB");
-    if (totalEnviado &gt; maxEnvio) { maxEnvio = totalEnviado; servMayor = i; }
-}
-// c) Servidores con recepción mayor a cota M (por columnas)
-for (int j = 0; j &lt; 5; j++) {
-    int totalRecibido = 0;
-    for (int i = 0; i &lt; 5; i++) { totalRecibido += correo[i][j]; }
-    if (totalRecibido &gt; cotaM) System.out.println("Servidor " + j + " superó la cota");
-}</code></pre>
+                        <!-- Enunciado Principal -->
+                        <div class="problem-statement-box">
+                            <span style="font-size: 13px; font-weight: 700; color: var(--utn-blue); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">
+                                <i class="fa-solid fa-network-wired" style="color: var(--cyan-accent);"></i> Consigna del Problema
+                            </span>
+                            <p style="font-size: 16px; color: var(--text-main); margin: 0; line-height: 1.45;">
+                                En un centro de datos, <strong>5 servidores</strong> (identificados de 0 a 4) registran su intercambio de información en una matriz <code>int[][] correo = new int[5][5];</code>. La celda <code>correo[i][j]</code> representa los KB enviados desde el servidor <strong>emisor i</strong> hacia el servidor <strong>receptor j</strong>.
+                            </p>
                         </div>
 
-                        <div class="callout-box" style="margin-top: 6px;">
-                            <i class="fa-solid fa-server"></i>
-                            <div>
-                                <strong>La diagonal principal: <code class="code-badge">correo[i][i]</code></strong>
-                                <p>Representa tráfico que un servidor se envía a sí mismo (habitualmente 0 o loopback de mantenimiento).</p>
+                        <!-- 3 Incisos del Problema -->
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 12px;">
+                            <div style="background: #F0FDF4; border: 2px solid #BBF7D0; border-left: 5px solid #10B981; border-radius: 10px; padding: 12px 14px;">
+                                <h4 style="font-size: 14.5px; color: #166534; margin: 0 0 4px 0; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-upload" style="color: #10B981;"></i> a) Total por Emisor
+                                </h4>
+                                <p style="font-size: 12.5px; color: #15803D; margin: 0; line-height: 1.35;">
+                                    Calcular e imprimir el total de KB que envió cada servidor hacia la red (<strong>sumatoria por cada fila i</strong>).
+                                </p>
+                            </div>
+
+                            <div style="background: #EFF6FF; border: 2px solid #BFDBFE; border-left: 5px solid #0284C7; border-radius: 10px; padding: 12px 14px;">
+                                <h4 style="font-size: 14.5px; color: #1E40AF; margin: 0 0 4px 0; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-trophy" style="color: #0284C7;"></i> b) Emisor Líder
+                                </h4>
+                                <p style="font-size: 12.5px; color: #1D4ED8; margin: 0; line-height: 1.35;">
+                                    Determinar cuál servidor fue el que envió la mayor cantidad de KB en total y el volumen máximo alcanzado.
+                                </p>
+                            </div>
+
+                            <div style="background: #FFFBEB; border: 2px solid #FDE68A; border-left: 5px solid #F59E0B; border-radius: 10px; padding: 12px 14px;">
+                                <h4 style="font-size: 14.5px; color: #92400E; margin: 0 0 4px 0; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-triangle-exclamation" style="color: #F59E0B;"></i> c) Recepción Crítica
+                                </h4>
+                                <p style="font-size: 12.5px; color: #B45309; margin: 0; line-height: 1.35;">
+                                    Informar qué servidores recibieron un tráfico total mayor a una cota <code>cotaM = 250</code> KB (<strong>sumatoria por columnas j</strong>).
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Grilla de Análisis / Callouts -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                            <div class="callout-box" style="margin: 0;">
+                                <i class="fa-solid fa-server"></i>
+                                <div>
+                                    <strong>La diagonal principal: <code class="code-badge">correo[i][i]</code></strong>
+                                    <p>Representa el tráfico local de loopback que un servidor se envía a sí mismo (habitualmente 0).</p>
+                                </div>
+                            </div>
+
+                            <div class="callout-box" style="margin: 0; background: #FEF3C7; border-color: #FDE68A; border-left-color: #D97706;">
+                                <i class="fa-solid fa-lightbulb" style="color: #D97706;"></i>
+                                <div>
+                                    <strong style="color: #92400E;">Estrategia de barrido:</strong>
+                                    <p style="color: #78350F;">¿Cuál índice debe gobernar el bucle exterior para totalizar envíos (inciso a) y cuál para recepciones (inciso c)?</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- VERTICAL SLIDE: ONECOMPILER SERVIDORES -->
+                <!-- 6.B Slide Vertical: Resolución Paso a Paso -->
+                <section>
+                    <h2 class="slide-title">PRÁCTICA GUIADA 1: <span class="slide-subtitle">Resolución Paso a Paso</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 15px; color: #475569; margin-bottom: 8px;">
+                            Implementación en Java diferenciando el recorrido por filas (envíos) del recorrido por columnas (recepciones):
+                        </p>
+
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 8px;">
+                            <pre style="font-size: 12px !important; line-height: 1.25 !important; margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" data-trim data-noescape data-line-numbers="1-4|6-15|17-25" style="padding: 10px 14px !important; display: block; box-sizing: border-box; background: #272822 !important;">// 1. Inicialización de variables de seguimiento
+int maxEnvio = -1, servMayor = -1;
+int cotaM = 250;
+
+// 2. a) y b) Total enviado por cada servidor y búsqueda de líder (POR FILAS)
+for (int i = 0; i &lt; 5; i++) {
+    int totalEnviado = 0;
+    for (int j = 0; j &lt; 5; j++) {
+        totalEnviado += correo[i][j];
+    }
+    System.out.println("Servidor " + i + " envió: " + totalEnviado + " KB");
+    if (totalEnviado &gt; maxEnvio) {
+        maxEnvio = totalEnviado;
+        servMayor = i;
+    }
+}
+
+// 3. c) Servidores cuya recepción acumulada supera la cota M (POR COLUMNAS)
+for (int j = 0; j &lt; 5; j++) {
+    int totalRecibido = 0;
+    for (int i = 0; i &lt; 5; i++) {
+        totalRecibido += correo[i][j];
+    }
+    if (totalRecibido &gt; cotaM) {
+        System.out.println("Servidor " + j + " superó la cota con " + totalRecibido + " KB");
+    }
+}</code></pre>
+                        </div>
+
+                        <div class="callout-box" style="margin-top: 6px;">
+                            <i class="fa-solid fa-code-compare"></i>
+                            <div>
+                                <strong>La clave algorítmica:</strong>
+                                <p>Para evaluar a un servidor emisor dejamos fija la fila <code>i</code> en el bucle externo y sumamos sus columnas <code>j</code>. Para evaluar a un receptor, fijamos la columna <code>j</code> en el exterior y sumamos sus filas <code>i</code>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6.C Slide Vertical: Compilador Interactivo 1 -->
                 <section id="slide-compiler-servidores" data-background-color="#0F172A">
                     <div class="compiler-window">
                         <div class="header">
@@ -611,46 +699,133 @@ for (int j = 0; j &lt; 5; j++) {
             </section>
 
             <!-- =========================================================================
-                 SLIDE 7: PRÁCTICA GUIADA 2: AEROLÍNEAS Y VECTORES PARALELOS
+                 SLIDE 7: PRÁCTICA GUIADA 2: AEROLÍNEAS Y VECTORES PARALELOS (3 Pasos Verticales)
                  ========================================================================= -->
             <section>
+                <!-- 7.A Slide Teórica Horizontal: Enunciado del Problema (Sin spoilers) -->
                 <section>
                     <h2 class="slide-title">PRÁCTICA GUIADA 2: <span class="slide-subtitle">Matrices &amp; Vectores Paralelos</span></h2>
                     <div class="content-area">
-                        <p style="font-size: 14.5px; color: #475569; margin-bottom: 8px;">
-                            <strong>Problema:</strong> Matriz <code class="code-badge">pasajes[4][50]</code> (4 categorías x 50 destinos) combinada con el vector paralelo <code class="code-badge">String[] localidades = { "Paraná", "Esquel", ... }</code>:
+                        <!-- Enunciado Principal -->
+                        <div class="problem-statement-box">
+                            <span style="font-size: 13px; font-weight: 700; color: var(--utn-blue); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">
+                                <i class="fa-solid fa-plane-departure" style="color: var(--cyan-accent);"></i> Consigna del Problema
+                            </span>
+                            <p style="font-size: 16px; color: var(--text-main); margin: 0; line-height: 1.45;">
+                                Una aerolínea administra la venta de pasajes con una matriz <code>pasajes[4][5]</code> (4 categorías de servicio × 5 destinos turísticos) y un vector paralelo de nombres <code>String[] localidades = { "Paraná", "Esquel", "Bariloche", "Ushuaia", "Iguazú" };</code>.
+                            </p>
+                        </div>
+
+                        <!-- 3 Requerimientos del Problema -->
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 12px;">
+                            <div style="background: #EFF6FF; border: 2px solid #BFDBFE; border-left: 5px solid #0284C7; border-radius: 10px; padding: 12px 14px;">
+                                <h4 style="font-size: 14.5px; color: #1E40AF; margin: 0 0 4px 0; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-chart-column" style="color: #0284C7;"></i> 1. Total por Destino
+                                </h4>
+                                <p style="font-size: 12.5px; color: #1D4ED8; margin: 0; line-height: 1.35;">
+                                    Calcular e informar la cantidad total de pasajeros que volaron a cada localidad (<strong>sumatoria por columnas</strong>).
+                                </p>
+                            </div>
+
+                            <div style="background: #FFFBEB; border: 2px solid #FDE68A; border-left: 5px solid #F59E0B; border-radius: 10px; padding: 12px 14px;">
+                                <h4 style="font-size: 14.5px; color: #92400E; margin: 0 0 4px 0; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-location-dot" style="color: #F59E0B;"></i> 2. Destino Menor
+                                </h4>
+                                <p style="font-size: 12.5px; color: #B45309; margin: 0; line-height: 1.35;">
+                                    Determinar la localidad con menor cantidad de pasajes y mostrar su nombre cruzando el índice con <code>localidades</code>.
+                                </p>
+                            </div>
+
+                            <div style="background: #FEF2F2; border: 2px solid #FECACA; border-left: 5px solid #EF4444; border-radius: 10px; padding: 12px 14px;">
+                                <h4 style="font-size: 14.5px; color: #991B1B; margin: 0 0 4px 0; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-ban" style="color: #EF4444;"></i> 3. Categoría Vacía
+                                </h4>
+                                <p style="font-size: 12.5px; color: #B91C1C; margin: 0; line-height: 1.35;">
+                                    Verificar si existe alguna categoría de tarifa que no haya registrado ninguna venta (<strong>sumatoria por filas == 0</strong>).
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Grilla de Esquema Paralelo y Callout -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                            <div style="background: white; border: 1px solid #CBD5E1; border-radius: 10px; padding: 10px 14px; text-align: left;">
+                                <span style="font-size: 11.5px; font-weight: 700; color: #0284C7; text-transform: uppercase; display: block; margin-bottom: 6px;">
+                                    <i class="fa-solid fa-link"></i> Mapeo Paralelo por Subíndice Col:
+                                </span>
+                                <div style="display: flex; flex-wrap: wrap; gap: 6px; font-family: 'Fira Code', monospace; font-size: 11px;">
+                                    <span style="background: #F1F5F9; padding: 3px 6px; border-radius: 4px;">Col 0 &rarr; Paraná</span>
+                                    <span style="background: #F1F5F9; padding: 3px 6px; border-radius: 4px;">Col 1 &rarr; Esquel</span>
+                                    <span style="background: #F1F5F9; padding: 3px 6px; border-radius: 4px;">Col 2 &rarr; Bariloche</span>
+                                    <span style="background: #F1F5F9; padding: 3px 6px; border-radius: 4px;">Col 3 &rarr; Ushuaia</span>
+                                    <span style="background: #F1F5F9; padding: 3px 6px; border-radius: 4px;">Col 4 &rarr; Iguazú</span>
+                                </div>
+                            </div>
+
+                            <div class="callout-box" style="margin: 0;">
+                                <i class="fa-solid fa-lightbulb"></i>
+                                <div>
+                                    <strong>¿Por qué conservar el índice col?</strong>
+                                    <p>Guardar <code>idxMenorDestino</code> permite acceder a <code>localidades[idxMenorDestino]</code> sin perder la asociación con la columna.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7.B Slide Vertical: Resolución Paso a Paso -->
+                <section>
+                    <h2 class="slide-title">PRÁCTICA GUIADA 2: <span class="slide-subtitle">Resolución Paso a Paso</span></h2>
+                    <div class="content-area">
+                        <p style="font-size: 15px; color: #475569; margin-bottom: 8px;">
+                            Implementación en Java integrando el barrido por columnas con el vector paralelo y el barrido por filas:
                         </p>
 
-                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 10px;">
-                            <pre style="margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" style="padding: 10px 14px !important; display: block; box-sizing: border-box; background: #272822 !important; font-size: 12px;">// Localidad a la que viajó la menor cantidad de pasajeros (por columnas)
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 8px;">
+                            <pre style="font-size: 11.5px !important; line-height: 1.25 !important; margin: 0; padding: 0 !important; position: relative !important; overflow: hidden !important;"><code class="language-java" data-trim data-noescape data-line-numbers="1-5|7-17|19-21|23-31" style="padding: 10px 14px !important; display: block; box-sizing: border-box; background: #272822 !important;">// 1. Dimensiones y variables de seguimiento
+int categorias = pasajes.length;     // 4 filas
+int destinos = localidades.length;    // 5 columnas
 int minPasajeros = Integer.MAX_VALUE;
-int idxMinLocalidad = 0;
+int idxMenorDestino = 0;
 
+// 2. Requerimiento 1 y 2: Total por columnas (destino) y búsqueda de mínimo
 for (int col = 0; col &lt; destinos; col++) {
-    int totalLocalidad = 0;
-    for (int cat = 0; cat &lt; categorias; cat++) {
-        totalLocalidad += pasajes[cat][col];
+    int totalLoc = 0;
+    for (int fila = 0; fila &lt; categorias; fila++) {
+        totalLoc += pasajes[fila][col];
     }
-    if (totalLocalidad &lt; minPasajeros) {
-        minPasajeros = totalLocalidad;
-        idxMinLocalidad = col; // Guardamos el índice para cruzar con el vector
+    System.out.println(localidades[col] + ": " + totalLoc + " pasajeros.");
+    if (totalLoc &lt; minPasajeros) {
+        minPasajeros = totalLoc;
+        idxMenorDestino = col; // Guardamos el índice para cruzar con el vector paralelo
     }
 }
-// Cruzamos el índice con el vector paralelo de nombres
-System.out.println("Destino menos visitado: " + localidades[idxMinLocalidad]);</code></pre>
+
+// 3. Cruce con el vector paralelo
+System.out.println("Destino menos visitado: " + localidades[idxMenorDestino]);
+
+// 4. Requerimiento 3: Total por filas para detectar categorías sin ventas
+for (int fila = 0; fila &lt; categorias; fila++) {
+    int totalCat = 0;
+    for (int col = 0; col &lt; destinos; col++) {
+        totalCat += pasajes[fila][col];
+    }
+    if (totalCat == 0) {
+        System.out.println("La Categoría #" + fila + " no vendió ningún pasaje.");
+    }
+}</code></pre>
                         </div>
 
                         <div class="callout-box" style="margin-top: 6px;">
                             <i class="fa-solid fa-link"></i>
                             <div>
                                 <strong>La potencia de los vectores paralelos</strong>
-                                <p>El subíndice de la columna en la matriz (<code class="code-badge">col</code>) se utiliza directamente como índice en el vector de nombres (<code class="code-badge">localidades[col]</code>), vinculando números con entidades del mundo real.</p>
+                                <p>El subíndice de la columna en la matriz (<code>col</code>) se utiliza directamente como índice en el vector de nombres (<code>localidades[col]</code>), vinculando números con entidades del mundo real.</p>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- VERTICAL SLIDE: ONECOMPILER AEROLÍNEAS -->
+                <!-- 7.C Slide Vertical: Compilador Interactivo 2 -->
                 <section id="slide-compiler-aerolineas" data-background-color="#0F172A">
                     <div class="compiler-window">
                         <div class="header">
