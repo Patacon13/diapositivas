@@ -1,11 +1,16 @@
 ---
 name: sied_utn
-description: Automatización, gestión de aulas, foros, entregas, notas y contenidos de SIED Moodle UTN (TUTI, cátedras SAO, PBA, etc.). Se activa cuando el usuario consulta sobre SIED, Moodle UTN, gestión de materias de TUTI, foros, tareas pendientes o sincronización de materiales.
+description: Automatización, gestión de aulas, foros, entregas, notas y contenidos de SIED Moodle UTN (TUTI, cátedras SAO, PBA, etc.). Se activa cuando el usuario consulta sobre SIED, Moodle UTN, gestión de materias de TUTI, foros, tareas pendientes o sincronización de materiales. NUNCA usar para AEDD o carreras de Grado/Ingeniería (para AEDD usar campus_aedd_utn).
 ---
 
 # SIED UTN - Moodle Automation & Management Skill
 
 Esta skill proporciona conocimiento, herramientas y pautas para interactuar de forma programática con la plataforma Moodle de **SIED UTN** (`https://tuti.sied.utn.edu.ar`).
+
+> [!CAUTION]
+> **REGLA DE DESAMBIGUACIÓN OBLIGATORIA:**
+> * **Esta skill (`sied_utn`)** es **EXCLUSIVA** para las materias de **TUTI** (cátedras **SAO**, **PBA**) alojadas en `https://tuti.sied.utn.edu.ar`.
+> * Para el **Campus Virtual de Grado / Ingeniería en Sistemas** (cátedra **AEDD**, URL `https://campusvirtual.frsf.utn.edu.ar`), **NO USAR ESTA SKILL**. Usar en su lugar `campus_aedd_utn`.
 
 ---
 

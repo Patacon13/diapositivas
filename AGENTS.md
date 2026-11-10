@@ -20,6 +20,9 @@ Este archivo define las directrices arquitectónicas, de maquetación y de contr
   - En diapositivas y hubs sin MathJax/KaTeX, escribir siempre texto directo (`O(1)`, `O(N log N)`, `N`, `>= x`), evitando los signos de dólar que se imprimen literalmente.
 - **Evitar mensajes redundantes de navegación**:
   - No incluir carteles, banners ni bloques `.puesta-en-comun` con instrucciones del tipo *"Presioná Flecha Abajo..."*. Reveal.js ya provee flechas direccionales e indicadores de progreso nativos; estos banners saturan la altura útil y generan colisiones con el pie institucional.
+- **Separación de Enunciados y Resoluciones (Arquitectura Anti-Spoilers en 3 Pasos)**:
+  - En prácticas guiadas o ejercicios, está prohibido colocar la resolución en la misma diapositiva del enunciado.
+  - Se utiliza la estructura vertical en 3 niveles: Paso A (Horizontal: Enunciado y modelo conceptual sin spoilers), Paso B (Vertical ↓: Resolución guiada con resaltado progresivo `data-line-numbers="1-5|7-12"`), y Paso C (Vertical ↓: Sandbox interactivo OneCompiler).
 
 ## 2. Soporte Móvil y Orientación Vertical (Portrait)
 - **Orden de ejecución crítico (Anti-Blank-Slide)**:

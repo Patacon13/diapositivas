@@ -196,8 +196,9 @@ Antes de dar por finalizada la creación o refactorización de presentaciones, d
 10. **Navegación Vertical Orgánica (Cero Mensajes Explícitos)**:
     - **No incluir** botones, textos ni píldoras como `"Presioná Flecha Abajo"`, ni tampoco `"Probar en vivo"`.
     - La interfaz nativa de Reveal.js ilumina automáticamente la flecha inferior en los controles de navegación (esquina inferior derecha) cuando existe una diapositiva vertical secundaria (compilador o sandbox), siendo completamente suficiente, limpia y no invasiva.
-11. **Navegación Fluida en Código (Fragmentos)**:
-    - En diapositivas de desafíos o explicaciones completas, evitar dividir `data-line-numbers="line1|line2"` con barras verticales (`|`) salvo que sea estrictamente necesario un paso a paso fragmentado. Los pipes interceptan la flecha derecha (`→`), bloqueando el avance normal hacia la siguiente diapositiva.
+11. **Navegación en Código y Resaltado Progresivo (`data-line-numbers`)**:
+    - **En diapositivas de resolución paso a paso (Paso B de prácticas guiadas)**: Es OBLIGATORIO utilizar resaltado progresivo con pipes (`data-line-numbers="1-4|6-12|14-20"`), permitiendo al docente guiar la explicación línea por línea. La arquitectura anti-fantasmeo (Regla 20) previene cualquier desplazamiento o doble imagen.
+    - **En diapositivas teóricas o de referencia rápida**: Usar `data-line-numbers` plano (sin pipes) para que la flecha derecha avance de inmediato al siguiente slide sin requerir múltiples pulsaciones intermedias.
 12. **Limpieza Visual en Portada y Cierre**:
     - No colocar logotipos o badges redundantes (`TUTI / UTN`) por encima del título principal en la portada o en el slide de preguntas cuando ya existe el footer institucional persistente en la esquina inferior izquierda. Preservar la limpieza tipográfica de la Unidad 0.
 13. **Estructura y Balance en Portales Hub**:
@@ -276,3 +277,23 @@ Antes de dar por finalizada la creación o refactorización de presentaciones, d
 23. **Tono Didáctico Natural vs. Frases de Plantilla Artificial ("Cero Clichés de IA")**:
     - Desterrar expresiones vacías o de relleno que delatan generación automática: *"Regla de oro"*, *"En conclusión"*, *"En el fascinante mundo de..."*, *"Es crucial recordar que..."*.
     - Redactar con el tono docente directo y técnico de la cátedra: *"Aclaración importante"*, *"Detalle a tener en cuenta"*, *"En STL los elementos se inicializan por defecto en 0..."*.
+
+24. **Arquitectura de Ejercicios Guiados en 3 Pasos (Anti-Spoilers y Navegación Vertical)**:
+    - En diapositivas de problemas prácticos o desafíos guiados presentados por docentes, está **ESTRICTAMENTE PROHIBIDO** incluir el código de la solución en la misma diapositiva del enunciado. Si se muestra el código inmediatamente, se spoilea la resolución y se anula la instancia pedagógica de análisis con los estudiantes.
+    - Toda práctica guiada debe estructurarse en un bloque de **3 pasos verticales** (`<section> <section>...</section> <section>...</section> <section>...</section> </section>`):
+      1. **Paso A (Horizontal): Enunciado y Modelo Conceptual (Sin Spoilers)**:
+         - Título claro del problema (`slide-title` con subtítulo en `slide-subtitle`).
+         - Caja de enunciado (`problem-statement-box`) con la consigna completa, contexto real y objetivos/incisos desglosados (tarjetas o badges para `a)`, `b)`, `c)`).
+         - Diagrama, tabla o esquema visual de datos (ej: grilla 2D, estado de variables, flujo de índices o mapeo paralelo).
+         - Pregunta disparadora o de reflexión previa (`callout-box`).
+         - **Cero código de solución en este slide**.
+      2. **Paso B (Vertical ↓): Resolución Paso a Paso**:
+         - Se accede presionando Flecha Abajo (o flecha vertical en Reveal).
+         - Título: `Resolución Paso a Paso // [Tema]`.
+         - Código modular, limpio y comentado.
+         - Resaltado progresivo línea por línea o bloque por bloque utilizando `data-line-numbers="1-5|7-12|..."` para guiar la explicación.
+         - Caja explicativa (`callout-box`) con la justificación técnica, complejidad o decisiones de diseño.
+      3. **Paso C (Vertical ↓): Laboratorio o Compilador en Vivo (OneCompiler)**:
+         - Se accede presionando nuevamente Flecha Abajo.
+         - Contenedor `.compiler-window` con iframe de OneCompiler cargado con el código completo y botón de reinicio.
+         - En pantallas móviles / portrait, el script anti-blank-slide remueve automáticamente este paso y aplana los pasos A y B como diapositivas horizontales consecutivas.
