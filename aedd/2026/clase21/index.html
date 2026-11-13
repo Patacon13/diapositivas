@@ -399,9 +399,6 @@
                     <div class="two-column" style="grid-template-columns: 1.25fr 0.75fr; align-items: center;">
                         <pre><code class="cpp" data-trim data-noescape data-line-numbers>
 // === pila.h ===
-#ifndef PILA_H
-#define PILA_H
-
 struct NodoPila {
     int info;
     NodoPila* sig;
@@ -415,8 +412,6 @@ bool desapilar(PtrNodo &amp;P, int &amp;valor);
 void mostrarPila(PtrNodo P);
 void liberarPila(PtrNodo &amp;P);
 void invertirPila(PtrNodo &amp;P);
-
-#endif
                         </code></pre>
 
                         <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -623,9 +618,6 @@ void invertirPila(PtrNodo &amp;P) {
                     <div class="two-column" style="grid-template-columns: 1.25fr 0.75fr; align-items: center;">
                         <pre><code class="cpp" data-trim data-noescape data-line-numbers>
 // === cola.h ===
-#ifndef COLA_H
-#define COLA_H
-
 struct NodoCola {
     char info;
     NodoCola* sig;
@@ -644,8 +636,6 @@ bool encolar(Cola &amp;C, char valor);
 bool desencolar(Cola &amp;C, char &amp;valor);
 void mostrarCola(Cola C);
 void liberarCola(Cola &amp;C);
-
-#endif
                         </code></pre>
 
                         <div style="display: flex; flex-direction: column; gap: 12px;">
