@@ -803,8 +803,7 @@ bool desencolar(Cola &amp;C, char &amp;valor) {
             <!-- ============================================================== -->
             <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
                 <div class="section-title-layout">
-                    <h2 style="color: var(--utn-gold); font-size: 46px; margin-bottom: 14px;">PRÁCTICA GUIADA // PILAS Y COLAS</h2>
-                    <p style="color: rgba(255,255,255,0.8); font-size: 22px;">3 ejercicios integradores con resolución paso a paso y compilador C++ en vivo</p>
+                    <h2 style="color: var(--utn-gold); font-size: 52px; margin-bottom: 0;">PRÁCTICA GUIADA</h2>
                 </div>
             </section>
 
@@ -886,12 +885,6 @@ bool balanceada(string expresion) {
     return valida;
 }
                         </code></pre>
-                        <div class="callout-box">
-                            <i class="fa-solid fa-check-double"></i>
-                            <p>
-                                <strong>Buenas prácticas AEDD:</strong> Condición compuesta en <code>while</code> (sin <code>break</code> ni <code>return</code> temprano), liberación garantizada con <code>liberarPila(pila)</code> si quedaron paréntesis abiertos y retorno único al final.
-                            </p>
-                        </div>
                     </div>
                 </section>
 
@@ -945,26 +938,31 @@ bool balanceada(string expresion) {
                         <h2 class="slide-title" style="margin-bottom: 0 !important;">Resolución Paso a Paso // Cola FIFO</h2>
                     </div>
                     <div class="content-area" style="margin-top: 10px; gap: 10px;">
-                        <pre style="font-size: 12px;"><code class="cpp" data-trim data-noescape data-line-numbers="1-6|8-19|21-29">
+                        <pre style="font-size: 12px;"><code class="cpp" data-trim data-noescape data-line-numbers="1-16|18-31">
+void procesarComando(Cola &amp;impresora, char cmd) {
+    char idTrabajo;
+    if (cmd == 'E') {
+        cin &gt;&gt; idTrabajo;
+        encolar(impresora, idTrabajo);
+    } else if (cmd == 'D') {
+        if (desencolar(impresora, idTrabajo)) {
+            cout &lt;&lt; "Imprimiendo: " &lt;&lt; idTrabajo &lt;&lt; endl;
+        } else {
+            cout &lt;&lt; "Cola vacia." &lt;&lt; endl;
+        }
+    } else if (cmd == 'M') {
+        mostrarCola(impresora);
+    }
+}
+
 int main() {
     Cola impresora;
-    char cmd, idTrabajo;
+    char cmd;
     inicializarCola(impresora);
 
     cin &gt;&gt; cmd;
     while (cmd != 'F') {
-        if (cmd == 'E') {
-            cin &gt;&gt; idTrabajo;
-            encolar(impresora, idTrabajo);
-        } else if (cmd == 'D') {
-            if (desencolar(impresora, idTrabajo)) {
-                cout &lt;&lt; "Imprimiendo: " &lt;&lt; idTrabajo &lt;&lt; endl;
-            } else {
-                cout &lt;&lt; "Cola vacia." &lt;&lt; endl;
-            }
-        } else if (cmd == 'M') {
-            mostrarCola(impresora);
-        }
+        procesarComando(impresora, cmd);
         cin &gt;&gt; cmd;
     }
 
@@ -1282,25 +1280,30 @@ void liberarCola(Cola &C) {
 }
 
 // === main.cpp ===
+void procesarComando(Cola &impresora, char cmd) {
+    char idTrabajo;
+    if (cmd == 'E') {
+        cin >> idTrabajo;
+        encolar(impresora, idTrabajo);
+    } else if (cmd == 'D') {
+        if (desencolar(impresora, idTrabajo)) {
+            cout << "Imprimiendo: " << idTrabajo << endl;
+        } else {
+            cout << "Cola vacia." << endl;
+        }
+    } else if (cmd == 'M') {
+        mostrarCola(impresora);
+    }
+}
+
 int main() {
     Cola impresora;
-    char cmd, idTrabajo;
+    char cmd;
     inicializarCola(impresora);
 
     cin >> cmd;
     while (cmd != 'F') {
-        if (cmd == 'E') {
-            cin >> idTrabajo;
-            encolar(impresora, idTrabajo);
-        } else if (cmd == 'D') {
-            if (desencolar(impresora, idTrabajo)) {
-                cout << "Imprimiendo: " << idTrabajo << endl;
-            } else {
-                cout << "Cola vacia." << endl;
-            }
-        } else if (cmd == 'M') {
-            mostrarCola(impresora);
-        }
+        procesarComando(impresora, cmd);
         cin >> cmd;
     }
 
