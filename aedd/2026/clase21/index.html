@@ -799,6 +799,62 @@ bool desencolar(Cola &amp;C, char &amp;valor) {
             </section>
 
             <!-- ============================================================== -->
+            <!-- SLIDE 12B: PSEUDOCÓDIGO INFIJA A POSTFIJA -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Algoritmo Infija &rarr; Postfija (Pseudocódigo)</h2>
+                <div class="content-area">
+                    <div class="two-column" style="grid-template-columns: 1.4fr 0.6fr; align-items: stretch;">
+                        <pre style="font-size: 12px;"><code class="plaintext" data-trim data-noescape data-line-numbers>
+P = NULL;  salida = ""
+para cada token t de izquierda a derecha:
+    si t es operando:
+        agregar t a salida
+    sino si t == '(':
+        apilar(P, t)
+    sino si t == ')':
+        mientras !pilaVacia(P) y cima(P) != '(':
+            desapilar(P, op)
+            agregar op a salida
+        desapilar(P, descarte)   // descarta '('
+    sino:                        // t es operador
+        mientras !pilaVacia(P) y cima(P) != '(' y
+                 debeSalir(cima(P), t):
+            desapilar(P, op)
+            agregar op a salida
+        apilar(P, t)
+
+mientras !pilaVacia(P):
+    desapilar(P, op)
+    agregar op a salida
+                        </code></pre>
+
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="concept-card" style="padding: 12px 14px;">
+                                <h3 style="font-size: 16px;"><i class="fa-solid fa-arrow-up-wide-short" style="color: var(--utn-gold);"></i> Precedencia</h3>
+                                <table class="trace-table" style="margin-top: 8px; box-shadow: none;">
+                                    <thead>
+                                        <tr><th>Op</th><th>Nivel</th><th>Asoc.</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td><code>^</code></td><td>3</td><td>Der</td></tr>
+                                        <tr><td><code>* /</code></td><td>2</td><td>Izq</td></tr>
+                                        <tr><td><code>+ -</code></td><td>1</td><td>Izq</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="callout-box" style="padding: 10px 12px;">
+                                <i class="fa-solid fa-eye"></i>
+                                <p style="font-size: 13.5px;">
+                                    <strong><code>debeSalir(tope, t)</code>:</strong> es verdadero si <code>prec(tope) &gt; prec(t)</code>, o si tienen igual precedencia y <code>t</code> asocia a izquierda.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
             <!-- SLIDE 13: SEPARADOR PRÁCTICA GUIADA -->
             <!-- ============================================================== -->
             <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
