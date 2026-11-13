@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AEDD - Clase 21: Pilas y Colas en Listas Enlazadas - UTN FRSF</title>
+
+    <!-- Estilos Base Reveal.js -->
+    <link rel="stylesheet" href="../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../dist/plugin/highlight/monokai.css" />
+
+    <!-- Tema AEDD (Extiende utn-core.css) -->
+    <link rel="stylesheet" href="../../../dist/theme/aedd.css" />
+
+    <!-- Tipografias Oficiales e Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --danger-red: #EF4444;
+            --warning-amber: #F59E0B;
+            --success-green: #10B981;
+            --cyan-accent: #38BDF8;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 20px; color: var(--text-main); line-height: 1.5; text-align: left; }
+
+        .slide-title {
+            font-size: 36px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 16px !important; border-left: 12px solid var(--utn-gold);
+            padding-left: 20px; text-transform: uppercase !important; letter-spacing: -1px;
+            text-align: left; width: 100%;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; width: 100%; align-items: stretch; }
+
+        .tile {
+            background: var(--bg-neutral); padding: 16px 18px; border-radius: 14px;
+            border-bottom: 5px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+        }
+        .tile:hover { transform: translateY(-3px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
+        .tile h3 { font-size: 18px; color: var(--utn-blue); margin-bottom: 6px; font-weight: 600; }
+        .tile p { font-size: 15px; color: var(--text-light); margin: 0; line-height: 1.45; }
+
+        .concept-card {
+            background: white; padding: 14px 18px; border-radius: 14px; border: 1px solid #E2E8F0;
+            border-left: 8px solid var(--utn-gold); box-shadow: 0 8px 24px rgba(0,0,0,0.04); text-align: left;
+        }
+        .concept-card h3 {
+            color: var(--utn-blue); font-size: 18px; margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
+        }
+
+        /* Arquitectura Anti-Fantasmeo en Bloques de Codigo */
+        .reveal pre {
+            background: #272822 !important; padding: 0 !important; border-radius: 12px;
+            font-family: 'Fira Code', monospace; font-size: 13px; margin: 0; position: relative !important;
+            border-left: 6px solid var(--utn-gold); box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            width: 100%; box-sizing: border-box;
+            max-height: 465px !important;
+            overflow: hidden !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+        .reveal pre code,
+        .reveal pre .hljs:not(:first-child).fragment {
+            font-family: 'Fira Code', monospace;
+            font-size: inherit;
+            padding: 14px 18px !important;
+            background: #272822 !important;
+            max-height: 465px !important;
+            overflow-y: auto !important;
+            overflow-x: auto !important;
+            box-sizing: border-box !important;
+            width: 100%;
+            display: block;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 193, 7, 0.45) rgba(15, 23, 42, 0.6);
+        }
+        .reveal pre .hljs:not(:first-child).fragment {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            height: 100% !important;
+        }
+
+        /* Codigo inline */
+        .reveal :not(pre) > code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(0, 43, 91, 0.08);
+            color: var(--utn-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.88em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Callout Box */
+        .callout-box {
+            display: flex; align-items: flex-start !important; gap: 14px;
+            background: #EFF6FF; border: 1px solid #BFDBFE; border-left: 6px solid var(--utn-blue);
+            border-radius: 12px; padding: 12px 16px; text-align: left !important; width: 100%; box-sizing: border-box;
+        }
+        .callout-box i { margin-top: 3px !important; flex-shrink: 0; font-size: 18px; color: var(--utn-blue); }
+        .callout-box p { margin: 0; font-size: 14.5px; color: var(--text-main); line-height: 1.45; text-align: left; }
+        .callout-box p strong { display: inline !important; }
+
+        /* Diagramas de Nodos y Punteros (Puro HTML/CSS) */
+        .mem-row {
+            display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; justify-content: center;
+        }
+        .ptr-badge {
+            background: var(--utn-blue); color: white; font-family: 'Fira Code', monospace;
+            font-size: 12px; font-weight: 600; padding: 6px 10px; border-radius: 8px;
+            border-bottom: 3px solid var(--utn-gold); white-space: nowrap;
+        }
+        .ptr-badge.tail {
+            background: #0F766E; border-bottom-color: var(--cyan-accent);
+        }
+        .node-box {
+            background: white; border: 2px solid var(--utn-blue); border-radius: 10px;
+            overflow: hidden; width: 102px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); text-align: center; flex-shrink: 0;
+        }
+        .node-box.new-node {
+            border-color: var(--success-green);
+        }
+        .node-box-addr {
+            background: var(--utn-blue); color: white; font-family: 'Fira Code', monospace;
+            font-size: 10px; padding: 3px 0; font-weight: 600;
+        }
+        .node-box.new-node .node-box-addr {
+            background: var(--success-green);
+        }
+        .node-box-body { display: grid; grid-template-columns: 1fr 1fr; height: 36px; }
+        .node-box-data {
+            border-right: 1px solid #CBD5E1; display: flex; align-items: center; justify-content: center;
+            font-family: 'Fira Code', monospace; font-weight: 700; font-size: 15px; color: var(--utn-blue);
+        }
+        .node-box-sig {
+            display: flex; align-items: center; justify-content: center; background: #F1F5F9;
+        }
+        .node-sig-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--cyan-accent); }
+        .node-arrow-link { color: var(--utn-blue); font-size: 18px; font-weight: bold; }
+        .node-null-tag {
+            background: #FEE2E2; border: 1px dashed var(--danger-red); color: var(--danger-red);
+            font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px;
+            white-space: nowrap;
+        }
+
+        /* Caja de Enunciado */
+        .problem-statement-box {
+            background: #FFFFFF; border: 1px solid #CBD5E1; border-left: 8px solid var(--utn-blue);
+            border-radius: 12px; padding: 14px 18px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); text-align: left;
+        }
+        .problem-statement-box p { font-size: 16px; margin: 0 0 8px 0; line-height: 1.45; }
+        .problem-statement-box p:last-child { margin-bottom: 0; }
+
+        /* Tabla de Traza */
+        .trace-table {
+            width: 100%; border-collapse: collapse; font-size: 13px; background: white;
+            border-radius: 10px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+        }
+        .trace-table th {
+            background: var(--utn-blue); color: white; padding: 8px 10px; text-align: left;
+            font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 12.5px;
+        }
+        .trace-table td {
+            padding: 6px 10px; border-bottom: 1px solid #E2E8F0; font-family: 'Fira Code', monospace;
+            font-size: 12px; color: var(--text-main);
+        }
+        .trace-table tr:nth-child(even) td { background: #F8FAFC; }
+
+        /* Compilador Integrado Vertical */
+        .compiler-window {
+            background: #1e1e1e; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 16px 45px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+            height: 515px; display: flex; flex-direction: column; width: 100%;
+        }
+        .compiler-window .header {
+            background: #252526; padding: 8px 14px; font-size: 12px; color: #CCCCCC;
+            display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333333;
+        }
+        .compiler-window .header button {
+            background: rgba(56, 189, 248, 0.2); border: 1px solid var(--cyan-accent); color: var(--cyan-accent);
+            padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600;
+        }
+        .compiler-window iframe { flex: 1; border: none; width: 100%; height: 100%; background: #1e1e1e; }
+
+        /* Footer global fijo */
+        .branding-footer {
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 35px !important;
+            z-index: 9999 !important;
+            pointer-events: none !important;
+        }
+
+        @media (max-width: 767px), (max-aspect-ratio: 1/1) {
+            .two-column { grid-template-columns: 1fr; }
+            .mem-row { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 1: PORTADA INSTITUCIONAL AEDD -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <h1 style="color: white; font-size: 60px; line-height: 1.08; margin-bottom: 20px;">
+                    Algoritmos y Estructuras de Datos<br>
+                    <span style="color: var(--utn-gold); font-weight: 300; font-size: 42px;">Clase 21: Pilas y Colas en Listas Enlazadas</span>
+                </h1>
+                <p style="color: rgba(255,255,255,0.7); margin-top: 35px; text-align: center; font-size: 22px;">Docentes de práctica: Tomás Assenza, Facundo Sanchez</p>
+                <p style="color: rgba(255,255,255,0.35); margin-top: 10px; text-align: center; font-size: 16px; letter-spacing: 2px;">UTN - Facultad Regional Santa Fe (ISI)</p>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 2: HOJA DE RUTA DE LA CLASE -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Hoja de Ruta de la Clase</h2>
+                <div class="content-area">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%;">
+                        <div class="tile">
+                            <h3><i class="fa-solid fa-layer-group" style="color: var(--utn-gold);"></i> 1. TDA Pila (LIFO)</h3>
+                            <p>Concepto de tope/cima, restricción de acceso sobre listas enlazadas y operaciones primitivas.</p>
+                        </div>
+                        <div class="tile">
+                            <h3><i class="fa-solid fa-file-code" style="color: var(--cyan-accent);"></i> 2. Pila en C++ (.h / .cpp)</h3>
+                            <p>Separación de interfaz e implementación, control de memoria y pasaje por referencia vs puntero doble.</p>
+                        </div>
+                        <div class="tile">
+                            <h3><i class="fa-solid fa-people-line" style="color: var(--utn-gold);"></i> 3. TDA Cola (FIFO)</h3>
+                            <p>Frente y final, estructura con 2 punteros (<code>Primero</code> y <code>Ultimo</code>) para inserción O(1).</p>
+                        </div>
+                        <div class="tile">
+                            <h3><i class="fa-solid fa-sliders" style="color: var(--cyan-accent);"></i> 4. Cola en C++ (.h / .cpp)</h3>
+                            <p>Casos borde al encolar en cola vacía y al desencolar el último nodo sin dejar punteros colgantes.</p>
+                        </div>
+                        <div class="tile" style="border-bottom-color: var(--utn-gold); background: #FFFBEB;">
+                            <h3><i class="fa-solid fa-code-branch" style="color: var(--utn-gold);"></i> 5. Aplicaciones Clásicas</h3>
+                            <p>Balanceo de símbolos, evaluación de expresiones postfijas y conversión de infija a postfija.</p>
+                        </div>
+                        <div class="tile" style="border-bottom-color: var(--cyan-accent); background: #F0F9FF;">
+                            <h3><i class="fa-solid fa-laptop-code" style="color: var(--cyan-accent);"></i> 6. Práctica Guiada</h3>
+                            <p>3 ejercicios integradores en 3 pasos con resolución comentada y compilador C++ en vivo.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 3: TDA PILA (LIFO) -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">TDA Pila: Estructura LIFO</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="concept-card">
+                                <h3><i class="fa-solid fa-arrow-up-from-bracket" style="color: var(--utn-gold);"></i> Last In, First Out (LIFO)</h3>
+                                <p style="font-size: 15.5px; margin: 0;">
+                                    El <strong>último</strong> elemento insertado es el <strong>primero</strong> en salir. El acceso está restringido exclusivamente a un extremo llamado <strong>cima</strong> o <strong>tope</strong>.
+                                </p>
+                            </div>
+                            <div class="concept-card" style="border-left-color: var(--cyan-accent);">
+                                <h3><i class="fa-solid fa-link" style="color: var(--cyan-accent);"></i> Lista Enlazada Restringida</h3>
+                                <p style="font-size: 15.5px; margin: 0;">
+                                    Cada nodo apunta al elemento inmediatamente inferior. El fondo de la pila se identifica porque su enlace apunta a <code>NULL</code>.
+                                </p>
+                            </div>
+                            <div class="tile" style="padding: 12px 16px; border-left: 4px solid var(--utn-blue);">
+                                <h4 style="font-size: 15px; color: var(--utn-blue); margin: 0 0 4px 0;">Operaciones Primitivas</h4>
+                                <p style="font-size: 14px; margin: 0;">
+                                    <code>apilar(P, x)</code>: inserta en el tope.<br>
+                                    <code>desapilar(P, x)</code>: extrae del tope y libera el nodo.<br>
+                                    <code>pilaVacia(P)</code>: verifica si <code>P == NULL</code>.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: center; gap: 18px;">
+                            <div style="display: flex; justify-content: center; gap: 24px;">
+                                <span style="background: #DCFCE7; color: #166534; font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 20px;">
+                                    <i class="fa-solid fa-arrow-down"></i> Apilar (Push) en Tope
+                                </span>
+                                <span style="background: #FEE2E2; color: #991B1B; font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 20px;">
+                                    <i class="fa-solid fa-arrow-up"></i> Desapilar (Pop) del Tope
+                                </span>
+                            </div>
+
+                            <div class="mem-row">
+                                <div class="ptr-badge">topPtr</div>
+                                <span class="node-arrow-link">&rarr;</span>
+                                <div class="node-box new-node">
+                                    <div class="node-box-addr">Tope</div>
+                                    <div class="node-box-body">
+                                        <div class="node-box-data">12</div>
+                                        <div class="node-box-sig"><div class="node-sig-dot"></div></div>
+                                    </div>
+                                </div>
+                                <span class="node-arrow-link">&rarr;</span>
+                                <div class="node-box">
+                                    <div class="node-box-addr">0x2A0</div>
+                                    <div class="node-box-body">
+                                        <div class="node-box-data">7</div>
+                                        <div class="node-box-sig"><div class="node-sig-dot"></div></div>
+                                    </div>
+                                </div>
+                                <span class="node-arrow-link">&rarr;</span>
+                                <div class="node-box">
+                                    <div class="node-box-addr">Fondo</div>
+                                    <div class="node-box-body">
+                                        <div class="node-box-data">11</div>
+                                        <div class="node-box-sig"><div class="node-sig-dot"></div></div>
+                                    </div>
+                                </div>
+                                <span class="node-arrow-link">&rarr;</span>
+                                <div class="node-null-tag">NULL</div>
+                            </div>
+
+                            <p style="font-size: 13.5px; color: var(--text-light); text-align: center; margin: 0;">
+                                Tanto apilar como desapilar modifican únicamente el puntero <code>topPtr</code>: complejidad temporal <strong>O(1)</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 4: MECÁNICA EN MEMORIA (APILAR Y DESAPILAR) -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Mecánica en Memoria: Apilar y Desapilar</h2>
+                <div class="content-area" style="gap: 14px;">
+                    <div class="two-column">
+                        <div class="concept-card" style="border-left-color: var(--success-green);">
+                            <h3><i class="fa-solid fa-plus-circle" style="color: var(--success-green);"></i> Inserción (Apilar) — O(1)</h3>
+                            <ol style="margin: 8px 0 10px 18px; padding: 0;">
+                                <li style="font-size: 14.5px; margin-bottom: 4px;"><span>Reservar nodo en el Heap: <code>nuevo = new NodoPila;</code></span></li>
+                                <li style="font-size: 14.5px; margin-bottom: 4px;"><span>Guardar dato: <code>nuevo-&gt;info = valor;</code></span></li>
+                                <li style="font-size: 14.5px; margin-bottom: 4px;"><span>Enlazar al tope previo: <code>nuevo-&gt;sig = P;</code></span></li>
+                                <li style="font-size: 14.5px;"><span>Actualizar el tope: <code>P = nuevo;</code></span></li>
+                            </ol>
+                            <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; padding: 8px 12px; font-size: 13px; color: #166534;">
+                                <strong>Orden crítico:</strong> primero apuntar <code>nuevo-&gt;sig</code> a <code>P</code> y recién después mover <code>P = nuevo</code> para no perder el resto de la pila.
+                            </div>
+                        </div>
+
+                        <div class="concept-card" style="border-left-color: var(--danger-red);">
+                            <h3><i class="fa-solid fa-minus-circle" style="color: var(--danger-red);"></i> Eliminación (Desapilar) — O(1)</h3>
+                            <ol style="margin: 8px 0 10px 18px; padding: 0;">
+                                <li style="font-size: 14.5px; margin-bottom: 4px;"><span>Controlar que no esté vacía: <code>if (!pilaVacia(P))</code></span></li>
+                                <li style="font-size: 14.5px; margin-bottom: 4px;"><span>Rescatar valor y nodo: <code>valor = P-&gt;info; aux = P;</code></span></li>
+                                <li style="font-size: 14.5px; margin-bottom: 4px;"><span>Avanzar el tope: <code>P = P-&gt;sig;</code></span></li>
+                                <li style="font-size: 14.5px;"><span>Liberar memoria: <code>delete aux;</code></span></li>
+                            </ol>
+                            <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 8px 12px; font-size: 13px; color: #991B1B;">
+                                <strong>Sin fugas de memoria:</strong> siempre usar <code>aux</code> antes de avanzar <code>P</code> para poder ejecutar <code>delete aux</code>.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <p>
+                            <strong>Nota de cursada (<code>PtrNodo &amp;P</code> vs <code>PtrNodo *P</code>):</strong> En el material de teoría se utiliza puntero doble (<code>PtrNodo *P</code>, estilo C) invocando con <code>&amp;P1</code>. En la práctica de C++ (Guía 18 en adelante) usamos pasaje por referencia (<code>PtrNodo &amp;P</code>), lo que evita el operador <code>*P</code> dentro de cada función manteniendo exactamente el mismo efecto sobre el tope.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 5: TDA PILA - INTERFAZ (pila.h) -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">TDA Pila: Interfaz (<code>pila.h</code>)</h2>
+                <div class="content-area">
+                    <div class="two-column" style="grid-template-columns: 1.25fr 0.75fr; align-items: center;">
+                        <pre><code class="cpp" data-trim data-noescape data-line-numbers>
+// === pila.h ===
+#ifndef PILA_H
+#define PILA_H
+
+struct NodoPila {
+    int info;
+    NodoPila* sig;
+};
+
+typedef NodoPila* PtrNodo;
+
+bool pilaVacia(PtrNodo P);
+bool apilar(PtrNodo &amp;P, int valor);
+bool desapilar(PtrNodo &amp;P, int &amp;valor);
+void mostrarPila(PtrNodo P);
+void liberarPila(PtrNodo &amp;P);
+void invertirPila(PtrNodo &amp;P);
+
+#endif
+                        </code></pre>
+
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="concept-card">
+                                <h3><i class="fa-solid fa-box-archive"></i> Principio de Caja Negra</h3>
+                                <p style="font-size: 14.5px; margin: 0;">
+                                    El programa cliente (<code>main.cpp</code>) incluye <code>"pila.h"</code> y manipula la pila únicamente mediante sus primitivas, sin recorrer punteros <code>-&gt;sig</code> manualmente.
+                                </p>
+                            </div>
+                            <div class="concept-card" style="border-left-color: var(--cyan-accent);">
+                                <h3><i class="fa-solid fa-gauge-high" style="color: var(--cyan-accent);"></i> Complejidad Temporal</h3>
+                                <p style="font-size: 14.5px; margin: 0;">
+                                    <code>pilaVacia</code>, <code>apilar</code> y <code>desapilar</code>: <strong>O(1)</strong>.<br>
+                                    <code>mostrarPila</code>, <code>liberarPila</code> e <code>invertirPila</code>: <strong>O(N)</strong>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 6: TDA PILA - IMPLEMENTACIÓN (pila.cpp) -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">TDA Pila: Implementación (<code>pila.cpp</code>)</h2>
+                <div class="content-area">
+                    <pre style="font-size: 12.5px;"><code class="cpp" data-trim data-noescape data-line-numbers>
+// === pila.cpp ===
+#include &lt;iostream&gt;
+#include "pila.h"
+using namespace std;
+
+bool pilaVacia(PtrNodo P) {
+    return (P == NULL);
+}
+
+bool apilar(PtrNodo &amp;P, int valor) {
+    bool exito = false;
+    PtrNodo nuevo = new NodoPila;
+    if (nuevo != NULL) {
+        nuevo-&gt;info = valor;
+        nuevo-&gt;sig = P;
+        P = nuevo;
+        exito = true;
+    }
+    return exito;
+}
+
+bool desapilar(PtrNodo &amp;P, int &amp;valor) {
+    bool exito = false;
+    if (!pilaVacia(P)) {
+        PtrNodo aux = P;
+        valor = P-&gt;info;
+        P = P-&gt;sig;
+        delete aux;
+        exito = true;
+    }
+    return exito;
+}
+
+void liberarPila(PtrNodo &amp;P) {
+    int descarte;
+    while (!pilaVacia(P)) {
+        desapilar(P, descarte);
+    }
+}
+
+void invertirPila(PtrNodo &amp;P) {
+    PtrNodo pAux = NULL;
+    int valor;
+    while (!pilaVacia(P)) {
+        desapilar(P, valor);
+        apilar(pAux, valor);
+    }
+    P = pAux;
+}
+                    </code></pre>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 7: TDA COLA (FIFO) -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">TDA Cola: Estructura FIFO con 2 Punteros</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="concept-card">
+                                <h3><i class="fa-solid fa-forward-step" style="color: var(--utn-gold);"></i> First In, First Out (FIFO)</h3>
+                                <p style="font-size: 15.5px; margin: 0;">
+                                    El <strong>primer</strong> elemento en entrar es el <strong>primero</strong> en salir (como una fila de atención o cola de impresión).
+                                </p>
+                            </div>
+                            <div class="concept-card" style="border-left-color: var(--cyan-accent);">
+                                <h3><i class="fa-solid fa-arrows-left-right" style="color: var(--cyan-accent);"></i> Dos Extremos Diferenciados</h3>
+                                <p style="font-size: 15.5px; margin: 0;">
+                                    Se inserta (<strong>encola</strong>) únicamente por el final (<code>Ultimo</code>) y se elimina (<strong>desencola</strong>) únicamente por el frente (<code>Primero</code>).
+                                </p>
+                            </div>
+                            <div class="callout-box" style="padding: 10px 14px;">
+                                <i class="fa-solid fa-bolt"></i>
+                                <p style="font-size: 14px;">
+                                    <strong>¿Por qué mantener <code>Ultimo</code>?</strong> Sin él, cada inserción obligaría a recorrer toda la lista (O(N)). Con ambos punteros en un <code>struct Cola</code>, encolar y desencolar son <strong>O(1)</strong>.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: center; gap: 18px;">
+                            <div style="display: flex; justify-content: space-between; padding: 0 12px;">
+                                <span style="background: #FEE2E2; color: #991B1B; font-size: 12.5px; font-weight: 700; padding: 5px 10px; border-radius: 20px;">
+                                    &larr; Desencolar (Frente)
+                                </span>
+                                <span style="background: #DCFCE7; color: #166534; font-size: 12.5px; font-weight: 700; padding: 5px 10px; border-radius: 20px;">
+                                    Encolar (Final) &larr;
+                                </span>
+                            </div>
+
+                            <div class="mem-row">
+                                <div class="ptr-badge">Primero</div>
+                                <span class="node-arrow-link">&rarr;</span>
+                                <div class="node-box">
+                                    <div class="node-box-addr">Frente</div>
+                                    <div class="node-box-body">
+                                        <div class="node-box-data">'A'</div>
+                                        <div class="node-box-sig"><div class="node-sig-dot"></div></div>
+                                    </div>
+                                </div>
+                                <span class="node-arrow-link">&rarr;</span>
+                                <div class="node-box">
+                                    <div class="node-box-addr">0x3B4</div>
+                                    <div class="node-box-body">
+                                        <div class="node-box-data">'G'</div>
+                                        <div class="node-box-sig"><div class="node-sig-dot"></div></div>
+                                    </div>
+                                </div>
+                                <span class="node-arrow-link">&rarr;</span>
+                                <div class="node-box new-node">
+                                    <div class="node-box-addr">Final</div>
+                                    <div class="node-box-body">
+                                        <div class="node-box-data">'R'</div>
+                                        <div class="node-box-sig"><div class="node-sig-dot"></div></div>
+                                    </div>
+                                </div>
+                                <span class="node-arrow-link">&rarr;</span>
+                                <div class="node-null-tag">NULL</div>
+                            </div>
+
+                            <div style="display: flex; justify-content: flex-end; padding-right: 78px;">
+                                <div class="ptr-badge tail">&uarr; Ultimo</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 8: CASOS BORDE EN COLA -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Casos Borde al Encolar y Desencolar</h2>
+                <div class="content-area" style="gap: 14px;">
+                    <div class="two-column">
+                        <div class="concept-card" style="border-left-color: var(--success-green);">
+                            <h3><i class="fa-solid fa-right-to-bracket" style="color: var(--success-green);"></i> Encolar: Cola Vacía vs No Vacía</h3>
+                            <p style="font-size: 14.5px; margin: 6px 0 8px 0;">
+                                El nuevo nodo siempre se crea con <code>nuevo-&gt;sig = NULL;</code> porque será el último.
+                            </p>
+                            <ul style="margin: 0 0 0 18px; padding: 0;">
+                                <li style="font-size: 14.5px; margin-bottom: 6px;"><span><strong>Si <code>colaVacia(C)</code>:</strong> el nuevo nodo es también el primero: <code>C.Primero = nuevo;</code></span></li>
+                                <li style="font-size: 14.5px; margin-bottom: 6px;"><span><strong>Si no está vacía:</strong> se encadena detrás del último: <code>C.Ultimo-&gt;sig = nuevo;</code></span></li>
+                                <li style="font-size: 14.5px;"><span><strong>Siempre al final:</strong> <code>C.Ultimo = nuevo;</code></span></li>
+                            </ul>
+                        </div>
+
+                        <div class="concept-card" style="border-left-color: var(--danger-red);">
+                            <h3><i class="fa-solid fa-right-from-bracket" style="color: var(--danger-red);"></i> Desencolar: Último Elemento</h3>
+                            <p style="font-size: 14.5px; margin: 6px 0 8px 0;">
+                                Al extraer desde <code>C.Primero</code>, avanzamos <code>C.Primero = C.Primero-&gt;sig;</code> y liberamos <code>temp</code>.
+                            </p>
+                            <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 10px 12px; font-size: 13.5px; color: #991B1B;">
+                                <strong>Error frecuente:</strong> Si la cola tenía un único nodo, <code>C.Primero</code> pasa a valer <code>NULL</code>, pero <code>C.Ultimo</code> seguiría apuntando al nodo recién borrado (puntero colgante).<br>
+                                <strong>Solución obligatoria:</strong> <code>if (C.Primero == NULL) C.Ultimo = NULL;</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <p>
+                            <strong>Inicialización obligatoria:</strong> Antes de operar con una variable <code>Cola C;</code>, sus dos punteros contienen basura de memoria. Llamar siempre a <code>inicializarCola(C)</code> para dejar <code>Primero = NULL</code> y <code>Ultimo = NULL</code>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 9: TDA COLA - INTERFAZ (cola.h) -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">TDA Cola: Interfaz (<code>cola.h</code>)</h2>
+                <div class="content-area">
+                    <div class="two-column" style="grid-template-columns: 1.25fr 0.75fr; align-items: center;">
+                        <pre><code class="cpp" data-trim data-noescape data-line-numbers>
+// === cola.h ===
+#ifndef COLA_H
+#define COLA_H
+
+struct NodoCola {
+    char info;
+    NodoCola* sig;
+};
+
+typedef NodoCola* NodoPtr;
+
+struct Cola {
+    NodoPtr Primero;
+    NodoPtr Ultimo;
+};
+
+void inicializarCola(Cola &amp;C);
+bool colaVacia(Cola C);
+bool encolar(Cola &amp;C, char valor);
+bool desencolar(Cola &amp;C, char &amp;valor);
+void mostrarCola(Cola C);
+void liberarCola(Cola &amp;C);
+
+#endif
+                        </code></pre>
+
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="concept-card">
+                                <h3><i class="fa-solid fa-cubes"></i> Encapsulamiento</h3>
+                                <p style="font-size: 14.5px; margin: 0;">
+                                    Agrupar <code>Primero</code> y <code>Ultimo</code> dentro de <code>struct Cola</code> simplifica el pasaje de parámetros y evita desincronizar ambos punteros en el programa cliente.
+                                </p>
+                            </div>
+                            <div class="concept-card" style="border-left-color: var(--cyan-accent);">
+                                <h3><i class="fa-solid fa-shield-halved" style="color: var(--cyan-accent);"></i> Seguridad en <code>desencolar</code></h3>
+                                <p style="font-size: 14.5px; margin: 0;">
+                                    Retornar <code>bool</code> e informar el valor por parámetro de referencia <code>char &amp;valor</code> evita leer memoria inválida si la cola está vacía.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 10: TDA COLA - IMPLEMENTACIÓN (cola.cpp) -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">TDA Cola: Implementación (<code>cola.cpp</code>)</h2>
+                <div class="content-area">
+                    <pre style="font-size: 12px;"><code class="cpp" data-trim data-noescape data-line-numbers>
+// === cola.cpp ===
+#include &lt;iostream&gt;
+#include "cola.h"
+using namespace std;
+
+void inicializarCola(Cola &amp;C) {
+    C.Primero = NULL;
+    C.Ultimo = NULL;
+}
+
+bool colaVacia(Cola C) {
+    return (C.Primero == NULL);
+}
+
+bool encolar(Cola &amp;C, char valor) {
+    bool exito = false;
+    NodoPtr nuevo = new NodoCola;
+    if (nuevo != NULL) {
+        nuevo-&gt;info = valor;
+        nuevo-&gt;sig = NULL;
+        if (colaVacia(C)) {
+            C.Primero = nuevo;
+        } else {
+            C.Ultimo-&gt;sig = nuevo;
+        }
+        C.Ultimo = nuevo;
+        exito = true;
+    }
+    return exito;
+}
+
+bool desencolar(Cola &amp;C, char &amp;valor) {
+    bool exito = false;
+    if (!colaVacia(C)) {
+        NodoPtr temp = C.Primero;
+        valor = temp-&gt;info;
+        C.Primero = C.Primero-&gt;sig;
+        if (C.Primero == NULL) {
+            C.Ultimo = NULL;
+        }
+        delete temp;
+        exito = true;
+    }
+    return exito;
+}
+                    </code></pre>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 11: APLICACIONES DE PILAS -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <h2 class="slide-title">Aplicaciones de Pilas en Compiladores</h2>
+                <div class="content-area">
+                    <div class="two-column">
+                        <div class="concept-card" style="border-left-color: var(--utn-blue);">
+                            <h3><i class="fa-solid fa-brackets-curly" style="color: var(--utn-gold);"></i> 1. Símbolos Equilibrados</h3>
+                            <p style="font-size: 14.5px; margin: 6px 0;">
+                                Validar anidamientos de <code>( )</code>, <code>[ ]</code>, <code>{ }</code> o <code>begin / end</code> al leer una expresión de izquierda a derecha:
+                            </p>
+                            <ol style="margin: 0 0 0 18px; padding: 0;">
+                                <li style="font-size: 14px; margin-bottom: 4px;"><span>Símbolo de <strong>apertura</strong> &rarr; <code>apilar</code> en la pila.</span></li>
+                                <li style="font-size: 14px; margin-bottom: 4px;"><span>Símbolo de <strong>cierre</strong> &rarr; si la pila está vacía, hay error; si no, <code>desapilar</code> y verificar que coincida el tipo.</span></li>
+                                <li style="font-size: 14px;"><span><strong>Fin de entrada</strong> &rarr; equilibrada sii <code>pilaVacia(P)</code>.</span></li>
+                            </ol>
+                        </div>
+
+                        <div class="concept-card" style="border-left-color: var(--cyan-accent);">
+                            <h3><i class="fa-solid fa-calculator" style="color: var(--cyan-accent);"></i> 2. Notación Postfija (Polaca Inversa)</h3>
+                            <p style="font-size: 14.5px; margin: 6px 0;">
+                                Permite evaluar expresiones sin paréntesis ni reglas de precedencia ambiguas:
+                            </p>
+                            <p style="font-size: 13.5px; background: #F1F5F9; padding: 8px 10px; border-radius: 8px; margin: 6px 0;">
+                                <strong>Infija:</strong> <code>(1 - 2) - 4 ^ 5 * 3</code><br>
+                                <strong>Postfija:</strong> <code>1 2 - 4 5 ^ 3 * -</code>
+                            </p>
+                            <ul style="margin: 4px 0 0 18px; padding: 0;">
+                                <li style="font-size: 14px; margin-bottom: 4px;"><span><strong>Evaluación:</strong> operando &rarr; <code>apilar</code>; operador &rarr; <code>desapilar</code> 2 operandos, operar y <code>apilar</code> el resultado.</span></li>
+                                <li style="font-size: 14px;"><span><strong>Conversión Infija &rarr; Postfija:</strong> los operandos pasan directo a la salida; los operadores esperan en la pila.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 12: CONVERSIÓN INFIJA A POSTFIJA -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Conversión de Infija a Postfija</h2>
+                <div class="content-area" style="gap: 12px;">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                        <div class="tile" style="padding: 10px 12px;">
+                            <h3 style="font-size: 14px;">1. Operando</h3>
+                            <p style="font-size: 13px;">Pasa directo a la salida.</p>
+                        </div>
+                        <div class="tile" style="padding: 10px 12px;">
+                            <h3 style="font-size: 14px;">2. Paréntesis <code>(</code></h3>
+                            <p style="font-size: 13px;">Se apila directamente.</p>
+                        </div>
+                        <div class="tile" style="padding: 10px 12px;">
+                            <h3 style="font-size: 14px;">3. Paréntesis <code>)</code></h3>
+                            <p style="font-size: 13px;">Desapilar a salida hasta encontrar <code>(</code> y descartarlo.</p>
+                        </div>
+                        <div class="tile" style="padding: 10px 12px;">
+                            <h3 style="font-size: 14px;">4. Operador</h3>
+                            <p style="font-size: 13px;">Desapilar mayor precedencia (o igual si asoc. izq.) y apilar.</p>
+                        </div>
+                    </div>
+
+                    <p style="font-size: 15px; margin: 0;">
+                        <strong>Ejemplo:</strong> Infija <code>1 - 2 ^ 3 ^ 3 - ( 4 + 5 * 6 ) * 7</code> &rarr; Postfija <code>1 2 3 3 ^ ^ - 4 5 6 * + 7 * -</code>
+                    </p>
+
+                    <table class="trace-table">
+                        <thead>
+                            <tr>
+                                <th>Token</th>
+                                <th>Acción sobre la Pila</th>
+                                <th>Pila (base &rarr; tope)</th>
+                                <th>Salida acumulada</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>1 - 2</code></td><td>Operandos salen; <code>-</code> se apila</td><td><code>[ - ]</code></td><td><code>1 2</code></td></tr>
+                            <tr><td><code>^ 3 ^ 3</code></td><td><code>^</code> tiene mayor precedencia y asoc. derecha</td><td><code>[ - ^ ^ ]</code></td><td><code>1 2 3 3</code></td></tr>
+                            <tr><td><code>-</code></td><td>Desapila <code>^ ^ -</code> (menor/igual precedencia), apila <code>-</code></td><td><code>[ - ]</code></td><td><code>1 2 3 3 ^ ^ -</code></td></tr>
+                            <tr><td><code>( 4 + 5 * 6 )</code></td><td>Apila <code>( + *</code>; al leer <code>)</code> desapila hasta <code>(</code></td><td><code>[ - ]</code></td><td><code>1 2 3 3 ^ ^ - 4 5 6 * +</code></td></tr>
+                            <tr><td><code>* 7</code> &rarr; EOF</td><td>Apila <code>*</code>, sale <code>7</code>; fin de entrada vacía la pila</td><td><code>[ ]</code></td><td><code>1 2 3 3 ^ ^ - 4 5 6 * + 7 * -</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 13: SEPARADOR PRÁCTICA GUIADA -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2 style="color: var(--utn-gold); font-size: 46px; margin-bottom: 14px;">PRÁCTICA GUIADA // PILAS Y COLAS</h2>
+                    <p style="color: rgba(255,255,255,0.8); font-size: 22px;">3 ejercicios integradores con resolución paso a paso y compilador C++ en vivo</p>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 14: EJERCICIO 1 (3 PASOS VERTICALES) -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 14.A Enunciado sin spoilers -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">1</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Balanceo de Paréntesis (Juez 1068)</h2>
+                    </div>
+                    <div class="content-area" style="gap: 14px; margin-top: 12px;">
+                        <div class="problem-statement-box">
+                            <p>Dada una expresión matemática leída por línea desde la entrada estándar (hasta EOF), determinar si los paréntesis <code>(</code> y <code>)</code> están correctamente balanceados.</p>
+                            <p>Por cada expresión leída se debe imprimir <code>correct</code> si está balanceada o <code>incorrect</code> en caso contrario.</p>
+                        </div>
+
+                        <div class="two-column">
+                            <div class="tile" style="background: #1E293B; color: #F8FAFC;">
+                                <h3 style="color: var(--utn-gold); font-size: 15px;">Entrada de Ejemplo</h3>
+                                <pre style="box-shadow: none; border-left: none; max-height: 150px !important;"><code class="plaintext" style="padding: 8px 12px !important; background: #1E293B !important;">a+(b*c)-2-a
+(a+b*(2-c)-2+a)*2
+(a*b-(2+c)
+2*(3-a))
+5+4*(3-2</code></pre>
+                            </div>
+                            <div class="tile" style="background: #1E293B; color: #F8FAFC;">
+                                <h3 style="color: var(--success-green); font-size: 15px;">Salida Esperada</h3>
+                                <pre style="box-shadow: none; border-left: none; max-height: 150px !important;"><code class="plaintext" style="padding: 8px 12px !important; background: #1E293B !important;">correct
+correct
+incorrect
+incorrect
+incorrect</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="callout-box">
+                            <i class="fa-solid fa-circle-question"></i>
+                            <p>
+                                <strong>Para pensar antes de codificar:</strong> Si detectamos un <code>)</code> con la pila vacía, o si al terminar la cadena quedan <code>(</code> sin cerrar, ¿qué debemos hacer con los nodos que hayan quedado en el Heap antes de retornar?
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 14.B Resolucion paso a paso -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">1</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Resolución Paso a Paso // Balanceo</h2>
+                    </div>
+                    <div class="content-area" style="margin-top: 10px; gap: 10px;">
+                        <pre style="font-size: 12.5px;"><code class="cpp" data-trim data-noescape data-line-numbers="1-6|8-21|23-32">
+bool balanceada(string expresion) {
+    PtrNodo pila = NULL;
+    bool valida = true;
+    unsigned i = 0;
+    char descarte;
+
+    while (i &lt; expresion.size() &amp;&amp; valida) {
+        if (expresion[i] == '(') {
+            apilar(pila, '(');
+        } else if (expresion[i] == ')') {
+            if (pilaVacia(pila)) {
+                valida = false;
+            } else {
+                desapilar(pila, descarte);
+            }
+        }
+        i = i + 1;
+    }
+
+    if (!pilaVacia(pila)) {
+        valida = false;
+        liberarPila(pila);
+    }
+    return valida;
+}
+                        </code></pre>
+                        <div class="callout-box">
+                            <i class="fa-solid fa-check-double"></i>
+                            <p>
+                                <strong>Buenas prácticas AEDD:</strong> Condición compuesta en <code>while</code> (sin <code>break</code> ni <code>return</code> temprano), liberación garantizada con <code>liberarPila(pila)</code> si quedaron paréntesis abiertos y retorno único al final.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 14.C Compilador interactivo -->
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 1 (Balanceo)</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler - C++ Sandbox (Ingresá expresiones por STDIN)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-1', cppCodeEj1, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 15: EJERCICIO 2 (3 PASOS VERTICALES) -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 15.A Enunciado sin spoilers -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">2</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Cola de Impresión FIFO (Uso de TDA Cola)</h2>
+                    </div>
+                    <div class="content-area" style="gap: 14px; margin-top: 12px;">
+                        <div class="problem-statement-box">
+                            <p>Implementar un simulador de cola de impresión usando el TDA <code>Cola</code> (de caracteres o identificadores). El programa debe leer comandos por entrada estándar hasta ingresar <code>F</code>:</p>
+                            <ul style="margin: 6px 0 0 20px; padding: 0;">
+                                <li style="font-size: 15.5px;"><span><code>E &lt;id&gt;</code>: Encola el trabajo identificado con el caracter <code>&lt;id&gt;</code>.</span></li>
+                                <li style="font-size: 15.5px;"><span><code>D</code>: Desencola e imprime el trabajo más antiguo (o informa si está vacía).</span></li>
+                                <li style="font-size: 15.5px;"><span><code>M</code>: Muestra los trabajos pendientes desde <code>Primero</code> hasta <code>NULL</code>.</span></li>
+                                <li style="font-size: 15.5px;"><span><code>F</code>: Libera toda la memoria dinámica pendiente y finaliza.</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="callout-box">
+                            <i class="fa-solid fa-cube"></i>
+                            <p>
+                                <strong>Restricción de diseño:</strong> <code>main()</code> debe respetar la caja negra del TDA <code>Cola</code>. Solo puede invocar <code>inicializarCola</code>, <code>colaVacia</code>, <code>encolar</code>, <code>desencolar</code>, <code>mostrarCola</code> y <code>liberarCola</code>.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 15.B Resolucion paso a paso -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">2</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Resolución Paso a Paso // Cola FIFO</h2>
+                    </div>
+                    <div class="content-area" style="margin-top: 10px; gap: 10px;">
+                        <pre style="font-size: 12px;"><code class="cpp" data-trim data-noescape data-line-numbers="1-6|8-19|21-29">
+int main() {
+    Cola impresora;
+    char cmd, idTrabajo;
+    inicializarCola(impresora);
+
+    cin &gt;&gt; cmd;
+    while (cmd != 'F') {
+        if (cmd == 'E') {
+            cin &gt;&gt; idTrabajo;
+            encolar(impresora, idTrabajo);
+        } else if (cmd == 'D') {
+            if (desencolar(impresora, idTrabajo)) {
+                cout &lt;&lt; "Imprimiendo: " &lt;&lt; idTrabajo &lt;&lt; endl;
+            } else {
+                cout &lt;&lt; "Cola vacia." &lt;&lt; endl;
+            }
+        } else if (cmd == 'M') {
+            mostrarCola(impresora);
+        }
+        cin &gt;&gt; cmd;
+    }
+
+    liberarCola(impresora);
+    return 0;
+}
+                        </code></pre>
+                        <div class="callout-box">
+                            <i class="fa-solid fa-memory"></i>
+                            <p>
+                                <strong>Gestión limpia del Heap:</strong> Al salir del bucle con <code>cmd == 'F'</code>, <code>liberarCola(impresora)</code> desencola cualquier nodo remanente y deja <code>Primero</code> y <code>Ultimo</code> en <code>NULL</code>.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 15.C Compilador interactivo -->
+                <section id="slide-compiler-2">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 2 (Cola FIFO)</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler - C++ Sandbox (Ej. entrada: E A E B E C M D M F)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-2', cppCodeEj2, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-2" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 16: EJERCICIO 3 (3 PASOS VERTICALES) -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 16.A Enunciado sin spoilers -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">3</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Invertir los Primeros K Elementos de una Cola</h2>
+                    </div>
+                    <div class="content-area" style="gap: 12px; margin-top: 10px;">
+                        <div class="problem-statement-box">
+                            <p>Dada una <code>Cola C</code> con <code>N</code> enteros y un entero <code>K</code> (<code>0 &lt;= K &lt;= N</code>), escribir una función <code>invertirPrimerosK(Cola &amp;C, int k, int n)</code> que invierta únicamente el orden de los primeros <code>K</code> elementos, conservando el orden relativo de los <code>N - K</code> restantes.</p>
+                        </div>
+
+                        <div style="background: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 16px;">
+                            <p style="font-size: 14.5px; margin: 0 0 8px 0;"><strong>Ejemplo con <code>N = 5</code>, <code>K = 3</code>:</strong></p>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div style="background: #F8FAFC; padding: 8px 12px; border-radius: 8px; font-family: 'Fira Code', monospace; font-size: 13.5px;">
+                                    Entrada: <strong>[10, 20, 30, 40, 50]</strong>
+                                </div>
+                                <div style="background: #ECFDF5; padding: 8px 12px; border-radius: 8px; font-family: 'Fira Code', monospace; font-size: 13.5px; color: #065F46;">
+                                    Salida:  <strong>[30, 20, 10, 40, 50]</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="callout-box">
+                            <i class="fa-solid fa-lightbulb"></i>
+                            <p>
+                                <strong>Estrategia combinada (Pila + Cola):</strong> (1) Desencolar <code>K</code> elementos y apilarlos en una <code>Pila</code> auxiliar; (2) desapilarlos y re-encolarlos al final de <code>C</code>; (3) rotar los <code>N - K</code> elementos restantes desencolando y volviendo a encolar.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 16.B Resolucion paso a paso -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">3</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Resolución Paso a Paso // Pila + Cola</h2>
+                    </div>
+                    <div class="content-area" style="margin-top: 10px; gap: 10px;">
+                        <pre style="font-size: 12px;"><code class="cpp" data-trim data-noescape data-line-numbers="1-8|10-14|16-22">
+void invertirPrimerosK(Cola &amp;C, int k, int n) {
+    PtrNodo pilaAux = NULL;
+    int val, i;
+
+    for (i = 0; i &lt; k; i = i + 1) {
+        if (desencolar(C, val)) {
+            apilar(pilaAux, val);
+        }
+    }
+
+    while (!pilaVacia(pilaAux)) {
+        desapilar(pilaAux, val);
+        encolar(C, val);
+    }
+
+    for (i = 0; i &lt; n - k; i = i + 1) {
+        if (desencolar(C, val)) {
+            encolar(C, val);
+        }
+    }
+}
+                        </code></pre>
+                        <div class="callout-box">
+                            <i class="fa-solid fa-gauge-high"></i>
+                            <p>
+                                <strong>Análisis de complejidad:</strong> Cada elemento se encola, apila o rota a lo sumo una cantidad constante de veces. El algoritmo opera en <strong>O(N)</strong> tiempo y <strong>O(K)</strong> espacio auxiliar, sin romper la caja negra de ningún TDA.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 16.C Compilador interactivo -->
+                <section id="slide-compiler-3">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 8px !important;">Compilador Online: Ejercicio 3 (Invertir K en Cola)</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler - C++ Sandbox (Ej. entrada: 5 3 10 20 30 40 50)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-3', cppCodeEj3, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-3" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 17: CIERRE INSTITUCIONAL -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2>¿DUDAS O CONSULTAS?</h2>
+                    <p>Espacio para puesta en común y preguntas</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+
+    <script src="../../../dist/reveal.js"></script>
+    <script src="../../../dist/plugin/notes.js"></script>
+    <script src="../../../dist/plugin/highlight.js"></script>
+
+    <script>
+        // =========================================================================
+        // CODIGOS COMPLETOS PARA ONECOMPILER C++ (Separacion estricta .h / .cpp / main)
+        // =========================================================================
+        const cppCodeEj1 = `#include <iostream>
+#include <string>
+using namespace std;
+
+// === pila.h ===
+struct NodoPila {
+    char info;
+    NodoPila* sig;
+};
+typedef NodoPila* PtrNodo;
+
+bool pilaVacia(PtrNodo P);
+bool apilar(PtrNodo &P, char valor);
+bool desapilar(PtrNodo &P, char &valor);
+void liberarPila(PtrNodo &P);
+
+// === pila.cpp ===
+bool pilaVacia(PtrNodo P) {
+    return (P == NULL);
+}
+
+bool apilar(PtrNodo &P, char valor) {
+    bool exito = false;
+    PtrNodo nuevo = new NodoPila;
+    if (nuevo != NULL) {
+        nuevo->info = valor;
+        nuevo->sig = P;
+        P = nuevo;
+        exito = true;
+    }
+    return exito;
+}
+
+bool desapilar(PtrNodo &P, char &valor) {
+    bool exito = false;
+    if (!pilaVacia(P)) {
+        PtrNodo aux = P;
+        valor = P->info;
+        P = P->sig;
+        delete aux;
+        exito = true;
+    }
+    return exito;
+}
+
+void liberarPila(PtrNodo &P) {
+    char descarte;
+    while (!pilaVacia(P)) {
+        desapilar(P, descarte);
+    }
+}
+
+// === main.cpp ===
+bool balanceada(string expresion) {
+    PtrNodo pila = NULL;
+    bool valida = true;
+    unsigned i = 0;
+    char descarte;
+
+    while (i < expresion.size() && valida) {
+        if (expresion[i] == '(') {
+            apilar(pila, '(');
+        } else if (expresion[i] == ')') {
+            if (pilaVacia(pila)) {
+                valida = false;
+            } else {
+                desapilar(pila, descarte);
+            }
+        }
+        i = i + 1;
+    }
+
+    if (!pilaVacia(pila)) {
+        valida = false;
+        liberarPila(pila);
+    }
+    return valida;
+}
+
+int main() {
+    string expresion;
+    while (getline(cin, expresion)) {
+        if (balanceada(expresion)) {
+            cout << "correct" << endl;
+        } else {
+            cout << "incorrect" << endl;
+        }
+    }
+    return 0;
+}`;
+
+        const cppCodeEj2 = `#include <iostream>
+using namespace std;
+
+// === cola.h ===
+struct NodoCola {
+    char info;
+    NodoCola* sig;
+};
+typedef NodoCola* NodoPtr;
+
+struct Cola {
+    NodoPtr Primero;
+    NodoPtr Ultimo;
+};
+
+void inicializarCola(Cola &C);
+bool colaVacia(Cola C);
+bool encolar(Cola &C, char valor);
+bool desencolar(Cola &C, char &valor);
+void mostrarCola(Cola C);
+void liberarCola(Cola &C);
+
+// === cola.cpp ===
+void inicializarCola(Cola &C) {
+    C.Primero = NULL;
+    C.Ultimo = NULL;
+}
+
+bool colaVacia(Cola C) {
+    return (C.Primero == NULL);
+}
+
+bool encolar(Cola &C, char valor) {
+    bool exito = false;
+    NodoPtr nuevo = new NodoCola;
+    if (nuevo != NULL) {
+        nuevo->info = valor;
+        nuevo->sig = NULL;
+        if (colaVacia(C)) {
+            C.Primero = nuevo;
+        } else {
+            C.Ultimo->sig = nuevo;
+        }
+        C.Ultimo = nuevo;
+        exito = true;
+    }
+    return exito;
+}
+
+bool desencolar(Cola &C, char &valor) {
+    bool exito = false;
+    if (!colaVacia(C)) {
+        NodoPtr temp = C.Primero;
+        valor = temp->info;
+        C.Primero = C.Primero->sig;
+        if (C.Primero == NULL) {
+            C.Ultimo = NULL;
+        }
+        delete temp;
+        exito = true;
+    }
+    return exito;
+}
+
+void mostrarCola(Cola C) {
+    NodoPtr actual = C.Primero;
+    if (colaVacia(C)) {
+        cout << "Cola vacia." << endl;
+    } else {
+        while (actual != NULL) {
+            cout << actual->info << " -> ";
+            actual = actual->sig;
+        }
+        cout << "NULL" << endl;
+    }
+}
+
+void liberarCola(Cola &C) {
+    char descarte;
+    while (!colaVacia(C)) {
+        desencolar(C, descarte);
+    }
+}
+
+// === main.cpp ===
+int main() {
+    Cola impresora;
+    char cmd, idTrabajo;
+    inicializarCola(impresora);
+
+    cin >> cmd;
+    while (cmd != 'F') {
+        if (cmd == 'E') {
+            cin >> idTrabajo;
+            encolar(impresora, idTrabajo);
+        } else if (cmd == 'D') {
+            if (desencolar(impresora, idTrabajo)) {
+                cout << "Imprimiendo: " << idTrabajo << endl;
+            } else {
+                cout << "Cola vacia." << endl;
+            }
+        } else if (cmd == 'M') {
+            mostrarCola(impresora);
+        }
+        cin >> cmd;
+    }
+
+    liberarCola(impresora);
+    return 0;
+}`;
+
+        const cppCodeEj3 = `#include <iostream>
+using namespace std;
+
+// === pila.h ===
+struct NodoPila {
+    int info;
+    NodoPila* sig;
+};
+typedef NodoPila* PtrNodo;
+
+bool pilaVacia(PtrNodo P);
+bool apilar(PtrNodo &P, int valor);
+bool desapilar(PtrNodo &P, int &valor);
+
+// === cola.h ===
+struct NodoCola {
+    int info;
+    NodoCola* sig;
+};
+typedef NodoCola* NodoPtr;
+
+struct Cola {
+    NodoPtr Primero;
+    NodoPtr Ultimo;
+};
+
+void inicializarCola(Cola &C);
+bool colaVacia(Cola C);
+bool encolar(Cola &C, int valor);
+bool desencolar(Cola &C, int &valor);
+void mostrarCola(Cola C);
+void liberarCola(Cola &C);
+
+// === pila.cpp ===
+bool pilaVacia(PtrNodo P) {
+    return (P == NULL);
+}
+
+bool apilar(PtrNodo &P, int valor) {
+    bool exito = false;
+    PtrNodo nuevo = new NodoPila;
+    if (nuevo != NULL) {
+        nuevo->info = valor;
+        nuevo->sig = P;
+        P = nuevo;
+        exito = true;
+    }
+    return exito;
+}
+
+bool desapilar(PtrNodo &P, int &valor) {
+    bool exito = false;
+    if (!pilaVacia(P)) {
+        PtrNodo aux = P;
+        valor = P->info;
+        P = P->sig;
+        delete aux;
+        exito = true;
+    }
+    return exito;
+}
+
+// === cola.cpp ===
+void inicializarCola(Cola &C) {
+    C.Primero = NULL;
+    C.Ultimo = NULL;
+}
+
+bool colaVacia(Cola C) {
+    return (C.Primero == NULL);
+}
+
+bool encolar(Cola &C, int valor) {
+    bool exito = false;
+    NodoPtr nuevo = new NodoCola;
+    if (nuevo != NULL) {
+        nuevo->info = valor;
+        nuevo->sig = NULL;
+        if (colaVacia(C)) {
+            C.Primero = nuevo;
+        } else {
+            C.Ultimo->sig = nuevo;
+        }
+        C.Ultimo = nuevo;
+        exito = true;
+    }
+    return exito;
+}
+
+bool desencolar(Cola &C, int &valor) {
+    bool exito = false;
+    if (!colaVacia(C)) {
+        NodoPtr temp = C.Primero;
+        valor = temp->info;
+        C.Primero = C.Primero->sig;
+        if (C.Primero == NULL) {
+            C.Ultimo = NULL;
+        }
+        delete temp;
+        exito = true;
+    }
+    return exito;
+}
+
+void mostrarCola(Cola C) {
+    NodoPtr actual = C.Primero;
+    while (actual != NULL) {
+        cout << actual->info << " -> ";
+        actual = actual->sig;
+    }
+    cout << "NULL" << endl;
+}
+
+void liberarCola(Cola &C) {
+    int descarte;
+    while (!colaVacia(C)) {
+        desencolar(C, descarte);
+    }
+}
+
+// === main.cpp ===
+void invertirPrimerosK(Cola &C, int k, int n) {
+    PtrNodo pilaAux = NULL;
+    int val, i;
+
+    for (i = 0; i < k; i = i + 1) {
+        if (desencolar(C, val)) {
+            apilar(pilaAux, val);
+        }
+    }
+
+    while (!pilaVacia(pilaAux)) {
+        desapilar(pilaAux, val);
+        encolar(C, val);
+    }
+
+    for (i = 0; i < n - k; i = i + 1) {
+        if (desencolar(C, val)) {
+            encolar(C, val);
+        }
+    }
+}
+
+int main() {
+    Cola C;
+    int n, k, x, i;
+    inicializarCola(C);
+
+    cin >> n >> k;
+    for (i = 0; i < n; i = i + 1) {
+        cin >> x;
+        encolar(C, x);
+    }
+
+    cout << "Original: ";
+    mostrarCola(C);
+
+    invertirPrimerosK(C, k, n);
+
+    cout << "Resultado: ";
+    mostrarCola(C);
+
+    liberarCola(C);
+    return 0;
+}`;
+
+        // =========================================================================
+        // REGLA CRITICA DE ORDEN DE EJECUCION (Anti-Blank-Slide en Moviles/Vertical)
+        // =========================================================================
+        const isMobilePortrait = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
+        if (isMobilePortrait) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        // =========================================================================
+        // Canvas Adaptativo
+        // =========================================================================
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({ width: newSize.width, height: newSize.height });
+        });
+
+        // =========================================================================
+        // Protocolo de Inyeccion OneCompiler C++ con Reintentos
+        // =========================================================================
+        function sendCode(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        function checkCompilerSlides(slide) {
+            if (!slide) return;
+            if (slide.id === 'slide-compiler-1') {
+                sendCodeWithRetries('oc-editor-1', cppCodeEj1, 'cpp', 'main.cpp');
+            } else if (slide.id === 'slide-compiler-2') {
+                sendCodeWithRetries('oc-editor-2', cppCodeEj2, 'cpp', 'main.cpp');
+            } else if (slide.id === 'slide-compiler-3') {
+                sendCodeWithRetries('oc-editor-3', cppCodeEj3, 'cpp', 'main.cpp');
+            }
+        }
+
+        Reveal.on('slidechanged', event => {
+            checkCompilerSlides(event.currentSlide);
+        });
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                checkCompilerSlides(Reveal.getCurrentSlide());
+            }, 600);
+        });
+    </script>
+</body>
+</html>
