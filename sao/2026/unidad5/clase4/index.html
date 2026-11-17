@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>SAO - Unidad 5 | Clase 4: Repaso General y Práctica Integradora</title>
+
+    <!-- Reveal.js & Plugins CSS -->
+    <link rel="stylesheet" href="../../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../../dist/plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="../../../../dist/theme/tuti.css" />
+
+    <!-- Tipografías Oficiales & Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Títulos de Diapositiva */
+        .slide-title {
+            font-size: 34px !important;
+            font-weight: 800 !important;
+            color: var(--utn-blue) !important;
+            margin-bottom: 16px !important;
+            border-left: 8px solid var(--utn-gold);
+            padding-left: 18px;
+            text-transform: uppercase !important;
+            letter-spacing: -0.5px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .slide-subtitle {
+            color: var(--cyan-accent);
+            font-weight: 700;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* Footer Institucional Fijo Global */
+        .branding-footer {
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 35px !important;
+            color: #94A3B8 !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            letter-spacing: 1px !important;
+            z-index: 9999 !important;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
+        .branding-footer span {
+            color: var(--utn-gold) !important;
+        }
+
+        /* Grillas y Tarjetas Conceptuales */
+        .cards-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            width: 100%;
+        }
+
+        .cards-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            width: 100%;
+        }
+
+        .concept-card {
+            background: #FFFFFF;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            padding: 14px 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .card-icon-sm {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .concept-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            margin: 0;
+            text-align: left !important;
+        }
+
+        .concept-card h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--utn-blue);
+            margin: 0 0 6px 0;
+            text-align: left !important;
+        }
+
+        .concept-card p {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.4;
+            margin: 0;
+            text-align: left;
+        }
+
+        .mini-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mini-list li {
+            font-size: 12.8px;
+            color: var(--text-main);
+            line-height: 1.4;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            text-align: left;
+        }
+
+        .mini-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .mini-list li i {
+            margin-top: 3px;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .mini-list li span {
+            flex-grow: 1;
+        }
+
+        /* Cuadros Callout Estandarizados */
+        .callout-box {
+            display: flex;
+            align-items: flex-start !important;
+            text-align: left !important;
+            gap: 12px;
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            border-left: 5px solid var(--cyan-accent);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-top: 12px;
+        }
+
+        .callout-box.warning {
+            background: #FFFBEB;
+            border-color: #FDE68A;
+            border-left-color: #D97706;
+        }
+
+        .callout-box.danger {
+            background: #FEF2F2;
+            border-color: #FECACA;
+            border-left-color: #EF4444;
+        }
+
+        .callout-box.success {
+            background: #F0FDF4;
+            border-color: #BBF7D0;
+            border-left-color: #10B981;
+        }
+
+        .callout-box i {
+            color: var(--cyan-accent);
+            font-size: 18px;
+            margin-top: 3px !important;
+            flex-shrink: 0;
+        }
+
+        .callout-box strong {
+            display: block;
+            margin-bottom: 2px;
+            color: var(--utn-blue);
+            font-size: 14px;
+        }
+
+        .callout-box p strong {
+            display: inline !important;
+            color: inherit !important;
+            font-size: inherit !important;
+        }
+
+        .callout-box p {
+            margin: 0 !important;
+            text-align: left !important;
+            font-size: 13px !important;
+            line-height: 1.38 !important;
+            color: var(--text-main);
+        }
+
+        /* Badges de Código */
+        .code-badge {
+            font-family: 'Fira Code', monospace;
+            background: #F1F5F9;
+            color: #0284C7;
+            padding: 1px 6px;
+            border-radius: 5px;
+            font-size: 0.88em;
+            font-weight: 600;
+            white-space: nowrap !important;
+            display: inline-block;
+        }
+
+        /* Tablas Comparativas Compactas */
+        .reveal table:not(.hljs-ln) {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12.5px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #E2E8F0;
+            margin: 4px 0;
+        }
+
+        .reveal table:not(.hljs-ln) th {
+            background: #002B5B;
+            color: white;
+            padding: 7px 10px;
+            text-align: left;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 12.5px;
+        }
+
+        .reveal table:not(.hljs-ln) td {
+            padding: 6.5px 10px;
+            border-bottom: 1px solid #E2E8F0;
+            color: var(--text-main);
+            vertical-align: top;
+            line-height: 1.35;
+        }
+
+        .reveal table:not(.hljs-ln) tr:nth-child(even) {
+            background-color: #F8FAFC;
+        }
+
+        /* Enunciado de Práctica */
+        .problem-statement-box {
+            background: #FFFFFF;
+            border: 2px solid #E2E8F0;
+            border-left: 6px solid var(--cyan-accent);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        /* Diagrama Tope Compacto */
+        .tope-vector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0 10px 0;
+            padding: 10px 14px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+        }
+
+        .ram-cell-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .ram-index {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: #0284C7;
+            background: #E0F2FE;
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        .ram-cell {
+            width: 68px;
+            height: 44px;
+            background: #FFFFFF;
+            border: 2px solid #002B5B;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            color: #002B5B;
+        }
+
+        .cell-empty {
+            border: 2px dashed #94A3B8;
+            background: #F1F5F9;
+            color: #94A3B8;
+        }
+
+        /* Código Anti-Fantasmeo en Resoluciones */
+        .reveal pre.code-integrador {
+            margin: 0 !important;
+            padding: 0 !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+
+        .reveal pre.code-integrador,
+        .reveal pre.code-integrador code,
+        .reveal pre.code-integrador .hljs:not(:first-child).fragment {
+            font-size: 13px !important;
+            line-height: 1.24 !important;
+            padding: 10px 14px !important;
+            background: #272822 !important;
+            box-sizing: border-box !important;
+        }
+
+        .reveal pre.code-integrador table.hljs-ln td {
+            padding: 1px 0 !important;
+            line-height: 1.24 !important;
+        }
+
+        body:has(.reveal .slides section.present:not(.stack) pre.code-integrador) .branding-footer,
+        .reveal-viewport:has(.slides section.present:not(.stack) pre.code-integrador) .branding-footer {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        /* Tablas de Datos del Integrador */
+        .mini-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Fira Code', monospace;
+            font-size: 11.5px;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .mini-data-table th {
+            background: #0F172A !important;
+            color: #F8FAFC !important;
+            padding: 5px 8px !important;
+            font-size: 11px !important;
+            text-align: center !important;
+        }
+
+        .mini-data-table td {
+            padding: 5px 8px !important;
+            text-align: center !important;
+            border-bottom: 1px solid #E2E8F0;
+            font-size: 11.5px !important;
+        }
+
+        /* Ventana del Compilador OneCompiler */
+        .compiler-window {
+            width: 100%;
+            height: 520px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid #334155;
+            background: #1E293B;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .compiler-window .header {
+            background: #0F172A;
+            padding: 10px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .compiler-window .header span {
+            color: #94A3B8;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .compiler-window .header button {
+            background: #334155;
+            color: #F8FAFC;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .compiler-window .header button:hover {
+            background: #475569;
+        }
+
+        .compiler-window iframe {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        @media (max-aspect-ratio: 1/1), (max-width: 768px) {
+            .hero-container { flex-direction: column !important; padding: 15px !important; }
+            .hero-image { height: 180px !important; min-height: 180px !important; width: 100% !important; margin-bottom: 12px !important; }
+            .hero-text { padding-left: 0 !important; text-align: center !important; }
+            .hero-title { font-size: 32px !important; text-align: center !important; margin-bottom: 10px !important; }
+            .staff-list { margin-bottom: 10px !important; }
+            .staff-list h4 { text-align: center !important; font-size: 17px !important; margin-bottom: 4px !important; }
+            .staff-list ul { display: inline-block !important; text-align: left !important; }
+            .staff-list li { font-size: 15px !important; margin-bottom: 3px !important; }
+
+            .cards-grid-2, .cards-grid-3 { grid-template-columns: 1fr !important; gap: 10px !important; }
+            .slide-title { font-size: 24px !important; margin-bottom: 12px !important; border-left-width: 6px !important; padding-left: 12px !important; }
+            .reveal p, .reveal li { font-size: 14px !important; }
+            .tope-vector { flex-wrap: wrap; }
+            .branding-footer { bottom: 10px !important; left: 15px !important; font-size: 11px !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- =========================================================================
+                 SLIDE 1: PORTADA INSTITUCIONAL TUTI (Hero Split)
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title" style="text-align: left; font-size: 44px !important; margin-bottom: 12px !important;">SISTEMA DE AUTOMATIZACIÓN DE OFICINAS</h1>
+                        <h3 style="font-size: 22px; color: var(--cyan-accent); font-weight: 600; margin-bottom: 24px; text-align: left;">Unidad #5 - Estructuras de Datos (Clase 4: Repaso General y Práctica Integradora)</h3>
+
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 2: HOJA DE RUTA DEL REPASO INTEGRAL
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">REPASO GENERAL: <span class="slide-subtitle">Mapa de Contenidos (U1 a U5)</span></h2>
+                <div class="content-area">
+                    <p style="font-size: 15px; color: #475569; margin-bottom: 12px;">
+                        Recorrido de síntesis por los fundamentos de programación en Java y las estructuras de datos estáticas previas a la práctica integradora:
+                    </p>
+
+                    <div class="cards-grid-2">
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-blue);">
+                            <div class="card-header-row">
+                                <div class="card-icon-sm" style="background: #EFF6FF; color: var(--utn-blue);">
+                                    <i class="fa-solid fa-microchip"></i>
+                                </div>
+                                <h3>1. Unidades 1 &amp; 2: Base y Tipos</h3>
+                            </div>
+                            <p>Ciclo de compilación (<code class="code-badge">javac</code> / JVM), clasificación de errores, los 8 tipos primitivos, rangos, división entera vs. flotante, casting, operadores y lógica booleana.</p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-gold);">
+                            <div class="card-header-row">
+                                <div class="card-icon-sm" style="background: #FEF3C7; color: #D97706;">
+                                    <i class="fa-solid fa-code-branch"></i>
+                                </div>
+                                <h3>2. Unidades 3 &amp; 4: Flujo y Módulos</h3>
+                            </div>
+                            <p>Selectivas (<code class="code-badge">if-else if</code>, <code class="code-badge">switch</code>), bucles (<code class="code-badge">for</code>, <code class="code-badge">while</code>, <code class="code-badge">do-while</code>), secuencias con centinela, métodos <code class="code-badge">static</code>, pasaje por valor, <code class="code-badge">Math</code> y <code class="code-badge">Random</code>.</p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid var(--cyan-accent);">
+                            <div class="card-header-row">
+                                <div class="card-icon-sm" style="background: #E0F2FE; color: #0284C7;">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                </div>
+                                <h3>3. Unidad 5: Vectores, Tope y Matrices</h3>
+                            </div>
+                            <p>Arreglos 1D en memoria contigua, recorridos completos y parciales, capacidad lógica (<code class="code-badge">tope</code>) con corrimientos, matrices 2D (filas vs. columnas) y vectores paralelos.</p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid #10B981;">
+                            <div class="card-header-row">
+                                <div class="card-icon-sm" style="background: #D1FAE5; color: #10B981;">
+                                    <i class="fa-solid fa-laptop-code"></i>
+                                </div>
+                                <h3>4. Práctica Integradora Guiada</h3>
+                            </div>
+                            <p>Resolución modular de un sistema completo combinando matriz 2D, vector paralelo, generación con <code class="code-badge">Random</code>, filtrado a un nuevo arreglo y menú cíclico controlado.</p>
+                        </div>
+                    </div>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-compass"></i>
+                        <div>
+                            <strong>Enfoque de la clase</strong>
+                            <p>Consolidamos los criterios de diseño estructurado y estructuras estáticas en Java (vectores y matrices numéricas), dejando el tratamiento específico de cadenas de texto para la instancia siguiente.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 3: REPASO U1 & U2 (1/2): ARQUITECTURA JAVA, ERRORES Y TIPOS PRIMITIVOS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">UNIDADES 1 &amp; 2: <span class="slide-subtitle">Compilación, Errores y Tipos Primitivos</span></h2>
+                <div class="content-area">
+                    <div style="display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 16px;">
+                        <!-- Columna Izquierda: Arquitectura y Errores -->
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-blue);">
+                            <h4><i class="fa-solid fa-gears" style="color: var(--cyan-accent);"></i> Flujo de Ejecución y Tipos de Error</h4>
+                            <ul class="mini-list">
+                                <li><i class="fa-solid fa-angle-right" style="color: var(--utn-blue);"></i><span><strong>Compilación portátil:</strong> <code class="code-badge">.java</code> &rarr; <code class="code-badge">javac</code> &rarr; <code class="code-badge">.class</code> (Bytecode neutro) &rarr; ejecutado por la <strong>JVM</strong> de cada sistema operativo.</span></li>
+                                <li><i class="fa-solid fa-angle-right" style="color: var(--utn-blue);"></i><span><strong>Reglas léxicas:</strong> Java es <em>case-sensitive</em>; la clase <code class="code-badge">public</code> debe coincidir con el nombre del archivo; punto de entrada <code class="code-badge">public static void main(String[] args)</code>.</span></li>
+                                <li><i class="fa-solid fa-xmark" style="color: #EF4444;"></i><span><strong>Error de sintaxis:</strong> detectado por <code class="code-badge">javac</code> (falta <code class="code-badge">;</code>, llave sin cerrar, variable local leída sin inicializar).</span></li>
+                                <li><i class="fa-solid fa-bolt" style="color: #D97706;"></i><span><strong>Error en ejecución (excepción):</strong> compila bien, pero aborta en JVM (división entera por cero, índice fuera de rango, tipo incompatible en <code class="code-badge">Scanner</code>).</span></li>
+                                <li><i class="fa-solid fa-bug" style="color: #7C3AED;"></i><span><strong>Error lógico:</strong> compila y termina sin excepciones, pero entrega un resultado erróneo (ej. omitir paréntesis en <code class="code-badge">a + b / 2</code>).</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Columna Derecha: Tabla de los 8 Primitivos -->
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-gold);">
+                            <h4><i class="fa-solid fa-cubes" style="color: #D97706;"></i> Los 8 Tipos Primitivos en Java</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 22%;">Tipo</th>
+                                        <th style="width: 20%;">Tamaño</th>
+                                        <th style="width: 58%;">Rango / Detalle Clave</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code class="code-badge">byte</code></td>
+                                        <td>8 bits</td>
+                                        <td>Entero con signo: <code class="code-badge">-128</code> a <code class="code-badge">127</code>.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class="code-badge">short</code></td>
+                                        <td>16 bits</td>
+                                        <td>Entero con signo: <code class="code-badge">-32.768</code> a <code class="code-badge">32.767</code>.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class="code-badge">int</code></td>
+                                        <td>32 bits</td>
+                                        <td>Entero estándar (tipo por defecto de literales).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class="code-badge">long</code></td>
+                                        <td>64 bits</td>
+                                        <td>Entero largo; literales grandes exigen sufijo <code class="code-badge">L</code>.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class="code-badge">float</code></td>
+                                        <td>32 bits</td>
+                                        <td>Decimal simple; literal exige sufijo <code class="code-badge">f</code>.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class="code-badge">double</code></td>
+                                        <td>64 bits</td>
+                                        <td>Decimal doble precisión (defecto con punto decimal).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class="code-badge">boolean</code></td>
+                                        <td>1 bit*</td>
+                                        <td>Solo <code class="code-badge">true</code> o <code class="code-badge">false</code> (no admite <code class="code-badge">0</code> ni <code class="code-badge">1</code>).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class="code-badge">char</code></td>
+                                        <td>16 bits</td>
+                                        <td>Un único carácter entre comillas simples (<code class="code-badge">'A'</code>).</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="callout-box warning" style="margin-top: 10px;">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #D97706;"></i>
+                        <div>
+                            <strong style="color: #92400E;">Aclaraciones de tipos, constantes y límites</strong>
+                            <p style="color: #78350F;"><code class="code-badge">String</code> <strong>no</strong> es primitivo (es una clase/objeto con comillas dobles). Las constantes con <code class="code-badge">final</code> no pueden reasignarse. Superar el máximo o mínimo entero produce <strong>Overflow / Underflow</strong> cíclico (ej: <code class="code-badge">(short)(32767 + 1)</code> &rarr; <code class="code-badge">-32768</code>).</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 4: REPASO U2 (2/2): OPERADORES, CASTING, DE MORGAN Y CORTOCIRCUITO
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">UNIDAD 2: <span class="slide-subtitle">Operadores, Casting y Lógica Booleana</span></h2>
+                <div class="content-area">
+                    <div class="cards-grid-3">
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-blue);">
+                            <div class="card-header-row">
+                                <div class="card-icon-sm" style="background: #EFF6FF; color: var(--utn-blue);">
+                                    <i class="fa-solid fa-divide"></i>
+                                </div>
+                                <h3>División y Casting</h3>
+                            </div>
+                            <ul class="mini-list">
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i><span><strong>División entera:</strong> <code class="code-badge">5 / 2</code> da <code class="code-badge">2</code> (aunque se guarde en <code class="code-badge">double</code> da <code class="code-badge">2.0</code>).</span></li>
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i><span><strong>Cast antes de dividir:</strong> <code class="code-badge">(double) a / b</code> da decimal; <code class="code-badge">(double)(a / b)</code> trunca antes.</span></li>
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i><span><strong>Truncamiento:</strong> <code class="code-badge">(int) 7.95</code> descarta decimales y resulta <code class="code-badge">7</code> (no redondea).</span></li>
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i><span><strong>Dígitos y múltiplos:</strong> <code class="code-badge">n % 10</code> extrae último dígito; <code class="code-badge">n / 10</code> lo quita; <code class="code-badge">n % k == 0</code> valida divisibilidad.</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-gold);">
+                            <div class="card-header-row">
+                                <div class="card-icon-sm" style="background: #FEF3C7; color: #D97706;">
+                                    <i class="fa-solid fa-arrow-down-1-9"></i>
+                                </div>
+                                <h3>Precedencia y Unarios</h3>
+                            </div>
+                            <ul class="mini-list">
+                                <li><i class="fa-solid fa-check" style="color: #D97706;"></i><span><strong>Prioridad aritmética:</strong> <code class="code-badge">* / %</code> preceden a <code class="code-badge">+ -</code>. Usar paréntesis ante cualquier duda.</span></li>
+                                <li><i class="fa-solid fa-check" style="color: #D97706;"></i><span><strong>Concatenación izq &rarr; der:</strong> <code class="code-badge">2 + 3 + " pts " + 4 + 1</code> evalúa <code class="code-badge">"5 pts 41"</code>.</span></li>
+                                <li><i class="fa-solid fa-check" style="color: #D97706;"></i><span><strong>Post vs. Pre-incremento:</strong> <code class="code-badge">b = a++</code> asigna y luego suma; <code class="code-badge">c = ++a</code> suma primero y luego asigna.</span></li>
+                                <li><i class="fa-solid fa-check" style="color: #D97706;"></i><span><strong>Operador = vs ==:</strong> <code class="code-badge">=</code> asigna valor a una variable; <code class="code-badge">==</code> compara igualdad primitiva.</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid #10B981;">
+                            <div class="card-header-row">
+                                <div class="card-icon-sm" style="background: #D1FAE5; color: #10B981;">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+                                <h3>Lógica y Cortocircuito</h3>
+                            </div>
+                            <ul class="mini-list">
+                                <li><i class="fa-solid fa-check" style="color: #10B981;"></i><span><strong>Negación de rangos (De Morgan):</strong> si el rango válido es <code class="code-badge">x &gt;= 0 &amp;&amp; x &lt;= 10</code>, repetir entrada si <code class="code-badge">x &lt; 0 || x &gt; 10</code>.</span></li>
+                                <li><i class="fa-solid fa-check" style="color: #10B981;"></i><span><strong>Cortocircuito con &amp;&amp;:</strong> <code class="code-badge">div != 0 &amp;&amp; n % div == 0</code> protege contra división por cero al evaluar izquierda primero.</span></li>
+                                <li><i class="fa-solid fa-check" style="color: #10B981;"></i><span><strong>Cortocircuito con ||:</strong> si el término izquierdo es <code class="code-badge">true</code>, no evalúa el derecho.</span></li>
+                                <li><i class="fa-solid fa-check" style="color: #10B981;"></i><span><strong>Buffer Scanner:</strong> tras <code class="code-badge">nextInt()</code> queda <code class="code-badge">\n</code>; limpiar con <code class="code-badge">nextLine()</code> extra antes de leer líneas.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="callout-box" style="margin-top: 12px;">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <div>
+                            <strong>Cálculo de porcentajes y promedios con enteros</strong>
+                            <p>Si <code class="code-badge">cant</code> y <code class="code-badge">total</code> son <code class="code-badge">int</code>, escribir <code class="code-badge">(cant / total) * 100.0</code> primero ejecuta división entera (<code class="code-badge">0</code> si <code class="code-badge">cant &lt; total</code>). Lo correcto es <code class="code-badge">(cant * 100.0) / total</code> o castear a <code class="code-badge">(double)</code> antes de dividir.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 5: REPASO U3: CONTROL DE FLUJO Y SECUENCIAS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">UNIDAD 3: <span class="slide-subtitle">Control de Flujo y Secuencias</span></h2>
+                <div class="content-area">
+                    <div class="cards-grid-2">
+                        <!-- Selectivas -->
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-blue);">
+                            <h4><i class="fa-solid fa-code-fork" style="color: var(--utn-blue);"></i> Estructuras Selectivas (if / switch)</h4>
+                            <ul class="mini-list">
+                                <li><i class="fa-solid fa-angle-right" style="color: var(--utn-blue);"></i><span><strong><code class="code-badge">if</code> independientes vs. <code class="code-badge">if - else if</code>:</strong> los <code class="code-badge">if</code> sueltos pueden ejecutarse todos; la cascada <code class="code-badge">else if</code> ejecuta solo la <strong>primera</strong> rama verdadera.</span></li>
+                                <li><i class="fa-solid fa-angle-right" style="color: var(--utn-blue);"></i><span><strong>Llaves y punto y coma:</strong> sin <code class="code-badge">{ }</code> el <code class="code-badge">if</code> controla solo 1 línea; un <code class="code-badge">;</code> tras <code class="code-badge">if (cond);</code> deja el bloque siguiente suelto.</span></li>
+                                <li><i class="fa-solid fa-angle-right" style="color: var(--utn-blue);"></i><span><strong>Tipos en <code class="code-badge">switch</code>:</strong> admite <code class="code-badge">byte</code>, <code class="code-badge">short</code>, <code class="code-badge">int</code>, <code class="code-badge">char</code> y <code class="code-badge">String</code>; prohíbe <code class="code-badge">double</code>, <code class="code-badge">float</code> y <code class="code-badge">boolean</code>.</span></li>
+                                <li><i class="fa-solid fa-angle-right" style="color: var(--utn-blue);"></i><span><strong>Caída en cascada (<em>fall-through</em>):</strong> omitir <code class="code-badge">break;</code> ejecuta el <code class="code-badge">case</code> siguiente. Se aprovecha para agrupar etiquetas como <code class="code-badge">case 's': case 'S':</code>.</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Repetitivas y Secuencias -->
+                        <div class="concept-card" style="border-top: 4px solid #10B981;">
+                            <h4><i class="fa-solid fa-rotate" style="color: #10B981;"></i> Bucles y Patrones de Secuencia</h4>
+                            <ul class="mini-list">
+                                <li><i class="fa-solid fa-check" style="color: #10B981;"></i><span><strong><code class="code-badge">while</code> vs. <code class="code-badge">do-while</code>:</strong> <code class="code-badge">while</code> evalúa antes (0 o más veces); <code class="code-badge">do-while</code> ejecuta al menos 1 vez (menús y validaciones) y exige <code class="code-badge">;</code> al final.</span></li>
+                                <li><i class="fa-solid fa-check" style="color: #10B981;"></i><span><strong><code class="code-badge">for</code> y ámbito:</strong> cantidad conocida <code class="code-badge">N</code>; la variable declarada en la cabecera solo existe dentro del bucle (y cuidado con <code class="code-badge">for (...);</code>).</span></li>
+                                <li><i class="fa-solid fa-check" style="color: #10B981;"></i><span><strong>Centinela limpio:</strong> leer el 1° dato antes del <code class="code-badge">while</code> y leer el siguiente al final del cuerpo, evitando procesar la marca de fin.</span></li>
+                                <li><i class="fa-solid fa-check" style="color: #10B981;"></i><span><strong>Extremos con negativos:</strong> inicializar <code class="code-badge">min</code> y <code class="code-badge">max</code> con el 1° dato válido (o <code class="code-badge">MIN_VALUE</code> / <code class="code-badge">MAX_VALUE</code>), nunca en <code class="code-badge">0</code>.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="callout-box danger" style="margin-top: 12px;">
+                        <i class="fa-solid fa-ban" style="color: #EF4444;"></i>
+                        <div>
+                            <strong style="color: #991B1B;">Criterio de programación estructurada en la cátedra</strong>
+                            <p style="color: #7F1D1D;">Evitar <code class="code-badge">break</code> para cortar bucles y nunca usar <code class="code-badge">System.exit(0)</code>. Todo corte anticipado (búsqueda o menú con errores) se controla con bandera booleana y condición compuesta en el <code class="code-badge">while</code> / <code class="code-badge">do-while</code>.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 6: REPASO U4: MODULARIZACIÓN, PASAJE Y BIBLIOTECAS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">UNIDAD 4: <span class="slide-subtitle">Modularización, Memoria y Bibliotecas</span></h2>
+                <div class="content-area">
+                    <div class="cards-grid-2">
+                        <!-- Principios y Retornos -->
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-blue);">
+                            <h4><i class="fa-solid fa-cubes-stacked" style="color: var(--utn-blue);"></i> Diseño Modular y Contrato de Métodos</h4>
+                            <ul class="mini-list">
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i><span><strong>Principios:</strong> <strong>Top-Down</strong> (dividir en subtareas), <strong>DRY</strong> (reutilizar en vez de duplicar), <strong>Caja Negra</strong> (contrato entrada/salida) y <strong>Alta Cohesión</strong> (separar cálculo de <code class="code-badge">Scanner</code>/<code class="code-badge">println</code>).</span></li>
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i><span><strong>Firma <code class="code-badge">static</code>:</strong> permite invocar desde <code class="code-badge">main</code> sin instanciar objetos; cada parámetro formal declara su tipo (<code class="code-badge">int a, int b</code>).</span></li>
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i><span><strong>Retorno y <code class="code-badge">void</code>:</strong> métodos no-<code class="code-badge">void</code> exigen <code class="code-badge">return</code> en toda rama (buena práctica: variable resultado y <strong>retorno único</strong> al final). Un <code class="code-badge">void</code> no puede asignarse a variables.</span></li>
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i><span><strong>Simplificación booleana:</strong> en vez de <code class="code-badge">if (cond) return true; else return false;</code>, retornar directo <code class="code-badge">return cond;</code>.</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Memoria y APIs -->
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-gold);">
+                            <h4><i class="fa-solid fa-memory" style="color: #D97706;"></i> Call Stack, Pasaje y Paquetes Estándar</h4>
+                            <ul class="mini-list">
+                                <li><i class="fa-solid fa-angle-right" style="color: #D97706;"></i><span><strong>Call Stack (LIFO):</strong> cada invocación crea su propio marco con variables locales independientes (el último método en entrar es el primero en salir).</span></li>
+                                <li><i class="fa-solid fa-angle-right" style="color: #D97706;"></i><span><strong>Pasaje por valor (primitivos vs. arreglos):</strong> un <code class="code-badge">int</code> se pasa por copia (no cambia en <code class="code-badge">main</code>). Un arreglo pasa copia de su <strong>referencia</strong>: mutar <code class="code-badge">arr[i]</code> modifica el original, pero <code class="code-badge">arr = new int[...]</code> solo cambia la copia local.</span></li>
+                                <li><i class="fa-solid fa-angle-right" style="color: #D97706;"></i><span><strong><code class="code-badge">java.lang.Math</code> (sin import):</strong> <code class="code-badge">Math.pow(a, b)</code> y <code class="code-badge">Math.sqrt(x)</code> devuelven siempre <code class="code-badge">double</code>; <code class="code-badge">Math.abs</code>, <code class="code-badge">Math.max</code>, <code class="code-badge">Math.min</code>.</span></li>
+                                <li><i class="fa-solid fa-angle-right" style="color: #D97706;"></i><span><strong><code class="code-badge">java.util.Random</code> (requiere import):</strong> <code class="code-badge">rnd.nextInt(n)</code> genera <code class="code-badge">[0, n - 1]</code>. Para rango <code class="code-badge">[min, max]</code>: <code class="code-badge">rnd.nextInt(max - min + 1) + min</code>.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="callout-box" style="margin-top: 12px;">
+                        <i class="fa-solid fa-ban" style="color: var(--cyan-accent);"></i>
+                        <div>
+                            <strong>Comunicación limpia entre módulos (sin estado global mutable)</strong>
+                            <p>Los datos y contadores deben viajar mediante <strong>parámetros explícitos y retornos</strong>. Descartar el valor de retorno de un método (ej. llamar a <code class="code-badge">doble(x);</code> sin asignarlo) deja sin efecto el cálculo en el invocador.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 7: REPASO U5 (1/3): VECTORES 1D, SINTAXIS Y RECORRIDOS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">UNIDAD 5 (1/3): <span class="slide-subtitle">Vectores 1D, Memoria y Recorridos</span></h2>
+                <div class="content-area">
+                    <div class="cards-grid-3" style="margin-bottom: 10px;">
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-blue); padding: 11px 14px;">
+                            <h3>3 Propiedades Base</h3>
+                            <p><strong>Homogéneo</strong> (un solo tipo), <strong>contiguo</strong> en RAM e <strong>indexado</strong> en base <code class="code-badge">0</code> (<code class="code-badge">0</code> a <code class="code-badge">length - 1</code>). Acceso en <code class="code-badge">O(1)</code>.</p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-gold); padding: 11px 14px;">
+                            <h3>Valores por Defecto</h3>
+                            <p>Al reservar con <code class="code-badge">new</code>: numéricos inician en <code class="code-badge">0</code> / <code class="code-badge">0.0</code>, <code class="code-badge">boolean[]</code> en <code class="code-badge">false</code> y objetos en <code class="code-badge">null</code>.</p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid #EF4444; padding: 11px 14px;">
+                            <h3>Límites y Defensiva</h3>
+                            <p><code class="code-badge">arr.length</code> es atributo (sin <code class="code-badge">()</code>). Validar <code class="code-badge">arr != null &amp;&amp; arr.length &gt; 0</code> evita excepciones de ejecución.</p>
+                        </div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 24%;">Patrón Algorítmico</th>
+                                <th style="width: 38%;">Estructura Recomendada</th>
+                                <th style="width: 38%;">Detalle Crítico de Implementación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Recorrido completo</strong><br><span style="font-size: 11px; color: #64748B;">Sumas, conteos, promedios</span></td>
+                                <td><code class="code-badge">for (int i = 0; i &lt; v.length; i++)</code><br><code class="code-badge">for (int x : v)</code> (solo lectura)</td>
+                                <td>Para promedios con condición, contar cuántos cumplen y validar <code class="code-badge">cant &gt; 0</code> antes de dividir como <code class="code-badge">double</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Recorrido parcial</strong><br><span style="font-size: 11px; color: #64748B;">Búsqueda / verificación</span></td>
+                                <td><code class="code-badge">while (i &lt; v.length &amp;&amp; cond)</code><br><span style="font-size: 11px; color: #64748B;">(corte anticipado sin break)</span></td>
+                                <td>El control de índice <code class="code-badge">i &lt; v.length</code> va <strong>siempre primero</strong> para evitar desbordamiento por cortocircuito.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Extremo en rango</strong><br><span style="font-size: 11px; color: #64748B;">Subrango [inf, sup]</span></td>
+                                <td><code class="code-badge">int max = v[inf];</code><br><code class="code-badge">for (int i = inf + 1; i &lt;= sup; i++)</code></td>
+                                <td>Validar <code class="code-badge">0 &lt;= inf &lt;= sup &lt; v.length</code>. Iniciar con <code class="code-badge">v[inf]</code> soporta valores negativos.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Filtrado / Rotación</strong><br><span style="font-size: 11px; color: #64748B;">Nuevo vector o in-situ</span></td>
+                                <td>Filtrado en 2 pasadas (contar + copiar)<br>Rotar izq/der usando <code class="code-badge">int aux</code></td>
+                                <td>Rotar izquierda corre ascendente y guarda <code class="code-badge">v[0]</code>; rotar derecha corre descendente y guarda <code class="code-badge">v[length - 1]</code>.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 8: REPASO U5 (2/3): CAPACIDAD LÓGICA (TOPE) Y CORRIMIENTOS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">UNIDAD 5 (2/3): <span class="slide-subtitle">Capacidad Lógica (tope) y Corrimientos</span></h2>
+                <div class="content-area">
+                    <div class="tope-vector">
+                        <div class="ram-cell-group">
+                            <span class="ram-index">idx 0</span>
+                            <div class="ram-cell">65</div>
+                        </div>
+                        <div class="ram-cell-group">
+                            <span class="ram-index">idx 1</span>
+                            <div class="ram-cell">22</div>
+                        </div>
+                        <div class="ram-cell-group">
+                            <span class="ram-index">idx 2</span>
+                            <div class="ram-cell">14</div>
+                        </div>
+                        <div class="ram-cell-group">
+                            <span class="ram-index" style="background: #FEE2E2; color: #EF4444;">idx 3 (tope)</span>
+                            <div class="ram-cell cell-empty">?</div>
+                        </div>
+                        <div class="ram-cell-group">
+                            <span class="ram-index">idx 4</span>
+                            <div class="ram-cell cell-empty">?</div>
+                        </div>
+                        <div style="margin-left: 14px; font-size: 12.5px; color: var(--text-main); line-height: 1.4;">
+                            <strong>Datos válidos:</strong> índices <code class="code-badge">0 .. tope - 1</code> (<code class="code-badge">i &lt; tope</code>).<br>
+                            <strong>Capacidad libre:</strong> existe lugar si <code class="code-badge">tope &lt; arr.length</code>.<br>
+                            <strong>Lista no vacía:</strong> se puede eliminar si <code class="code-badge">tope &gt; 0</code>.
+                        </div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 24%;">Operación</th>
+                                <th style="width: 12%;">Costo</th>
+                                <th style="width: 26%;">Precondición</th>
+                                <th style="width: 38%;">Mecánica y Sentido del Bucle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Insertar al final</strong></td>
+                                <td><strong style="color: #10B981;">O(1)</strong></td>
+                                <td><code class="code-badge">tope &lt; arr.length</code></td>
+                                <td><code class="code-badge">arr[tope] = val; tope++;</code> (sin desplazamientos).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Insertar en <code class="code-badge">pos</code></strong></td>
+                                <td><strong style="color: #EF4444;">O(N)</strong></td>
+                                <td><code class="code-badge">tope &lt; length</code> y <code class="code-badge">0 &lt;= pos &lt;= tope</code></td>
+                                <td><strong>Corrimiento derecha descendente:</strong> <code class="code-badge">for (i = tope; i &gt; pos; i--) arr[i] = arr[i-1];</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Eliminar al final</strong></td>
+                                <td><strong style="color: #10B981;">O(1)</strong></td>
+                                <td><code class="code-badge">tope &gt; 0</code></td>
+                                <td><code class="code-badge">tope--;</code> (la celda queda fuera del rango lógico).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Eliminar en <code class="code-badge">pos</code></strong></td>
+                                <td><strong style="color: #EF4444;">O(N)</strong></td>
+                                <td><code class="code-badge">tope &gt; 0</code> y <code class="code-badge">0 &lt;= pos &lt; tope</code></td>
+                                <td><strong>Corrimiento izquierda ascendente:</strong> <code class="code-badge">for (i = pos; i &lt; tope - 1; i++) arr[i] = arr[i+1];</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout-box warning" style="margin-top: 10px;">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #D97706;"></i>
+                        <div>
+                            <strong style="color: #92400E;">Control del índice cuando se inserta o borra en recorrido</strong>
+                            <p style="color: #78350F;">Al <strong>eliminar repetidos</strong> en un <code class="code-badge">while</code>, no incrementar <code class="code-badge">i</code> tras compactar porque un nuevo elemento ocupa la posición siguiente y debe volver a compararse. Al <strong>insertar detrás</strong> de <code class="code-badge">i</code>, avanzar <code class="code-badge">i++</code> para saltar el valor recién insertado.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 9: REPASO U5 (3/3): MATRICES 2D, PARALELOS Y MAPA DE DECISIÓN
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">UNIDAD 5 (3/3): <span class="slide-subtitle">Matrices 2D y Vectores Paralelos</span></h2>
+                <div class="content-area">
+                    <div class="cards-grid-2" style="margin-bottom: 10px;">
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-blue);">
+                            <h4><i class="fa-solid fa-table-cells" style="color: var(--utn-blue);"></i> Anatomía y Dimensiones en Java</h4>
+                            <ul class="mini-list">
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i><span><strong>Arreglo de arreglos:</strong> <code class="code-badge">int[][] m = new int[F][C];</code> siempre indexado primero por <strong>fila</strong> y luego por <strong>columna</strong> (<code class="code-badge">m[fila][col]</code>).</span></li>
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i><span><strong>Lectura de límites:</strong> <code class="code-badge">m.length</code> devuelve cantidad de <strong>filas</strong>; <code class="code-badge">m[0].length</code> (o <code class="code-badge">m[i].length</code>) las <strong>columnas</strong>.</span></li>
+                                <li><i class="fa-solid fa-check" style="color: var(--cyan-accent);"></i><span><strong>Diagonal principal:</strong> celdas donde fila y columna coinciden (<code class="code-badge">m[i][i]</code>).</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid var(--cyan-accent);">
+                            <h4><i class="fa-solid fa-arrows-up-down-left-right" style="color: #0284C7;"></i> Barridos y Vectores Paralelos</h4>
+                            <ul class="mini-list">
+                                <li><i class="fa-solid fa-angle-right" style="color: #0284C7;"></i><span><strong>Por filas (horizontal):</strong> <code class="code-badge">i</code> afuera, <code class="code-badge">j</code> adentro &rarr; totaliza cada entidad fila (ej. servidor emisor o categoría).</span></li>
+                                <li><i class="fa-solid fa-angle-right" style="color: #0284C7;"></i><span><strong>Por columnas (vertical):</strong> <code class="code-badge">j</code> afuera, <code class="code-badge">i</code> adentro &rarr; totaliza cada columna (ej. servidor receptor o destino).</span></li>
+                                <li><i class="fa-solid fa-angle-right" style="color: #0284C7;"></i><span><strong>Cruce paralelo:</strong> el subíndice <code class="code-badge">col</code> o <code class="code-badge">fila</code> de la matriz indexa un vector paralelo (<code class="code-badge">localidades[col]</code>, <code class="code-badge">tarifas[s]</code>).</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 26%;">Estructura</th>
+                                <th style="width: 37%;">Cuándo Elegirla</th>
+                                <th style="width: 37%;">Ejemplo Típico de Aplicación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Vector 1D (<code class="code-badge">T[]</code>)</strong></td>
+                                <td>Lista homogénea con una única dimensión independiente.</td>
+                                <td>Notas de un curso, temperaturas horarias, tarifas de servicios.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Matriz 2D (<code class="code-badge">T[][]</code>)</strong></td>
+                                <td>Tabla homogénea al cruzar dos dimensiones ortogonales (<code class="code-badge">F &times; C</code>).</td>
+                                <td>Tráfico servidor origen &times; destino, ventas sucursal &times; mes.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vectores Paralelos</strong></td>
+                                <td>Asociar atributos de <strong>distinto tipo</strong> (o metadatos) mediante el mismo índice.</td>
+                                <td>Vector de nombres o costos vinculado a filas o columnas de una matriz.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 10: PRÁCTICA GUIADA INTEGRADORA (Arquitectura Vertical: Enunciado -> 3 Pasos Código -> OneCompiler)
+                 ========================================================================= -->
+            <section>
+                <!-- 10.A Slide Horizontal: Enunciado y Modelo de Datos (Sin spoilers) -->
+                <section>
+                    <h2 class="slide-title">PRÁCTICA INTEGRADORA: <span class="slide-subtitle">Gestión de Soporte Técnico</span></h2>
+                    <div class="content-area">
+                        <div class="problem-statement-box">
+                            <span style="font-size: 12.5px; font-weight: 700; color: var(--utn-blue); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">
+                                <i class="fa-solid fa-screwdriver-wrench" style="color: var(--cyan-accent);"></i> Consigna Integradora (Unidades 2, 3, 4 y 5)
+                            </span>
+                            <p style="font-size: 14.5px; color: var(--text-main); margin: 0; line-height: 1.4;">
+                                Una empresa ofrece <strong>4 servicios técnicos</strong> (códigos 0 a 3) con tarifas fijas en un vector <code class="code-badge">int[] tarifas</code> y dispone de <strong>3 técnicos</strong> (códigos 0 a 2) que cobran una <strong>comisión del 5%</strong> sobre el monto de sus trabajos. Las prestaciones del mes se almacenan en una matriz <code class="code-badge">int[][] prestaciones = new int[3][4]</code>.
+                            </p>
+                        </div>
+
+                        <!-- Tablas Visuales: Vector Paralelo + Matriz -->
+                        <div style="display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 14px; margin-bottom: 10px;">
+                            <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 12px;">
+                                <span style="display: block; text-align: left; font-size: 11.5px; font-weight: 700; color: #0284C7; text-transform: uppercase; margin-bottom: 6px;">
+                                    Modelo de Datos (Vector + Matriz 3x4)
+                                </span>
+                                <table class="mini-data-table" style="margin-bottom: 6px;">
+                                    <thead>
+                                        <tr>
+                                            <th>tarifas[]</th>
+                                            <th>Serv 0</th>
+                                            <th>Serv 1</th>
+                                            <th>Serv 2</th>
+                                            <th>Serv 3</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>ARS</strong></td>
+                                            <td>2500</td>
+                                            <td>5000</td>
+                                            <td>10000</td>
+                                            <td>15000</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="mini-data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>prestaciones</th>
+                                            <th>S0</th>
+                                            <th>S1</th>
+                                            <th>S2</th>
+                                            <th>S3</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td><strong>Téc 0</strong></td><td>2</td><td>1</td><td>2</td><td>3</td></tr>
+                                        <tr><td><strong>Téc 1</strong></td><td>3</td><td>1</td><td>0</td><td>2</td></tr>
+                                        <tr><td><strong>Téc 2</strong></td><td>2</td><td>2</td><td>1</td><td>1</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Requerimientos Modulares -->
+                            <div style="background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 14px;">
+                                <span style="display: block; text-align: left; font-size: 11.5px; font-weight: 700; color: var(--utn-blue); text-transform: uppercase; margin-bottom: 6px;">
+                                    Requerimientos Modulares y Menú
+                                </span>
+                                <ul class="mini-list">
+                                    <li><i class="fa-solid fa-dice" style="color: #0284C7;"></i><span><strong>1. Carga aleatoria:</strong> llenar la matriz con enteros en <code class="code-badge">[0, 5]</code> usando <code class="code-badge">Random</code>.</span></li>
+                                    <li><i class="fa-solid fa-sack-dollar" style="color: #10B981;"></i><span><strong>2. Recaudación y comisión (5%):</strong> métodos estáticos con retorno único y barrido por fila cruzando <code class="code-badge">tarifas</code>.</span></li>
+                                    <li><i class="fa-solid fa-star" style="color: #D97706;"></i><span><strong>3. Servicio estrella:</strong> obtener código del servicio con más prestaciones totales (barrido por columnas).</span></li>
+                                    <li><i class="fa-solid fa-filter" style="color: #7C3AED;"></i><span><strong>4. Filtrado de destacados:</strong> retornar un nuevo <code class="code-badge">int[]</code> con los técnicos cuya comisión supere un umbral válido (<code class="code-badge">&gt; 0</code>).</span></li>
+                                    <li><i class="fa-solid fa-list-check" style="color: #EF4444;"></i><span><strong>5. Menú <code class="code-badge">do-while</code>:</strong> cortar con opción <code class="code-badge">0</code> o al acumular <code class="code-badge">3</code> errores inválidos.</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="callout-box warning" style="margin-top: 0;">
+                            <i class="fa-solid fa-lightbulb" style="color: #D97706;"></i>
+                            <div>
+                                <strong style="color: #92400E;">Análisis previo al código</strong>
+                                <p style="color: #78350F;">¿Cómo reutilizás el método de recaudación de un técnico para calcular tanto la facturación global como su comisión y el filtrado de destacados sin duplicar bucles?</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10.B1 Slide Vertical: Resolución Paso a Paso (Parte 1: Carga, Filas y Reutilización) -->
+                <section data-state="hide-footer">
+                    <h2 class="slide-title">RESOLUCIÓN (1/4): <span class="slide-subtitle">Carga Aleatoria, Filas y Reutilización</span></h2>
+                    <div class="content-area">
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <pre class="code-integrador"><code class="language-java" data-trim data-noescape data-line-numbers="1-9|11-18|20-22">// 1. Carga aleatoria en [0, 5] con java.util.Random
+public static void cargarPrestaciones(int[][] m) {
+    if (m != null) {
+        Random rnd = new Random();
+        for (int t = 0; t &lt; m.length; t++) {
+            for (int s = 0; s &lt; m[t].length; s++) { m[t][s] = rnd.nextInt(6); }
+        }
+    }
+}
+
+// 2. Recaudación de un técnico (barrido por fila + vector paralelo)
+public static int calcularRecaudacionTecnico(int[][] m, int[] tarifas, int tec) {
+    int total = 0;
+    if (m != null &amp;&amp; tarifas != null &amp;&amp; tec &gt;= 0 &amp;&amp; tec &lt; m.length &amp;&amp; m[tec].length == tarifas.length) {
+        for (int s = 0; s &lt; m[tec].length; s++) { total += m[tec][s] * tarifas[s]; }
+    }
+    return total;
+}
+
+// 3. Reutilización (DRY): comisión del 5% en double (evita truncamiento)
+public static double calcularComision(int[][] m, int[] tarifas, int tec) {
+    return calcularRecaudacionTecnico(m, tarifas, tec) * 0.05;
+}</code></pre>
+                        </div>
+
+                        <div class="callout-box" style="margin-top: 10px;">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <div>
+                                <strong>Validación defensiva y promoción numérica</strong>
+                                <p>Cada método verifica nulidad y límites antes de indexar y mantiene un único <code class="code-badge">return</code>. Multiplicar por <code class="code-badge">0.05</code> promueve el monto entero a <code class="code-badge">double</code> sin perder centavos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10.B2 Slide Vertical: Resolución Paso a Paso (Parte 2: Barrido por Columnas) -->
+                <section data-state="hide-footer">
+                    <h2 class="slide-title">RESOLUCIÓN (2/4): <span class="slide-subtitle">Servicio Estrella por Columnas</span></h2>
+                    <div class="content-area">
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <pre class="code-integrador"><code class="language-java" data-trim data-noescape data-line-numbers="1-4|5-14|15-17">// 4. Servicio estrella: mayor cantidad total (barrido por columnas)
+public static int obtenerServicioEstrella(int[][] m) {
+    int estrella = -1, maxCant = -1;
+    if (m != null &amp;&amp; m.length &gt; 0 &amp;&amp; m[0].length &gt; 0) {
+        for (int s = 0; s &lt; m[0].length; s++) {
+            int sumaCol = 0;
+            for (int t = 0; t &lt; m.length; t++) {
+                sumaCol += m[t][s];
+            }
+            if (sumaCol &gt; maxCant) {
+                maxCant = sumaCol;
+                estrella = s;
+            }
+        }
+    }
+    return estrella;
+}</code></pre>
+                        </div>
+
+                        <div class="callout-box" style="margin-top: 10px;">
+                            <i class="fa-solid fa-table-columns"></i>
+                            <div>
+                                <strong>Barrido vertical por columnas</strong>
+                                <p>El bucle exterior fija el código de servicio <code class="code-badge">s</code> y el interior suma todos los técnicos <code class="code-badge">t</code>. Inicializar <code class="code-badge">maxCant = -1</code> asegura actualizar en la primera columna aunque todas sumen <code class="code-badge">0</code>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10.B3 Slide Vertical: Resolución Paso a Paso (Parte 3: Filtrado a Nuevo Vector) -->
+                <section data-state="hide-footer">
+                    <h2 class="slide-title">RESOLUCIÓN (3/4): <span class="slide-subtitle">Filtrado a Nuevo Vector</span></h2>
+                    <div class="content-area">
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <pre class="code-integrador"><code class="language-java" data-trim data-noescape data-line-numbers="1-4|5-8|9-15|16-17">// 5. Filtrado a nuevo vector: técnicos con comisión superior al umbral
+public static int[] filtrarDestacados(int[][] m, int[] tarifas, double umbral) {
+    int[] resultado = new int[0];
+    if (m != null &amp;&amp; tarifas != null &amp;&amp; umbral &gt; 0) {
+        int cant = 0;
+        for (int t = 0; t &lt; m.length; t++) {
+            if (calcularComision(m, tarifas, t) &gt; umbral) { cant++; }
+        }
+        resultado = new int[cant];
+        int idx = 0;
+        for (int t = 0; t &lt; m.length; t++) {
+            if (calcularComision(m, tarifas, t) &gt; umbral) {
+                resultado[idx++] = t;
+            }
+        }
+    }
+    return resultado;
+}</code></pre>
+                        </div>
+
+                        <div class="callout-box" style="margin-top: 10px;">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <div>
+                                <strong>Doble pasada para dimensionar exactamente</strong>
+                                <p>Primero contamos cuántos técnicos cumplen para instanciar <code class="code-badge">new int[cant]</code> sin celdas sobrantes ni huecos; luego copiamos los índices reutilizando <code class="code-badge">calcularComision</code>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10.B4 Slide Vertical: Resolución Paso a Paso (Parte 4: Menú Principal y Validación) -->
+                <section data-state="hide-footer">
+                    <h2 class="slide-title">RESOLUCIÓN (4/4): <span class="slide-subtitle">Menú Cíclico y Validación de Entrada</span></h2>
+                    <div class="content-area">
+                        <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
+                            <pre class="code-integrador"><code class="language-java" data-trim data-noescape data-line-numbers="1-5|7-16|18-24">Scanner sc = new Scanner(System.in);
+int[] tarifas = { 2500, 5000, 10000, 15000 };
+int[][] prestaciones = new int[3][4];
+cargarPrestaciones(prestaciones);
+int opcion, errores = 0;
+
+do {
+    System.out.println("\n1-Recargar | 2-Total | 3-Comisiones | 4-Estrella | 5-Destacados | 0-Salir");
+    opcion = sc.nextInt();
+    switch (opcion) {
+        case 1: cargarPrestaciones(prestaciones); break;
+        case 2: /* Acumula calcularRecaudacionTecnico para cada t */ break;
+        case 3: /* Imprime calcularComision(...) y busca técnico del mes */ break;
+        case 4: System.out.println("Estrella: " + obtenerServicioEstrella(prestaciones)); break;
+        case 5:
+            double umbral;
+            do { System.out.print("Umbral &gt; 0: "); umbral = sc.nextDouble(); } while (umbral &lt;= 0);
+            System.out.println(Arrays.toString(filtrarDestacados(prestaciones, tarifas, umbral)));
+            break;
+        case 0: System.out.println("Fin del sistema."); break;
+        default: errores++; System.out.println("Inválida (" + errores + "/3)");
+    }
+} while (opcion != 0 &amp;&amp; errores &lt; 3);</code></pre>
+                        </div>
+
+                        <div class="callout-box success" style="margin-top: 10px;">
+                            <i class="fa-solid fa-circle-check" style="color: #10B981;"></i>
+                            <div>
+                                <strong style="color: #065F46;">Flujo estructurado de principio a fin</strong>
+                                <p style="color: #047857;">El menú termina naturalmente por la condición compuesta <code class="code-badge">opcion != 0 &amp;&amp; errores &lt; 3</code>, y la validación del umbral aplica De Morgan (<code class="code-badge">umbral &lt;= 0</code>) dentro de un <code class="code-badge">do-while</code> sin consumir intentos del menú.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10.C Slide Vertical: Compilador Interactivo (OneCompiler Java) -->
+                <section id="slide-compiler-integrador" data-background-color="#0F172A">
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-terminal" style="color: var(--utn-gold);"></i> OneCompiler — Integrador Completo: Gestión de Soporte Técnico</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-integrador', codeIntegrador, 'java', 'Main.java')">
+                                <i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar Código
+                            </button>
+                        </div>
+                        <iframe id="oc-editor-integrador" src="https://onecompiler.com/embed/java?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 11: CHECKLIST DE BUENAS PRÁCTICAS INTEGRADORAS
+                 ========================================================================= -->
+            <section>
+                <h2 class="slide-title">CHECKLIST DE CÁTEDRA: <span class="slide-subtitle">Puntos Clave Antes de Programar</span></h2>
+                <div class="content-area">
+                    <div class="cards-grid-2">
+                        <div class="concept-card" style="border-top: 4px solid #EF4444;">
+                            <div class="card-header-row">
+                                <div class="card-icon-sm" style="background: #FEE2E2; color: #EF4444;">
+                                    <i class="fa-solid fa-shield-virus"></i>
+                                </div>
+                                <h3>1. Validación Defensiva &amp; Límites</h3>
+                            </div>
+                            <p>Comprobá <code class="code-badge">arr != null</code>, longitudes válidas (<code class="code-badge">0..length - 1</code> o <code class="code-badge">&lt; tope</code>), rangos <code class="code-badge">inf &lt;= sup</code> y divisores distintos de cero antes de operar.</p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid var(--utn-gold);">
+                            <div class="card-header-row">
+                                <div class="card-icon-sm" style="background: #FEF3C7; color: #D97706;">
+                                    <i class="fa-solid fa-code-commit"></i>
+                                </div>
+                                <h3>2. Control Estructurado Limpio</h3>
+                            </div>
+                            <p>Sin <code class="code-badge">break</code> en ciclos (salvo <code class="code-badge">switch</code>), sin recursión en menús, sin <code class="code-badge">System.exit()</code> y un único <code class="code-badge">return</code> al cierre de cada método.</p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid var(--cyan-accent);">
+                            <div class="card-header-row">
+                                <div class="card-icon-sm" style="background: #E0F2FE; color: #0284C7;">
+                                    <i class="fa-solid fa-calculator"></i>
+                                </div>
+                                <h3>3. Precisión Numérica y Extremos</h3>
+                            </div>
+                            <p>Cuidá la división entera casteando a <code class="code-badge">double</code> antes de dividir e inicializá máximos y mínimos con el primer dato real (o <code class="code-badge">MIN/MAX_VALUE</code>) para soportar negativos.</p>
+                        </div>
+
+                        <div class="concept-card" style="border-top: 4px solid #10B981;">
+                            <div class="card-header-row">
+                                <div class="card-icon-sm" style="background: #D1FAE5; color: #10B981;">
+                                    <i class="fa-solid fa-cubes"></i>
+                                </div>
+                                <h3>4. Modularidad y Cohesión</h3>
+                            </div>
+                            <p>Separar cálculo de entrada/salida, comunicar datos por parámetros y retornos, y componer funciones existentes en lugar de duplicar lógica entre opciones.</p>
+                        </div>
+                    </div>
+
+                    <div class="callout-box success" style="margin-top: 12px;">
+                        <i class="fa-solid fa-flag-checkered" style="color: #10B981;"></i>
+                        <div>
+                            <strong style="color: #065F46;">Siguiente paso en la práctica</strong>
+                            <p style="color: #047857;">Podés seguir ejercitando los problemas pendientes de la Guía Práctica de Unidad 5 (como normalización de vectores, suma de dígitos iterativa y eliminación condicional) y en OmegaUp.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================================
+                 SLIDE 12: CIERRE CANÓNICO TUTI
+                 ========================================================================= -->
+            <section data-background-color="#F8FAFC">
+                <div class="hero-container">
+                    <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop');"></div>
+                    <div class="hero-text">
+                        <h1 class="hero-title" style="font-size: 48px !important; text-align: left; margin-bottom: 10px !important;">¿PREGUNTAS?</h1>
+                        <h3 style="font-size: 20px; color: var(--text-main); font-weight: 600; margin-bottom: 15px; text-align: left;">Espacio de consultas y dudas</h3>
+                        <p style="font-size: 16px; color: var(--text-light); text-align: left; margin-bottom: 20px;">¡Muchas gracias por su atención!</p>
+
+                        <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+                            <a href="../index.html" style="background: var(--utn-blue); color: white; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-house"></i> Portal Unidad 5
+                            </a>
+                        </div>
+
+                        <div class="staff-list">
+                            <h4>Profesores:</h4>
+                            <ul>
+                                <li>Gastón Micheri</li>
+                                <li>Tomás Assenza</li>
+                            </ul>
+                        </div>
+
+                        <div class="staff-list">
+                            <h4>Tutores:</h4>
+                            <ul>
+                                <li>Agustín Ramello</li>
+                                <li>Micaela Assenza</li>
+                                <li>Lijandy Jimenez Armas</li>
+                                <li>Macarena Moya</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Branding footer persistente en todas las diapositivas -->
+    <div class="branding-footer">TUTI / UTN <span>SANTA FE</span></div>
+
+    <!-- Scripts de Reveal.js y Plugins -->
+    <script src="../../../../dist/reveal.js"></script>
+    <script src="../../../../dist/plugin/highlight.js"></script>
+    <script src="../../../../dist/plugin/notes.js"></script>
+
+    <script>
+        // =========================================================================
+        // Script Anti-Blank-Slide para Móviles y Pantallas Verticales
+        // =========================================================================
+        const isMobileOrVertical = window.innerWidth < 768 || window.innerHeight > window.innerWidth;
+        if (isMobileOrVertical) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            const slidesContainer = document.querySelector('.slides');
+            document.querySelectorAll('.slides > section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                slidesContainer.insertBefore(sec, parent);
+            });
+            document.querySelectorAll('.slides > section').forEach(sec => {
+                if (sec.children.length === 0) {
+                    sec.remove();
+                }
+            });
+        }
+
+        // =========================================================================
+        // Canvas Adaptativo
+        // =========================================================================
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let size = getCanvasSize();
+            Reveal.configure({
+                width: size.width,
+                height: size.height
+            });
+        });
+
+        // =========================================================================
+        // Código para OneCompiler (Integrador Completo Ejecutable)
+        // =========================================================================
+        const codeIntegrador = `import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+
+    // 1. Carga aleatoria en [0, 5] con java.util.Random
+    public static void cargarPrestaciones(int[][] m) {
+        if (m != null) {
+            Random rnd = new Random();
+            for (int t = 0; t < m.length; t++) {
+                for (int s = 0; s < m[t].length; s++) {
+                    m[t][s] = rnd.nextInt(6);
+                }
+            }
+        }
+    }
+
+    // 2. Recaudación de un técnico (barrido por fila + vector paralelo tarifas)
+    public static int calcularRecaudacionTecnico(int[][] m, int[] tarifas, int tec) {
+        int total = 0;
+        if (m != null && tarifas != null && tec >= 0 && tec < m.length && m[tec].length == tarifas.length) {
+            for (int s = 0; s < m[tec].length; s++) {
+                total += m[tec][s] * tarifas[s];
+            }
+        }
+        return total;
+    }
+
+    // 3. Reutilización (DRY): comisión del 5% en double
+    public static double calcularComision(int[][] m, int[] tarifas, int tec) {
+        return calcularRecaudacionTecnico(m, tarifas, tec) * 0.05;
+    }
+
+    // 4. Servicio estrella: mayor demanda acumulada (barrido por columnas)
+    public static int obtenerServicioEstrella(int[][] m) {
+        int estrella = -1;
+        int maxCant = -1;
+        if (m != null && m.length > 0 && m[0].length > 0) {
+            for (int s = 0; s < m[0].length; s++) {
+                int sumaCol = 0;
+                for (int t = 0; t < m.length; t++) {
+                    sumaCol += m[t][s];
+                }
+                if (sumaCol > maxCant) {
+                    maxCant = sumaCol;
+                    estrella = s;
+                }
+            }
+        }
+        return estrella;
+    }
+
+    // 5. Filtrado a nuevo vector: técnicos cuya comisión supera el umbral
+    public static int[] filtrarDestacados(int[][] m, int[] tarifas, double umbral) {
+        int[] resultado = new int[0];
+        if (m != null && tarifas != null && umbral > 0) {
+            int cant = 0;
+            for (int t = 0; t < m.length; t++) {
+                if (calcularComision(m, tarifas, t) > umbral) {
+                    cant++;
+                }
+            }
+            resultado = new int[cant];
+            int idx = 0;
+            for (int t = 0; t < m.length; t++) {
+                if (calcularComision(m, tarifas, t) > umbral) {
+                    resultado[idx] = t;
+                    idx++;
+                }
+            }
+        }
+        return resultado;
+    }
+
+    public static void mostrarMatriz(int[][] m) {
+        System.out.println("Prestaciones [Técnico x Servicio]:");
+        for (int t = 0; t < m.length; t++) {
+            System.out.println("  Técnico " + t + ": " + Arrays.toString(m[t]));
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int[] tarifas = { 2500, 5000, 10000, 15000 };
+        int[][] prestaciones = new int[3][4];
+        cargarPrestaciones(prestaciones);
+
+        // Demo automática si no se ingresa STDIN en OneCompiler
+        int[] demoOpciones = { 2, 3, 4, 5, 0 };
+        int pasoDemo = 0;
+        int opcion;
+        int errores = 0;
+
+        do {
+            System.out.println("\\n=== UTN HELPDESK ===");
+            System.out.println("1-Recargar | 2-Total | 3-Comisiones | 4-Estrella | 5-Destacados | 0-Salir");
+            if (sc.hasNextInt()) {
+                opcion = sc.nextInt();
+            } else {
+                opcion = (pasoDemo < demoOpciones.length) ? demoOpciones[pasoDemo++] : 0;
+                System.out.println(">> Opción (demo): " + opcion);
+            }
+
+            switch (opcion) {
+                case 1:
+                    cargarPrestaciones(prestaciones);
+                    mostrarMatriz(prestaciones);
+                    break;
+                case 2:
+                    mostrarMatriz(prestaciones);
+                    int facturacion = 0;
+                    for (int t = 0; t < prestaciones.length; t++) {
+                        facturacion += calcularRecaudacionTecnico(prestaciones, tarifas, t);
+                    }
+                    System.out.println("Total facturado: $" + facturacion);
+                    break;
+                case 3:
+                    int mejorTec = 0;
+                    double maxCom = -1.0;
+                    for (int t = 0; t < prestaciones.length; t++) {
+                        double com = calcularComision(prestaciones, tarifas, t);
+                        System.out.println("  Técnico " + t + " -> Comisión 5%: $" + com);
+                        if (com > maxCom) {
+                            maxCom = com;
+                            mejorTec = t;
+                        }
+                    }
+                    System.out.println("Técnico del mes: Técnico " + mejorTec + " ($" + maxCom + ")");
+                    break;
+                case 4:
+                    int estrella = obtenerServicioEstrella(prestaciones);
+                    System.out.println("Servicio estrella: Servicio " + estrella + " (tarifa $" + tarifas[estrella] + ")");
+                    break;
+                case 5:
+                    double umbral;
+                    if (sc.hasNextDouble()) {
+                        do {
+                            System.out.print("Umbral positivo: ");
+                            umbral = sc.nextDouble();
+                        } while (umbral <= 0);
+                    } else {
+                        umbral = 3000.0;
+                        System.out.println("Umbral (demo): $" + umbral);
+                    }
+                    int[] destacados = filtrarDestacados(prestaciones, tarifas, umbral);
+                    System.out.println("Técnicos sobre $" + umbral + ": " + Arrays.toString(destacados));
+                    break;
+                case 0:
+                    System.out.println("Cierre del sistema. ¡Hasta luego!");
+                    break;
+                default:
+                    errores++;
+                    System.out.println("Opción inválida (" + errores + "/3)");
+                    break;
+            }
+        } while (opcion != 0 && errores < 3);
+    }
+}`;
+
+        function sendCode(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'java', fileName = 'Main.java') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        Reveal.on('slidechanged', event => {
+            const slideId = event.currentSlide ? event.currentSlide.id : '';
+            if (slideId === 'slide-compiler-integrador') {
+                sendCodeWithRetries('oc-editor-integrador', codeIntegrador, 'java', 'Main.java');
+            }
+        });
+    </script>
+</body>
+</html>

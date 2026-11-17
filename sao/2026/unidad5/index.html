@@ -170,13 +170,13 @@
             border: 1px solid #BFDBFE;
         }
 
-        /* Grilla de Clases (3 columnas) */
+        /* Grilla de Clases (4 columnas) */
         .classes-grid {
             max-width: 1240px;
             margin: 0 auto 10px auto;
             padding: 0 20px;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 18px;
         }
 
@@ -203,9 +203,10 @@
             width: 100%;
         }
 
-        .bar-blue  { background: linear-gradient(90deg, var(--utn-blue), var(--cyan-light)); }
-        .bar-gold  { background: linear-gradient(90deg, var(--utn-gold), #F59E0B); }
-        .bar-green { background: linear-gradient(90deg, #10B981, #059669); }
+        .bar-blue   { background: linear-gradient(90deg, var(--utn-blue), var(--cyan-light)); }
+        .bar-gold   { background: linear-gradient(90deg, var(--utn-gold), #F59E0B); }
+        .bar-green  { background: linear-gradient(90deg, #10B981, #059669); }
+        .bar-purple { background: linear-gradient(90deg, #8B5CF6, #C084FC); }
 
         .card-content {
             padding: 18px 18px 12px 18px;
@@ -704,7 +705,7 @@
         <div class="section-header">
             <h2><i class="fa-solid fa-chalkboard-user" style="color: var(--cyan-accent);"></i> Clases Interactivas</h2>
             <div class="section-line"></div>
-            <span class="badge-count">3 Clases</span>
+            <span class="badge-count">4 Clases</span>
         </div>
 
         <section class="classes-grid">
@@ -792,6 +793,35 @@
                 <div class="card-footer">
                     <a href="clase3/index.html" class="action-btn btn-slate">
                         <span>Iniciar Clase 3</span> <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- TARJETA 4: CLASE 4 -->
+            <div class="portal-card">
+                <div>
+                    <div class="card-accent-bar bar-purple"></div>
+                    <div class="card-content">
+                        <div class="card-icon" style="color: #7C3AED;">
+                            <i class="fa-solid fa-compass-drafting"></i>
+                        </div>
+                        <h3>Clase 4</h3>
+                        <span class="card-subtitle">Repaso General &amp; Práctica Integradora</span>
+                        <p class="card-description">
+                            Síntesis integral de Java (U1 a U5): tipos, lógica, control de flujo, modularización, vectores con <code>tope</code>, matrices 2D y desarrollo completo paso a paso.
+                        </p>
+                        <ul class="topics-list">
+                            <li><i class="fa-solid fa-check"></i> <span>Tipos primitivos, casting y lógica booleana</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Selectivas, bucles y patrones de secuencia</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Modularización, pasaje y uso de <code>Math</code> / <code>Random</code></span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Repaso de vectores 1D, <code>tope</code> y matrices 2D</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span>Práctica integradora de gestión paso a paso</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="clase4/index.html" class="action-btn btn-slate">
+                        <span>Iniciar Clase 4</span> <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
