@@ -994,7 +994,7 @@
                                 <i class="fa-solid fa-screwdriver-wrench" style="color: var(--cyan-accent);"></i> Consigna Integradora (Unidades 2, 3, 4 y 5)
                             </span>
                             <p style="font-size: 14.5px; color: var(--text-main); margin: 0; line-height: 1.4;">
-                                Una empresa ofrece <strong>4 servicios técnicos</strong> (códigos 0 a 3) con tarifas fijas en un vector <code class="code-badge">int[] tarifas</code> y dispone de <strong>3 técnicos</strong> (códigos 0 a 2) que cobran una <strong>comisión del 5%</strong> sobre el monto de sus trabajos. Las prestaciones del mes se almacenan en una matriz <code class="code-badge">int[][] prestaciones = new int[3][4]</code>.
+                                Una empresa ofrece <strong>4 servicios técnicos</strong> (códigos 0 a 3) con tarifas fijas en un vector <code class="code-badge">int[] tarifas</code> y dispone de <strong>3 técnicos</strong> (códigos 0 a 2) que cobran una <strong>comisión del 5%</strong> sobre lo facturado. En la matriz <code class="code-badge">int[][] prestaciones = new int[3][4]</code>, cada celda <code class="code-badge">prestaciones[t][s]</code> guarda <strong>cuántos trabajos (0 a 5)</strong> realizó el técnico <code class="code-badge">t</code> del servicio <code class="code-badge">s</code>.
                             </p>
                         </div>
 
@@ -1112,11 +1112,14 @@ public static double calcularComision(int[][] m, int[] tarifas, int tec) {
                     <h2 class="slide-title">RESOLUCIÓN (2/4): <span class="slide-subtitle">Servicio Estrella por Columnas</span></h2>
                     <div class="content-area">
                         <div style="background: #1E293B; border-radius: 10px; overflow: hidden; border: 1px solid #334155;">
-                            <pre class="code-integrador"><code class="language-java" data-trim data-noescape data-line-numbers="1-4|5-14|15-17">// 4. Servicio estrella: mayor cantidad total (barrido por columnas)
+                            <pre class="code-integrador"><code class="language-java" data-trim data-noescape data-line-numbers="1-7|8-17|18-20">// 4. Servicio estrella: mayor cantidad total (barrido por columnas)
 public static int obtenerServicioEstrella(int[][] m) {
-    int estrella = -1, maxCant = -1;
+    int estrella = -1;
     if (m != null &amp;&amp; m.length &gt; 0 &amp;&amp; m[0].length &gt; 0) {
-        for (int s = 0; s &lt; m[0].length; s++) {
+        estrella = 0;
+        int maxCant = 0;
+        for (int t = 0; t &lt; m.length; t++) { maxCant += m[t][0]; }
+        for (int s = 1; s &lt; m[0].length; s++) {
             int sumaCol = 0;
             for (int t = 0; t &lt; m.length; t++) {
                 sumaCol += m[t][s];
@@ -1135,7 +1138,7 @@ public static int obtenerServicioEstrella(int[][] m) {
                             <i class="fa-solid fa-table-columns"></i>
                             <div>
                                 <strong>Barrido vertical por columnas</strong>
-                                <p>El bucle exterior fija el código de servicio <code class="code-badge">s</code> y el interior suma todos los técnicos <code class="code-badge">t</code>. Inicializar <code class="code-badge">maxCant = -1</code> asegura actualizar en la primera columna aunque todas sumen <code class="code-badge">0</code>.</p>
+                                <p>Tomamos el total real de la columna <code class="code-badge">0</code> (<code class="code-badge">estrella = 0</code>) como candidato inicial y comparamos desde <code class="code-badge">s = 1</code>, manteniendo todos los valores dentro del universo del problema.</p>
                             </div>
                         </div>
                     </div>
@@ -1432,9 +1435,13 @@ public class Main {
     // 4. Servicio estrella: mayor demanda acumulada (barrido por columnas)
     public static int obtenerServicioEstrella(int[][] m) {
         int estrella = -1;
-        int maxCant = -1;
         if (m != null && m.length > 0 && m[0].length > 0) {
-            for (int s = 0; s < m[0].length; s++) {
+            estrella = 0;
+            int maxCant = 0;
+            for (int t = 0; t < m.length; t++) {
+                maxCant += m[t][0];
+            }
+            for (int s = 1; s < m[0].length; s++) {
                 int sumaCol = 0;
                 for (int t = 0; t < m.length; t++) {
                     sumaCol += m[t][s];
@@ -1514,7 +1521,7 @@ public class Main {
                     break;
                 case 3:
                     int mejorTec = 0;
-                    double maxCom = -1.0;
+                    double maxCom = calcularComision(prestaciones, tarifas, 0);
                     for (int t = 0; t < prestaciones.length; t++) {
                         double com = calcularComision(prestaciones, tarifas, t);
                         System.out.println("  Técnico " + t + " -> Comisión 5%: $" + com);
