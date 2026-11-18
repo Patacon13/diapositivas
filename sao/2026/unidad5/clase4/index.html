@@ -733,7 +733,7 @@
                                 <li><i class="fa-solid fa-check" style="color: #10B981;"></i><span><strong><code class="code-badge">while</code> vs. <code class="code-badge">do-while</code>:</strong> <code class="code-badge">while</code> evalúa antes (0 o más veces); <code class="code-badge">do-while</code> ejecuta al menos 1 vez (menús y validaciones) y exige <code class="code-badge">;</code> al final.</span></li>
                                 <li><i class="fa-solid fa-check" style="color: #10B981;"></i><span><strong><code class="code-badge">for</code> y ámbito:</strong> cantidad conocida <code class="code-badge">N</code>; la variable declarada en la cabecera solo existe dentro del bucle (y cuidado con <code class="code-badge">for (...);</code>).</span></li>
                                 <li><i class="fa-solid fa-check" style="color: #10B981;"></i><span><strong>Centinela limpio:</strong> leer el 1° dato antes del <code class="code-badge">while</code> y leer el siguiente al final del cuerpo, evitando procesar la marca de fin.</span></li>
-                                <li><i class="fa-solid fa-check" style="color: #10B981;"></i><span><strong>Extremos con negativos:</strong> inicializar <code class="code-badge">min</code> y <code class="code-badge">max</code> con el 1° dato válido (o <code class="code-badge">MIN_VALUE</code> / <code class="code-badge">MAX_VALUE</code>), nunca en <code class="code-badge">0</code>.</span></li>
+                                <li><i class="fa-solid fa-check" style="color: #10B981;"></i><span><strong>Extremos con negativos:</strong> inicializar <code class="code-badge">min</code> y <code class="code-badge">max</code> con el 1° dato válido del problema (nunca en <code class="code-badge">0</code>) para mantener los valores en su universo real.</span></li>
                             </ul>
                         </div>
                     </div>
@@ -822,7 +822,7 @@
                         <tbody>
                             <tr>
                                 <td><strong>Recorrido completo</strong><br><span style="font-size: 11px; color: #64748B;">Sumas, conteos, promedios</span></td>
-                                <td><code class="code-badge">for (int i = 0; i &lt; v.length; i++)</code><br><code class="code-badge">for (int x : v)</code> (solo lectura)</td>
+                                <td><code class="code-badge">for (int i = 0; i &lt; v.length; i++)</code><br><span style="font-size: 11px; color: #64748B;">(índices de <code class="code-badge">0</code> a <code class="code-badge">v.length - 1</code>)</span></td>
                                 <td>Para promedios con condición, contar cuántos cumplen y validar <code class="code-badge">cant &gt; 0</code> antes de dividir como <code class="code-badge">double</code>.</td>
                             </tr>
                             <tr>
@@ -1267,7 +1267,7 @@ do {
                                 </div>
                                 <h3>3. Precisión Numérica y Extremos</h3>
                             </div>
-                            <p>Cuidá la división entera casteando a <code class="code-badge">double</code> antes de dividir e inicializá máximos y mínimos con el primer dato real (o <code class="code-badge">MIN/MAX_VALUE</code>) para soportar negativos.</p>
+                            <p>Cuidá la división entera casteando a <code class="code-badge">double</code> antes de dividir e inicializá máximos y mínimos con el primer dato real del problema (nunca en <code class="code-badge">0</code>) para mantener todo en su universo de valores.</p>
                         </div>
 
                         <div class="concept-card" style="border-top: 4px solid #10B981;">
