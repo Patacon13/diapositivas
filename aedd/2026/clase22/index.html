@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AEDD - Clase 22: Simulacro de Parcial 3 - UTN FRSF</title>
+
+    <!-- Estilos Base Reveal.js -->
+    <link rel="stylesheet" href="../../../dist/reset.css" />
+    <link rel="stylesheet" href="../../../dist/reveal.css" />
+    <link rel="stylesheet" href="../../../dist/theme/white.css" id="theme" />
+    <link rel="stylesheet" href="../../../dist/plugin/highlight/monokai.css" />
+
+    <!-- Tema AEDD (Extiende utn-core.css) -->
+    <link rel="stylesheet" href="../../../dist/theme/aedd.css" />
+
+    <!-- Tipografías Oficiales e Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --utn-blue: #002B5B;
+            --utn-gold: #FFC107;
+            --bg-neutral: #F8FAFC;
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --danger-red: #EF4444;
+            --warning-amber: #F59E0B;
+            --success-green: #10B981;
+            --cyan-accent: #38BDF8;
+        }
+
+        .reveal { font-family: 'Inter', sans-serif; background-color: #FFFFFF; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { font-family: 'Poppins', sans-serif; text-transform: none; margin: 0; }
+        .reveal p, .reveal li { font-size: 19px; color: var(--text-main); line-height: 1.45; text-align: left; }
+
+        .slide-title {
+            font-size: 34px !important; font-weight: 700 !important; color: var(--utn-blue) !important;
+            margin-bottom: 14px !important; border-left: 12px solid var(--utn-gold);
+            padding-left: 20px; text-transform: uppercase !important; letter-spacing: -1px;
+            text-align: left; width: 100%;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; align-items: stretch; }
+
+        .concept-card {
+            background: white; padding: 14px 18px; border-radius: 14px; border: 1px solid #E2E8F0;
+            border-left: 8px solid var(--utn-gold); box-shadow: 0 8px 24px rgba(0,0,0,0.04); text-align: left;
+        }
+        .concept-card h3 {
+            color: var(--utn-blue); font-size: 18px; margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
+        }
+
+        .tile {
+            background: var(--bg-neutral); padding: 14px 18px; border-radius: 14px;
+            border-bottom: 4px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+        }
+        .tile:hover { transform: translateY(-3px); border-bottom-color: var(--utn-gold); background: #FFF; box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
+        .tile h3 { font-size: 17px; color: var(--utn-blue); margin-bottom: 6px; font-weight: 600; }
+        .tile p { font-size: 14.5px; color: var(--text-light); margin: 0; line-height: 1.4; }
+
+        /* Arquitectura Anti-Fantasmeo en Bloques de Codigo */
+        .reveal pre {
+            background: #272822 !important; padding: 0 !important; border-radius: 12px;
+            font-family: 'Fira Code', monospace; font-size: 13px; margin: 0; position: relative !important;
+            border-left: 6px solid var(--utn-gold); box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            width: 100%; box-sizing: border-box;
+            max-height: 465px !important;
+            overflow: hidden !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+        .reveal pre code,
+        .reveal pre .hljs:not(:first-child).fragment {
+            font-family: 'Fira Code', monospace;
+            font-size: inherit;
+            padding: 14px 18px !important;
+            background: #272822 !important;
+            max-height: 465px !important;
+            overflow-y: auto !important;
+            overflow-x: auto !important;
+            box-sizing: border-box !important;
+            width: 100%;
+            display: block;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .callout-box {
+            background: #EFF6FF; border: 1px solid #BFDBFE; border-left: 6px solid var(--utn-blue);
+            border-radius: 10px; padding: 12px 16px; display: flex; align-items: flex-start; gap: 12px;
+        }
+        .callout-box i { color: var(--utn-blue); font-size: 18px; margin-top: 2px; }
+        .callout-box p { font-size: 14.5px; margin: 0; color: #1E3A8A; line-height: 1.45; }
+
+        .warning-box {
+            background: #FEF2F2; border: 1px solid #FECACA; border-left: 6px solid var(--danger-red);
+            border-radius: 10px; padding: 12px 16px; display: flex; align-items: flex-start; gap: 12px;
+        }
+        .warning-box i { color: var(--danger-red); font-size: 18px; margin-top: 2px; }
+        .warning-box p { font-size: 14.5px; margin: 0; color: #991B1B; line-height: 1.45; }
+
+        .meta-pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(255, 193, 7, 0.16); border: 1px solid rgba(255, 193, 7, 0.45);
+            color: var(--utn-gold); padding: 6px 16px; border-radius: 999px;
+            font-size: 15px; font-weight: 600; margin-bottom: 18px;
+        }
+
+        @media (max-width: 767px), (orientation: portrait) {
+            .two-column { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 1: PORTADA INSTITUCIONAL AEDD -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div style="text-align: center;">
+                    <span class="meta-pill"><i class="fa-solid fa-flag-checkered"></i> ÚLTIMA CLASE — PRÁCTICA INTEGRADORA</span>
+                </div>
+                <h1 style="color: white; font-size: 66px; line-height: 1.05; margin-bottom: 20px;">
+                    Algoritmos y Estructuras de Datos<br>
+                    <span style="color: var(--utn-gold); font-weight: 300; font-size: 48px;">Clase 22: Simulacro de Parcial 3</span>
+                </h1>
+                <p style="color: rgba(255,255,255,0.75); margin-top: 34px; text-align: center; font-size: 21px;">
+                    Docentes de práctica: Tomás Assenza, Facundo Sanchez
+                </p>
+                <p style="color: rgba(255,255,255,0.4); margin-top: 10px; text-align: center; font-size: 16px; letter-spacing: 2px;">
+                    UTN - Facultad Regional Santa Fe (ISI)
+                </p>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 2: DINÁMICA DEL SIMULACRO -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Reglas del Simulacro (Parcial 3 Real)</h2>
+                <div class="content-area" style="gap: 16px;">
+                    <div class="two-column">
+                        <div class="tile">
+                            <h3><i class="fa-solid fa-stopwatch" style="color: var(--utn-gold);"></i> Modalidad y Tiempos</h3>
+                            <p>Resolución individual en papel o editor plano durante <strong>55 minutos</strong>, sin compilador ni autocompletado. Luego hacemos puesta en común y prueba en vivo.</p>
+                        </div>
+                        <div class="tile">
+                            <h3><i class="fa-solid fa-file-lines" style="color: var(--cyan-accent);"></i> Examen de Referencia</h3>
+                            <p>Basado en el <strong>Parcial 3 AEDD - ISI - UTN Santa Fe (24/02/2022)</strong>. Integra listas enlazadas simples, diseño sin codificar y restricciones estrictas.</p>
+                        </div>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="concept-card" style="border-left-color: var(--success-green);">
+                            <h3><i class="fa-solid fa-check-double" style="color: var(--success-green);"></i> Qué se evalúa</h3>
+                            <ul style="margin: 6px 0 0 18px; padding: 0;">
+                                <li style="font-size: 15px;">Declaración correcta de nodos y punteros.</li>
+                                <li style="font-size: 15px;">Razonamiento algorítmico <strong>sin codificar</strong>.</li>
+                                <li style="font-size: 15px;">Respeto estricto de precondiciones y modularización.</li>
+                            </ul>
+                        </div>
+                        <div class="concept-card" style="border-left-color: var(--danger-red);">
+                            <h3><i class="fa-solid fa-ban" style="color: var(--danger-red);"></i> Reglas de Cátedra en C++</h3>
+                            <ul style="margin: 6px 0 0 18px; padding: 0;">
+                                <li style="font-size: 15px;">Sin operadores ternarios (<code>?:</code>).</li>
+                                <li style="font-size: 15px;">Sin <code>break</code> ni <code>continue</code> dentro de bucles.</li>
+                                <li style="font-size: 15px;"><strong>Single return:</strong> único <code>return</code> al final de cada función.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 3: CONTEXTO GENERAL DEL ENUNCIADO -->
+            <!-- ============================================================== -->
+            <section data-background-color="#F8FAFC">
+                <div class="inciso-header">
+                    <span class="inciso-badge">1</span>
+                    <h2 class="slide-title" style="margin-bottom: 0 !important;">Contexto: Ciudades de Santa Fe</h2>
+                    <span class="points-badge">Parcial 3</span>
+                </div>
+                <div class="content-area" style="gap: 16px;">
+                    <div class="texto-enunciado">
+                        <p style="font-size: 18px; margin-bottom: 12px;">
+                            La provincia de Santa Fe tiene información sobre las ciudades de la provincia en <strong>listas enlazadas simples</strong> (en cada lista vienen varias ciudades del mismo departamento).
+                        </p>
+                        <p style="font-size: 17px; margin-bottom: 8px;"><strong>En cada nodo de una lista enlazada con ciudades, la información almacenada es:</strong></p>
+                        <ul style="margin: 0 0 0 24px;">
+                            <li style="font-size: 17px;"><strong>Código Departamento:</strong> entero en <code>1..20</code></li>
+                            <li style="font-size: 17px;"><strong>Nombre de la ciudad:</strong> <code>30</code> caracteres</li>
+                            <li style="font-size: 17px;"><strong>Cantidad de habitantes:</strong> entero sin signo</li>
+                            <li style="font-size: 17px;"><strong>Sector:</strong> <code>0: Sur, 1: Centro, 2: Norte</code></li>
+                        </ul>
+                    </div>
+
+                    <div class="callout-box">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <p>
+                            <strong>Lectura atenta:</strong> Antes de tirar código, identificá los tipos exactos de cada campo, la longitud real del arreglo de caracteres y qué debe ser un <code>struct</code> separado para facilitar la copia de nodos.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 4: INCISO A (ENUNCIADO + SOLUCIÓN VERTICAL) -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 4.A Horizontal: Enunciado Inciso a) -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">a</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Declaración de Estructuras</h2>
+                        <span class="points-badge">Inciso a</span>
+                    </div>
+                    <div class="content-area" style="gap: 18px;">
+                        <div class="texto-enunciado">
+                            <p style="font-size: 20px; line-height: 1.55;">
+                                Declarar las estructuras de datos necesarias para manejar una lista <code>Ciudades</code> con estas características, y una variable <code>Start</code>, que pueda utilizarse para apuntar al comienzo de la misma.
+                            </p>
+                        </div>
+
+                        <div class="concept-card">
+                            <h3><i class="fa-solid fa-magnifying-glass"></i> Puntos clave a verificar</h3>
+                            <p style="font-size: 15px; margin: 0;">
+                                ¿Cuántos bytes necesita una cadena C de 30 caracteres? ¿Qué tipo representa un entero sin signo? ¿En qué valor debe quedar inicializada <code>Start</code>?
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4.B Vertical: Solución C++ Inciso a) -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">a</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución: Estructuras de Datos</h2>
+                    </div>
+                    <div class="content-area" style="gap: 14px;">
+                        <pre><code class="cpp" data-trim data-noescape data-line-numbers="1-6|8-13|15-20">
+struct Ciudad {
+    int codDepto;               // 1..20
+    char nombre[31];            // 30 caracteres + '\0'
+    unsigned int habitantes;    // entero sin signo
+    int sector;                 // 0: Sur, 1: Centro, 2: Norte
+};
+
+struct Nodo {
+    Ciudad info;
+    Nodo* sig;
+};
+
+typedef Nodo* ListaCiudades;
+
+// Variable solicitada para apuntar al comienzo
+ListaCiudades Start = NULL;
+
+// Estructura auxiliar para retornar totales en el inciso c)
+struct HabitantesPorSector {
+    unsigned long sur;
+    unsigned long centro;
+    unsigned long norte;
+};
+                        </code></pre>
+                        <div class="callout-box">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <p>
+                                Separar <code>Ciudad</code> de <code>Nodo</code> permite copiar todos los datos de una ciudad con una sola asignación (<code>nuevo-&gt;info = aux-&gt;info;</code>) en los incisos siguientes.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 5: INCISO B (ENUNCIADO + ESTRATEGIAS VERTICAL) -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 5.A Horizontal: Enunciado Inciso b) -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">b</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Diseño sin Codificar</h2>
+                        <span class="points-badge">Inciso b</span>
+                    </div>
+                    <div class="content-area" style="gap: 14px;">
+                        <div class="texto-enunciado">
+                            <p style="font-size: 17px; margin-bottom: 10px;">
+                                Se dispone de varias listas de Ciudades (una por Departamento) ya cargadas y <strong>ordenadas por cantidad de habitantes de menor a mayor</strong>.
+                            </p>
+                            <p style="font-size: 17px; margin-bottom: 10px;">
+                                Diseñar <code>ItemB()</code> que recibe dos listas de Ciudades, un entero <code>X</code> y un entero <code>Cant</code>:
+                                <strong>retornar una lista con las X ciudades de las dos listas que tengan más de <code>Cant</code> habitantes, ordenada de mayor a menor</strong> (ambas listas no están vacías).
+                            </p>
+                            <p style="font-size: 17px; font-weight: 600; color: var(--utn-blue); margin: 0;">
+                                Explique brevemente con sus palabras —sin codificar— dos formas diferentes de cumplir con este requerimiento.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5.B Vertical: Dos Estrategias sin codificar -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">b</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Dos Estrategias Diferentes (Sin Código)</h2>
+                    </div>
+                    <div class="content-area" style="gap: 16px;">
+                        <div class="two-column">
+                            <div class="concept-card" style="border-left-color: var(--utn-blue);">
+                                <h3><i class="fa-solid fa-code-merge" style="color: var(--utn-blue);"></i> Forma 1: Merge + Inserción en Cabecera</h3>
+                                <ol style="margin: 8px 0 0 18px; padding: 0;">
+                                    <li style="font-size: 14.5px; margin-bottom: 6px;">Avanzar en ambas listas salteando los nodos con <code>habitantes &lt;= Cant</code> (aprovechando que vienen de menor a mayor).</li>
+                                    <li style="font-size: 14.5px; margin-bottom: 6px;">Hacer un <em>merge</em> (intercalación) tomando siempre el <strong>menor</strong> de los dos frentes.</li>
+                                    <li style="font-size: 14.5px;">Insertar cada copia <strong>al principio</strong> de la lista resultado: al entrar de menor a mayor por la cabeza, queda ordenada de <strong>mayor a menor</strong>. Si supera <code>X</code> nodos, se elimina el último.</li>
+                                </ol>
+                            </div>
+
+                            <div class="concept-card" style="border-left-color: var(--utn-gold);">
+                                <h3><i class="fa-solid fa-layer-group" style="color: var(--warning-amber);"></i> Forma 2: Merge + Pila Auxiliar (LIFO)</h3>
+                                <ol style="margin: 8px 0 0 18px; padding: 0;">
+                                    <li style="font-size: 14.5px; margin-bottom: 6px;">Descartar en ambas listas el prefijo con <code>habitantes &lt;= Cant</code>.</li>
+                                    <li style="font-size: 14.5px; margin-bottom: 6px;">Intercalar ambas listas tomando el menor frente y <strong>apilar</strong> cada elemento en una <strong>Pila</strong> auxiliar (los más poblados quedan en el tope).</li>
+                                    <li style="font-size: 14.5px;">Desapilar hasta <code>X</code> ciudades (o hasta vaciar la pila) e ir agregándolas <strong>al final</strong> de la lista resultado, quedando de mayor a menor.</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="callout-box">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <p>
+                                <strong>Alternativa válida:</strong> Recorrer ambas listas e ir aplicando <em>inserción ordenada descendente</em> en la lista resultado (podando el último nodo si se excede <code>X</code>), técnica clave para el inciso <strong>c)</strong> donde una lista viene desordenada.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 6: INCISO C (ENUNCIADO + AUXILIARES + ITEMC + SANDBOX) -->
+            <!-- ============================================================== -->
+            <section>
+                <!-- 6.A Horizontal: Enunciado Inciso c) -->
+                <section data-background-color="#F8FAFC">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">c</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Codificación con Restricciones</h2>
+                        <span class="points-badge">Inciso c</span>
+                    </div>
+                    <div class="content-area" style="gap: 14px;">
+                        <div class="texto-enunciado">
+                            <p style="font-size: 17px; margin-bottom: 8px;">
+                                Codificar la función <code>ItemC()</code> retornando la misma lista resultado que en <code>ItemB()</code>, respetando:
+                            </p>
+                            <ul style="margin: 0 0 0 22px;">
+                                <li style="font-size: 16px; margin-bottom: 4px;">Lista <strong>A</strong> ordenada de menor a mayor; lista <strong>B sin ningún orden</strong>.</li>
+                                <li style="font-size: 16px; margin-bottom: 4px;"><strong>Ninguna lista recibida puede modificarse</strong>.</li>
+                                <li style="font-size: 16px; margin-bottom: 4px;"><strong>No está permitido</strong> usar algoritmos de ordenamiento sobre listas.</li>
+                                <li style="font-size: 16px; margin-bottom: 4px;">La lista resultado debe <strong>pasarse como parámetro</strong>.</li>
+                                <li style="font-size: 16px;">La función debe <strong>retornar la cantidad de habitantes por cada sector</strong> de la provincia.</li>
+                            </ul>
+                        </div>
+
+                        <div class="warning-box">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <p>
+                                <strong>Cuidado con B desordenada:</strong> Si cortás el ciclo apenas insertás <code>X</code> ciudades, una ciudad enorme al final de B quedaría afuera. Solución: insertar ordenado descendente y, si se supera <code>X</code>, podar el último nodo.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6.B Vertical 1: Funciones Auxiliares de Lista -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">c</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución (1/2): Auxiliares de Lista</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 12px;"><code class="cpp" data-trim data-noescape data-line-numbers="1-6|8-23|25-39">
+Nodo* crearNodo(const Ciudad&amp; c) {
+    Nodo* nuevo = new Nodo;
+    nuevo-&gt;info = c;
+    nuevo-&gt;sig = NULL;
+    return nuevo;
+}
+
+void insertarOrdenadoDesc(ListaCiudades&amp; lista, const Ciudad&amp; c) {
+    Nodo* nuevo = crearNodo(c);
+    if (lista == NULL || c.habitantes &gt;= lista-&gt;info.habitantes) {
+        nuevo-&gt;sig = lista;
+        lista = nuevo;
+    } else {
+        Nodo* actual = lista;
+        while (actual-&gt;sig != NULL &amp;&amp;
+               actual-&gt;sig-&gt;info.habitantes &gt; c.habitantes) {
+            actual = actual-&gt;sig;
+        }
+        nuevo-&gt;sig = actual-&gt;sig;
+        actual-&gt;sig = nuevo;
+    }
+}
+
+void eliminarUltimo(ListaCiudades&amp; lista) {
+    if (lista != NULL) {
+        if (lista-&gt;sig == NULL) {
+            delete lista;
+            lista = NULL;
+        } else {
+            Nodo* actual = lista;
+            while (actual-&gt;sig-&gt;sig != NULL) {
+                actual = actual-&gt;sig;
+            }
+            delete actual-&gt;sig;
+            actual-&gt;sig = NULL;
+        }
+    }
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 6.C Vertical 2: Procesamiento e ItemC() -->
+                <section data-background-color="#FFFFFF">
+                    <div class="inciso-header">
+                        <span class="inciso-badge">c</span>
+                        <h2 class="slide-title" style="margin-bottom: 0 !important;">Solución (2/2): <code>ItemC()</code> Modularizada</h2>
+                    </div>
+                    <div class="content-area">
+                        <pre style="font-size: 11.5px;"><code class="cpp" data-trim data-noescape data-line-numbers="1-7|9-27|29-42|44-52">
+void acumularSector(HabitantesPorSector&amp; tot, const Ciudad&amp; c) {
+    switch (c.sector) {
+        case 0: tot.sur += c.habitantes; break;
+        case 1: tot.centro += c.habitantes; break;
+        case 2: tot.norte += c.habitantes; break;
+    }
+}
+
+void procesarListaOrdenada(ListaCiudades A, int X, unsigned int Cant,
+                           ListaCiudades&amp; res, int&amp; cantIns,
+                           HabitantesPorSector&amp; tot) {
+    Nodo* aux = A;
+    while (aux != NULL &amp;&amp; aux-&gt;info.habitantes &lt;= Cant) {
+        acumularSector(tot, aux-&gt;info);
+        aux = aux-&gt;sig;
+    }
+    while (aux != NULL) {
+        acumularSector(tot, aux-&gt;info);
+        if (X &gt; 0) {
+            insertarOrdenadoDesc(res, aux-&gt;info);
+            cantIns++;
+            if (cantIns &gt; X) {
+                eliminarUltimo(res);
+                cantIns--;
+            }
+        }
+        aux = aux-&gt;sig;
+    }
+}
+
+void procesarListaDesordenada(ListaCiudades B, int X, unsigned int Cant,
+                              ListaCiudades&amp; res, int&amp; cantIns,
+                              HabitantesPorSector&amp; tot) {
+    Nodo* aux = B;
+    while (aux != NULL) {
+        acumularSector(tot, aux-&gt;info);
+        if (X &gt; 0 &amp;&amp; aux-&gt;info.habitantes &gt; Cant) {
+            insertarOrdenadoDesc(res, aux-&gt;info);
+            cantIns++;
+            if (cantIns &gt; X) {
+                eliminarUltimo(res);
+                cantIns--;
+            }
+        }
+        aux = aux-&gt;sig;
+    }
+}
+
+HabitantesPorSector ItemC(ListaCiudades A, ListaCiudades B, int X,
+                          unsigned int Cant, ListaCiudades&amp; resultado) {
+    resultado = NULL;
+    HabitantesPorSector totales = {0, 0, 0};
+    int cantInsertados = 0;
+    procesarListaOrdenada(A, X, Cant, resultado, cantInsertados, totales);
+    procesarListaDesordenada(B, X, Cant, resultado, cantInsertados, totales);
+    return totales;
+}
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- 6.D Vertical 3: Sandbox Interactivo OneCompiler -->
+                <section id="slide-compiler-1">
+                    <h2 class="slide-title" style="font-size: 26px !important; margin-bottom: 10px !important;">Prueba en Vivo: OneCompiler C++</h2>
+                    <div class="compiler-window">
+                        <div class="header">
+                            <span><i class="fa-solid fa-code"></i> OneCompiler - Simulacro Parcial 3 (Lee STDIN)</span>
+                            <button onclick="sendCodeWithRetries('oc-editor-1', cppCodeSimulacro, 'cpp', 'main.cpp')">Restaurar Código</button>
+                        </div>
+                        <iframe id="oc-editor-1" src="https://onecompiler.com/embed/cpp?listenToEvents=true&theme=dark&hideLanguageSelection=true&hideTitle=true"></iframe>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 7: CHECKLIST ANTI-DESAPROBADO -->
+            <!-- ============================================================== -->
+            <section data-background-color="#FFFFFF">
+                <h2 class="slide-title">Checklist: Trampas Clásicas de Parcial 3</h2>
+                <div class="content-area" style="gap: 14px;">
+                    <div class="two-column">
+                        <div class="tile">
+                            <h3><i class="fa-solid fa-ghost" style="color: var(--danger-red);"></i> 1. Pisar el puntero original</h3>
+                            <p>Nunca hagas <code>A = A-&gt;sig;</code> directamente si necesitás preservar la referencia o si se pasa por referencia. Usá siempre <code>Nodo* aux = A;</code>.</p>
+                        </div>
+                        <div class="tile">
+                            <h3><i class="fa-solid fa-link-slash" style="color: var(--warning-amber);"></i> 2. Compartir nodos sin <code>new</code></h3>
+                            <p>Enlazar un nodo existente de <code>A</code> o <code>B</code> dentro de <code>resultado</code> modifica su campo <code>-&gt;sig</code> y rompe la lista original.</p>
+                        </div>
+                    </div>
+                    <div class="two-column">
+                        <div class="tile">
+                            <h3><i class="fa-solid fa-broom" style="color: var(--utn-blue);"></i> 3. Basura en <code>resultado</code></h3>
+                            <p>Siempre inicializá <code>resultado = NULL;</code> al comienzo de <code>ItemC()</code>. Si venía sin inicializar, <code>insertarOrdenadoDesc</code> falla.</p>
+                        </div>
+                        <div class="tile">
+                            <h3><i class="fa-solid fa-memory" style="color: var(--success-green);"></i> 4. Fuga al podar a <code>X</code></h3>
+                            <p>Si desenganchás el último nodo para no superar <code>X</code>, recordá hacer <code>delete</code> para no dejar memoria huérfana en el Heap.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SLIDE 8: CIERRE INSTITUCIONAL -->
+            <!-- ============================================================== -->
+            <section data-background-gradient="radial-gradient(circle at 50% 50%, #272822 0%, #111111 100%)">
+                <div class="section-title-layout">
+                    <h2>¿DUDAS O CONSULTAS?</h2>
+                    <p>¡Muchos éxitos en el Parcial 3 y en el cierre de AEDD!</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Footer Institucional Único -->
+    <div class="branding-footer">AEDD / UTN <span>SANTA FE</span></div>
+
+    <script src="../../../dist/reveal.js"></script>
+    <script src="../../../dist/plugin/notes.js"></script>
+    <script src="../../../dist/plugin/highlight.js"></script>
+
+    <script>
+        const cppCodeSimulacro = `#include <iostream>
+#include <cstring>
+using namespace std;
+
+struct Ciudad {
+    int codDepto;
+    char nombre[31];
+    unsigned int habitantes;
+    int sector; // 0: Sur, 1: Centro, 2: Norte
+};
+
+struct Nodo {
+    Ciudad info;
+    Nodo* sig;
+};
+
+typedef Nodo* ListaCiudades;
+
+struct HabitantesPorSector {
+    unsigned long sur;
+    unsigned long centro;
+    unsigned long norte;
+};
+
+Nodo* crearNodo(const Ciudad& c) {
+    Nodo* nuevo = new Nodo;
+    nuevo->info = c;
+    nuevo->sig = NULL;
+    return nuevo;
+}
+
+void insertarOrdenadoDesc(ListaCiudades& lista, const Ciudad& c) {
+    Nodo* nuevo = crearNodo(c);
+    if (lista == NULL || c.habitantes >= lista->info.habitantes) {
+        nuevo->sig = lista;
+        lista = nuevo;
+    } else {
+        Nodo* actual = lista;
+        while (actual->sig != NULL &&
+               actual->sig->info.habitantes > c.habitantes) {
+            actual = actual->sig;
+        }
+        nuevo->sig = actual->sig;
+        actual->sig = nuevo;
+    }
+}
+
+void eliminarUltimo(ListaCiudades& lista) {
+    if (lista != NULL) {
+        if (lista->sig == NULL) {
+            delete lista;
+            lista = NULL;
+        } else {
+            Nodo* actual = lista;
+            while (actual->sig->sig != NULL) {
+                actual = actual->sig;
+            }
+            delete actual->sig;
+            actual->sig = NULL;
+        }
+    }
+}
+
+void acumularSector(HabitantesPorSector& tot, const Ciudad& c) {
+    switch (c.sector) {
+        case 0: tot.sur += c.habitantes; break;
+        case 1: tot.centro += c.habitantes; break;
+        case 2: tot.norte += c.habitantes; break;
+    }
+}
+
+void procesarListaOrdenada(ListaCiudades A, int X, unsigned int Cant,
+                           ListaCiudades& res, int& cantIns,
+                           HabitantesPorSector& tot) {
+    Nodo* aux = A;
+    while (aux != NULL && aux->info.habitantes <= Cant) {
+        acumularSector(tot, aux->info);
+        aux = aux->sig;
+    }
+    while (aux != NULL) {
+        acumularSector(tot, aux->info);
+        if (X > 0) {
+            insertarOrdenadoDesc(res, aux->info);
+            cantIns++;
+            if (cantIns > X) {
+                eliminarUltimo(res);
+                cantIns--;
+            }
+        }
+        aux = aux->sig;
+    }
+}
+
+void procesarListaDesordenada(ListaCiudades B, int X, unsigned int Cant,
+                              ListaCiudades& res, int& cantIns,
+                              HabitantesPorSector& tot) {
+    Nodo* aux = B;
+    while (aux != NULL) {
+        acumularSector(tot, aux->info);
+        if (X > 0 && aux->info.habitantes > Cant) {
+            insertarOrdenadoDesc(res, aux->info);
+            cantIns++;
+            if (cantIns > X) {
+                eliminarUltimo(res);
+                cantIns--;
+            }
+        }
+        aux = aux->sig;
+    }
+}
+
+HabitantesPorSector ItemC(ListaCiudades A, ListaCiudades B, int X,
+                          unsigned int Cant, ListaCiudades& resultado) {
+    resultado = NULL;
+    HabitantesPorSector totales = {0, 0, 0};
+    int cantInsertados = 0;
+    procesarListaOrdenada(A, X, Cant, resultado, cantInsertados, totales);
+    procesarListaDesordenada(B, X, Cant, resultado, cantInsertados, totales);
+    return totales;
+}
+
+void agregarAlFinal(ListaCiudades& lista, const Ciudad& c) {
+    Nodo* nuevo = crearNodo(c);
+    if (lista == NULL) {
+        lista = nuevo;
+    } else {
+        Nodo* aux = lista;
+        while (aux->sig != NULL) {
+            aux = aux->sig;
+        }
+        aux->sig = nuevo;
+    }
+}
+
+void cargarLista(ListaCiudades& lista, int n) {
+    for (int i = 0; i < n; i++) {
+        Ciudad c;
+        cin >> c.codDepto >> c.nombre >> c.habitantes >> c.sector;
+        agregarAlFinal(lista, c);
+    }
+}
+
+void imprimirLista(ListaCiudades lista) {
+    Nodo* aux = lista;
+    while (aux != NULL) {
+        cout << aux->info.nombre << " (" << aux->info.habitantes << ")\\n";
+        aux = aux->sig;
+    }
+}
+
+void liberarLista(ListaCiudades& lista) {
+    while (lista != NULL) {
+        Nodo* borrar = lista;
+        lista = lista->sig;
+        delete borrar;
+    }
+}
+
+/* Ejemplo STDIN:
+3 3 3 10000
+1 MonteVera 8500 1
+1 Recreo 16000 1
+1 SantaFe 415000 1
+16 Rosario 1030000 0
+9 VillaMinetti 5600 2
+5 Reconquista 80000 2
+*/
+int main() {
+    ListaCiudades A = NULL, B = NULL, Start = NULL;
+    int n, m, X;
+    unsigned int Cant;
+    cin >> n >> m >> X >> Cant;
+    cargarLista(A, n);
+    cargarLista(B, m);
+
+    HabitantesPorSector tot = ItemC(A, B, X, Cant, Start);
+    cout << "Resultado:\\n";
+    imprimirLista(Start);
+    cout << "Sur: " << tot.sur << " Centro: " << tot.centro
+         << " Norte: " << tot.norte << "\\n";
+
+    liberarLista(A);
+    liberarLista(B);
+    liberarLista(Start);
+    return 0;
+}`;
+
+        // =========================================================================
+        // REGLA CRÍTICA DE ORDEN DE EJECUCIÓN (Anti-Blank-Slide en Móviles/Vertical)
+        // =========================================================================
+        const isMobilePortrait = window.innerWidth < 768 || (window.innerHeight > window.innerWidth);
+        if (isMobilePortrait) {
+            document.querySelectorAll('[id^="slide-compiler-"]').forEach(el => el.remove());
+            document.querySelectorAll('section > section').forEach(sec => {
+                const parent = sec.parentNode;
+                if (parent && parent.children.length === 1) {
+                    while (sec.firstChild) {
+                        parent.appendChild(sec.firstChild);
+                    }
+                    sec.remove();
+                }
+            });
+        }
+
+        // =========================================================================
+        // Canvas Adaptativo
+        // =========================================================================
+        function getCanvasSize() {
+            let isPortrait = window.innerHeight > window.innerWidth;
+            return {
+                width: isPortrait ? 720 : 1280,
+                height: isPortrait ? 1280 : 720
+            };
+        }
+
+        let initialSize = getCanvasSize();
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: initialSize.width,
+            height: initialSize.height,
+            margin: 0.08,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes ]
+        });
+
+        window.addEventListener('resize', () => {
+            let newSize = getCanvasSize();
+            Reveal.configure({ width: newSize.width, height: newSize.height });
+        });
+
+        // =========================================================================
+        // Protocolo de Inyección OneCompiler C++ con Reintentos
+        // =========================================================================
+        function sendCode(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const iframe = document.getElementById(iframeId);
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: language,
+                    files: [{ name: fileName, content: code }]
+                }, '*');
+            }
+        }
+
+        function sendCodeWithRetries(iframeId, code, language = 'cpp', fileName = 'main.cpp') {
+            const send = () => sendCode(iframeId, code, language, fileName);
+            send();
+            setTimeout(send, 200);
+            setTimeout(send, 500);
+            setTimeout(send, 1000);
+            setTimeout(send, 2000);
+            setTimeout(send, 3500);
+        }
+
+        function checkCompilerSlides(slide) {
+            if (!slide) return;
+            if (slide.id === 'slide-compiler-1') {
+                sendCodeWithRetries('oc-editor-1', cppCodeSimulacro, 'cpp', 'main.cpp');
+            }
+        }
+
+        Reveal.on('slidechanged', event => {
+            checkCompilerSlides(event.currentSlide);
+        });
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                checkCompilerSlides(Reveal.getCurrentSlide());
+            }, 600);
+        });
+    </script>
+</body>
+</html>
